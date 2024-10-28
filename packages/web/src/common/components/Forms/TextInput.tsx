@@ -21,8 +21,8 @@ const errorBorderStyle = css`
 `;
 
 const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  background-color: ${({ theme }) => theme.colors.GRAY[50]};
+  border-color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const areaInputStyle = css`
@@ -38,7 +38,7 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   width: 100%;
   padding: 8px 12px 8px 12px;
   outline: none;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;
   gap: 8px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
@@ -49,14 +49,14 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
     border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.PRIMARY};
+      !hasError && !disabled && theme.colors.GREEN[600]};
   }
   &:hover:not(:focus) {
     border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GRAY[100]};
+      !hasError && !disabled && theme.colors.GRAY[200]};
   }
   &::placeholder {
-    color: ${({ theme }) => theme.colors.GRAY[200]};
+    color: ${({ theme }) => theme.colors.GRAY[100]};
   }
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
