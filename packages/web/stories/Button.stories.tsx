@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-// import { fn } from "@storybook/addon-actions";
 import { fn } from "@storybook/test";
 
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
