@@ -11,8 +11,6 @@ const meta: Meta<typeof Button> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"],
-
   argTypes: {
     type: {
       control: { type: "select", options: ["default", "outlined", "disabled"] },
@@ -35,7 +33,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const exampleButton: Story = {
+export const example: Story = {
   args: {
     type: "default",
     buttonText: "Button",
