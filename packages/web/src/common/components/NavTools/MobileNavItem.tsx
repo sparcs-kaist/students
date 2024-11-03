@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 
+import { useTranslations } from "next-intl";
 import Icon from "../Icon";
 
 interface MobileNavItemProps {
@@ -43,13 +44,16 @@ const MobileNavItem: React.FC<MobileNavItemProps> = ({
   isExpanded = false,
   highlight = false,
   onClick = () => {},
-}) => (
-  <MobileNavItemInner highlight={highlight} onClick={onClick}>
-    {path ? <Link href={path}>{name}</Link> : name}
-    {!path && (
-      <Icon type={isExpanded ? "expand_less" : "expand_more"} size={20} />
-    )}
-  </MobileNavItemInner>
-);
+}) => {
+  const t = useTranslations();
+  return (
+    <MobileNavItemInner highlight={highlight} onClick={onClick}>
+      {path ? <Link href={path}>{t(name)}</Link> : name}
+      {!path && (
+        <Icon type={isExpanded ? "expand_less" : "expand_more"} size={20} />
+      )}
+    </MobileNavItemInner>
+  );
+};
 
 export default MobileNavItem;
