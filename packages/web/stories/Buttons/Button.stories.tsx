@@ -39,5 +39,6 @@ export const example: Story = {
     type: "default",
     buttonText: "Button",
     children: <Tag color="GREEN">Example Tag Children</Tag>,
+    iconType: "person",
   },
 };
