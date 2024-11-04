@@ -17,6 +17,9 @@ import Footer from "@sparcs-students/web/common/components/Footer";
 
 import { UseClientProvider } from "@sparcs-students/web/common/providers/UseClientProvider";
 import ResponsiveContent from "@sparcs-students/web/common/components/Responsive";
+
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import DebugBadge from "../common/components/DebugBadge";
 
 export const metadata: Metadata = {
@@ -25,24 +28,31 @@ export const metadata: Metadata = {
     "Created by SPARCS Academic Relations AR-007 TF Team, Copyright 2024",
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html
-    lang="ko-KR"
-    className={classNames(pretendard.variable, raleway.variable)}
-  >
-    <body>
-      <AppRouterCacheProvider>
-        <StyledComponentsRegistry>
-          <UseClientProvider>
-            <DebugBadge />
-            <Header />
-            <ResponsiveContent>{children}</ResponsiveContent>
-            <Footer />
-          </UseClientProvider>
-        </StyledComponentsRegistry>
-      </AppRouterCacheProvider>
-    </body>
-  </html>
-);
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
+  return (
+    <html
+      lang={locale}
+      className={classNames(pretendard.variable, raleway.variable)}
+    >
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <AppRouterCacheProvider>
+            <StyledComponentsRegistry>
+              <UseClientProvider>
+                <DebugBadge />
+                <Header />
+                <ResponsiveContent>{children}</ResponsiveContent>
+                <Footer />
+              </UseClientProvider>
+            </StyledComponentsRegistry>
+          </AppRouterCacheProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;

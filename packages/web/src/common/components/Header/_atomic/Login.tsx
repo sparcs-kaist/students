@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Icon from "@sparcs-students/web/common/components/Icon";
 
 import paths from "@sparcs-students/web/constants/paths";
+import { useTranslations } from "next-intl";
 
 const LoginInner = styled(Link)`
   display: flex;
@@ -24,11 +25,14 @@ const LoginInner = styled(Link)`
   }
 `;
 
-const Login = () => (
-  <LoginInner href={paths.LOGIN.path}>
-    <Icon type="person" size={16} />
-    {paths.LOGIN.name}
-  </LoginInner>
-);
+const Login = () => {
+  const t = useTranslations();
+  return (
+    <LoginInner href={paths.LOGIN.path}>
+      <Icon type="person" size={16} />
+      {t(paths.LOGIN.name)}
+    </LoginInner>
+  );
+};
 
 export default Login;
