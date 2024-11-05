@@ -9,7 +9,9 @@
     "lint": "next lint",
     "build-start": "next build && next start",
     "mock:front": "pnpm dev",
-    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\"",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",
@@ -37,11 +39,23 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
     "@sparcs-students/interface": "workspace:*",
+    "@storybook/addon-essentials": "^8.3.6",
+    "@storybook/addon-interactions": "^8.3.6",
+    "@storybook/addon-links": "^8.3.6",
+    "@storybook/addon-onboarding": "^8.3.6",
+    "@storybook/addon-styling-webpack": "^1.0.0",
+    "@storybook/addon-themes": "^8.3.6",
+    "@storybook/blocks": "^8.3.6",
+    "@storybook/nextjs": "^8.3.6",
+    "@storybook/react": "^8.3.6",
+    "@storybook/test": "^8.3.6",
     "@tanstack/react-query-devtools": "^5.28.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "storybook": "^8.3.6",
     "typescript": "^5"
   },
   "packageManager": "pnpm@8.15.8"
