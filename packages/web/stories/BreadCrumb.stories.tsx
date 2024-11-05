@@ -6,7 +6,7 @@ const meta: Meta<typeof BreadCrumb> = {
   title: "components/BreadCrumb",
   component: BreadCrumb,
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
   },
 
   argTypes: {
