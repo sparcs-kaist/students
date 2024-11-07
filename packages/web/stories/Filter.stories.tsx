@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { fn } from "@storybook/test";
 
+import { useState } from "@storybook/preview-api";
+
 import Filter from "@sparcs-students/web/common/components/Filter/index";
 
 const meta: Meta<typeof Filter> = {
@@ -10,20 +12,16 @@ const meta: Meta<typeof Filter> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"], // CHACHA: description display 위해 추가.
 
   argTypes: {
     itemList: {
       control: false,
-      description: "[개발자, 디자이너, 기획자]",
     },
     selectedList: {
-      control: { type: "multi-select" },
-      options: ["개발자", "디자이너", "기획자"],
+      control: false,
     },
     setSelectedList: {
       control: false,
-      description: "useState set 함수를 삽입합니다.",
     },
   },
 
@@ -38,5 +36,20 @@ export const example: Story = {
   args: {
     itemList: ["개발자", "디자이너", "기획자"],
     selectedList: ["개발자", "디자이너", "기획자"],
+  },
+  render: function Render(args) {
+    const [selectedList, setSelectedList] = useState<string[]>([
+      "개발자",
+      "디자이너",
+      "기획자",
+    ]);
+    return (
+      <Filter
+        {...args}
+        itemList={["개발자", "디자이너", "기획자"]}
+        selectedList={selectedList}
+        setSelectedList={setSelectedList}
+      />
+    );
   },
 };

@@ -8,7 +8,7 @@ const meta: Meta<typeof Tag> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"],
+  tags: ["autodocs"], // CHACHA: needed to display description
 
   argTypes: {
     children: {
