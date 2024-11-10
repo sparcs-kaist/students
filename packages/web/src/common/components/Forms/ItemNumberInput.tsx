@@ -140,14 +140,24 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
 
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.replace(/[^0-9]/g, "");
-
-    if (inputValue.length <= 2) {
-      handleChange(inputValue);
-    }
+    handleChange(inputValue);
   };
 
   const displayValue = value ? `${value}${unit}` : "";
   const mainInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // 커서 위치 제한
+    const inputElement = mainInputRef.current;
+    if (inputElement) {
+      const cursorPosition = inputElement.selectionStart || 0;
+      const numericValueLength = value.length;
+
+      if (cursorPosition > numericValueLength) {
+        inputElement.setSelectionRange(numericValueLength, numericValueLength);
+      }
+    }
+  }, [value]);
 
   const handleCursor = () => {
     mainInputRef.current?.setSelectionRange(
