@@ -70,6 +70,13 @@ const InputWrapper = styled.div`
   gap: 4px;
 `;
 
+const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+
 // Component
 const TextInput: React.FC<TextInputProps> = ({
   label = "",
@@ -97,7 +104,7 @@ const TextInput: React.FC<TextInputProps> = ({
   return (
     <InputWrapper>
       {label && <Label>{label}</Label>}
-      <InputWrapper>
+      <InputContainer>
         <Input
           placeholder={placeholder}
           hasError={!!errorMessage}
@@ -108,7 +115,7 @@ const TextInput: React.FC<TextInputProps> = ({
           {...props}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </InputWrapper>
+      </InputContainer>
     </InputWrapper>
   );
 };

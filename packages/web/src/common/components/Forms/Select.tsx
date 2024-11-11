@@ -23,6 +23,7 @@ interface SelectProps {
 const DropdownContainer = styled.div`
   gap: 4px;
   position: relative;
+  display: flex;
 `;
 
 const disabledStyle = css`
@@ -37,7 +38,7 @@ const StyledSelect = styled.div<{
   isOpen?: boolean;
 }>`
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 32px 8px 12px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -66,7 +67,7 @@ const Dropdown = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 40px;
   padding: 8px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;

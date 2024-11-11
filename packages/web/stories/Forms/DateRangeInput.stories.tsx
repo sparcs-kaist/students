@@ -14,10 +14,16 @@ const meta: Meta<typeof DateRangeInput> = {
   argTypes: {
     label: { control: "text" },
     disabled: { control: "boolean" },
-    startValue: { control: "text" },
-    endValue: { control: "text" },
-    limitStartValue: { control: "text" },
-    limitEndValue: { control: "text" },
+    startValue: { control: "text", description: "YYYY.MM 형식으로 입력" },
+    endValue: { control: "text", description: "YYYY.MM 형식으로 입력" },
+    limitStartValue: {
+      control: "text",
+      description: "YYYY.MM 또는 YYYY.MM.DD 형식으로 입력",
+    },
+    limitEndValue: {
+      control: "text",
+      description: "YYYY.MM 또는 YYYY.MM.DD 형식으로 입력",
+    },
     onChange: { control: false },
     setErrorStatus: { control: false },
   },
