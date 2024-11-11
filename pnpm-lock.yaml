@@ -4370,7 +4370,6 @@ packages:
       - uglify-js
       - webpack-cli
     dev: true
-
   /@storybook/preview-api@7.6.17:
     resolution: {integrity: sha512-wLfDdI9RWo1f2zzFe54yRhg+2YWyxLZvqdZnSQ45mTs4/7xXV5Wfbv3QNTtcdw8tT3U5KRTrN1mTfTCiRJc0Kw==}
     dependencies:
@@ -4389,7 +4388,6 @@ packages:
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
     dev: false
-
   /@storybook/preview-api@8.4.2(storybook@8.3.6):
     resolution: {integrity: sha512-5X/xvIvDPaWJKUBCo5zVeBbbjkhnwcI2KPkuOgrHVRRhuQ5WqD0RYxVtOOFNyQXme7g0nNl5RFNgvT7qv9qGeg==}
     peerDependencies:
