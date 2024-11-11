@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import Label from "../Forms/_atomic/Label";
+import ErrorMessage from "../Forms/_atomic/ErrorMessage";
+import Dropdown from "./Dropdown";
 
 export interface SelectItem {
   label: string;
@@ -60,20 +61,6 @@ const StyledSelect = styled.div<{
   }
 
   ${({ disabled }) => disabled && disabledStyle}
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 4px;
-  padding: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.WHITE};
-  gap: 4px;
-  z-index: 1000;
 `;
 
 const Option = styled.div<{ selectable?: boolean; isSelected?: boolean }>`
