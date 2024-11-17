@@ -20,7 +20,7 @@ interface EventPeriod {
 
 interface CalendarProps extends CalendarSizeProps {
   existDates: Date[];
-  eventPeriods: EventPeriod[];
+  eventPeriods?: EventPeriod[];
   selectedDates: Date[];
   onDateClick?: (date: Date) => void;
 }
@@ -53,7 +53,7 @@ const WeekWrapper = styled.div`
 const Calendar: React.FC<CalendarProps> = ({
   size = "md",
   existDates,
-  eventPeriods,
+  eventPeriods = [],
   selectedDates,
   onDateClick = () => {},
 }) => {
