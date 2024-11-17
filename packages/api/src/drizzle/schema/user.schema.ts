@@ -5,15 +5,18 @@ import {
   mysqlTable,
   foreignKey,
 } from "drizzle-orm/mysql-core";
+import { InferSelectModel } from "drizzle-orm";
 
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey().notNull(),
-  name: varchar("name", { length: 30 }),
+  name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
+
+export type UserT = InferSelectModel<typeof User>;
 
 export const UserStudent = mysqlTable(
   "user_student",
@@ -31,3 +34,5 @@ export const UserStudent = mysqlTable(
     }),
   }),
 );
+
+export type UserStudentT = InferSelectModel<typeof UserStudent>;

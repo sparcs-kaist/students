@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import {
   int,
   varchar,
@@ -14,3 +15,5 @@ export const Semester = mysqlTable("semester", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
+
+export type SemesterT = InferSelectModel<typeof Semester>;

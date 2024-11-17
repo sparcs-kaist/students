@@ -7,6 +7,7 @@ import {
   timestamp,
   mysqlTable,
 } from "drizzle-orm/mysql-core";
+import { InferSelectModel } from "drizzle-orm";
 import {
   OrganizationTypeEnum,
   BudgetDomainEnum,
@@ -18,8 +19,8 @@ import { File } from "./file.schema";
 
 export const Organization = mysqlTable("organization", {
   id: int("id").autoincrement().primaryKey().notNull(),
-  nameKr: varchar("name", { length: 30 }).notNull(),
-  nameEn: varchar("name_eng", { length: 100 }).notNull(),
+  name: varchar("name", { length: 30 }).notNull(),
+  nameEng: varchar("name_eng", { length: 100 }).notNull(),
   organizationTypeEnumId: int("organization_type_enum_id")
     .notNull()
     .references(() => OrganizationTypeEnum.id),
@@ -177,3 +178,18 @@ export const AssistantManager = mysqlTable("assistant_manager", {
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
+
+export type OrganizationT = InferSelectModel<typeof Organization>;
+export type OrganizationPresidentT = InferSelectModel<
+  typeof OrganizationPresident
+>;
+export type OrganizationMemberT = InferSelectModel<typeof OrganizationMember>;
+export type OperatingCommitteeMemberT = InferSelectModel<
+  typeof OperatingCommitteeMember
+>;
+export type TeamT = InferSelectModel<typeof Team>;
+export type TeamLeaderT = InferSelectModel<typeof TeamLeader>;
+export type TeamMemberT = InferSelectModel<typeof TeamMember>;
+export type AccountT = InferSelectModel<typeof Account>;
+export type OrganizationManagerT = InferSelectModel<typeof OrganizationManager>;
+export type AssistantManagerT = InferSelectModel<typeof AssistantManager>;
