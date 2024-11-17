@@ -6,12 +6,12 @@ import {
   addDays,
   isSameMonth,
   isSameDay,
+  getDay,
 } from "date-fns";
 import styled from "styled-components";
 import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
-import CalendarWeekdays from "./_atomic/CalendarWeekdays";
 
 interface EventPeriod {
   start: Date;
@@ -26,19 +26,28 @@ interface CalendarProps extends CalendarSizeProps {
 }
 
 const CalendarWrapper = styled.div<CalendarSizeProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
   width: 100%;
+  height: 365px;
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 30px;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 2px solid ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const WeekWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 8px;
   width: 100%;
+  min-width: 294px;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+  flex: 1 0 0;
 `;
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -55,7 +64,7 @@ const Calendar: React.FC<CalendarProps> = ({
       start: startOfMonth(currentDate),
       end: endOfMonth(currentDate),
     },
-    { weekStartsOn: 0 },
+    { weekStartsOn: 1 },
   );
 
   const handleDateClick = (date: Date) => {
@@ -70,10 +79,16 @@ const Calendar: React.FC<CalendarProps> = ({
       const day = addDays(startDate, index);
       const isCurrentMonth = isSameMonth(day, currentDate);
       const exist = existDates.some(existDate => isSameDay(existDate, day));
+      const dayInWeek = getDay(day);
       let type: CalendarDateProps["type"] = isCurrentMonth
         ? "Default"
         : "Past/Future";
 
+      if (dayInWeek === 0) {
+        type = "Sunday";
+      } else if (dayInWeek === 6) {
+        type = "Saturday";
+      }
       if (!isCurrentMonth) {
         type = "Past/Future";
       } else if (
@@ -102,7 +117,6 @@ const Calendar: React.FC<CalendarProps> = ({
   return (
     <CalendarWrapper size={size}>
       <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
-      <CalendarWeekdays size={size} />
       <WeekWrapper>
         {weeks.map((weekStart: Date) => (
           <CalendarWeek

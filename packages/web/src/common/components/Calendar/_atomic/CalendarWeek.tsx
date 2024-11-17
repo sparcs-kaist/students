@@ -18,11 +18,10 @@ export interface CalendarSizeProps {
 
 const WeekWrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   align-self: stretch;
-  width: 100%;
-  flex: 1;
+  height: 24px;
 `;
 
 const CalendarWeek: React.FC<CalendarWeekProps> = ({

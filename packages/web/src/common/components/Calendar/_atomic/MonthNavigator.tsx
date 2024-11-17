@@ -13,19 +13,32 @@ const NavigatorWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 160px;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  width: 100%;
+  font-size: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.BOLD};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  color: ${({ theme }) => theme.colors.BLACK};
+  color: ${({ theme }) => theme.colors.GRAY[900]};
   user-select: none;
-  gap: 16px;
 `;
 
 const MonthDisplay = styled.div`
-  flex-grow: 1;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ChevronBlockWrapper = styled.div`
+  display: flex;
+  width: 36px;
+  height: 36px;
+  padding: 5px 11px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 4px;
+  background: rgba(94, 94, 94, 0.5);
 `;
 
 const MonthNavigator: React.FC<MonthNavigatorProps> = ({
@@ -50,11 +63,25 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
 
   return (
     <NavigatorWrapper>
-      <Icon type="chevron_left" size={20} onClick={handlePrevious} />
+      <ChevronBlockWrapper>
+        <Icon
+          type="chevron_left"
+          size={48}
+          onClick={handlePrevious}
+          color="WHITE"
+        />
+      </ChevronBlockWrapper>
       <MonthDisplay onClick={handleTodayClick}>
-        {format(currentDate, "yyyy년 M월", { locale: ko })}
+        {format(currentDate, "yyyy. MM.", { locale: ko })}
       </MonthDisplay>
-      <Icon type="chevron_right" size={20} onClick={handleNext} />
+      <ChevronBlockWrapper>
+        <Icon
+          type="chevron_right"
+          size={48}
+          onClick={handleNext}
+          color="WHITE"
+        />
+      </ChevronBlockWrapper>
     </NavigatorWrapper>
   );
 };
