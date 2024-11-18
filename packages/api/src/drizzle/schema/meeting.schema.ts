@@ -24,9 +24,7 @@ export const Agenda = mysqlTable(
   "agenda",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    meetingId: int("meeting_id")
-      .notNull()
-      .references(() => Meeting.id),
+    meetingId: int("meeting_id").notNull(),
     accepted: boolean("accepted"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     submittedAt: timestamp("submitted_at"),
@@ -35,7 +33,7 @@ export const Agenda = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    meetingForeignKey: foreignKey({
+    meetingIdFk: foreignKey({
       columns: [table.meetingId],
       foreignColumns: [Meeting.id],
     }),

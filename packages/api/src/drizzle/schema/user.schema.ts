@@ -22,9 +22,7 @@ export const UserStudent = mysqlTable(
   "user_student",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    userId: int("user_id")
-      .notNull()
-      .references(() => User.id),
+    userId: int("user_id").notNull(),
     studentNumber: varchar("student_number", { length: 20 }),
   },
   table => ({
