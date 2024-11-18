@@ -12,6 +12,7 @@ import styled from "styled-components";
 import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
+import Typography from "../Typography";
 
 interface EventPeriod {
   start: Date;
@@ -23,34 +24,58 @@ interface CalendarProps extends CalendarSizeProps {
   eventPeriods?: EventPeriod[];
   selectedDates: Date[];
   onDateClick?: (date: Date) => void;
+  width?: number;
+  title?: string;
 }
 
-const CalendarWrapper = styled.div<CalendarSizeProps>`
-  width: 100%;
-  height: 365px;
+const CalendarWrapper = styled.div<{
+  width?: CalendarProps["width"];
+}>`
+  width: ${({ width }) => (width ? `${width}px` : "100%")};
+`;
+
+const CalendarContentWrapper = styled.div<{
+  title?: CalendarProps["title"];
+}>`
   display: flex;
   padding: 30px;
   flex-direction: column;
   align-items: flex-end;
   gap: 30px;
   align-self: stretch;
-  border-radius: 4px;
-  border: 2px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-radius: ${({ title }) => (title !== "" ? "0px 0px 4px 4px" : "4px")};
+  ${({ title, theme }) =>
+    title === ""
+      ? `border: 2px solid ${theme.colors.GRAY[100]}`
+      : `border-left: 2px solid ${theme.colors.GRAY[100]};
+  border-right: 2px solid ${theme.colors.GRAY[100]};
+  border-bottom: 2px solid ${theme.colors.GRAY[100]};`};
 `;
 
 const WeekWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 100%;
-  min-width: 294px;
   justify-content: space-between;
   align-items: flex-end;
   align-self: stretch;
   flex: 1 0 0;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  height: 40px;
+  padding: 8px 20px;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+  border-radius: 4px 4px 0px 0px;
+  background: ${({ theme }) => theme.colors.GREEN[600]};
+`;
+
 const Calendar: React.FC<CalendarProps> = ({
+  title = "",
+  width = undefined,
   size = "md",
   existDates,
   eventPeriods = [],
@@ -115,18 +140,27 @@ const Calendar: React.FC<CalendarProps> = ({
     });
 
   return (
-    <CalendarWrapper size={size}>
-      <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
-      <WeekWrapper>
-        {weeks.map((weekStart: Date) => (
-          <CalendarWeek
-            week={getWeekData(weekStart)}
-            size={size}
-            key={weekStart.toISOString()}
-            onDateClick={handleDateClick}
-          />
-        ))}
-      </WeekWrapper>
+    <CalendarWrapper width={width}>
+      {title !== "" && (
+        <TitleWrapper>
+          <Typography color="WHITE" fs={20} fw="BOLD" lh={20}>
+            {title}
+          </Typography>
+        </TitleWrapper>
+      )}
+      <CalendarContentWrapper title={title}>
+        <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
+        <WeekWrapper>
+          {weeks.map((weekStart: Date) => (
+            <CalendarWeek
+              week={getWeekData(weekStart)}
+              size={size}
+              key={weekStart.toISOString()}
+              onDateClick={handleDateClick}
+            />
+          ))}
+        </WeekWrapper>
+      </CalendarContentWrapper>
     </CalendarWrapper>
   );
 };
