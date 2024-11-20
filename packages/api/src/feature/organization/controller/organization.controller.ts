@@ -10,7 +10,7 @@ import {
 
 import { OrganizationService } from "../service/organization.service";
 
-@Controller("organization")
+@Controller()
 export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 

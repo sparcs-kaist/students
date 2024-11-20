@@ -5,7 +5,7 @@ import {
   ApiOrg001ResponseOK,
 } from "@sparcs-students/interface/api/organization/index";
 
-import SemesterPublicService from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 
