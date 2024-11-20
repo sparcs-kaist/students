@@ -3,7 +3,7 @@ import { SemesterT } from "@sparcs-students/api/drizzle/schema";
 import { SemesterRepository } from "./semester.repository";
 
 @Injectable()
-export default class SemesterPublicService {
+export class SemesterPublicService {
   constructor(private semesterRepository: SemesterRepository) {}
 
   /**
