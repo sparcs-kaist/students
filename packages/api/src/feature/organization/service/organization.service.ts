@@ -5,7 +5,7 @@ import {
   ApiOrg001ResponseOK,
 } from "@sparcs-students/interface/api/organization/index";
 
-import SemesterPublicService from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 
@@ -26,7 +26,6 @@ export class OrganizationService {
         startTerm,
         endTerm,
       );
-
     // 변환 작업: OriginalResponse -> ApiOrg001ResponseOK
     const organizationTypesMap = organizations.reduce((acc, curr) => {
       const { organization, organizationTypeEnum } = curr;

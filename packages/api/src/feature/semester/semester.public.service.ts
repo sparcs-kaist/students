@@ -16,6 +16,7 @@ export class SemesterPublicService {
     if (semesters.length === 0) {
       throw new NotFoundException(`Semester with ID ${id} not found.`);
     }
+
     return semesters[0];
   }
 }
