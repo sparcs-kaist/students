@@ -60,7 +60,7 @@ export class OrganizationRepository {
               isNull(OrganizationPresident.endTerm),
             ),
           ),
-          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1),
+          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1), // 정후보만 찾음
         ),
       );
     return res.map(row => ({
