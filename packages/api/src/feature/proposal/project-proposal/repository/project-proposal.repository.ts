@@ -5,6 +5,10 @@ import {
   AgendaAcceptedStatusEnum,
   ProjectProposal,
   ProjectProposalRevision,
+  ProjectProposalRevisionT,
+  ProjectProposalT,
+  ProjectProposalTimeline,
+  ProjectProposalTimelineT,
 } from "@sparcs-students/api/drizzle/schema";
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
 
@@ -12,6 +16,11 @@ import { or, isNull, isNotNull, and, eq, desc } from "drizzle-orm";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+
+export type ProjectProposalWithRevision = {
+  projectProposal: ProjectProposalT;
+  projectProposalRevision: ProjectProposalRevisionT;
+};
 
 @Injectable()
 export class ProjectProposalRepository {
@@ -95,5 +104,38 @@ export class ProjectProposalRepository {
       .limit(1);
 
     return res.map(row => row.agenda.submittedAt);
+  }
+
+  /**
+   * @param projectProposalId
+   * @returns 사업계획서 id에 해당하는 revisionId에 해당하는 ProjectProposalRevision 객체를 리턴합니다.
+   *
+   */
+
+  async getProjectProposalRevisionById(
+    projectProposalId: number,
+  ): Promise<ProjectProposalRevisionT[]> {
+    const res = await this.db
+      .select()
+      .from(ProjectProposal)
+      .innerJoin(
+        ProjectProposalRevision,
+        eq(ProjectProposal.revisionId, ProjectProposalRevision.id),
+      )
+      .where(eq(ProjectProposalRevision.id, projectProposalId))
+      .limit(1);
+
+    return res.map(row => row.project_proposal_revision);
+  }
+
+  async getProjectProposalTimelinesByProjectId(
+    projectId: number,
+  ): Promise<ProjectProposalTimelineT[]> {
+    const res = await this.db
+      .select()
+      .from(ProjectProposalTimeline)
+      .where(eq(ProjectProposalTimeline.id, projectId));
+
+    return res;
   }
 }

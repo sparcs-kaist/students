@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+import { TeamT } from "src/drizzle/schema";
 
 import {
   OrganizationRepository,
@@ -53,5 +54,18 @@ export class OrganizationPublicService {
       endTerm,
     );
     return res;
+  }
+
+  /**
+   * @param teamId
+   * @returns OrganizationWithPresidentT
+   * @description 해당 학기 마지막 날의 해당 기관의 president 정보와 함께 반환합니다. 즉, 학기로 기간을 얻을 수 있습니다.
+   */
+  async getTeamById(teamId: number): Promise<TeamT> {
+    const res = await this.organizationRepository.getTeamById(teamId);
+    if (res.length === 0) {
+      throw new NotFoundException(`Team with ID ${teamId} not found.`);
+    }
+    return res[0];
   }
 }
