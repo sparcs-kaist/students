@@ -51,6 +51,7 @@ export const OrganizationPresident = mysqlTable(
     organizationPresidentTypeEnumId: int(
       "organization_president_type_enum_id",
     ).notNull(),
+    organizationId: int("organization_id").notNull(),
     phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
@@ -60,6 +61,10 @@ export const OrganizationPresident = mysqlTable(
     userFK: foreignKey({
       columns: [table.userId],
       foreignColumns: [User.id],
+    }),
+    organizationIdFk: foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [Organization.id],
     }),
   }),
 );

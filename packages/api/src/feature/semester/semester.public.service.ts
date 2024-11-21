@@ -3,7 +3,7 @@ import { SemesterT } from "@sparcs-students/api/drizzle/schema";
 import { SemesterRepository } from "./semester.repository";
 
 @Injectable()
-export default class SemesterPublicService {
+export class SemesterPublicService {
   constructor(private semesterRepository: SemesterRepository) {}
 
   /**
@@ -16,6 +16,7 @@ export default class SemesterPublicService {
     if (semesters.length === 0) {
       throw new NotFoundException(`Semester with ID ${id} not found.`);
     }
+
     return semesters[0];
   }
 }

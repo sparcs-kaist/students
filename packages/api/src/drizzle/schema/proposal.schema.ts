@@ -7,6 +7,7 @@ import {
   mysqlTable,
   foreignKey,
 } from "drizzle-orm/mysql-core";
+import { InferSelectModel } from "drizzle-orm";
 import { Organization, Team } from "./organization.schema";
 import { Semester } from "./semester.schema";
 import { User } from "./user.schema";
@@ -61,6 +62,7 @@ export const ProjectProposalRevision = mysqlTable(
     target: text("target").notNull(),
     detail: text("detail").notNull(),
     note: text("note"),
+    agendaId: int("agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -78,6 +80,11 @@ export const ProjectProposalRevision = mysqlTable(
       columns: [table.documentId],
       foreignColumns: [ProjectProposal.id],
       name: "pro_pro_rev_document_id_fk",
+    }),
+    agendaIdFk: foreignKey({
+      columns: [table.agendaId],
+      foreignColumns: [Agenda.id],
+      name: "pro_pro_rev_agenda_id_fk",
     }),
   }),
 );
@@ -299,3 +306,27 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     }),
   }),
 );
+
+export type ProjectProposalT = InferSelectModel<typeof ProjectProposal>;
+export type ProjectProposalRevisionT = InferSelectModel<
+  typeof ProjectProposalRevision
+>;
+export type ProjectProposalTimelineT = InferSelectModel<
+  typeof ProjectProposalTimeline
+>;
+export type OperationProposalT = InferSelectModel<typeof OperationProposal>;
+export type OperatingCommitteeProposalT = InferSelectModel<
+  typeof OperatingCommitteeProposal
+>;
+export type BudgetProposalIncomeT = InferSelectModel<
+  typeof BudgetProposalIncome
+>;
+export type BudgetProposalIncomeRevisionT = InferSelectModel<
+  typeof BudgetProposalIncomeRevision
+>;
+export type BudgetProposalExpenseT = InferSelectModel<
+  typeof BudgetProposalExpense
+>;
+export type BudgetProposalExpenseRevisionT = InferSelectModel<
+  typeof BudgetProposalExpenseRevision
+>;
