@@ -60,6 +60,7 @@ export class OrganizationRepository {
               isNull(OrganizationPresident.endTerm),
             ),
           ),
+          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1),
         ),
       );
     return res.map(row => ({

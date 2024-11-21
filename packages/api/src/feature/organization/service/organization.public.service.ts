@@ -49,8 +49,9 @@ export class OrganizationPublicService {
 
   /**
    * @param id organizationId, semesterId
-   * @returns OrganizationT id에 해당하는 semester의 마지막 OrganizationWithPresidentT 객체를 리턴합니다.
+   * @returns OrganizationT id에 해당하는 semester의 가장 후임인 OrganizationWithPresidentT 객체를 리턴합니다.
    * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
+   * 가장 후임인 이유는, 새학 등 학기 중에 president가 바뀔 가능성을 고려하였습니다.
    */
   async getOrganizationWithPresidentByIdAndSemester(
     id: number,
