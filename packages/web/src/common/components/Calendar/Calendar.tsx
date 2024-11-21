@@ -55,7 +55,7 @@ const CalendarContentWrapper = styled.div<{
 const WeekWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
   justify-content: space-between;
   align-items: flex-end;
   align-self: stretch;

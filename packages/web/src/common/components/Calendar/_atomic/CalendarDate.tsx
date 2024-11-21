@@ -22,8 +22,9 @@ const getBackgroundColor = (
   theme: DefaultTheme,
   type?: CalendarDateProps["type"],
 ) => {
-  if (type === "Default") return theme.colors.PRIMARY;
-  if (type === "Past/Future") return theme.colors.GRAY[100];
+  if (type === "Default" || type === "Saturday" || type === "Sunday")
+    return theme.colors.PRIMARY;
+  if (type === "Past/Future") return theme.colors.GREEN[100];
   return theme.colors.WHITE;
 };
 
@@ -32,11 +33,15 @@ const ExistWrapper = styled.div<{
   type?: CalendarDateProps["type"];
 }>`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1 0 0;
+  flex-wrap: wrap;
   position: relative;
-  width: 24px;
   height: 24px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  padding: 0px 2px;
+  gap: 10px;
 
   ${({ exist, type, theme }) =>
     exist &&
@@ -44,12 +49,13 @@ const ExistWrapper = styled.div<{
       &::after {
         content: "";
         position: absolute;
-        right: 0;
-        top: 0;
+        right: 5px;
+        top: 2px;
         width: 4px;
         height: 4px;
         background-color: ${getBackgroundColor(theme, type)};
-        border-radius: 2px;
+        border: 1px solid ${theme.colors.WHITE};
+        border-radius: 3px;
       }
     `}
 `;
