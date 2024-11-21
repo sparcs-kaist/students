@@ -145,7 +145,7 @@ const DateWrapper = styled.div<{
     }
   }};
   width: 28px;
-  height: 24px;
+  /* height: 24px; */ // CHACHA: 이것 때문에 기간 선택할 때 날짜 하이라이트랑 기간 표시 연두색의 높이차가 생깁니다. 아직 이것에 대한 디자인이 없어서 css 수정을 안 했어요..!
   padding: 0px 2px;
   gap: 10px;
 `;

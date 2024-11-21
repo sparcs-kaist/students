@@ -122,7 +122,12 @@ const Calendar: React.FC<CalendarProps> = ({
         type = "Selected";
       } else {
         eventPeriods.forEach(period => {
-          if (isSameDay(day, period.start)) {
+          if (
+            isSameDay(period.start, period.end) && // 2 eventPeriod 기간이 시작과 끝이 같을 때 처리 완료!
+            isSameDay(day, period.start)
+          ) {
+            type = "Selected";
+          } else if (isSameDay(day, period.start)) {
             type = "Start";
           } else if (isSameDay(day, period.end)) {
             type = "End";
