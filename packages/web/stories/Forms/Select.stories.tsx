@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import Select from "@sparcs-students/web/common/components/Forms/Select";
+
 import { useArgs } from "@storybook/client-api";
 import { fn } from "@storybook/test";
+import Select from "@sparcs-students/web/common/components/Select";
 
 const meta: Meta<typeof Select> = {
   title: "components/Forms/Select",
