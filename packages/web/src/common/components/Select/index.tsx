@@ -25,7 +25,6 @@ interface SelectProps {
 const DropdownContainer = styled.div`
   gap: 4px;
   position: relative;
-  display: flex;
 `;
 
 const disabledStyle = css`
@@ -40,7 +39,7 @@ const StyledSelect = styled.div<{
   isOpen?: boolean;
 }>`
   width: 100%;
-  padding: 8px 32px 8px 12px;
+  padding: 8px 12px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -64,13 +63,12 @@ const StyledSelect = styled.div<{
   ${({ disabled }) => disabled && disabledStyle}
 `;
 
-const Option = styled.div<{ selectable?: boolean }>`
+const Option = styled.div<{ selectable?: boolean; isSelected?: boolean }>`
   gap: 10px;
   border-radius: 4px;
   padding: 4px 12px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
-  packages/web/src/common/components/Select/index.tsx
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme, selectable }) =>
