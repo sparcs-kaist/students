@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { OrganizationT } from "@sparcs-students/api/drizzle/schema";
 
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
@@ -14,7 +20,7 @@ export class OrganizationPublicService {
     private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
-  /** 
+  /**
    * @param id organization id
    * @returns OrganizationT id에 해당하는 OrganizationT 객체를 리턴합니다.
    * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
@@ -27,7 +33,7 @@ export class OrganizationPublicService {
     }
     return organizations[0];
   }
-    
+
   /**
    * @param id organizationId, date
    * @returns OrganizationT id에 해당하는 OrganizationT 객체를 리턴합니다.
@@ -52,7 +58,7 @@ export class OrganizationPublicService {
     }
     return organizations[0];
   }
-  
+
   /**
    * @param id organizationId, semesterId
    * @returns OrganizationT id에 해당하는 semester의 가장 후임인 OrganizationWithPresidentT 객체를 리턴합니다.
@@ -66,7 +72,7 @@ export class OrganizationPublicService {
     const { endTerm } =
       await this.semesterPublicService.getSemesterById(semesterId);
 
-    const res = await this.getOrganizationWithPresidentByOrganizationIdAndDate(
+    const res = await this.getOrganizationWithPresidentByIdAndDate(
       organizationId,
       endTerm,
     );
