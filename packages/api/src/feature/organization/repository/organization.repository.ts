@@ -53,6 +53,7 @@ export class OrganizationRepository {
       .innerJoin(UserStudent, eq(UserStudent.userId, User.id))
       .where(
         and(
+
           eq(Organization.id, organizationId),
           and(
             lte(OrganizationPresident.startTerm, date),
@@ -61,7 +62,7 @@ export class OrganizationRepository {
               isNull(OrganizationPresident.endTerm),
             ),
           ),
-          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1),
+          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1), // 정후보만 찾음
         ),
       );
     return res.map(row => ({

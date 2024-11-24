@@ -14,32 +14,50 @@ export class OrganizationPublicService {
     private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
-  /**
-   * @param organizationId, date
-   * @returns OrganizationWithPresidentT
-   * @description 해당 시간의 해당 기관의 president 정보와 함께 반환합니다.
+  /** 
+   * @param id organization id
+   * @returns OrganizationT id에 해당하는 OrganizationT 객체를 리턴합니다.
+   * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
    */
-  async getOrganizationWithPresidentByOrganizationIdAndDate(
-    organizationId: number,
+  async getOrganizationById(id: number): Promise<OrganizationT> {
+    const organizations =
+      await this.organizationRepository.getOrganizationById(id);
+    if (organizations.length === 0) {
+      throw new NotFoundException(`Organization with ID ${id} not found.`);
+    }
+    return organizations[0];
+  }
+    
+  /**
+   * @param id organizationId, date
+   * @returns OrganizationT id에 해당하는 OrganizationT 객체를 리턴합니다.
+   * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
+   */
+  async getOrganizationWithPresidentByIdAndDate(
+    id: number,
     date: Date,
   ): Promise<OrganizationWithPresidentT> {
-    const res =
+    const organizations =
       await this.organizationRepository.getOrganizationWithPresidentById(
-        organizationId,
+        id,
         date,
       );
-    if (!res) {
-      throw new NotFoundException(
-        `Organization with ID ${organizationId} not found.`,
+    if (organizations.length === 0) {
+      throw new NotFoundException(`Organization with ID ${id} not found.`);
+    } else if (organizations.length > 1) {
+      throw new HttpException(
+        `Unreachable: Organization with ID ${id} has multiple records.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return res[0];
+    return organizations[0];
   }
-
+  
   /**
-   * @param organizationId, semesterId
-   * @returns OrganizationWithPresidentT
-   * @description 해당 학기 마지막 날의 해당 기관의 president 정보와 함께 반환합니다. 즉, 기간을 정확히 명시하기 보단 학기 id를 통해 찾을 수 있도록 합니다.
+   * @param id organizationId, semesterId
+   * @returns OrganizationT id에 해당하는 semester의 가장 후임인 OrganizationWithPresidentT 객체를 리턴합니다.
+   * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
+   * 가장 후임인 이유는, 새학 등 학기 중에 president가 바뀔 가능성을 고려하였습니다.
    */
   async getOrganizationWithPresidentByOrganizationIdAndSemesterId(
     organizationId: number,
