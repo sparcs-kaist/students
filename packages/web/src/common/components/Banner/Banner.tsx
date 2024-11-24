@@ -4,6 +4,7 @@ import Image from "next/image";
 
 type BannerProps = {
   images?: string[];
+  alt?: string[];
   onClick?: (idx: number) => void;
 };
 
@@ -38,8 +39,20 @@ const Arrow = styled.button`
   z-index: 1;
 `;
 
+const IndexWrapper = styled.div`
+  display: flex;
+  margin-top: 8px;
+  justify-content: center;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: auto;
+`;
+
 const Banner: React.FC<BannerProps> = ({
   images = ["temp/1.jpg", "temp/2.jpg", "temp/3.jpg"],
+  alt = ["배너 이미지 1", "배너 이미지 2", "배너 이미지 3"],
   onClick = _idx => {},
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -63,21 +76,28 @@ const Banner: React.FC<BannerProps> = ({
   }, [currentIndex]);
 
   return (
-    <BannerWrapper>
-      <Arrow onClick={handlePrev}>{"<"}</Arrow>
+    <div>
+      <BannerWrapper>
+        <Arrow onClick={handlePrev}>{"<"}</Arrow>
 
-      <div>
-        <Image
-          src={`/${images[currentIndex]}`}
-          alt={`배너 이미지 ${currentIndex + 1}`}
-          width={840}
-          height={336}
-          onClick={() => onClick(currentIndex)}
-        />
-      </div>
+        <div>
+          <StyledImage
+            src={`/${images[currentIndex]}`}
+            alt={alt[currentIndex]}
+            width={0}
+            height={0}
+            sizes="40vw"
+            onClick={() => onClick(currentIndex)}
+          />
+        </div>
 
-      <Arrow onClick={handleNext}>{">"}</Arrow>
-    </BannerWrapper>
+        <Arrow onClick={handleNext}>{">"}</Arrow>
+      </BannerWrapper>
+
+      <IndexWrapper>
+        {currentIndex + 1} / {images.length}
+      </IndexWrapper>
+    </div>
   );
 };
 export default Banner;
