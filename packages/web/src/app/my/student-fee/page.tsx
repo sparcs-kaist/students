@@ -7,6 +7,7 @@ import Image from "next/image";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import StudentFeeChange from "@sparcs-students/web/features/studentFee/components/StudentFeeChange";
+import StudentFeeStatus from "@sparcs-students/web/features/studentFee/components/StudentFeeStatus";
 
 const StudentFee = () => (
   <FlexWrapper direction="column" gap={60}>
@@ -17,6 +18,7 @@ const StudentFee = () => (
       <Typography fs={20} lh={20} fw="MEDIUM">
         학생회비 납부 학기
       </Typography>
+      <StudentFeeStatus />
       <Typography fs={16} lh={24} fw="REGULAR" color="GRAY.700">
         2015년 가을까지 모든 재적학기는 회비를 납부한 것으로 인정되며, 현재
         기록에 포함되어 있지 않습니다. <br />
