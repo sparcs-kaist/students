@@ -28,7 +28,7 @@ const StudentFeeChange: React.FC = () => (
     <Typography fs={20} lh={20} color="PRIMARY" fw="SEMIBOLD">
       학생회비 납부 (공제) 예정
     </Typography>
-    <Button>변경</Button>
+    <Button>변경하기</Button>
   </StudentFeeChangeWrapper>
 );
 export default StudentFeeChange;

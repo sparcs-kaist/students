@@ -1,6 +1,12 @@
-import isPropValid from "@emotion/is-prop-valid";
-import Typography from "@sparcs-students/web/common/components/Typography";
+import React from "react";
 import styled from "styled-components";
+import { Semester } from "@sparcs-students/web/types/semester.type";
+import StudentFeePaid from "./_atomic/StudentFeePaid";
+import StudentFeeNotPaid from "./_atomic/StudentFeeNotPaid";
+
+interface StudentFeeStatusProp {
+  semesters: Semester[];
+}
 
 const StudentFeeStatusWrapper = styled.div`
   display: grid;
@@ -9,61 +15,19 @@ const StudentFeeStatusWrapper = styled.div`
   gap: 24px;
 `;
 
-const StudentFeeStatusItem = styled.div.withConfig({
-  shouldForwardProp: prop => isPropValid(prop),
-})<{ isPaid: boolean }>`
-  width: 192px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme, isPaid }) =>
-    isPaid ? theme.colors.GREEN[100] : theme.colors.GRAY[400]};
-  border-radius: 20px;
-`;
-
-const StudentFeeStatus: React.FC = () => (
+const StudentFeeStatus: React.FC<StudentFeeStatusProp> = ({ semesters }) => (
   <StudentFeeStatusWrapper>
-    <StudentFeeStatusItem isPaid>
-      <Typography fw="MEDIUM" fs={18} lh={40}>
-        2024 가을학기
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid>
-      <Typography fw="MEDIUM" fs={18} lh={40}>
-        2024 가을학기
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid>
-      <Typography fw="MEDIUM" fs={18} lh={40}>
-        2024 가을학기
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid>
-      <Typography fw="MEDIUM" fs={18} lh={40}>
-        2024 가을학기
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid>
-      <Typography fw="MEDIUM" fs={18} lh={40}>
-        2024 가을학기
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid={false}>
-      <Typography fw="MEDIUM" fs={18} lh={40} color="WHITE">
-        -
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid={false}>
-      <Typography fw="MEDIUM" fs={18} lh={40} color="WHITE">
-        -
-      </Typography>
-    </StudentFeeStatusItem>
-    <StudentFeeStatusItem isPaid={false}>
-      <Typography fw="MEDIUM" fs={18} lh={40} color="WHITE">
-        -
-      </Typography>
-    </StudentFeeStatusItem>
+    {semesters.map(semester => (
+      <StudentFeePaid
+        key={`${semester.year}-${semester.semester}`}
+        year={semester.year}
+        semester={semester.semester}
+      />
+    ))}
+    {Array.from({ length: 8 - semesters.length }).map(_ => (
+      <StudentFeeNotPaid />
+    ))}
   </StudentFeeStatusWrapper>
 );
+
 export default StudentFeeStatus;
