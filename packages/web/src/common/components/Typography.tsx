@@ -1,6 +1,8 @@
-import { Theme } from "@sparcs-students/web/styles/themes";
 import React from "react";
+
 import styled from "styled-components";
+
+import { Theme } from "@sparcs-students/web/styles/themes";
 
 interface TypographyPropsBase extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -45,7 +47,8 @@ interface TypographyProps extends TypographyPropsBase {
 const TypographyInner = styled.div<TypographyProps>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
-  font-family: ${({ theme, ff }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
+  font-family: ${({ theme, ff }) =>
+    ff ? theme.fonts.FAMILY[ff] : theme.fonts.FAMILY.PRETENDARD};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
   font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
