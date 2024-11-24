@@ -2,13 +2,12 @@ import { Injectable, Inject } from "@nestjs/common";
 
 import {
   Agenda,
-  AgendaAcceptedStatusEnum,
   ProjectProposal,
   ProjectProposalRevision,
 } from "@sparcs-students/api/drizzle/schema";
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
 
-import { or, isNull, isNotNull, and, eq, desc } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -29,42 +28,33 @@ export class ProjectProposalRepository {
     semesterId: number,
   ): Promise<ApiPrp001ResponseOK["projects"]> {
     const res = await this.db
-      .select()
+      .select({
+        projectName: ProjectProposalRevision.name,
+        proposalId: ProjectProposal.id,
+        startTerm: ProjectProposalRevision.startTerm,
+        endTerm: ProjectProposalRevision.endTerm,
+        agendaAccepted: Agenda.accepted,
+        agendaExists: ProjectProposalRevision.agendaId,
+      })
       .from(ProjectProposal)
       .innerJoin(
         ProjectProposalRevision,
         eq(ProjectProposal.revisionId, ProjectProposalRevision.id),
       )
       .leftJoin(Agenda, eq(ProjectProposalRevision.agendaId, Agenda.id))
-      .leftJoin(
-        AgendaAcceptedStatusEnum,
-        or(
-          and(
-            isNotNull(ProjectProposalRevision.agendaId),
-            eq(Agenda.accepted, true),
-            eq(AgendaAcceptedStatusEnum.id, 1), // 조건에 따라 `id = 1`
-          ),
-          and(
-            or(
-              isNull(ProjectProposalRevision.agendaId),
-              eq(Agenda.accepted, false),
-            ),
-            eq(AgendaAcceptedStatusEnum.id, 2), // 조건에 따라 `id = 2`
-          ),
-        ),
-      )
       .where(
         and(
           eq(ProjectProposal.organizationId, organizationId),
           eq(ProjectProposal.semesterId, semesterId),
         ),
       );
+
     return res.map(row => ({
-      name: row.project_proposal_revision.name,
-      projectProposalId: row.project_proposal.id,
-      startTerm: row.project_proposal_revision.startTerm,
-      endTerm: row.project_proposal_revision.endTerm,
-      acceptedStatus: row.agenda_accepted_status_enum.name,
+      name: row.projectName,
+      projectProposalId: row.proposalId,
+      startTerm: row.startTerm,
+      endTerm: row.endTerm,
+      acceptedStatus: row.agendaExists && row.agendaAccepted ? 1 : 2,
     }));
   }
 

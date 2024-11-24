@@ -2,15 +2,15 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zEnumName,
   zOrgName,
   zUserName,
 } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
+import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum";
 
 /**
  * @version v0.1
- * @description 쿼리 파라미터로 사업계획서 뷰어 내용을 받아옵니다.
+ * @description semesterId랑 organizationId로 사업계획서 뷰어 내용을 받아옵니다.
  */
 
 const url = () => `/student/proposals/project-proposals`;
@@ -39,7 +39,7 @@ const responseBodyMap = {
         name: z.coerce.string().max(255),
         startTerm: z.date(),
         endTerm: z.date(),
-        acceptedStatus: zEnumName,
+        acceptedStatus: z.nativeEnum(AgendaAcceptedStatusE),
       })
       .array(),
   }),

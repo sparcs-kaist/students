@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 
 import {
   ApiPrp001RequestQuery,
@@ -42,7 +47,13 @@ export class ProjectProposalService {
       throw new NotFoundException(
         `ProjectProposal submitdate with Organization ID ${param.organizationId} and semesterId ${param.semesterId} not found`,
       );
+    } else if (submitDate.length > 1) {
+      throw new HttpException(
+        "unreachable: multiple submitDate",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+
     return {
       semesterId: param.semesterId,
       organizationId: param.organizationId,

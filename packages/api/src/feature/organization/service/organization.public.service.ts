@@ -39,7 +39,7 @@ export class OrganizationPublicService {
   /**
    * @param organizationId, semesterId
    * @returns OrganizationWithPresidentT
-   * @description 해당 학기 마지막 날의 해당 기관의 president 정보와 함께 반환합니다. 즉, 학기로 기간을 얻을 수 있습니다.
+   * @description 해당 학기 마지막 날의 해당 기관의 president 정보와 함께 반환합니다. 즉, 기간을 정확히 명시하기 보단 학기 id를 통해 찾을 수 있도록 합니다.
    */
   async getOrganizationWithPresidentByOrganizationIdAndSemesterId(
     organizationId: number,
