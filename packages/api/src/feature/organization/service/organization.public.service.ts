@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { OrganizationT } from "src/drizzle/schema";
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 import {
@@ -43,6 +48,11 @@ export class OrganizationPublicService {
       );
     if (organizations.length === 0) {
       throw new NotFoundException(`Organization with ID ${id} not found.`);
+    } else if (organizations.length > 1) {
+      throw new HttpException(
+        `Unreachable: Organization with ID ${id} has multiple records.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
     return organizations[0];
   }
