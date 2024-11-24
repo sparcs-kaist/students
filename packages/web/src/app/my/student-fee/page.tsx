@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import StudentFeeChange from "@sparcs-students/web/features/studentFee/components/StudentFeeChange";
 
 const StudentFee = () => (
   <FlexWrapper direction="column" gap={60}>
@@ -28,11 +29,13 @@ const StudentFee = () => (
       <Typography fs={20} lh={20} fw="MEDIUM">
         학생회비 공제 / 미공제 변경
       </Typography>
+      <StudentFeeChange />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={32}>
       <Typography fs={20} lh={20} fw="MEDIUM">
         학생회비 관련 공지사항
       </Typography>
+      {/* TODO: 임시 이미지 */}
       <Image
         src="/temp/student-fee.svg"
         alt="student-fee notice"
