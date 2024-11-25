@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { OrganizationT, TeamT } from "src/drizzle/schema";
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+
 import {
   OrganizationRepository,
   OrganizationWithPresidentT,
@@ -63,7 +64,7 @@ export class OrganizationPublicService {
    * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
    * 가장 후임인 이유는, 새학 등 학기 중에 president가 바뀔 가능성을 고려하였습니다.
    */
-  async getOrganizationWithPresidentByIdAndSemester(
+  async getOrganizationWithPresidentByOrganizationIdAndSemesterId(
     organizationId: number,
     semesterId: number,
   ): Promise<OrganizationWithPresidentT> {
