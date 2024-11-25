@@ -8,15 +8,18 @@ import {
 import {
   ApiPrp001RequestQuery,
   ApiPrp001ResponseOK,
+  ApiPrp002ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
+import { UserPublicService } from "src/feature/user/user.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
-import { ProjectProposalRepository } from "./project-proposal.repository";
+import { ProjectProposalRepository } from "../repository/project-proposal.repository";
 
 @Injectable()
 export class ProjectProposalService {
   constructor(
     private readonly projectProposalRepository: ProjectProposalRepository,
     private readonly organizationPublicService: OrganizationPublicService,
+    private readonly userPublicService: UserPublicService,
   ) {}
 
   async getProjectProposalsForStudentsBySemesterId(
@@ -62,6 +65,46 @@ export class ProjectProposalService {
       organizationPresidentName: organizationInfo.user.name,
       submitDate: submitDate[0],
       projects: projectProposals,
+    };
+  }
+
+  async getProjectProposalByIdForStudent(
+    projectId: number,
+  ): Promise<ApiPrp002ResponseOK> {
+    const prpRevs =
+      await this.projectProposalRepository.getProjectProposalRevisionById(
+        projectId,
+      );
+    if (prpRevs.length === 0) {
+      throw new NotFoundException(
+        `ProjectProposal with Project ID ${projectId} not found`,
+      );
+    }
+    const projectProposalRevision = prpRevs[0];
+
+    const team = await this.organizationPublicService.getTeamById(
+      projectProposalRevision.teamId,
+    );
+    const manager = await this.userPublicService.getUserById(
+      projectProposalRevision.managerId,
+    );
+
+    const timeLines =
+      await this.projectProposalRepository.getProjectProposalTimelinesByProjectId(
+        projectId,
+      );
+
+    return {
+      projectName: projectProposalRevision.name,
+      startTerm: projectProposalRevision.startTerm,
+      endTerm: projectProposalRevision.endTerm,
+      teamName: team.name,
+      managerName: manager.name,
+      purpose: projectProposalRevision.purpose,
+      target: projectProposalRevision.target,
+      detail: projectProposalRevision.detail,
+      timeLines,
+      budgetProposals: undefined,
     };
   }
 }

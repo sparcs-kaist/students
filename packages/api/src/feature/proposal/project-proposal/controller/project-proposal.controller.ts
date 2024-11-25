@@ -8,7 +8,7 @@ import {
   ApiPrp001RequestQuery,
 } from "@sparcs-students/interface/api/proposal/index";
 
-import { ProjectProposalService } from "./project-proposal.service";
+import { ProjectProposalService } from "../service/project-proposal.service";
 
 @Controller()
 export class ProjectProposalController {

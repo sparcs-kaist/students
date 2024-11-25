@@ -15,6 +15,8 @@ import {
   OrganizationPresidentT,
   UserT,
   UserStudentT,
+  TeamT,
+  Team,
 } from "src/drizzle/schema";
 
 export type OrganizationWithPresidentT = {
@@ -54,7 +56,6 @@ export class OrganizationRepository {
       .innerJoin(UserStudent, eq(UserStudent.userId, User.id))
       .where(
         and(
-
           eq(Organization.id, organizationId),
           and(
             lte(OrganizationPresident.startTerm, date),
@@ -108,6 +109,11 @@ export class OrganizationRepository {
       ...row,
       organizationTypeEnum: row.organization_type_enum,
     }));
+  }
+
+  async getTeamById(id: number): Promise<TeamT[]> {
+    const res = await this.db.select().from(Team).where(eq(Team.id, id));
+    return res;
   }
 
   async ckOrganizationBeforeCreate(
