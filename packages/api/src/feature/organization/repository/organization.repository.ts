@@ -1,4 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
+import { ApiOrg002RequestBody } from "@sparcs-students/interface/api/organization/index";
 import { and, or, lte, gte, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -107,5 +108,44 @@ export class OrganizationRepository {
       ...row,
       organizationTypeEnum: row.organization_type_enum,
     }));
+  }
+
+  async ckOrganizationBeforeCreate(
+    body: ApiOrg002RequestBody,
+  ): Promise<number> {
+    const select = await this.db
+      .select()
+      .from(Organization)
+      .where(
+        and(
+          eq(Organization.name, body.name),
+          eq(Organization.nameEng, body.nameEng),
+          eq(Organization.organizationTypeEnumId, body.organizationTypeId),
+          eq(Organization.foundingYear, body.foundingYear),
+          eq(Organization.startTerm, body.startTerm),
+        ),
+      )
+      .limit(1);
+    if (select.length === 0) {
+      return 0;
+    }
+    return select[0].id;
+  }
+
+  async createOrganization(body: ApiOrg002RequestBody): Promise<number> {
+    await this.db
+      .insert(Organization)
+      .values({
+        name: body.name,
+        nameEng: body.nameEng,
+        organizationTypeEnumId: body.organizationTypeId,
+        foundingYear: body.foundingYear,
+        startTerm: body.startTerm,
+        endTerm: body.endTerm ? body.endTerm : null,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationBeforeCreate(body);
+    return res;
   }
 }
