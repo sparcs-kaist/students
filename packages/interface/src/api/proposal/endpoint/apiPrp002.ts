@@ -9,7 +9,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
  * @version v0.1
- * @description 쿼리 파라미터로 사업계획서 뷰어 내용을 받아옵니다.
+ * @description 쿼리 파라미터로 projectProposalId를 받아서 사업계획서 뷰어 내용을 받아옵니다.
  */
 
 const url = () => `/student/proposals/project-proposals`;
