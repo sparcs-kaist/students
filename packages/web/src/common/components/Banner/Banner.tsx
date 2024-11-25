@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import Typography from "@sparcs-students/web/common/components/Typography";
 
 type BannerProps = {
   images?: string[];
@@ -39,7 +40,7 @@ const Arrow = styled.button`
   z-index: 1;
 `;
 
-const IndexWrapper = styled.div`
+const IndexWrapper = styled(Typography)`
   display: flex;
   margin-top: 8px;
   justify-content: center;
