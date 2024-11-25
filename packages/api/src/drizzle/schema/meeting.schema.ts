@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import {
   int,
   varchar,
@@ -39,3 +40,6 @@ export const Agenda = mysqlTable(
     }),
   }),
 );
+
+export type MeetingT = InferSelectModel<typeof Meeting>;
+export type AgendaT = InferSelectModel<typeof Agenda>;

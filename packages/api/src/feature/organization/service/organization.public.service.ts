@@ -4,8 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { OrganizationT } from "src/drizzle/schema";
+import { OrganizationT } from "@sparcs-students/api/drizzle/schema";
+
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+
 import {
   OrganizationRepository,
   OrganizationWithPresidentT,
@@ -63,13 +65,17 @@ export class OrganizationPublicService {
    * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
    * 가장 후임인 이유는, 새학 등 학기 중에 president가 바뀔 가능성을 고려하였습니다.
    */
-  async getOrganizationWithPresidentByIdAndSemester(
-    id: number,
+  async getOrganizationWithPresidentByOrganizationIdAndSemesterId(
+    organizationId: number,
     semesterId: number,
   ): Promise<OrganizationWithPresidentT> {
     const { endTerm } =
       await this.semesterPublicService.getSemesterById(semesterId);
 
-    return this.getOrganizationWithPresidentByIdAndDate(id, endTerm);
+    const res = await this.getOrganizationWithPresidentByIdAndDate(
+      organizationId,
+      endTerm,
+    );
+    return res;
   }
 }
