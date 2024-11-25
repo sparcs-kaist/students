@@ -1,6 +1,11 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { ApiOrg002RequestBody } from "@sparcs-students/interface/api/organization/index";
-import { and, or, lte, gte, eq, isNull } from "drizzle-orm";
+
+import {
+  ApiOrg002RequestBody,
+  ApiOrg003RequestBody,
+} from "@sparcs-students/interface/api/organization/index";
+
+import { and, or, lte, gte, eq, isNull, desc } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
@@ -153,5 +158,88 @@ export class OrganizationRepository {
 
     const res = await this.ckOrganizationBeforeCreate(body);
     return res;
+  }
+
+  async ckOrganizationPresidentBeforeCreate(
+    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
+  ): Promise<number> {
+    const select = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(
+        and(
+          eq(OrganizationPresident.organizationId, body.organizationId),
+          eq(
+            OrganizationPresident.organizationPresidentTypeEnumId,
+            body.organizationPresidentTypeE,
+          ),
+
+          isNull(OrganizationPresident.endTerm),
+        ),
+      )
+      .limit(1)
+      .orderBy(desc(OrganizationPresident.createdAt));
+    if (select.length === 0) {
+      return 0;
+    }
+    return select[0].id;
+  }
+
+  async updateOrganizationPresidentRetire(
+    organizationPresidentId: number,
+    endTerm: Date,
+  ): Promise<number> {
+    await this.db
+      .update(OrganizationPresident)
+      .set({ endTerm })
+      .where(eq(OrganizationPresident.id, organizationPresidentId))
+      .execute();
+
+    const resSelect = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(eq(OrganizationPresident.id, organizationPresidentId));
+    if (resSelect.length === 0 || resSelect[0].id !== organizationPresidentId) {
+      return 0;
+    }
+    return resSelect[0].id;
+  }
+
+  async createOrganizationPresident(
+    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
+  ): Promise<number> {
+    await this.db
+      .insert(OrganizationPresident)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        organizationPresidentTypeEnumId: body.organizationPresidentTypeE,
+        phoneNumber: body.phoneNumber,
+        startTerm: body.startTerm,
+        endTerm: body.endTerm ? body.endTerm : null,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationPresidentBeforeCreate(body);
+    return res;
+  }
+
+  async ckOrganizationPresidentAlready(userId: number): Promise<number> {
+    // 지금은 공직일 때만 체크하는 로직이 없는데, 언젠가는 추가해야 함
+    const select = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(
+        and(
+          eq(OrganizationPresident.userId, userId),
+          isNull(OrganizationPresident.endTerm),
+        ),
+      )
+      .limit(1);
+    if (select.length === 0) {
+      // 해당 president가 공직이 아닐 경우 그냥 0을 리턴하는 로직을 추가해야 함.
+      return 0;
+    }
+    return select[0].id;
   }
 }

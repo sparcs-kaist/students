@@ -5,7 +5,10 @@ import {
   ApiOrg001ResponseOK,
   ApiOrg002RequestBody,
   ApiOrg002ResponseCreated,
+  ApiOrg003RequestBody,
+  ApiOrg003ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
+import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum/organization.enum";
 
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
@@ -79,5 +82,67 @@ export class OrganizationService {
     }
 
     return { organizationId };
+  }
+
+  async postOrganizationPresident(
+    body: ApiOrg003RequestBody,
+  ): Promise<ApiOrg003ResponseCreated> {
+    const ckAlready =
+      await this.organizationRepository.ckOrganizationPresidentAlready(
+        body.userId,
+      );
+
+    if (ckAlready > 0) {
+      throw new HttpException(
+        "Organization President already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const { ignorePrev, ...bodyExceptIgnorePrev } = body;
+    if (!ignorePrev) {
+      const ck =
+        await this.organizationRepository.ckOrganizationPresidentBeforeCreate(
+          bodyExceptIgnorePrev,
+        );
+      if (ck > 0) {
+        // 기존의 president 존재 -> replace하기
+        const previousDay = new Date(body.startTerm); // body.startTerm 복사
+        previousDay.setDate(previousDay.getDate() - 1); // 하루 감소
+        const update =
+          await this.organizationRepository.updateOrganizationPresidentRetire(
+            ck, // organizationPresidentId
+            previousDay, // endTerm
+          );
+        if (update < 1) {
+          throw new HttpException(
+            "Failed to update organization president",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+    } else if (
+      body.organizationPresidentTypeE === OrganizationPresidentTypeE.Chief
+    ) {
+      // ignorePrev: true 가 cheif인 경우를 거르기 위함
+
+      throw new HttpException(
+        "Chief cannot be ignorePrev",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const organizationPresidentId =
+      await this.organizationRepository.createOrganizationPresident(
+        bodyExceptIgnorePrev,
+      );
+
+    if (organizationPresidentId < 1) {
+      throw new HttpException(
+        "Failed to create organization President",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return { organizationPresidentId };
   }
 }
