@@ -4,7 +4,7 @@ import {
   ApiOrg001RequestParam,
   ApiOrg001ResponseOK,
   ApiOrg002RequestBody,
-  ApiOrg002ResponseOK,
+  ApiOrg002ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
@@ -60,7 +60,7 @@ export class OrganizationService {
 
   async postOrganization(
     body: ApiOrg002RequestBody,
-  ): Promise<ApiOrg002ResponseOK> {
+  ): Promise<ApiOrg002ResponseCreated> {
     const ck =
       await this.organizationRepository.ckOrganizationBeforeCreate(body);
     if (ck > 0) {

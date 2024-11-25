@@ -14,6 +14,7 @@ import { z } from "zod";
 
 const url = (id: string) => `/temporary/students/club/subfeature/${id}`;
 const method = "GET";
+export const ApiTmp000RequestUrl = "/temporary/students/club/subfeature/:id";
 
 const requestParam = z.object({
   id: z.string(),

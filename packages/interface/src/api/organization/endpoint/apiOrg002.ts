@@ -15,6 +15,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 
 const url = () => `/uapresident/organizations/organization`;
 const method = "POST";
+export const ApiOrg002RequestUrl = "/uapresident/organizations/organization";
 
 const requestParam = z.object({});
 
@@ -30,7 +31,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     organizationId: zId,
   }),
 };
@@ -50,15 +51,15 @@ const apiOrg002 = {
 type ApiOrg002RequestParam = z.infer<typeof apiOrg002.requestParam>;
 type ApiOrg002RequestQuery = z.infer<typeof apiOrg002.requestQuery>;
 type ApiOrg002RequestBody = z.infer<typeof apiOrg002.requestBody>;
-type ApiOrg002ResponseOK = z.infer<(typeof apiOrg002.responseBodyMap)[200]>;
+type ApiOrg002ResponseCreated = z.infer<
+  (typeof apiOrg002.responseBodyMap)[201]
+>;
 
 export default apiOrg002;
-
-export const ApiOrg002RequestUrl = "/uapresident/organizations/organization";
 
 export type {
   ApiOrg002RequestParam,
   ApiOrg002RequestQuery,
   ApiOrg002RequestBody,
-  ApiOrg002ResponseOK,
+  ApiOrg002ResponseCreated,
 };

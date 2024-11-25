@@ -9,7 +9,7 @@ import {
   ApiOrg002RequestUrl,
   apiOrg002,
   ApiOrg002RequestBody,
-  ApiOrg002ResponseOK,
+  ApiOrg002ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
@@ -30,7 +30,7 @@ export class OrganizationController {
   @UsePipes(new ZodPipe(apiOrg002))
   async postOrganization(
     @Body() body: ApiOrg002RequestBody,
-  ): Promise<ApiOrg002ResponseOK> {
+  ): Promise<ApiOrg002ResponseCreated> {
     const res = await this.organizationService.postOrganization(body);
     return res;
   }

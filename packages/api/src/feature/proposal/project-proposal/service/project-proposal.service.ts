@@ -10,7 +10,7 @@ import {
   ApiPrp001ResponseOK,
   ApiPrp002ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
-import { UserPublicService } from "src/feature/user/user.public.service";
+import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
 import { ProjectProposalRepository } from "../repository/project-proposal.repository";
 
