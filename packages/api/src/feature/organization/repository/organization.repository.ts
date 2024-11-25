@@ -24,6 +24,7 @@ export type OrganizationWithPresidentT = {
   user: UserT;
   userStudent: UserStudentT;
 };
+
 @Injectable()
 export class OrganizationRepository {
   constructor(
@@ -35,7 +36,7 @@ export class OrganizationRepository {
   }
 
   async getOrganizationWithPresidentById(
-    id: number,
+    organizationId: number,
     date: Date,
   ): Promise<OrganizationWithPresidentT[]> {
     const res = await this.db
@@ -53,7 +54,8 @@ export class OrganizationRepository {
       .innerJoin(UserStudent, eq(UserStudent.userId, User.id))
       .where(
         and(
-          eq(Organization.id, id),
+
+          eq(Organization.id, organizationId),
           and(
             lte(OrganizationPresident.startTerm, date),
             or(

@@ -28,7 +28,6 @@ export class OrganizationService {
         startTerm,
         endTerm,
       );
-
     // 변환 작업: OriginalResponse -> ApiOrg001ResponseOK
     const organizationTypesMap = organizations.reduce((acc, curr) => {
       const { organization, organizationTypeEnum } = curr;
