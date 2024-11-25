@@ -6,6 +6,7 @@ import {
   ProjectProposalRevision,
 } from "@sparcs-students/api/drizzle/schema";
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
+import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 import { and, eq, desc } from "drizzle-orm";
 
@@ -54,7 +55,10 @@ export class ProjectProposalRepository {
       projectProposalId: row.proposalId,
       startTerm: row.startTerm,
       endTerm: row.endTerm,
-      acceptedStatus: row.agendaExists && row.agendaAccepted ? 1 : 2,
+      acceptedStatus:
+        row.agendaExists && row.agendaAccepted
+          ? AgendaAcceptedStatusE.Accepted
+          : AgendaAcceptedStatusE.Reject,
     }));
   }
 

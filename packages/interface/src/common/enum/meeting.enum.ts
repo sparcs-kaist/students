@@ -9,7 +9,7 @@ export enum AssistantPermissionE {
 
 // 안건 상태 E
 export enum AgendaAcceptedStatusE {
-  Approve = 1, // 승인
+  Accepted = 1, // 승인
   Reject, // 반려
   Revision, // 수정요청
   Progress, // 검토중
@@ -41,7 +41,7 @@ export const getDisplayNameAgendaAcceptedStatusE = (
   type: AgendaAcceptedStatusE | undefined,
 ) => {
   switch (type) {
-    case AgendaAcceptedStatusE.Approve:
+    case AgendaAcceptedStatusE.Accepted:
       return "승인";
     case AgendaAcceptedStatusE.Reject:
       return "반려";
