@@ -1,8 +1,10 @@
 import { Injectable, Inject } from "@nestjs/common";
+import logger from "@sparcs-students/api/common/util/logger";
 
 import {
   ApiOrg002RequestBody,
   ApiOrg003RequestBody,
+  ApiOrg005RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { and, or, lte, gte, eq, isNull, desc } from "drizzle-orm";
@@ -22,6 +24,7 @@ import {
   UserStudentT,
   TeamT,
   Team,
+  OrganizationMember,
 } from "src/drizzle/schema";
 
 export type OrganizationWithPresidentT = {
@@ -250,6 +253,43 @@ export class OrganizationRepository {
       .select()
       .from(OrganizationPresident)
       .where(and(eq(OrganizationPresident.id, organizationPresidentId)));
+    return res;
+  }
+
+  async ckOrganizationMemberBeforeCreate(
+    body: ApiOrg005RequestBody,
+  ): Promise<number> {
+    const res = await this.db
+      .select()
+      .from(OrganizationMember)
+      .where(
+        and(
+          eq(OrganizationMember.organizationId, body.organizationId),
+          eq(OrganizationMember.userId, body.userId),
+          isNull(OrganizationMember.endTerm),
+        ),
+      )
+      .orderBy(desc(OrganizationMember.createdAt))
+      .limit(1);
+    logger.info(res);
+    if (res.length === 0) {
+      return 0;
+    }
+    return res[0].id;
+  }
+
+  async createOrganizationMember(body: ApiOrg005RequestBody): Promise<number> {
+    await this.db
+      .insert(OrganizationMember)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        startTerm: body.startTerm,
+        endTerm: body.endTerm ? body.endTerm : null,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationMemberBeforeCreate(body);
     return res;
   }
 }

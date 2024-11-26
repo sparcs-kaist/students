@@ -6,7 +6,10 @@ import { zPhoneNumber } from "@sparcs-students/interface/common/type/phoneNumber
 
 /**
  * @version v0.1
- * @description 총학생회장 권한으로 새로운 단체를 생성합니다.
+ * @description 총학생회장 권한으로 새로운 기구장을 임명합니다.
+ * 만약 원래 기구장이 있는 경우, 임기를 종료시키고 새로운 기구장을 임명합니다.
+ * 만약 vice인 president의 경우, ignorePrev를 true로 설정하면 새로운 기구장을 추가합니다.
+ * 다만, cheif인 경우 ignorePrev를 true로 설정하면 400에러를 반환합니다.
  */
 
 const url = () => `/uapresident/organizations/president`;

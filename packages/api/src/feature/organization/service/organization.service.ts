@@ -14,10 +14,13 @@ import {
   ApiOrg003ResponseCreated,
   ApiOrg004RequestBody,
   ApiOrg004ResponseOK,
+  ApiOrg005RequestBody,
+  ApiOrg005ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum/organization.enum";
 
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+import { UserPublicService } from "src/feature/user/service/user.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 
@@ -26,6 +29,7 @@ export class OrganizationService {
   constructor(
     private readonly organizationRepository: OrganizationRepository,
     private readonly semesterPublicService: SemesterPublicService,
+    private readonly userPublicService: UserPublicService,
   ) {}
 
   async getOrganizationsBySemesterId(
@@ -196,5 +200,30 @@ export class OrganizationService {
       organizationPresidentTypeE: res[0].organizationPresidentTypeEnumId,
       phoneNumber: res[0].phoneNumber,
     };
+  }
+
+  async postOrganizationMember(
+    body: ApiOrg005RequestBody,
+  ): Promise<ApiOrg005ResponseCreated> {
+    await this.userPublicService.getUserById(body.userId); // user 존재하는지 확인
+
+    const ckMemberAlready =
+      await this.organizationRepository.ckOrganizationMemberBeforeCreate(body);
+    if (ckMemberAlready > 0) {
+      throw new HttpException(
+        "Organization Member already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const organizationMemberId =
+      await this.organizationRepository.createOrganizationMember(body);
+    if (organizationMemberId < 1) {
+      throw new HttpException(
+        "Failed to create organization member",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return { organizationMemberId };
   }
 }
