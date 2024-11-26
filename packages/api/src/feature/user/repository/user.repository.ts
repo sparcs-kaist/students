@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
 import { User, UserStudent, UserT } from "@sparcs-students/api/drizzle/schema";
 import {
   ApiUsr001RequestBody,
@@ -77,25 +77,33 @@ export class UserRepository {
   async createUserStudent(
     body: ApiUsr001RequestBody,
   ): Promise<ApiUsr001ResponseCreated> {
-    await this.db
-      .insert(User)
-      .values({
-        name: body.name,
-        email: body.email,
-      })
-      .execute();
+    const result = await this.db.transaction(async tx => {
+      await tx
+        .insert(User)
+        .values({
+          name: body.name,
+          email: body.email,
+        })
+        .execute();
 
-    const userId = await this.ckUserBeforeCreate(body.name, body.email);
+      const userId = await this.ckUserBeforeCreate(body.name, body.email);
+      if (userId === 0) {
+        throw new HttpException(
+          "User create failed",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      await tx
+        .insert(UserStudent)
+        .values({
+          userId,
+          studentNumber: body.studentNumber,
+        })
+        .execute();
 
-    await this.db
-      .insert(UserStudent)
-      .values({
-        userId,
-        studentNumber: body.studentNumber,
-      })
-      .execute();
-
-    const res = await this.ckUserStudentBeforeCreate(body);
-    return res;
+      const res = await this.ckUserStudentBeforeCreate(body);
+      return res;
+    });
+    return result;
   }
 }

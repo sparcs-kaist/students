@@ -231,7 +231,7 @@ export class OrganizationRepository {
   }
 
   async ckOrganizationPresidentAlready(userId: number): Promise<number> {
-    // 지금은 공직일 때만 체크하는 로직이 없는데, 언젠가는 추가해야 함
+    // TODO: 지금은 공직일 때만 체크하는 로직이 없는데, 언젠가는 추가해야 함
     const select = await this.db
       .select()
       .from(OrganizationPresident)
@@ -243,7 +243,7 @@ export class OrganizationRepository {
       )
       .limit(1);
     if (select.length === 0) {
-      // 해당 president가 공직이 아닐 경우 그냥 0을 리턴하는 로직을 추가해야 함.
+      // TODO: 해당 president가 공직이 아닐 경우 그냥 0을 리턴하는 로직을 추가해야 함.
       return 0;
     }
     return select[0].id;
