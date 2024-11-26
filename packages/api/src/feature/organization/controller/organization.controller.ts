@@ -30,6 +30,10 @@ import {
   ApiOrg005ResponseCreated,
   ApiOrg005RequestUrl,
   apiOrg005,
+  ApiOrg006RequestBody,
+  ApiOrg006ResponseCreated,
+  apiOrg006,
+  ApiOrg006RequestUrl,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
@@ -80,6 +84,15 @@ export class OrganizationController {
     @Body() body: ApiOrg005RequestBody,
   ): Promise<ApiOrg005ResponseCreated> {
     const res = await this.organizationService.postOrganizationMember(body);
+    return res;
+  }
+
+  @Post(ApiOrg006RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg006))
+  async postOrganizationManager(
+    @Body() body: ApiOrg006RequestBody,
+  ): Promise<ApiOrg006ResponseCreated> {
+    const res = await this.organizationService.postOrganizationManager(body);
     return res;
   }
 }

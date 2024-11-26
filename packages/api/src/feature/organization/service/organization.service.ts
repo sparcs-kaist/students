@@ -16,6 +16,8 @@ import {
   ApiOrg004ResponseOK,
   ApiOrg005RequestBody,
   ApiOrg005ResponseCreated,
+  ApiOrg006RequestBody,
+  ApiOrg006ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum/organization.enum";
 
@@ -225,5 +227,55 @@ export class OrganizationService {
     }
 
     return { organizationMemberId };
+  }
+
+  async postOrganizationManager(
+    body: ApiOrg006RequestBody,
+  ): Promise<ApiOrg006ResponseCreated> {
+    await this.userPublicService.getUserById(body.userId); // user 존재하는지 확인
+
+    // member 존재하는지 확인
+    const memberCheck =
+      await this.organizationRepository.selectOrganizationMemberByUserIdAndOrganizationId(
+        body.userId,
+        body.organizationId,
+      );
+    if (memberCheck.length === 0) {
+      throw new NotFoundException("Organization Member not exists");
+    }
+
+    // member의 기간이 semester 기간 안에 있는 지 확인. 일부 겹치는 것은 허용
+    const { startTerm, endTerm } =
+      await this.semesterPublicService.getSemesterById(body.semesterId);
+    memberCheck.forEach(member => {
+      if (
+        member.startTerm > endTerm ||
+        (member.endTerm !== null && member.endTerm < startTerm)
+      ) {
+        // 해당 멤버가 해당 학기 기간에 조금도 겹치지 않는 경우
+        throw new HttpException(
+          "Organization Member is not in semester",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    });
+    const ckManagerAlready =
+      await this.organizationRepository.ckOrganizationManagerBeforeCreate(body);
+    if (ckManagerAlready > 0) {
+      throw new HttpException(
+        "Organization Manager already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const organizationManagerId =
+      await this.organizationRepository.createOrganizationManager(body);
+    if (organizationManagerId < 1) {
+      throw new HttpException(
+        "Failed to create organization manager",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return { organizationManagerId };
   }
 }

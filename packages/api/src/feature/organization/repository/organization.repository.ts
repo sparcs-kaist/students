@@ -5,6 +5,7 @@ import {
   ApiOrg002RequestBody,
   ApiOrg003RequestBody,
   ApiOrg005RequestBody,
+  ApiOrg006RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { and, or, lte, gte, eq, isNull, desc } from "drizzle-orm";
@@ -25,6 +26,8 @@ import {
   TeamT,
   Team,
   OrganizationMember,
+  OrganizationManager,
+  OrganizationMemberT,
 } from "src/drizzle/schema";
 
 export type OrganizationWithPresidentT = {
@@ -290,6 +293,58 @@ export class OrganizationRepository {
       .execute();
 
     const res = await this.ckOrganizationMemberBeforeCreate(body);
+    return res;
+  }
+
+  async selectOrganizationMemberByUserIdAndOrganizationId(
+    userId: number,
+    organizationId: number,
+  ): Promise<OrganizationMemberT[]> {
+    const res = await this.db
+      .select()
+      .from(OrganizationMember)
+      .where(
+        and(
+          eq(OrganizationMember.userId, userId),
+          eq(OrganizationMember.organizationId, organizationId),
+          isNull(OrganizationMember.endTerm),
+        ),
+      );
+    return res;
+  }
+
+  async ckOrganizationManagerBeforeCreate(
+    body: ApiOrg006RequestBody,
+  ): Promise<number> {
+    const res = await this.db
+      .select()
+      .from(OrganizationManager)
+      .where(
+        and(
+          eq(OrganizationManager.organizationId, body.organizationId),
+          eq(OrganizationManager.userId, body.userId),
+          eq(OrganizationManager.semesterId, body.semesterId),
+        ),
+      )
+      .orderBy(desc(OrganizationManager.createdAt))
+      .limit(1);
+    if (res.length === 0) {
+      return 0;
+    }
+    return res[0].id;
+  }
+
+  async createOrganizationManager(body: ApiOrg006RequestBody): Promise<number> {
+    await this.db
+      .insert(OrganizationManager)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        semesterId: body.semesterId,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationManagerBeforeCreate(body);
     return res;
   }
 }
