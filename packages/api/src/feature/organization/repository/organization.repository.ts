@@ -242,4 +242,14 @@ export class OrganizationRepository {
     }
     return select[0].id;
   }
+
+  async selectOrganizationPresidentById(
+    organizationPresidentId: number,
+  ): Promise<OrganizationPresidentT[]> {
+    const res = this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(and(eq(OrganizationPresident.id, organizationPresidentId)));
+    return res;
+  }
 }

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 
 import {
   ApiOrg001RequestParam,
@@ -7,6 +12,8 @@ import {
   ApiOrg002ResponseCreated,
   ApiOrg003RequestBody,
   ApiOrg003ResponseCreated,
+  ApiOrg004RequestBody,
+  ApiOrg004ResponseOK,
 } from "@sparcs-students/interface/api/organization/index";
 import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum/organization.enum";
 
@@ -144,5 +151,50 @@ export class OrganizationService {
     }
 
     return { organizationPresidentId };
+  }
+
+  async putOrganizationPresidentRetire(
+    body: ApiOrg004RequestBody,
+  ): Promise<ApiOrg004ResponseOK> {
+    const resSelectPresident =
+      await this.organizationRepository.selectOrganizationPresidentById(
+        body.organizationPresidentId,
+      );
+    if (resSelectPresident.length === 0) {
+      throw new NotFoundException("Organization President not found");
+    } else if (resSelectPresident[0].endTerm !== null) {
+      throw new HttpException(
+        "Organization President already retired",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const update =
+      await this.organizationRepository.updateOrganizationPresidentRetire(
+        body.organizationPresidentId,
+        body.endTerm,
+      );
+    if (update < 1) {
+      throw new HttpException(
+        "Failed to update organization president",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const res =
+      await this.organizationRepository.selectOrganizationPresidentById(
+        body.organizationPresidentId,
+      );
+    if (res.length === 0 || res.length > 1) {
+      throw new HttpException("Unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return {
+      organizationPresidentId: res[0].id,
+      organizationId: res[0].organizationId,
+      userId: res[0].userId,
+      startTerm: res[0].startTerm,
+      endTerm: res[0].endTerm,
+      organizationPresidentTypeE: res[0].organizationPresidentTypeEnumId,
+      phoneNumber: res[0].phoneNumber,
+    };
   }
 }

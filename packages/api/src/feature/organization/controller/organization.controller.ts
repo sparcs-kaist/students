@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+} from "@nestjs/common";
 
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -14,6 +22,10 @@ import {
   apiOrg003,
   ApiOrg003RequestBody,
   ApiOrg003ResponseCreated,
+  ApiOrg004RequestUrl,
+  apiOrg004,
+  ApiOrg004ResponseOK,
+  ApiOrg004RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
@@ -45,6 +57,16 @@ export class OrganizationController {
     @Body() body: ApiOrg003RequestBody,
   ): Promise<ApiOrg003ResponseCreated> {
     const res = await this.organizationService.postOrganizationPresident(body);
+    return res;
+  }
+
+  @Put(ApiOrg004RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg004))
+  async putOrganizationPresidentRetire(
+    @Body() body: ApiOrg004RequestBody,
+  ): Promise<ApiOrg004ResponseOK> {
+    const res =
+      await this.organizationService.putOrganizationPresidentRetire(body);
     return res;
   }
 }
