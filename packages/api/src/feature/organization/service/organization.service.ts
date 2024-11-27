@@ -100,6 +100,8 @@ export class OrganizationService {
   async postOrganizationPresident(
     body: ApiOrg003RequestBody,
   ): Promise<ApiOrg003ResponseCreated> {
+    // president 가 있으면 president를 retire처리 하고, 새로운 president를 생성함.
+
     const ckAlready =
       await this.organizationRepository.ckOrganizationPresidentAlready(
         body.userId,
