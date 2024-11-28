@@ -9,7 +9,7 @@ const NoOption = styled.div`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   text-align: center;
   pointer-events: none;
-  color: ${({ theme }) => theme.colors.GRAY[300]};
+  color: ${({ theme }) => theme.colors.GRAY[400]};
 `;
 
 export default NoOption;
