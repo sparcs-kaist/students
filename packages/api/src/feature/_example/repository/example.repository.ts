@@ -4,7 +4,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 @Injectable()
-export class TeamRepository {
+export class ExampleRepository {
   constructor(
     @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
   ) {}
