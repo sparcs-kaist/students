@@ -89,7 +89,10 @@ const SemesterCard: React.FC<SemesterCardProps> = ({
         </SelectWrapper>
         <RadioWrapper>
           <Radio
-            gap="8px"
+            rg="8px"
+            cg="0px"
+            rows={2}
+            columns={1}
             value={String(isSpring)}
             onChange={(boolStr: string) => setIsSpring(JSON.parse(boolStr))}
           >
@@ -111,20 +114,3 @@ const SemesterCard: React.FC<SemesterCardProps> = ({
 );
 
 export default SemesterCard;
-
-// <Radio
-// label={label}
-// value={String(isFirstOptionSelected)}
-// onChange={(boolStr: string) =>
-//   setIsFirstOptionSelected(JSON.parse(boolStr))
-// }
-// >
-// {[
-//   <RadioOption key={`${label}_true`} value="true">
-//     {firstOptionLabel}
-//   </RadioOption>,
-//   <RadioOption key={`${label}_false`} value="false">
-//     {secondOptionLabel}
-//   </RadioOption>,
-// ]}
-// </Radio>
