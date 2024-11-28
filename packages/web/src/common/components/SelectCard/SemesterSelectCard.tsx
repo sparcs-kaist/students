@@ -9,7 +9,7 @@ import Select, {
   SelectItem,
 } from "@sparcs-students/web/common/components/Select";
 
-interface SemesterCardProps {
+interface SemesterSelectCardProps {
   year: number;
   setYear: (value: number) => void;
   selectItems: SelectItem<number>[];
@@ -19,8 +19,8 @@ interface SemesterCardProps {
 
 const CardWrapper = styled.div`
   display: flex;
-  width: fit-content;
-  height: 148px; // CHACHA: 이 정도는 돼야 에러 메시지 떠도 컴포넌트 안의 요소들 위치가 왔다갔다 안 해요.
+  width: 100%;
+  height: 138px; // CHACHA: 148 이상이어야 에러 메시지 떠도 컴포넌트 안의 요소들 위치가 왔다갔다 안 해요. 아직 에러 메시지에 대한 디자인이 없어서 추후 수정!
   flex-direction: column;
   align-items: flex-start;
 `;
@@ -65,7 +65,7 @@ const RadioWrapper = styled.div`
   width: fit-content;
 `;
 
-const SemesterCard: React.FC<SemesterCardProps> = ({
+const SemesterSelectCard: React.FC<SemesterSelectCardProps> = ({
   year,
   setYear,
   selectItems,
@@ -98,12 +98,12 @@ const SemesterCard: React.FC<SemesterCardProps> = ({
             value={String(isSpring)}
             onChange={(boolStr: string) => setIsSpring(JSON.parse(boolStr))}
           >
-            <RadioOption value="true">
+            <RadioOption value="true" width="82px">
               <Typography fs={16} lh={20} fw="REGULAR">
                 봄학기
               </Typography>
             </RadioOption>
-            <RadioOption value="false">
+            <RadioOption value="false" width="82px">
               <Typography fs={16} lh={20} fw="REGULAR">
                 가을학기
               </Typography>
@@ -115,4 +115,4 @@ const SemesterCard: React.FC<SemesterCardProps> = ({
   </CardWrapper>
 );
 
-export default SemesterCard;
+export default SemesterSelectCard;

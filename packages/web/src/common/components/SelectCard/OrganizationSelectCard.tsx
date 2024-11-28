@@ -23,11 +23,12 @@ interface OrganizationSelectCardProps {
 
 const CardWrapper = styled.div`
   display: flex;
-  /* width: 316px;
-  height: 138px; */
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
+  align-self: stretch;
+  justify-self: stretch;
+  height: 100%;
 `;
 
 const CardHeaderWrapper = styled.div`
@@ -68,10 +69,8 @@ const ArrowWrapper = styled.div`
 const SelectWrapper = styled.div`
   display: flex;
   width: 203px;
-  /* height: 198px; */
-  padding: 8px;
+  height: 198px;
   align-items: flex-start;
-  gap: 8px;
 `;
 
 const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({

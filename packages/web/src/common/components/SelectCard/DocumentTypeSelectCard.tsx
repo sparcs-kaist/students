@@ -13,14 +13,14 @@ export enum DocumentType {
   BusinessReport = "사업 보고서",
 }
 
-interface DocumentCardProps {
+interface DocumentTypeSelectCardProps {
   type: DocumentType;
   setType: (value: DocumentType) => void;
 }
 
 const CardWrapper = styled.div`
   display: flex;
-  width: 316px;
+  width: 100%;
   height: 138px;
   flex-direction: column;
   align-items: flex-start;
@@ -51,7 +51,10 @@ const CardContent = styled.div`
   background-color: ${({ theme }) => theme.colors.WHITE};
 `;
 
-const DocumentCard: React.FC<DocumentCardProps> = ({ type, setType }) => (
+const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
+  type,
+  setType,
+}) => (
   <CardWrapper>
     <CardHeaderWrapper>
       <Typography fs={20} fw="SEMIBOLD" color="WHITE">
@@ -92,4 +95,4 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ type, setType }) => (
   </CardWrapper>
 );
 
-export default DocumentCard;
+export default DocumentTypeSelectCard;

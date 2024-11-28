@@ -16,7 +16,7 @@ const Dropdown = styled.div.withConfig({
   border: 1px solid ${({ theme }) => theme.colors.GREEN[300]};
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
-  gap: 8px;
+  gap: 4px;
   ${({ onlyDropdown }) =>
     onlyDropdown
       ? ""
