@@ -1,6 +1,14 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { ApiOrg002RequestBody } from "@sparcs-students/interface/api/organization/index";
-import { and, or, lte, gte, eq, isNull } from "drizzle-orm";
+import logger from "@sparcs-students/api/common/util/logger";
+
+import {
+  ApiOrg002RequestBody,
+  ApiOrg003RequestBody,
+  ApiOrg005RequestBody,
+  ApiOrg006RequestBody,
+} from "@sparcs-students/interface/api/organization/index";
+
+import { and, or, lte, gte, eq, isNull, desc } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
@@ -17,6 +25,9 @@ import {
   UserStudentT,
   TeamT,
   Team,
+  OrganizationMember,
+  OrganizationManager,
+  OrganizationMemberT,
 } from "src/drizzle/schema";
 
 export type OrganizationWithPresidentT = {
@@ -152,6 +163,188 @@ export class OrganizationRepository {
       .execute();
 
     const res = await this.ckOrganizationBeforeCreate(body);
+    return res;
+  }
+
+  async ckOrganizationPresidentBeforeCreate(
+    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
+  ): Promise<number> {
+    const select = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(
+        and(
+          eq(OrganizationPresident.organizationId, body.organizationId),
+          eq(
+            OrganizationPresident.organizationPresidentTypeEnumId,
+            body.organizationPresidentTypeE,
+          ),
+
+          isNull(OrganizationPresident.endTerm),
+        ),
+      )
+      .limit(1)
+      .orderBy(desc(OrganizationPresident.createdAt));
+    if (select.length === 0) {
+      return 0;
+    }
+    return select[0].id;
+  }
+
+  async updateOrganizationPresidentRetire(
+    organizationPresidentId: number,
+    endTerm: Date,
+  ): Promise<number> {
+    await this.db
+      .update(OrganizationPresident)
+      .set({ endTerm })
+      .where(eq(OrganizationPresident.id, organizationPresidentId))
+      .execute();
+
+    const resSelect = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(eq(OrganizationPresident.id, organizationPresidentId));
+    if (resSelect.length === 0 || resSelect[0].id !== organizationPresidentId) {
+      return 0;
+    }
+    return resSelect[0].id;
+  }
+
+  async createOrganizationPresident(
+    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
+  ): Promise<number> {
+    await this.db
+      .insert(OrganizationPresident)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        organizationPresidentTypeEnumId: body.organizationPresidentTypeE,
+        phoneNumber: body.phoneNumber,
+        startTerm: body.startTerm,
+        endTerm: body.endTerm ? body.endTerm : null,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationPresidentBeforeCreate(body);
+    return res;
+  }
+
+  async ckOrganizationPresidentAlready(userId: number): Promise<number> {
+    // TODO: 지금은 공직일 때만 체크하는 로직이 없는데, 언젠가는 추가해야 함
+    const select = await this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(
+        and(
+          eq(OrganizationPresident.userId, userId),
+          isNull(OrganizationPresident.endTerm),
+        ),
+      )
+      .limit(1);
+    if (select.length === 0) {
+      // TODO: 해당 president가 공직이 아닐 경우 그냥 0을 리턴하는 로직을 추가해야 함.
+      return 0;
+    }
+    return select[0].id;
+  }
+
+  async selectOrganizationPresidentById(
+    organizationPresidentId: number,
+  ): Promise<OrganizationPresidentT[]> {
+    const res = this.db
+      .select()
+      .from(OrganizationPresident)
+      .where(and(eq(OrganizationPresident.id, organizationPresidentId)));
+    return res;
+  }
+
+  async ckOrganizationMemberBeforeCreate(
+    body: ApiOrg005RequestBody,
+  ): Promise<number> {
+    const res = await this.db
+      .select()
+      .from(OrganizationMember)
+      .where(
+        and(
+          eq(OrganizationMember.organizationId, body.organizationId),
+          eq(OrganizationMember.userId, body.userId),
+          isNull(OrganizationMember.endTerm),
+        ),
+      )
+      .orderBy(desc(OrganizationMember.createdAt))
+      .limit(1);
+    logger.info(res);
+    if (res.length === 0) {
+      return 0;
+    }
+    return res[0].id;
+  }
+
+  async createOrganizationMember(body: ApiOrg005RequestBody): Promise<number> {
+    await this.db
+      .insert(OrganizationMember)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        startTerm: body.startTerm,
+        endTerm: body.endTerm ? body.endTerm : null,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationMemberBeforeCreate(body);
+    return res;
+  }
+
+  async selectOrganizationMemberByUserIdAndOrganizationId(
+    userId: number,
+    organizationId: number,
+  ): Promise<OrganizationMemberT[]> {
+    const res = await this.db
+      .select()
+      .from(OrganizationMember)
+      .where(
+        and(
+          eq(OrganizationMember.userId, userId),
+          eq(OrganizationMember.organizationId, organizationId),
+          isNull(OrganizationMember.endTerm),
+        ),
+      );
+    return res;
+  }
+
+  async ckOrganizationManagerBeforeCreate(
+    body: ApiOrg006RequestBody,
+  ): Promise<number> {
+    const res = await this.db
+      .select()
+      .from(OrganizationManager)
+      .where(
+        and(
+          eq(OrganizationManager.organizationId, body.organizationId),
+          eq(OrganizationManager.userId, body.userId),
+          eq(OrganizationManager.semesterId, body.semesterId),
+        ),
+      )
+      .orderBy(desc(OrganizationManager.createdAt))
+      .limit(1);
+    if (res.length === 0) {
+      return 0;
+    }
+    return res[0].id;
+  }
+
+  async createOrganizationManager(body: ApiOrg006RequestBody): Promise<number> {
+    await this.db
+      .insert(OrganizationManager)
+      .values({
+        organizationId: body.organizationId,
+        userId: body.userId,
+        semesterId: body.semesterId,
+      })
+      .execute();
+
+    const res = await this.ckOrganizationManagerBeforeCreate(body);
     return res;
   }
 }

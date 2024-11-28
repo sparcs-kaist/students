@@ -14,6 +14,8 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 
 const url = () => `/student/proposals/project-proposals`;
 const method = "GET";
+export const ApiPrp002RequestUrl =
+  "/student/proposals/project-proposals/project-proposal/projectProposalId";
 
 const requestParam = z.object({
   projectProposalId: zId,
@@ -75,9 +77,6 @@ type ApiPrp002RequestBody = z.infer<typeof apiPrp002.requestBody>;
 type ApiPrp002ResponseOK = z.infer<(typeof apiPrp002.responseBodyMap)[200]>;
 
 export default apiPrp002;
-
-export const ApiPrp002RequestUrl =
-  "/student/proposals/project-proposals/project-proposal/projectProposalId";
 
 export type {
   ApiPrp002RequestParam,
