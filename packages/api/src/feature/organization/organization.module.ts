@@ -7,9 +7,10 @@ import { OrganizationService } from "./service/organization.service";
 import { OrganizationController } from "./controller/organization.controller";
 import { OrganizationPublicService } from "./service/organization.public.service";
 import { OrganizationRepository } from "./repository/organization.repository";
+import { TeamModule } from "./team/team.module";
 
 @Module({
-  imports: [DrizzleModule, SemesterModule, UserModule],
+  imports: [DrizzleModule, SemesterModule, UserModule, TeamModule],
   controllers: [OrganizationController],
   providers: [
     OrganizationService,
