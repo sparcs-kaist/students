@@ -3,9 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 import Radio from "@sparcs-students/web/common/components/Radio/index";
-import Typography from "./Typography";
-import RadioOption from "./Radio/RadioOption";
-import Select, { SelectItem } from "./Select";
+import Typography from "@sparcs-students/web/common/components/Typography";
+import RadioOption from "@sparcs-students/web/common/components/Radio/RadioOption";
+import Select, {
+  SelectItem,
+} from "@sparcs-students/web/common/components/Select";
 
 interface SemesterCardProps {
   year: number;

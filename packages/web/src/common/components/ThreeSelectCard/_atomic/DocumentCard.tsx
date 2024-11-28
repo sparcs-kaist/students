@@ -3,8 +3,8 @@
 import React from "react";
 import styled from "styled-components";
 import Radio from "@sparcs-students/web/common/components/Radio/index";
-import Typography from "./Typography";
-import RadioOption from "./Radio/RadioOption";
+import Typography from "@sparcs-students/web/common/components/Typography";
+import RadioOption from "@sparcs-students/web/common/components/Radio/RadioOption";
 
 export enum DocumentType {
   BudgetProposal = "예산안",

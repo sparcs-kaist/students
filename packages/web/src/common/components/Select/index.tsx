@@ -27,6 +27,7 @@ interface SelectProps<T> {
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
   isRequired?: boolean;
+  onlyDropdown?: boolean;
 }
 
 const SelectInner = styled.div`
@@ -48,8 +49,10 @@ const StyledSelect = styled.div.withConfig({
   disabled?: boolean;
   isOpen?: boolean;
 }>`
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 44px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -75,7 +78,7 @@ const StyledSelect = styled.div.withConfig({
 
 const IconWrapper = styled.div`
   position: absolute;
-  right: 8px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -95,6 +98,12 @@ const SelectWrapper = styled.div`
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isSelected: boolean; disabled: boolean }>`
+  display: flex;
+  width: 81px;
+  height: 24px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
   color: ${({ theme, isSelected, disabled }) => {
     if (disabled) {
       return theme.colors.GRAY[400];
@@ -116,6 +125,7 @@ const Select = <T,>({
   setErrorStatus = () => {},
   placeholder = "항목을 선택해주세요",
   isRequired = true,
+  onlyDropdown = false,
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -166,34 +176,36 @@ const Select = <T,>({
       {label && <Label>{label}</Label>}
       <SelectWrapper>
         <SelectInner ref={containerRef}>
-          <StyledSelect
-            hasError={
-              isRequired &&
-              hasOpenedOnce &&
-              !value &&
-              items.length > 0 &&
-              !isOpen
-            }
-            disabled={disabled}
-            onClick={handleSelectClick}
-            isOpen={isOpen}
-          >
-            <SelectValue
-              isSelected={value != null && value !== ""}
+          {!onlyDropdown && (
+            <StyledSelect
+              hasError={
+                isRequired &&
+                hasOpenedOnce &&
+                !value &&
+                items.length > 0 &&
+                !isOpen
+              }
               disabled={disabled}
+              onClick={handleSelectClick}
+              isOpen={isOpen}
             >
-              {selectedLabel}
-            </SelectValue>
-            <IconWrapper>
-              {isOpen ? (
-                <Typography fs={16}>▼</Typography> // CHACHA: TODO: 아래처럼 위 화살표로 변경해야 함.
-              ) : (
-                <Typography fs={16}>▼</Typography>
-              )}
-            </IconWrapper>
-          </StyledSelect>
-          {isOpen && (
-            <Dropdown marginTop={4}>
+              <SelectValue
+                isSelected={value != null && value !== ""}
+                disabled={disabled}
+              >
+                {selectedLabel}
+              </SelectValue>
+              <IconWrapper>
+                {isOpen ? (
+                  <Typography fs={16}>▼</Typography> // CHACHA: TODO: 아래처럼 위 화살표로 변경해야 함.
+                ) : (
+                  <Typography fs={16}>▼</Typography>
+                )}
+              </IconWrapper>
+            </StyledSelect>
+          )}
+          {(onlyDropdown || isOpen) && (
+            <Dropdown onlyDropdown={onlyDropdown} marginTop={4}>
               {items.length > 0 ? (
                 items.map(item => (
                   <SelectOption
@@ -202,6 +214,7 @@ const Select = <T,>({
                       item.selectable || item.selectable === undefined
                     }
                     onClick={() => handleOptionClick(item)}
+                    selected={selectedLabel === item.label}
                   >
                     {item.label}
                   </SelectOption>
