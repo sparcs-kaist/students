@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UsePipes } from "@nestjs/common";
 
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -6,11 +6,15 @@ import {
   ApiOrg001RequestUrl,
   apiOrg001,
   ApiOrg001RequestParam,
+  ApiOrg002RequestUrl,
+  apiOrg002,
+  ApiOrg002RequestBody,
+  ApiOrg002ResponseOK,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
 
-@Controller("organization")
+@Controller()
 export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
@@ -20,5 +24,14 @@ export class OrganizationController {
     @Param() param: ApiOrg001RequestParam,
   ): Promise<ApiOrg001ResponseOK> {
     return this.organizationService.getOrganizationsBySemesterId(param);
+  }
+
+  @Post(ApiOrg002RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg002))
+  async postOrganization(
+    @Body() body: ApiOrg002RequestBody,
+  ): Promise<ApiOrg002ResponseOK> {
+    const res = await this.organizationService.postOrganization(body);
+    return res;
   }
 }

@@ -1,11 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import {
   ApiOrg001RequestParam,
   ApiOrg001ResponseOK,
+  ApiOrg002RequestBody,
+  ApiOrg002ResponseOK,
 } from "@sparcs-students/interface/api/organization/index";
 
-import SemesterPublicService from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 
@@ -26,7 +28,6 @@ export class OrganizationService {
         startTerm,
         endTerm,
       );
-
     // 변환 작업: OriginalResponse -> ApiOrg001ResponseOK
     const organizationTypesMap = organizations.reduce((acc, curr) => {
       const { organization, organizationTypeEnum } = curr;
@@ -55,5 +56,28 @@ export class OrganizationService {
     const organizationTypes = Array.from(organizationTypesMap.values());
 
     return { organizationTypes };
+  }
+
+  async postOrganization(
+    body: ApiOrg002RequestBody,
+  ): Promise<ApiOrg002ResponseOK> {
+    const ck =
+      await this.organizationRepository.ckOrganizationBeforeCreate(body);
+    if (ck > 0) {
+      throw new HttpException(
+        "Organization already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const organizationId =
+      await this.organizationRepository.createOrganization(body);
+    if (organizationId < 1) {
+      throw new HttpException(
+        "Failed to create organization",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return { organizationId };
   }
 }
