@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { OrganizationMemberT, OrganizationT, TeamT } from "src/drizzle/schema";
+import { OrganizationMemberT, OrganizationT } from "src/drizzle/schema";
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import {
@@ -76,24 +76,6 @@ export class OrganizationPublicService {
       endTerm,
     );
     return res;
-  }
-
-  /**
-   * @param teamId
-   * @returns TeamT id에 해당하는 TeamT 객체를 리턴합니다.
-   * @description 해당 id의 Team이 없으면 404 exception을 throw 합니다.
-   */
-  async getTeamById(teamId: number): Promise<TeamT> {
-    const res = await this.organizationRepository.getTeamById(teamId);
-    if (res.length === 0) {
-      throw new NotFoundException(`Team with ID ${teamId} not found.`);
-    } else if (res.length > 1) {
-      throw new HttpException(
-        `Unreachable: Team with ID ${teamId} has multiple records.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-    return res[0];
   }
 
   /**

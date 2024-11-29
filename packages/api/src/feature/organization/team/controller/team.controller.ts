@@ -6,8 +6,12 @@ import {
   ApiOrg008RequestBody,
   ApiOrg008RequestUrl,
   ApiOrg008ResponseCreated,
+  ApiOrg009RequestBody,
+  ApiOrg009RequestUrl,
+  ApiOrg009ResponseCreated,
   apiOrg007,
   apiOrg008,
+  apiOrg009,
 } from "@sparcs-students/interface/api/organization/index";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 
@@ -31,5 +35,13 @@ export class TeamController {
     @Body() body: ApiOrg008RequestBody,
   ): Promise<ApiOrg008ResponseCreated> {
     return this.teamService.postTeamMember(body);
+  }
+
+  @Post(ApiOrg009RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg009))
+  async postTeamLeader(
+    @Body() body: ApiOrg009RequestBody,
+  ): Promise<ApiOrg009ResponseCreated> {
+    return this.teamService.postTeamLeader(body);
   }
 }

@@ -22,8 +22,6 @@ import {
   OrganizationPresidentT,
   UserT,
   UserStudentT,
-  TeamT,
-  Team,
   OrganizationMember,
   OrganizationManager,
   OrganizationMemberT,
@@ -119,11 +117,6 @@ export class OrganizationRepository {
       ...row,
       organizationTypeEnum: row.organization_type_enum,
     }));
-  }
-
-  async getTeamById(id: number): Promise<TeamT[]> {
-    const res = await this.db.select().from(Team).where(eq(Team.id, id));
-    return res;
   }
 
   async ckOrganizationBeforeCreate(
@@ -347,10 +340,14 @@ export class OrganizationRepository {
   }
 
   async selectOrganizationMember(target: Partial<OrganizationMemberT>) {
-    const { userId, startTerm, endTerm, organizationId } = target;
+    const { id, userId, startTerm, endTerm, organizationId } = target;
     let query = this.db.select().from(OrganizationMember).$dynamic();
 
     const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(OrganizationMember.id, id));
+    }
 
     if (userId) {
       whereConditions.push(eq(OrganizationMember.userId, userId));

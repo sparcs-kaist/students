@@ -12,6 +12,7 @@ import {
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
+import { TeamPublicService } from "src/feature/organization/team/service/team.public.service";
 import { ProjectProposalRepository } from "../repository/project-proposal.repository";
 
 @Injectable()
@@ -20,6 +21,7 @@ export class ProjectProposalService {
     private readonly projectProposalRepository: ProjectProposalRepository,
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly userPublicService: UserPublicService,
+    private readonly teamPublicService: TeamPublicService,
   ) {}
 
   async getProjectProposalsForStudentsBySemesterId(
@@ -82,7 +84,7 @@ export class ProjectProposalService {
     }
     const projectProposalRevision = prpRevs[0];
 
-    const team = await this.organizationPublicService.getTeamById(
+    const team = await this.teamPublicService.getTeamById(
       projectProposalRevision.teamId,
     );
     const manager = await this.userPublicService.getUserById(

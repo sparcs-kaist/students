@@ -8,6 +8,7 @@ import { TeamController } from "./controller/team.controller";
 import { TeamRepository } from "./repository/team.repository";
 /* eslint-disable import/no-cycle */
 import { OrganizationModule } from "../organization.module";
+import { TeamPublicService } from "./service/team.public.service";
 /* eslint-disable import/no-cycle */
 
 @Module({
@@ -18,7 +19,7 @@ import { OrganizationModule } from "../organization.module";
     forwardRef(() => OrganizationModule),
   ],
   controllers: [TeamController],
-  providers: [TeamService, TeamRepository],
-  exports: [],
+  providers: [TeamService, TeamRepository, TeamPublicService],
+  exports: [TeamPublicService],
 })
 export class TeamModule {}
