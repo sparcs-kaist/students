@@ -18,6 +18,7 @@ import {
   BudgetDivisionIncomeEnum,
   BudgetDivisionExpenseEnum,
   BudgetClassExpenseEnum,
+  DocumentReviewStatusEnum,
 } from "./enum.schema";
 
 // ProjectProposal 테이블
@@ -62,6 +63,7 @@ export const ProjectProposalRevision = mysqlTable(
     target: text("target").notNull(),
     detail: text("detail").notNull(),
     note: text("note"),
+    submittedAt: timestamp("submitted_at"),
     agendaId: int("agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
@@ -205,6 +207,7 @@ export const BudgetProposalIncomeRevision = mysqlTable(
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
     agendaId: int("agenda_id"),
+    submittedAt: timestamp("submitted_at"),
   },
   table => ({
     documentIdFk: foreignKey({
@@ -272,6 +275,7 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
     agendaId: int("agenda_id"),
+    submittedAt: timestamp("submitted_at"),
   },
   table => ({
     documentIdFk: foreignKey({
@@ -307,6 +311,103 @@ export const BudgetProposalExpenseRevision = mysqlTable(
   }),
 );
 
+// ProjectProposalDocumentReview 테이블
+export const ProjectProposalDocumentReview = mysqlTable(
+  "project_proposal_document_review",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    documentId: int("document_id").notNull(),
+    userId: int("user_id").notNull(),
+    documentReviewStatusEnumId: int("document_review_status_enum_id").notNull(),
+    detail: text("detail"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    documentIdFk: foreignKey({
+      columns: [table.documentId],
+      foreignColumns: [ProjectProposal.id],
+      name: "pro_pro_doc_rev_document_id_fk",
+    }),
+    userIdFk: foreignKey({
+      columns: [table.userId],
+      foreignColumns: [User.id],
+      name: "pro_pro_doc_rev_user_id_fk",
+    }),
+    documentReviewStatusEnumIdFk: foreignKey({
+      columns: [table.documentReviewStatusEnumId],
+      foreignColumns: [DocumentReviewStatusEnum.id],
+      name: "pro_pro_doc_rev_document_review_status_enum_id_fk",
+    }),
+  }),
+);
+
+// BudgetProposalIncomeDocumentReview 테이블
+export const BudgetProposalIncomeDocumentReview = mysqlTable(
+  "budget_proposal_income_document_review",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    documentId: int("document_id").notNull(),
+    userId: int("user_id").notNull(),
+    documentReviewStatusEnumId: int("document_review_status_enum_id").notNull(),
+    detail: text("detail"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    documentIdFk: foreignKey({
+      columns: [table.documentId],
+      foreignColumns: [BudgetProposalIncome.id],
+      name: "bud_pro_inc_doc_rev_document_id_fk",
+    }),
+    userIdFk: foreignKey({
+      columns: [table.userId],
+      foreignColumns: [User.id],
+      name: "bud_pro_inc_doc_rev_user_id_fk",
+    }),
+    documentReviewStatusEnumIdFk: foreignKey({
+      columns: [table.documentReviewStatusEnumId],
+      foreignColumns: [DocumentReviewStatusEnum.id],
+      name: "bud_pro_inc_doc_rev_document_review_status_enum_id_fk",
+    }),
+  }),
+);
+
+// BudgetProposalExpenseDocumentReview 테이블
+export const BudgetProposalExpenseDocumentReview = mysqlTable(
+  "budget_proposal_expense_document_review",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    documentId: int("document_id").notNull(),
+    userId: int("user_id").notNull(),
+    documentReviewStatusEnumId: int("document_review_status_enum_id").notNull(),
+    detail: text("detail"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    documentIdFk: foreignKey({
+      columns: [table.documentId],
+      foreignColumns: [BudgetProposalExpense.id],
+      name: "bud_pro_exp_doc_rev_document_id_fk",
+    }),
+    userIdFk: foreignKey({
+      columns: [table.userId],
+      foreignColumns: [User.id],
+      name: "bud_pro_exp_doc_rev_user_id_fk",
+    }),
+    documentReviewStatusEnumIdFk: foreignKey({
+      columns: [table.documentReviewStatusEnumId],
+      foreignColumns: [DocumentReviewStatusEnum.id],
+      name: "bud_pro_exp_doc_rev_document_review_status_enum_id_fk",
+    }),
+  }),
+);
+
+// 타입 추론
 export type ProjectProposalT = InferSelectModel<typeof ProjectProposal>;
 export type ProjectProposalRevisionT = InferSelectModel<
   typeof ProjectProposalRevision
@@ -329,4 +430,13 @@ export type BudgetProposalExpenseT = InferSelectModel<
 >;
 export type BudgetProposalExpenseRevisionT = InferSelectModel<
   typeof BudgetProposalExpenseRevision
+>;
+export type ProjectProposalDocumentReviewT = InferSelectModel<
+  typeof ProjectProposalDocumentReview
+>;
+export type BudgetProposalIncomeDocumentReviewT = InferSelectModel<
+  typeof BudgetProposalIncomeDocumentReview
+>;
+export type BudgetProposalExpenseDocumentReviewT = InferSelectModel<
+  typeof BudgetProposalExpenseDocumentReview
 >;

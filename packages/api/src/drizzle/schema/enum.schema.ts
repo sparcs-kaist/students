@@ -93,6 +93,17 @@ export const AgendaAcceptedStatusEnum = mysqlTable(
   },
 );
 
+export const DocumentReviewStatusEnum = mysqlTable(
+  "document_review_status_enum",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    name: varchar("name", { length: 30 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
+
 export type OrganizationTypeEnumT = InferSelectModel<
   typeof OrganizationTypeEnum
 >;
@@ -101,4 +112,7 @@ export type OrganizationPresidentTypeEnumT = InferSelectModel<
 >;
 export type AgendaAcceptedStatusEnumT = InferSelectModel<
   typeof AgendaAcceptedStatusEnum
+>;
+export type DocumentReviewStatusEnumT = InferSelectModel<
+  typeof DocumentReviewStatusEnum
 >;
