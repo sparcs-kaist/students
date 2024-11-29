@@ -10,10 +10,17 @@ export enum AssistantPermissionE {
 // 안건 상태 E
 export enum AgendaAcceptedStatusE {
   Accepted = 1, // 승인
-  Reject, // 반려
-  Revision, // 수정요청
+  Rejected, // 반려
+  ReviseNeeded, // 수정요청
   Progress, // 검토중
-  Post, // 사후승인
+  LateAccepted, // 사후승인
+}
+
+// Document Review Status E
+export enum DocumentReviewStatusE {
+  Accepted = 1, // 승인
+  Rejected, // 반려
+  Progress, // 검토중
 }
 
 // AssistantPermissionE
@@ -43,13 +50,13 @@ export const getDisplayNameAgendaAcceptedStatusE = (
   switch (type) {
     case AgendaAcceptedStatusE.Accepted:
       return "승인";
-    case AgendaAcceptedStatusE.Reject:
+    case AgendaAcceptedStatusE.Rejected:
       return "반려";
-    case AgendaAcceptedStatusE.Revision:
+    case AgendaAcceptedStatusE.ReviseNeeded:
       return "수정요청";
     case AgendaAcceptedStatusE.Progress:
       return "검토중";
-    case AgendaAcceptedStatusE.Post:
+    case AgendaAcceptedStatusE.LateAccepted:
       return "사후승인";
     default:
       return "";
