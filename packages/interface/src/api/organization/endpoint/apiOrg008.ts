@@ -21,8 +21,6 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   teamId: zId,
   userId: zId,
-  startTerm: z.coerce.date(),
-  endTerm: z.coerce.date().optional(),
 });
 
 const responseBodyMap = {

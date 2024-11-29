@@ -7,7 +7,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
  * @version v0.1
  * @description 기구장단 권한으로 팀에 리더를 생성합니다.
  * 만약 팀이 없거나 유저가 없거나 유저가 팀멤버가 아닌 경우 404 에러를 반환합니다.
- * 만약 이미 팀에 리더가 있는 경우 해당 리더를 은퇴 처리 후 새로운 리더를 임명합니다.
+ * 만약 이미 팀에 리더가 있는 경우 에러가 발생합니다.
  */
 
 const url = () => `/president/organizations/teams/leader`;
@@ -22,8 +22,6 @@ const requestBody = z.object({
   teamId: zId,
   userId: zId,
   role: z.string().max(30),
-  startTerm: z.coerce.date(),
-  endTerm: z.coerce.date().optional(),
 });
 
 const responseBodyMap = {
