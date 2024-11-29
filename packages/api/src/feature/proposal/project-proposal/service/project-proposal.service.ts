@@ -9,8 +9,11 @@ import {
   ApiPrp001RequestQuery,
   ApiPrp001ResponseOK,
   ApiPrp002ResponseOK,
+  ApiPrp004RequestBody,
+  ApiPrp004ResponseCreated,
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
 import { TeamPublicService } from "src/feature/organization/team/service/team.public.service";
 import { ProjectProposalRepository } from "../repository/project-proposal.repository";
@@ -22,6 +25,7 @@ export class ProjectProposalService {
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly userPublicService: UserPublicService,
     private readonly teamPublicService: TeamPublicService,
+    private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
   async getProjectProposalsForStudentsBySemesterId(
@@ -107,6 +111,97 @@ export class ProjectProposalService {
       detail: projectProposalRevision.detail,
       timeLines,
       budgetProposals: undefined,
+    };
+  }
+
+  async postProjectProposal(
+    body: ApiPrp004RequestBody,
+  ): Promise<ApiPrp004ResponseCreated> {
+    // semetster 존재하는 지 확인
+    await this.semesterPublicService.getSemesterById(body.semesterId);
+    // organization 존재하는 지 확인
+    await this.organizationPublicService.getOrganizationById(
+      body.organizationId,
+    );
+    // 해당 semester에 organization이 존재하는 지 확인
+    const checkOrganizationInSemester =
+      await this.organizationPublicService.checkOrganizationInSemester(
+        body.organizationId,
+        body.semesterId,
+      );
+    if (!checkOrganizationInSemester) {
+      throw new NotFoundException(
+        `Organization with ID ${body.organizationId} not found in semester with ID ${body.semesterId}`,
+      );
+    }
+
+    // 제대로 들어갔는 지 count 하기 위한 용도
+    const count1ProjectProposal =
+      await this.projectProposalRepository.selectProjectProposal({
+        organizationId: body.organizationId,
+        semesterId: body.semesterId,
+      });
+
+    // ProjectProposal 생성
+    const resPrpId = await this.projectProposalRepository.insertProjectProposal(
+      body.organizationId,
+      body.semesterId,
+    );
+
+    const count2ProjectProposal =
+      await this.projectProposalRepository.selectProjectProposal({
+        organizationId: body.organizationId,
+        semesterId: body.semesterId,
+      });
+    // ProjectProposal 생성이 제대로 되었는 지 확인
+    if (count1ProjectProposal.length + 1 !== count2ProjectProposal.length) {
+      throw new HttpException(
+        "ProjectProposal creation failed",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const count1ProjectProposalRevision =
+      await this.projectProposalRepository.selectProjectProposalRevision({
+        documentId: resPrpId,
+        name: body.name,
+      });
+
+    // ProjectProposalRevision 생성
+    const resPrpRevId =
+      await this.projectProposalRepository.insertProjectProposalRevision(
+        resPrpId,
+        body.name,
+      );
+
+    const count2ProjectProposalRevision =
+      await this.projectProposalRepository.selectProjectProposalRevision({
+        documentId: resPrpId,
+        name: body.name,
+      });
+
+    if (
+      count1ProjectProposalRevision.length + 1 !==
+      count2ProjectProposalRevision.length
+    ) {
+      throw new HttpException(
+        "ProjectProposalRevision creation failed",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    // ProjectProposal의 revisionId를 업데이트
+    await this.projectProposalRepository.updateProjectProposal(
+      {
+        revisionId: resPrpId,
+      },
+      {
+        revisionId: resPrpRevId,
+      },
+    );
+
+    return {
+      projectProposalId: resPrpId,
     };
   }
 }

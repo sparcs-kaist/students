@@ -10,9 +10,10 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
  *
  */
 
-const url = () => `/president/organizations/teams/team`;
+const url = () => `/president/proposals/project-proposals/project-proposal`;
 const method = "POST";
-export const ApiPrp004RequestUrl = "/president/organizations/teams/team";
+export const ApiPrp004RequestUrl =
+  "/president/proposals/project-proposals/project-proposal";
 
 const requestParam = z.object({});
 
@@ -26,7 +27,7 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    teamId: zId,
+    projectProposalId: zId,
   }),
 };
 

@@ -80,7 +80,7 @@ export class OrganizationPublicService {
 
   /**
    * @param userId, organizationId, startTerm, endTerm
-   * @returns TeamMemeberT 해당 학기 해당 단체에 해당하는 TeamMemberT 객체를 리턴합니다.
+   * @returns OrganizationMemeberT 해당 학기 해당 단체에 해당하는 OrganizationMemberT 객체를 리턴합니다.
    * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
    */
   async getOrganizationMemberByUserAndOrgAndDate(
@@ -110,7 +110,7 @@ export class OrganizationPublicService {
 
   /**
    * @param userId, organizationId, semesterId
-   * @returns TeamMemeberT 해당 학기 해당 단체에 해당하는 TeamMemberT 객체를 리턴합니다.
+   * @returns OrganizationMemeberT 해당 학기 해당 단체에 해당하는 OrganizationMemberT 객체를 리턴합니다.
    * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
    */
   async getOrganizationMemberByUserAndOrgAndSemester(
@@ -126,5 +126,31 @@ export class OrganizationPublicService {
       startTerm,
       endTerm,
     );
+  }
+
+  /**
+   * @param organizationId, semesterId
+   * @returns boolean 단체가 해당 학기에 존재했으면 true, 아니면 false를 리턴합니다.
+   * @description organizationId에 해당하는 단체가 semesterId에 해당하는 학기에 존재하는지 확인합니다.
+   * 해당 시기에 해당하는 Organization이 없었더라도 404Error를 발생시키지 않습니다.
+   */
+  async checkOrganizationInSemester(
+    organizationId: number,
+    semesterId: number,
+  ): Promise<boolean> {
+    const semester =
+      await this.semesterPublicService.getSemesterById(semesterId);
+    const organizations = await this.organizationRepository.selectOrganization({
+      id: organizationId,
+      startTerm: semester.startTerm,
+      endTerm: semester.endTerm,
+    });
+    if (organizations.length > 1) {
+      throw new HttpException(
+        `Unreachable: Organization with ID ${organizationId} has multiple records.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return organizations.length !== 0;
   }
 }

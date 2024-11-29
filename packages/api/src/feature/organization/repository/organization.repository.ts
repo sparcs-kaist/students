@@ -45,6 +45,68 @@ export class OrganizationRepository {
     return this.db.select().from(Organization).where(eq(Organization.id, id));
   }
 
+  async selectOrganization(
+    target: Partial<OrganizationT>,
+  ): Promise<OrganizationT[]> {
+    const {
+      id,
+      name,
+      nameEng,
+      organizationTypeEnumId,
+      foundingYear,
+      startTerm,
+      endTerm,
+    } = target;
+    let query = this.db.select().from(Organization).$dynamic();
+
+    const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(Organization.id, id));
+    }
+
+    if (name) {
+      whereConditions.push(eq(Organization.name, name));
+    }
+
+    if (nameEng) {
+      whereConditions.push(eq(Organization.nameEng, nameEng));
+    }
+
+    if (organizationTypeEnumId) {
+      whereConditions.push(
+        eq(Organization.organizationTypeEnumId, organizationTypeEnumId),
+      );
+    }
+
+    if (foundingYear) {
+      whereConditions.push(eq(Organization.foundingYear, foundingYear));
+    }
+
+    if (startTerm) {
+      whereConditions.push(
+        or(gte(Organization.endTerm, startTerm), isNull(Organization.endTerm)),
+      );
+    }
+
+    if (endTerm) {
+      whereConditions.push(lte(Organization.startTerm, endTerm));
+    }
+
+    // 삭제된 항목 제외
+    whereConditions.push(isNull(Organization.deletedAt));
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    // 쿼리 실행
+    const res = await query.execute();
+
+    return res;
+  }
+
   async getOrganizationWithPresidentById(
     organizationId: number,
     date: Date,
