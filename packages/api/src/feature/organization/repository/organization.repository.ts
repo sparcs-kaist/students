@@ -1,5 +1,4 @@
 import { Injectable, Inject } from "@nestjs/common";
-import logger from "@sparcs-students/api/common/util/logger";
 
 import {
   ApiOrg002RequestBody,
@@ -23,8 +22,6 @@ import {
   OrganizationPresidentT,
   UserT,
   UserStudentT,
-  TeamT,
-  Team,
   OrganizationMember,
   OrganizationManager,
   OrganizationMemberT,
@@ -120,11 +117,6 @@ export class OrganizationRepository {
       ...row,
       organizationTypeEnum: row.organization_type_enum,
     }));
-  }
-
-  async getTeamById(id: number): Promise<TeamT[]> {
-    const res = await this.db.select().from(Team).where(eq(Team.id, id));
-    return res;
   }
 
   async ckOrganizationBeforeCreate(
@@ -274,7 +266,6 @@ export class OrganizationRepository {
       )
       .orderBy(desc(OrganizationMember.createdAt))
       .limit(1);
-    logger.info(res);
     if (res.length === 0) {
       return 0;
     }
@@ -345,6 +336,53 @@ export class OrganizationRepository {
       .execute();
 
     const res = await this.ckOrganizationManagerBeforeCreate(body);
+    return res;
+  }
+
+  async selectOrganizationMember(target: Partial<OrganizationMemberT>) {
+    const { id, userId, startTerm, endTerm, organizationId } = target;
+    let query = this.db.select().from(OrganizationMember).$dynamic();
+
+    const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(OrganizationMember.id, id));
+    }
+
+    if (userId) {
+      whereConditions.push(eq(OrganizationMember.userId, userId));
+    }
+
+    if (startTerm) {
+      whereConditions.push(
+        or(
+          gte(OrganizationMember.endTerm, startTerm),
+          isNull(OrganizationMember.endTerm),
+        ),
+      );
+    }
+
+    if (endTerm) {
+      whereConditions.push(lte(OrganizationMember.startTerm, endTerm));
+    }
+
+    if (organizationId) {
+      whereConditions.push(
+        eq(OrganizationMember.organizationId, organizationId),
+      );
+    }
+
+    // 삭제된 항목 제외
+    whereConditions.push(isNull(OrganizationMember.deletedAt));
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    // 쿼리 실행
+    const res = await query.execute();
+
     return res;
   }
 }

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { OrganizationT, TeamT } from "src/drizzle/schema";
+import { OrganizationMemberT, OrganizationT } from "src/drizzle/schema";
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import {
@@ -79,20 +79,52 @@ export class OrganizationPublicService {
   }
 
   /**
-   * @param teamId
-   * @returns TeamT id에 해당하는 TeamT 객체를 리턴합니다.
-   * @description 해당 id의 Team이 없으면 404 exception을 throw 합니다.
+   * @param userId, organizationId, startTerm, endTerm
+   * @returns TeamMemeberT 해당 학기 해당 단체에 해당하는 TeamMemberT 객체를 리턴합니다.
+   * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
    */
-  async getTeamById(teamId: number): Promise<TeamT> {
-    const res = await this.organizationRepository.getTeamById(teamId);
+  async getOrganizationMemberByUserAndOrgAndDate(
+    userId: number,
+    organizationId: number,
+    startTerm: Date,
+    endTerm: Date,
+  ): Promise<OrganizationMemberT> {
+    const res = await this.organizationRepository.selectOrganizationMember({
+      userId,
+      startTerm,
+      endTerm,
+      organizationId,
+    });
     if (res.length === 0) {
-      throw new NotFoundException(`Team with ID ${teamId} not found.`);
+      throw new NotFoundException(
+        `OrganizationMember with userId ${userId} not found.`,
+      );
     } else if (res.length > 1) {
       throw new HttpException(
-        `Unreachable: Team with ID ${teamId} has multiple records.`,
+        `Unreachable: OrganizationMember with userId ${userId} has multiple records.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     return res[0];
+  }
+
+  /**
+   * @param userId, organizationId, semesterId
+   * @returns TeamMemeberT 해당 학기 해당 단체에 해당하는 TeamMemberT 객체를 리턴합니다.
+   * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
+   */
+  async getOrganizationMemberByUserAndOrgAndSemester(
+    userId: number,
+    semesterId: number,
+    organizationId: number,
+  ): Promise<OrganizationMemberT> {
+    const { startTerm, endTerm } =
+      await this.semesterPublicService.getSemesterById(semesterId);
+    return this.getOrganizationMemberByUserAndOrgAndDate(
+      userId,
+      organizationId,
+      startTerm,
+      endTerm,
+    );
   }
 }
