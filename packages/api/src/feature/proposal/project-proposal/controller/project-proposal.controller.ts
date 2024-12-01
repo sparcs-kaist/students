@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -20,7 +21,9 @@ import {
   ApiPrp004ResponseCreated,
   ApiPrp005RequestUrl,
   apiPrp005,
+  ApiPrp005RequestParam,
   ApiPrp005RequestBody,
+  ApiPrp005ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 
 import { ProjectProposalService } from "../service/project-proposal.service";
@@ -52,8 +55,9 @@ export class ProjectProposalController {
   @Put(ApiPrp005RequestUrl)
   @UsePipes(new ZodPipe(apiPrp005))
   async putProjectProposal(
+    @Param() param: ApiPrp005RequestParam,
     @Body() body: ApiPrp005RequestBody,
-  ): Promise<string> {
-    return `this.projectProposalService.putProjectProposal(${JSON.stringify(body)})`;
+  ): Promise<ApiPrp005ResponseOK> {
+    return this.projectProposalService.putProjectProposalContent(param, body);
   }
 }

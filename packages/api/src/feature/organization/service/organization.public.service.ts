@@ -115,8 +115,8 @@ export class OrganizationPublicService {
    */
   async getOrganizationMemberByUserAndOrgAndSemester(
     userId: number,
-    semesterId: number,
     organizationId: number,
+    semesterId: number,
   ): Promise<OrganizationMemberT> {
     const { startTerm, endTerm } =
       await this.semesterPublicService.getSemesterById(semesterId);

@@ -311,13 +311,13 @@ export class ProjectProposalRepository {
   }
 
   async updateProjectProposalRevision(
-    target: Partial<ProjectProposalRevisionT>, // 수정할 필드를 담은 객체
+    values: Partial<ProjectProposalRevisionT>, // 수정할 필드를 담은 객체
     condition: Partial<ProjectProposalRevisionT>, // 조건
   ): Promise<boolean> {
     // 업데이트된 행 수를 반환
     const { id, documentId, name } = condition;
 
-    let query = this.db.update(ProjectProposalRevision).set(target).$dynamic();
+    let query = this.db.update(ProjectProposalRevision).set(values).$dynamic();
 
     // 조건 설정
     const whereConditions = [];

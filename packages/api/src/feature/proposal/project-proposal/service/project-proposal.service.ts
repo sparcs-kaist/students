@@ -11,6 +11,9 @@ import {
   ApiPrp002ResponseOK,
   ApiPrp004RequestBody,
   ApiPrp004ResponseCreated,
+  ApiPrp005RequestBody,
+  ApiPrp005RequestParam,
+  ApiPrp005ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
@@ -203,5 +206,110 @@ export class ProjectProposalService {
     return {
       projectProposalId: resPrpId,
     };
+  }
+
+  async putProjectProposalContent(
+    param: ApiPrp005RequestParam,
+    body: ApiPrp005RequestBody,
+  ): Promise<ApiPrp005ResponseOK> {
+    // ProjectProposalRevision 존재하는 지 확인
+    const prpRev =
+      await this.projectProposalRepository.selectProjectProposalRevision({
+        documentId: param.projectProposalId,
+        orderByIdAsc: true,
+      });
+    if (prpRev.length === 0) {
+      throw new NotFoundException(
+        `ProjectProposalRevision with ID ${param.projectProposalId} not found`,
+      );
+    }
+    const projectProposalRevision = prpRev[prpRev.length - 1];
+
+    if (body.teamId || body.managerId) {
+      const prp = await this.projectProposalRepository.selectProjectProposal({
+        id: projectProposalRevision.documentId,
+      });
+      if (prp.length === 0) {
+        throw new NotFoundException(
+          `ProjectProposal with ID ${projectProposalRevision.documentId} not found`,
+        );
+      }
+      const projectProposal = prp[0];
+      const { organizationId } = projectProposal;
+      // team, manager의 유효성 검사
+      if (body.teamId) {
+        const team = await this.teamPublicService.getTeamById(body.teamId);
+        if (team.organizationId !== organizationId) {
+          throw new HttpException(
+            `Team with ID ${body.teamId} is not in Organization with ID ${organizationId}`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+      if (body.managerId) {
+        await this.userPublicService.getUserById(body.managerId);
+        const checkManagerInOrganization =
+          await this.organizationPublicService.getOrganizationMemberByUserAndOrgAndSemester(
+            body.managerId,
+            organizationId,
+            projectProposal.semesterId,
+          );
+        if (!checkManagerInOrganization) {
+          throw new HttpException(
+            `User with ID ${body.managerId} is not in Organization with ID ${organizationId} and Semester with ID ${projectProposal.semesterId}`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+    }
+    // TODO: prepareStartTerm, prepareEndTerm, startTerm, endTerm의 유효성 검사 (이건 총학 정책이 필요할 듯)
+
+    // 검증용 파라미터들
+    let projectProposalRevisionUpdated: boolean;
+
+    if (projectProposalRevision.submittedAt !== null) {
+      // ProPrpRev가 제출된 상태 => 새로운 PrpRev를 생성해야 함
+      const resPrpRevId =
+        await this.projectProposalRepository.insertProjectProposalRevision(
+          param.projectProposalId,
+          body.name,
+        );
+      if (resPrpRevId === 0) {
+        throw new HttpException(
+          "ProjectProposalRevision creation failed",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      // ProjectProposalRevision의 내용을 업데이트
+      projectProposalRevisionUpdated =
+        await this.projectProposalRepository.updateProjectProposalRevision(
+          {
+            ...body,
+          },
+          {
+            id: resPrpRevId,
+          },
+        );
+    } else {
+      // ProPrpRev가 제출되지 않은 상태 => 해당 PrpRev를 업데이트
+      projectProposalRevisionUpdated =
+        await this.projectProposalRepository.updateProjectProposalRevision(
+          {
+            ...body,
+          },
+          {
+            id: projectProposalRevision.id,
+          },
+        );
+    }
+    if (!projectProposalRevisionUpdated) {
+      throw new HttpException(
+        "ProjectProposalRevision update failed",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return { projectProposalId: param.projectProposalId };
   }
 }
