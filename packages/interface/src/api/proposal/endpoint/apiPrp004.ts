@@ -22,7 +22,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   organizationId: zId,
   semesterId: zId,
-  name: z.coerce.string().max(30),
+  name: z.coerce.string().max(255),
 });
 
 const responseBodyMap = {
