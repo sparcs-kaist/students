@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+} from "@nestjs/common";
 
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -10,6 +18,9 @@ import {
   apiPrp004,
   ApiPrp004RequestBody,
   ApiPrp004ResponseCreated,
+  ApiPrp005RequestUrl,
+  apiPrp005,
+  ApiPrp005RequestBody,
 } from "@sparcs-students/interface/api/proposal/index";
 
 import { ProjectProposalService } from "../service/project-proposal.service";
@@ -32,9 +43,17 @@ export class ProjectProposalController {
 
   @Post(ApiPrp004RequestUrl)
   @UsePipes(new ZodPipe(apiPrp004))
-  async PostProjectProposal(
+  async postProjectProposal(
     @Body() body: ApiPrp004RequestBody,
   ): Promise<ApiPrp004ResponseCreated> {
     return this.projectProposalService.postProjectProposal(body);
+  }
+
+  @Put(ApiPrp005RequestUrl)
+  @UsePipes(new ZodPipe(apiPrp005))
+  async putProjectProposal(
+    @Body() body: ApiPrp005RequestBody,
+  ): Promise<string> {
+    return `this.projectProposalService.putProjectProposal(${JSON.stringify(body)})`;
   }
 }
