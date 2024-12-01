@@ -12,7 +12,7 @@ import {
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
 import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum/meeting.enum";
 
-import { asc, isNull, and, eq, desc, inArray } from "drizzle-orm";
+import { asc, isNull, and, eq, desc, inArray, isNotNull } from "drizzle-orm";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -148,9 +148,13 @@ export class ProjectProposalRepository {
   }
 
   async selectProjectProposal(
-    target: Partial<ProjectProposalT> & { orderByIdAsc?: boolean },
+    target: Partial<ProjectProposalT>,
+    isNullCondition?: Partial<Record<keyof ProjectProposalT, boolean>>,
+    orderByCondition?: Partial<
+      Record<keyof ProjectProposalT, "ASC" | "DESC">
+    >[],
   ): Promise<ProjectProposalT[]> {
-    const { id, organizationId, semesterId, revisionId, orderByIdAsc } = target;
+    const { id, organizationId, semesterId, revisionId } = target;
     let query = this.db.select().from(ProjectProposal).$dynamic();
 
     const whereConditions = [];
@@ -174,18 +178,31 @@ export class ProjectProposalRepository {
     // 삭제된 항목 제외
     whereConditions.push(isNull(ProjectProposal.deletedAt));
 
+    if (isNullCondition) {
+      Object.entries(isNullCondition).forEach(([key, value]) => {
+        whereConditions.push(
+          value
+            ? isNull(ProjectProposal[key as keyof ProjectProposalT])
+            : isNotNull(ProjectProposal[key as keyof ProjectProposalT]),
+        );
+      });
+    }
+
     // 조건이 하나라도 있으면 AND로 묶어서 처리
     if (whereConditions.length > 0) {
       query = query.where(and(...whereConditions));
     }
-
-    if (orderByIdAsc) {
-      query = query.orderBy(asc(ProjectProposal.id));
+    const orderByConditions = orderByCondition.map(order => {
+      const [key, value] = Object.entries(order)[0]; // 각 항목을 키와 값으로 분리
+      return value === "ASC"
+        ? asc(ProjectProposal[key as keyof ProjectProposalT])
+        : desc(ProjectProposal[key as keyof ProjectProposalT]);
+    });
+    if (orderByConditions.length > 0) {
+      query = query.orderBy(...orderByConditions);
     }
-
     // 쿼리 실행
     const res = await query.execute();
-
     return res;
   }
 
@@ -197,11 +214,14 @@ export class ProjectProposalRepository {
       .insert(ProjectProposal)
       .values({ organizationId, semesterId })
       .execute();
-    const res = await this.selectProjectProposal({
-      organizationId,
-      semesterId,
-      orderByIdAsc: true,
-    });
+    const res = await this.selectProjectProposal(
+      {
+        organizationId,
+        semesterId,
+      },
+      {},
+      [{ id: "ASC" }],
+    );
     if (res.length === 0) {
       return 0;
     }
@@ -252,7 +272,9 @@ export class ProjectProposalRepository {
   }
 
   async selectProjectProposalRevision(
-    target: Partial<ProjectProposalRevisionT> & { orderByIdAsc?: boolean },
+    target: Partial<ProjectProposalRevisionT> & {
+      orderByIdAsc?: boolean;
+    },
   ): Promise<ProjectProposalRevisionT[]> {
     const { id, documentId, name, orderByIdAsc } = target;
     let query = this.db.select().from(ProjectProposalRevision).$dynamic();

@@ -152,12 +152,12 @@ export class ProjectProposalService {
       body.organizationId,
       body.semesterId,
     );
-
     const count2ProjectProposal =
       await this.projectProposalRepository.selectProjectProposal({
         organizationId: body.organizationId,
         semesterId: body.semesterId,
       });
+
     // ProjectProposal 생성이 제대로 되었는 지 확인
     if (count1ProjectProposal.length + 1 !== count2ProjectProposal.length) {
       throw new HttpException(
