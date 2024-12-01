@@ -14,6 +14,8 @@ import {
   ApiPrp005RequestBody,
   ApiPrp005RequestParam,
   ApiPrp005ResponseOK,
+  ApiPrp006RequestBody,
+  ApiPrp006ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
@@ -220,7 +222,7 @@ export class ProjectProposalService {
       });
     if (prpRev.length === 0) {
       throw new NotFoundException(
-        `ProjectProposalRevision with ID ${param.projectProposalId} not found`,
+        `ProjectProposalRevision with ProjectProposalID ${param.projectProposalId} not found`,
       );
     }
     const projectProposalRevision = prpRev[prpRev.length - 1];
@@ -311,5 +313,81 @@ export class ProjectProposalService {
     }
 
     return { projectProposalId: param.projectProposalId };
+  }
+
+  async putProjectProposalSubmit(
+    body: ApiPrp006RequestBody,
+  ): Promise<ApiPrp006ResponseOK> {
+    await this.organizationPublicService.checkOrganizationInSemester(
+      body.organizationId,
+      body.semesterId,
+    );
+
+    // ProjectProposalRevision 존재하는 지 확인
+    const unsubmittedPrpRevs =
+      await this.projectProposalRepository.selectUnsubmittedProjectProposalRevisionWithProjectProposal(
+        body.organizationId,
+        body.semesterId,
+      );
+    if (unsubmittedPrpRevs.length === 0) {
+      throw new NotFoundException(
+        `Unsubmitted ProjectProposalRevision with Organization ID ${body.organizationId} and Semester ID ${body.semesterId} not found`,
+      );
+    }
+    // ProjectProposalRevision 제출이 가능한 지 확인
+    await Promise.all(
+      unsubmittedPrpRevs.map(async row => {
+        const revision = row.projectProposalRevision;
+
+        // deleted_at 제외하고, 다른 값들이 null인지 체크
+        const hasNullFields = Object.keys(revision)
+          .filter(
+            key =>
+              key !== "deletedAt" &&
+              key !== "agendaId" &&
+              key !== "submittedAt",
+          )
+          .some(key => revision[key] === null);
+
+        if (hasNullFields) {
+          const nullKeys = Object.keys(revision).filter(
+            key => revision[key] === null,
+          );
+          throw new HttpException(
+            `ProjectProposalRevision with ID ${revision.id} has null fields, name: ${revision.name} || keys: ${JSON.stringify(nullKeys)}`,
+            HttpStatus.UNPROCESSABLE_ENTITY,
+          );
+        }
+      }),
+    );
+    // ProjectProposalRevision 제출
+    const unsubmittedPrpRevIds = unsubmittedPrpRevs.map(prpRev => ({
+      projectProposalId: prpRev.projectProposal.id,
+      projectProposalRevisionId: prpRev.projectProposalRevision.id,
+    }));
+
+    await this.projectProposalRepository.updateProjectProposalRevisionSubmit(
+      unsubmittedPrpRevIds,
+    );
+
+    // ProjectProposalRevision 제출이 제대로 되었는 지 확인
+    const unsubmittedPrpRevCheck =
+      await this.projectProposalRepository.selectUnsubmittedProjectProposalRevisionWithProjectProposal(
+        body.organizationId,
+        body.semesterId,
+      );
+
+    if (unsubmittedPrpRevCheck.length !== 0) {
+      throw new HttpException(
+        "ProjectProposalRevision submission failed",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    // ProjectProposal의 revisionId를 업데이트
+
+    return {
+      submittedIds: unsubmittedPrpRevIds,
+    };
   }
 }

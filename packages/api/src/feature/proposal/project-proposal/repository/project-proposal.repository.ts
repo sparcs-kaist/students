@@ -11,7 +11,8 @@ import {
 } from "@sparcs-students/api/drizzle/schema";
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
 import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum/meeting.enum";
-import { asc, isNull, and, eq, desc } from "drizzle-orm";
+
+import { asc, isNull, and, eq, desc, inArray } from "drizzle-orm";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -318,22 +319,17 @@ export class ProjectProposalRepository {
     const { id, documentId, name } = condition;
 
     let query = this.db.update(ProjectProposalRevision).set(values).$dynamic();
-
     // 조건 설정
     const whereConditions = [];
-
     if (id) {
       whereConditions.push(eq(ProjectProposalRevision.id, id));
     }
-
     if (documentId) {
       whereConditions.push(eq(ProjectProposalRevision.documentId, documentId));
     }
-
     if (name) {
       whereConditions.push(eq(ProjectProposalRevision.name, name));
     }
-
     // 삭제된 항목 제외 (deletedAt이 null이어야만 업데이트)
     whereConditions.push(isNull(ProjectProposalRevision.deletedAt));
 
@@ -346,6 +342,74 @@ export class ProjectProposalRepository {
     await query.execute();
 
     // 업데이트된 행 수를 반환
+    return true;
+  }
+
+  async selectUnsubmittedProjectProposalRevisionWithProjectProposal(
+    organizationId: number,
+    semesterId: number,
+  ): Promise<ProjectProposalWithRevision[]> {
+    // 가장 최신의 updatedAt 값을 가져오는 서브쿼리
+    const res = await this.db
+      .select()
+      .from(ProjectProposalRevision)
+      .innerJoin(
+        ProjectProposal,
+        eq(ProjectProposal.id, ProjectProposalRevision.documentId),
+      )
+      .where(
+        and(
+          eq(ProjectProposal.organizationId, organizationId),
+          eq(ProjectProposal.semesterId, semesterId),
+          isNull(ProjectProposalRevision.submittedAt),
+          isNull(ProjectProposalRevision.deletedAt),
+        ),
+      );
+
+    return res.map(row => ({
+      projectProposal: row.project_proposal,
+      projectProposalRevision: row.project_proposal_revision,
+    }));
+  }
+
+  async updateProjectProposalRevisionSubmit(
+    targetIds: {
+      projectProposalId: number;
+      projectProposalRevisionId: number;
+    }[],
+  ): Promise<boolean> {
+    const revisionIds = targetIds.map(ids => ids.projectProposalRevisionId);
+
+    await this.db.transaction(async tx => {
+      // submittedAt을 현재 시간으로 업데이트
+      tx.update(ProjectProposalRevision)
+        .set({ submittedAt: new Date() })
+        .where(inArray(ProjectProposalRevision.id, revisionIds))
+        .execute();
+
+      // ProjectProposal의 revisionId를 업데이트
+      // 여러 개의 업데이트를 트랜잭션 안에서 한 번에 처리
+      const updateQueries = targetIds.map(
+        ({ projectProposalId, projectProposalRevisionId }) =>
+          tx
+            .update(ProjectProposal)
+            .set({ revisionId: projectProposalRevisionId })
+            .where(eq(ProjectProposal.id, projectProposalId))
+            .execute(),
+      );
+
+      // 모든 업데이트가 병렬로 실행되도록 Promise.all 사용
+      await Promise.all(updateQueries);
+
+      // 위의 코드는 아래와 같이 forEach로도 작성 가능
+      // targetIds.forEach(ids => {
+      //   tx.update(ProjectProposal)
+      //     .set({ revisionId: ids.projectProposalRevisionId })
+      //     .where(eq(ProjectProposal.id, ids.projectProposalId))
+      //     .execute();
+      // });
+    });
+
     return true;
   }
 }

@@ -24,6 +24,10 @@ import {
   ApiPrp005RequestParam,
   ApiPrp005RequestBody,
   ApiPrp005ResponseOK,
+  ApiPrp006RequestUrl,
+  apiPrp006,
+  ApiPrp006RequestBody,
+  ApiPrp006ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 
 import { ProjectProposalService } from "../service/project-proposal.service";
@@ -59,5 +63,13 @@ export class ProjectProposalController {
     @Body() body: ApiPrp005RequestBody,
   ): Promise<ApiPrp005ResponseOK> {
     return this.projectProposalService.putProjectProposalContent(param, body);
+  }
+
+  @Put(ApiPrp006RequestUrl)
+  @UsePipes(new ZodPipe(apiPrp006))
+  async putProjectProposalSubmit(
+    @Body() body: ApiPrp006RequestBody,
+  ): Promise<ApiPrp006ResponseOK> {
+    return this.projectProposalService.putProjectProposalSubmit(body);
   }
 }
