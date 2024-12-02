@@ -12,7 +12,7 @@ import {
 import { ApiPrp001ResponseOK } from "@sparcs-students/interface/api/proposal/index";
 import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum/meeting.enum";
 
-import { and, eq, desc } from "drizzle-orm";
+import { asc, isNull, and, eq, desc, inArray, isNotNull } from "drizzle-orm";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -67,7 +67,7 @@ export class ProjectProposalRepository {
       acceptedStatus:
         row.agendaExists && row.agendaAccepted
           ? AgendaAcceptedStatusE.Accepted
-          : AgendaAcceptedStatusE.Reject,
+          : AgendaAcceptedStatusE.Rejected,
     }));
   }
 
@@ -131,5 +131,307 @@ export class ProjectProposalRepository {
       .where(eq(ProjectProposalTimeline.id, projectId));
 
     return res;
+  }
+
+  async selectProjectProposalWithRevision() //   target: {
+  //   projectProposal: Partial<ProjectProposalT>;
+  //   projectProposalRevision: Partial<ProjectProposalRevisionT>;
+  // }
+  : Promise<
+    {
+      projectProposal: ProjectProposalT;
+      projectProposalRevision: ProjectProposalRevisionT;
+    }[]
+  > {
+    // TODO: 둘 다 join하는 것 나중에 만들 것임
+    return [];
+  }
+
+  async selectProjectProposal(
+    target: Partial<ProjectProposalT>,
+    isNullCondition?: Partial<Record<keyof ProjectProposalT, boolean>>,
+    orderByCondition?: Partial<
+      Record<keyof ProjectProposalT, "ASC" | "DESC">
+    >[],
+  ): Promise<ProjectProposalT[]> {
+    const { id, organizationId, semesterId, revisionId } = target;
+    let query = this.db.select().from(ProjectProposal).$dynamic();
+
+    const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(ProjectProposal.id, id));
+    }
+
+    if (organizationId) {
+      whereConditions.push(eq(ProjectProposal.organizationId, organizationId));
+    }
+
+    if (semesterId) {
+      whereConditions.push(eq(ProjectProposal.semesterId, semesterId));
+    }
+
+    if (revisionId) {
+      whereConditions.push(eq(ProjectProposal.revisionId, revisionId));
+    }
+
+    // 삭제된 항목 제외
+    whereConditions.push(isNull(ProjectProposal.deletedAt));
+
+    if (isNullCondition) {
+      Object.entries(isNullCondition).forEach(([key, value]) => {
+        whereConditions.push(
+          value
+            ? isNull(ProjectProposal[key as keyof ProjectProposalT])
+            : isNotNull(ProjectProposal[key as keyof ProjectProposalT]),
+        );
+      });
+    }
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+    const orderByConditions = orderByCondition.map(order => {
+      const [key, value] = Object.entries(order)[0]; // 각 항목을 키와 값으로 분리
+      return value === "ASC"
+        ? asc(ProjectProposal[key as keyof ProjectProposalT])
+        : desc(ProjectProposal[key as keyof ProjectProposalT]);
+    });
+    if (orderByConditions.length > 0) {
+      query = query.orderBy(...orderByConditions);
+    }
+    // 쿼리 실행
+    const res = await query.execute();
+    return res;
+  }
+
+  async insertProjectProposal(
+    organizationId: number,
+    semesterId: number,
+  ): Promise<number> {
+    await this.db
+      .insert(ProjectProposal)
+      .values({ organizationId, semesterId })
+      .execute();
+    const res = await this.selectProjectProposal(
+      {
+        organizationId,
+        semesterId,
+      },
+      {},
+      [{ id: "ASC" }],
+    );
+    if (res.length === 0) {
+      return 0;
+    }
+
+    return res[res.length - 1].id;
+  }
+
+  async updateProjectProposal(
+    target: Partial<ProjectProposalT>, // 수정할 필드를 담은 객체
+    condition: Partial<ProjectProposalT>, // 조건
+  ): Promise<boolean> {
+    const { id, organizationId, semesterId, revisionId } = condition;
+
+    let query = this.db.update(ProjectProposal).set(target).$dynamic();
+
+    // 조건 설정
+    const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(ProjectProposal.id, id));
+    }
+
+    if (organizationId) {
+      whereConditions.push(eq(ProjectProposal.organizationId, organizationId));
+    }
+
+    if (semesterId) {
+      whereConditions.push(eq(ProjectProposal.semesterId, semesterId));
+    }
+
+    if (revisionId) {
+      whereConditions.push(eq(ProjectProposal.revisionId, revisionId));
+    }
+
+    // 삭제된 항목 제외 (deletedAt이 null이어야만 업데이트)
+    whereConditions.push(isNull(ProjectProposal.deletedAt));
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    // 쿼리 실행
+    await query.execute();
+
+    // 업데이트가 완료되었으므로 true 반환
+    return true;
+  }
+
+  async selectProjectProposalRevision(
+    target: Partial<ProjectProposalRevisionT> & {
+      orderByIdAsc?: boolean;
+    },
+  ): Promise<ProjectProposalRevisionT[]> {
+    const { id, documentId, name, orderByIdAsc } = target;
+    let query = this.db.select().from(ProjectProposalRevision).$dynamic();
+
+    const whereConditions = [];
+
+    if (id) {
+      whereConditions.push(eq(ProjectProposalRevision.id, id));
+    }
+
+    if (documentId) {
+      whereConditions.push(eq(ProjectProposalRevision.documentId, documentId));
+    }
+
+    if (name) {
+      whereConditions.push(eq(ProjectProposalRevision.name, name));
+    }
+
+    // TODO: 나중에 다른 항목으로 조회가 필요할 경우 추가
+
+    // 삭제된 항목 제외
+    whereConditions.push(isNull(ProjectProposalRevision.deletedAt));
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    if (orderByIdAsc) {
+      query = query.orderBy(asc(ProjectProposalRevision.id));
+    }
+
+    // 쿼리 실행
+    const res = await query.execute();
+
+    return res;
+  }
+
+  async insertProjectProposalRevision(
+    documentId: number,
+    name: string,
+  ): Promise<number> {
+    await this.db
+      .insert(ProjectProposalRevision)
+      .values({ documentId, name })
+      .execute();
+    const res = await this.selectProjectProposalRevision({
+      documentId,
+      name,
+      orderByIdAsc: true,
+    });
+    if (res.length === 0) {
+      return 0;
+    }
+
+    return res[res.length - 1].id;
+  }
+
+  async updateProjectProposalRevision(
+    values: Partial<ProjectProposalRevisionT>, // 수정할 필드를 담은 객체
+    condition: Partial<ProjectProposalRevisionT>, // 조건
+  ): Promise<boolean> {
+    // 업데이트된 행 수를 반환
+    const { id, documentId, name } = condition;
+
+    let query = this.db.update(ProjectProposalRevision).set(values).$dynamic();
+    // 조건 설정
+    const whereConditions = [];
+    if (id) {
+      whereConditions.push(eq(ProjectProposalRevision.id, id));
+    }
+    if (documentId) {
+      whereConditions.push(eq(ProjectProposalRevision.documentId, documentId));
+    }
+    if (name) {
+      whereConditions.push(eq(ProjectProposalRevision.name, name));
+    }
+    // 삭제된 항목 제외 (deletedAt이 null이어야만 업데이트)
+    whereConditions.push(isNull(ProjectProposalRevision.deletedAt));
+
+    // 조건이 하나라도 있으면 AND로 묶어서 처리
+    if (whereConditions.length > 0) {
+      query = query.where(and(...whereConditions));
+    }
+
+    // 쿼리 실행
+    await query.execute();
+
+    // 업데이트된 행 수를 반환
+    return true;
+  }
+
+  async selectUnsubmittedProjectProposalRevisionWithProjectProposal(
+    organizationId: number,
+    semesterId: number,
+  ): Promise<ProjectProposalWithRevision[]> {
+    // 가장 최신의 updatedAt 값을 가져오는 서브쿼리
+    const res = await this.db
+      .select()
+      .from(ProjectProposalRevision)
+      .innerJoin(
+        ProjectProposal,
+        eq(ProjectProposal.id, ProjectProposalRevision.documentId),
+      )
+      .where(
+        and(
+          eq(ProjectProposal.organizationId, organizationId),
+          eq(ProjectProposal.semesterId, semesterId),
+          isNull(ProjectProposalRevision.submittedAt),
+          isNull(ProjectProposalRevision.deletedAt),
+        ),
+      );
+
+    return res.map(row => ({
+      projectProposal: row.project_proposal,
+      projectProposalRevision: row.project_proposal_revision,
+    }));
+  }
+
+  async updateProjectProposalRevisionSubmit(
+    targetIds: {
+      projectProposalId: number;
+      projectProposalRevisionId: number;
+    }[],
+  ): Promise<boolean> {
+    const revisionIds = targetIds.map(ids => ids.projectProposalRevisionId);
+
+    await this.db.transaction(async tx => {
+      // submittedAt을 현재 시간으로 업데이트
+      tx.update(ProjectProposalRevision)
+        .set({ submittedAt: new Date() })
+        .where(inArray(ProjectProposalRevision.id, revisionIds))
+        .execute();
+
+      // ProjectProposal의 revisionId를 업데이트
+      // 여러 개의 업데이트를 트랜잭션 안에서 한 번에 처리
+      const updateQueries = targetIds.map(
+        ({ projectProposalId, projectProposalRevisionId }) =>
+          tx
+            .update(ProjectProposal)
+            .set({ revisionId: projectProposalRevisionId })
+            .where(eq(ProjectProposal.id, projectProposalId))
+            .execute(),
+      );
+
+      // 모든 업데이트가 병렬로 실행되도록 Promise.all 사용
+      await Promise.all(updateQueries);
+
+      // 위의 코드는 아래와 같이 forEach로도 작성 가능
+      // targetIds.forEach(ids => {
+      //   tx.update(ProjectProposal)
+      //     .set({ revisionId: ids.projectProposalRevisionId })
+      //     .where(eq(ProjectProposal.id, ids.projectProposalId))
+      //     .execute();
+      // });
+    });
+
+    return true;
   }
 }
