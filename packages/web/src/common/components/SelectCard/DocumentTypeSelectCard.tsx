@@ -13,7 +13,23 @@ export enum DocumentType {
   BusinessReport = "사업 보고서",
 }
 
+const enumToString = (docType: DocumentType): string => {
+  switch (docType) {
+    case DocumentType.BudgetProposal:
+      return "예산안";
+    case DocumentType.FinancialStatementProposal:
+      return "결산안";
+    case DocumentType.BusinessPlan:
+      return "사업 계획서";
+    case DocumentType.BusinessReport:
+      return "사업 보고서";
+    default:
+      return "";
+  }
+};
+
 interface DocumentTypeSelectCardProps {
+  documentTypes: DocumentType[];
   type: DocumentType;
   setType: (value: DocumentType) => void;
 }
@@ -52,6 +68,7 @@ const CardContent = styled.div`
 `;
 
 const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
+  documentTypes,
   type,
   setType,
 }) => (
@@ -70,7 +87,15 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
         value={type}
         onChange={(val: DocumentType) => setType(val)}
       >
-        <RadioOption value={DocumentType.BudgetProposal}>
+        {documentTypes.map(e => (
+          <RadioOption key={e} value={e}>
+            <Typography fs={16} lh={20} fw="REGULAR">
+              {enumToString(e)}
+            </Typography>
+          </RadioOption>
+        ))}
+
+        {/* <RadioOption value={DocumentType.BudgetProposal}>
           <Typography fs={16} lh={20} fw="REGULAR">
             예산안
           </Typography>
@@ -89,7 +114,7 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
           <Typography fs={16} lh={20} fw="REGULAR">
             사업 보고서
           </Typography>
-        </RadioOption>
+        </RadioOption> */}
       </Radio>
     </CardContent>
   </CardWrapper>

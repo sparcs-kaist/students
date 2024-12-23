@@ -86,6 +86,17 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
     return selectedItem?.values || [];
   }, [totalList, selectedKey]);
 
+  const handleKeyChange = (newKey: string) => {
+    setSelectedKey(newKey);
+
+    const selectedItem = totalList.find(item => item.key.value === newKey);
+    if (selectedItem && selectedItem.values.length > 0) {
+      setSelectedValue(selectedItem.values[0].value);
+    } else {
+      setSelectedValue("");
+    }
+  };
+
   return (
     <CardWrapper>
       <CardHeaderWrapper>
@@ -98,7 +109,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
           <Select
             items={keyList}
             value={selectedKey}
-            onChange={setSelectedKey}
+            onChange={handleKeyChange}
             placeholder="선택하세요."
             errorMessage="필수 항목입니다."
             onlyDropdown

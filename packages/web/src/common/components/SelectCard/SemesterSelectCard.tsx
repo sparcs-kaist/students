@@ -71,48 +71,57 @@ const SemesterSelectCard: React.FC<SemesterSelectCardProps> = ({
   selectItems,
   isSpring,
   setIsSpring,
-}) => (
-  <CardWrapper>
-    <CardHeaderWrapper>
-      <Typography fs={20} fw="SEMIBOLD" color="WHITE">
-        분기 선택
-      </Typography>
-    </CardHeaderWrapper>
-    <CardContent>
-      <CardContentWrapper>
-        <SelectWrapper>
-          <Select
-            items={selectItems}
-            value={year}
-            onChange={setYear}
-            placeholder="선택하세요."
-            errorMessage="필수 항목입니다."
-          />
-        </SelectWrapper>
-        <RadioWrapper>
-          <Radio
-            rg="8px"
-            cg="0px"
-            rows={2}
-            columns={1}
-            value={String(isSpring)}
-            onChange={(boolStr: string) => setIsSpring(JSON.parse(boolStr))}
-          >
-            <RadioOption value="true" width="82px">
-              <Typography fs={16} lh={20} fw="REGULAR">
-                봄학기
-              </Typography>
-            </RadioOption>
-            <RadioOption value="false" width="82px">
-              <Typography fs={16} lh={20} fw="REGULAR">
-                가을학기
-              </Typography>
-            </RadioOption>
-          </Radio>
-        </RadioWrapper>
-      </CardContentWrapper>
-    </CardContent>
-  </CardWrapper>
-);
+}) => {
+  const handleYearChange = (newYear: number) => {
+    setYear(newYear);
+    const selectedItem = selectItems.find(item => item.value === newYear);
+    if (selectedItem) {
+      setIsSpring(true);
+    }
+  };
+  return (
+    <CardWrapper>
+      <CardHeaderWrapper>
+        <Typography fs={20} fw="SEMIBOLD" color="WHITE">
+          분기 선택
+        </Typography>
+      </CardHeaderWrapper>
+      <CardContent>
+        <CardContentWrapper>
+          <SelectWrapper>
+            <Select
+              items={Array.from(new Set(selectItems))}
+              value={year}
+              onChange={handleYearChange}
+              placeholder="선택하세요."
+              errorMessage="필수 항목입니다."
+            />
+          </SelectWrapper>
+          <RadioWrapper>
+            <Radio
+              rg="8px"
+              cg="0px"
+              rows={2}
+              columns={1}
+              value={String(isSpring)}
+              onChange={(boolStr: string) => setIsSpring(JSON.parse(boolStr))}
+            >
+              <RadioOption value="true" width="82px">
+                <Typography fs={16} lh={20} fw="REGULAR">
+                  봄학기
+                </Typography>
+              </RadioOption>
+              <RadioOption value="false" width="82px">
+                <Typography fs={16} lh={20} fw="REGULAR">
+                  가을학기
+                </Typography>
+              </RadioOption>
+            </Radio>
+          </RadioWrapper>
+        </CardContentWrapper>
+      </CardContent>
+    </CardWrapper>
+  );
+};
 
 export default SemesterSelectCard;
