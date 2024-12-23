@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import SemesterCard from "@sparcs-students/web/common/components/SelectCard/SemesterSelectCard";
 import DocumentCard, {
@@ -95,6 +95,17 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
   }, [itemList, year, isSpring, type]);
 
   const keyList = useMemo(() => totalList.map(e => e.key), [totalList]);
+
+  useEffect(() => {
+    setSelectedKey("");
+    setSelectedValue("");
+  }, [type, setSelectedKey, setSelectedValue]);
+
+  useEffect(() => {
+    if (documentTypes.length > 0) {
+      setType(documentTypes[0]);
+    }
+  }, [isSpring, documentTypes, setType]);
 
   return (
     <ThreeCardsWrapper>
