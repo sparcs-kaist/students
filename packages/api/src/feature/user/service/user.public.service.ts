@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserT } from "@sparcs-students/api/drizzle/schema";
-import { UserRepository } from "./user.repository";
+import { UserRepository } from "../repository/user.repository";
 
 @Injectable()
 export class UserPublicService {

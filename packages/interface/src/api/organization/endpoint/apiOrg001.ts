@@ -13,6 +13,7 @@ import {
 
 const url = (semesterId: number) => `/organizations/semester/${semesterId}`;
 const method = "GET";
+export const ApiOrg001RequestUrl = "/organizations/semester/:semesterId";
 
 const requestParam = z.object({
   semesterId: z.coerce.number().int().min(1),
@@ -58,8 +59,6 @@ type ApiOrg001RequestBody = z.infer<typeof apiOrg001.requestBody>;
 type ApiOrg001ResponseOK = z.infer<(typeof apiOrg001.responseBodyMap)[200]>;
 
 export default apiOrg001;
-
-export const ApiOrg001RequestUrl = "/organizations/semester/:semesterId";
 
 export type {
   ApiOrg001RequestParam,

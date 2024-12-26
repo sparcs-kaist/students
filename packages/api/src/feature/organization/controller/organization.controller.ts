@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+} from "@nestjs/common";
 
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -9,7 +17,23 @@ import {
   ApiOrg002RequestUrl,
   apiOrg002,
   ApiOrg002RequestBody,
-  ApiOrg002ResponseOK,
+  ApiOrg002ResponseCreated,
+  ApiOrg003RequestUrl,
+  apiOrg003,
+  ApiOrg003RequestBody,
+  ApiOrg003ResponseCreated,
+  ApiOrg004RequestUrl,
+  apiOrg004,
+  ApiOrg004ResponseOK,
+  ApiOrg004RequestBody,
+  ApiOrg005RequestBody,
+  ApiOrg005ResponseCreated,
+  ApiOrg005RequestUrl,
+  apiOrg005,
+  ApiOrg006RequestBody,
+  ApiOrg006ResponseCreated,
+  apiOrg006,
+  ApiOrg006RequestUrl,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
@@ -30,8 +54,45 @@ export class OrganizationController {
   @UsePipes(new ZodPipe(apiOrg002))
   async postOrganization(
     @Body() body: ApiOrg002RequestBody,
-  ): Promise<ApiOrg002ResponseOK> {
+  ): Promise<ApiOrg002ResponseCreated> {
     const res = await this.organizationService.postOrganization(body);
+    return res;
+  }
+
+  @Post(ApiOrg003RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg003))
+  async postOrganizationPresident(
+    @Body() body: ApiOrg003RequestBody,
+  ): Promise<ApiOrg003ResponseCreated> {
+    const res = await this.organizationService.postOrganizationPresident(body);
+    return res;
+  }
+
+  @Put(ApiOrg004RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg004))
+  async putOrganizationPresidentRetire(
+    @Body() body: ApiOrg004RequestBody,
+  ): Promise<ApiOrg004ResponseOK> {
+    const res =
+      await this.organizationService.putOrganizationPresidentRetire(body);
+    return res;
+  }
+
+  @Post(ApiOrg005RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg005))
+  async postOrganizationMember(
+    @Body() body: ApiOrg005RequestBody,
+  ): Promise<ApiOrg005ResponseCreated> {
+    const res = await this.organizationService.postOrganizationMember(body);
+    return res;
+  }
+
+  @Post(ApiOrg006RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg006))
+  async postOrganizationManager(
+    @Body() body: ApiOrg006RequestBody,
+  ): Promise<ApiOrg006ResponseCreated> {
+    const res = await this.organizationService.postOrganizationManager(body);
     return res;
   }
 }

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { OrganizationT, TeamT } from "src/drizzle/schema";
+import { OrganizationMemberT, OrganizationT } from "src/drizzle/schema";
 import { SemesterPublicService } from "src/feature/semester/semester.public.service";
 
 import {
@@ -79,20 +79,78 @@ export class OrganizationPublicService {
   }
 
   /**
-   * @param teamId
-   * @returns TeamT id에 해당하는 TeamT 객체를 리턴합니다.
-   * @description 해당 id의 Team이 없으면 404 exception을 throw 합니다.
+   * @param userId, organizationId, startTerm, endTerm
+   * @returns OrganizationMemeberT 해당 학기 해당 단체에 해당하는 OrganizationMemberT 객체를 리턴합니다.
+   * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
    */
-  async getTeamById(teamId: number): Promise<TeamT> {
-    const res = await this.organizationRepository.getTeamById(teamId);
+  async getOrganizationMemberByUserAndOrgAndDate(
+    userId: number,
+    organizationId: number,
+    startTerm: Date,
+    endTerm: Date,
+  ): Promise<OrganizationMemberT> {
+    const res = await this.organizationRepository.selectOrganizationMember({
+      userId,
+      startTerm,
+      endTerm,
+      organizationId,
+    });
     if (res.length === 0) {
-      throw new NotFoundException(`Team with ID ${teamId} not found.`);
+      throw new NotFoundException(
+        `OrganizationMember with userId ${userId} not found.`,
+      );
     } else if (res.length > 1) {
       throw new HttpException(
-        `Unreachable: Team with ID ${teamId} has multiple records.`,
+        `Unreachable: OrganizationMember with userId ${userId} has multiple records.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     return res[0];
+  }
+
+  /**
+   * @param userId, organizationId, semesterId
+   * @returns OrganizationMemeberT 해당 학기 해당 단체에 해당하는 OrganizationMemberT 객체를 리턴합니다.
+   * @description 해당 시기에 해당하는 OrganizationMember가 없으면 404 exception을 throw 합니다.
+   */
+  async getOrganizationMemberByUserAndOrgAndSemester(
+    userId: number,
+    organizationId: number,
+    semesterId: number,
+  ): Promise<OrganizationMemberT> {
+    const { startTerm, endTerm } =
+      await this.semesterPublicService.getSemesterById(semesterId);
+    return this.getOrganizationMemberByUserAndOrgAndDate(
+      userId,
+      organizationId,
+      startTerm,
+      endTerm,
+    );
+  }
+
+  /**
+   * @param organizationId, semesterId
+   * @returns boolean 단체가 해당 학기에 존재했으면 true, 아니면 false를 리턴합니다.
+   * @description organizationId에 해당하는 단체가 semesterId에 해당하는 학기에 존재하는지 확인합니다.
+   * 해당 시기에 해당하는 Organization이 없었더라도 404Error를 발생시키지 않습니다.
+   */
+  async checkOrganizationInSemester(
+    organizationId: number,
+    semesterId: number,
+  ): Promise<boolean> {
+    const semester =
+      await this.semesterPublicService.getSemesterById(semesterId);
+    const organizations = await this.organizationRepository.selectOrganization({
+      id: organizationId,
+      startTerm: semester.startTerm,
+      endTerm: semester.endTerm,
+    });
+    if (organizations.length > 1) {
+      throw new HttpException(
+        `Unreachable: Organization with ID ${organizationId} has multiple records.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return organizations.length !== 0;
   }
 }

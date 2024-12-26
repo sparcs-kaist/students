@@ -15,6 +15,7 @@ import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum";
 
 const url = () => `/student/proposals/project-proposals`;
 const method = "GET";
+export const ApiPrp001RequestUrl = "/student/proposals/project-proposals";
 
 const requestParam = z.object({});
 
@@ -63,8 +64,6 @@ type ApiPrp001RequestBody = z.infer<typeof apiPrp001.requestBody>;
 type ApiPrp001ResponseOK = z.infer<(typeof apiPrp001.responseBodyMap)[200]>;
 
 export default apiPrp001;
-
-export const ApiPrp001RequestUrl = "/student/proposals/project-proposals";
 
 export type {
   ApiPrp001RequestParam,

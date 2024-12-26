@@ -99,6 +99,7 @@ export const OperatingCommitteeMember = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     userId: int("user_id").notNull(),
+    semesterId: int("semester_id").notNull(),
     role: varchar("role", { length: 30 }).notNull(),
     legalBasis: varchar("legal_basis", { length: 30 }).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -114,6 +115,10 @@ export const OperatingCommitteeMember = mysqlTable(
     userIdFk: foreignKey({
       columns: [table.userId],
       foreignColumns: [User.id],
+    }),
+    semesterIdFk: foreignKey({
+      columns: [table.semesterId],
+      foreignColumns: [Semester.id],
     }),
   }),
 );
