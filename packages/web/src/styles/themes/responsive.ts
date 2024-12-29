@@ -13,11 +13,11 @@ const responsive = {
     xs: "320px",
   },
   CONTENT: {
-    xxl: "1120px",
-    xl: "880px",
-    lg: "640px",
+    xxl: "1200px",
+    xl: "1040px",
+    lg: "800px",
     md: "560px",
-    sm: "calc(100% - 40px)",
+    sm: "calc(100% - 30px)",
   },
 };
 
