@@ -20,16 +20,16 @@ interface SemesterSelectCardProps {
 const CardWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 138px; // CHACHA: 148 이상이어야 에러 메시지 떠도 컴포넌트 안의 요소들 위치가 왔다갔다 안 해요. 아직 에러 메시지에 대한 디자인이 없어서 추후 수정!
+  height: 136px;
   flex-direction: column;
   align-items: flex-start;
 `;
 
 const CardHeaderWrapper = styled.div`
   display: flex;
-  padding: 13px 33px;
+  padding: 12px 20px;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
   background-color: ${({ theme }) => theme.colors.GREEN[700]};
@@ -37,14 +37,13 @@ const CardHeaderWrapper = styled.div`
 
 const CardContent = styled.div`
   display: flex;
-  padding: 20px 32px;
-  justify-content: center;
+  height: 92px;
+  padding: 16px 30px;
   align-items: center;
-  gap: 20px;
-  flex: 1 0 0;
-  align-self: stretch;
+  gap: 10px;
+  flex-shrink: 0;
   border-radius: 0px 0px 4px 4px;
-  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]}; // CHACHA: D9D9D9 일단 GRAY 100으로?
+  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -54,15 +53,13 @@ const CardContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  width: 100%;
-`;
-
-const SelectWrapper = styled.div`
-  width: 150px;
 `;
 
 const RadioWrapper = styled.div`
-  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 `;
 
 const SemesterSelectCard: React.FC<SemesterSelectCardProps> = ({
@@ -82,21 +79,19 @@ const SemesterSelectCard: React.FC<SemesterSelectCardProps> = ({
   return (
     <CardWrapper>
       <CardHeaderWrapper>
-        <Typography fs={20} fw="SEMIBOLD" color="WHITE">
+        <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
           분기 선택
         </Typography>
       </CardHeaderWrapper>
       <CardContent>
         <CardContentWrapper>
-          <SelectWrapper>
-            <Select
-              items={Array.from(new Set(selectItems))}
-              value={year}
-              onChange={handleYearChange}
-              placeholder="선택하세요."
-              errorMessage="필수 항목입니다."
-            />
-          </SelectWrapper>
+          <Select
+            items={Array.from(new Set(selectItems))}
+            value={year}
+            onChange={handleYearChange}
+            placeholder="선택하세요."
+            errorMessage="필수 항목입니다."
+          />
           <RadioWrapper>
             <Radio
               rg="8px"

@@ -6,6 +6,7 @@ import Select, {
   SelectItem,
 } from "@sparcs-students/web/common/components/Select";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import Icon from "../Icon";
 
 export interface OrganizationItem {
   key: SelectItem<string>;
@@ -33,9 +34,8 @@ const CardWrapper = styled.div`
 
 const CardHeaderWrapper = styled.div`
   display: flex;
-  padding: 13px 33px;
+  padding: 12px 20px;
   align-items: center;
-  gap: 10px;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
   background-color: ${({ theme }) => theme.colors.GREEN[700]};
@@ -43,18 +43,26 @@ const CardHeaderWrapper = styled.div`
 
 const CardContent = styled.div`
   display: flex;
-  flex-direction: row;
-  padding: 21px 33px; // CHACHA: 이것만 다른 것들이랑 패딩이 달라서 확인 필요 20, 32
+  flex-direction: column;
+  padding: 16px 20px;
   justify-content: center;
   align-items: center;
   gap: 20px;
   align-self: stretch;
   height: fit-content;
   border-radius: 0px 0px 4px 4px;
-  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]}; // CHACHA: D9D9D9 일단 GRAY 100으로?
+  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   background-color: ${({ theme }) => theme.colors.WHITE};
+`;
+
+const CardContentInner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
 `;
 
 const ArrowWrapper = styled.div`
@@ -69,8 +77,12 @@ const ArrowWrapper = styled.div`
 const SelectWrapper = styled.div`
   display: flex;
   width: 203px;
-  height: 198px;
+  height: 200px;
   align-items: flex-start;
+`;
+
+const IconWrapper = styled.div`
+  color: ${({ theme }) => theme.colors.GREEN[300]};
 `;
 
 const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
@@ -100,36 +112,42 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
   return (
     <CardWrapper>
       <CardHeaderWrapper>
-        <Typography fs={20} fw="SEMIBOLD" color="WHITE">
+        <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
           단체 선택
         </Typography>
       </CardHeaderWrapper>
       <CardContent>
-        <SelectWrapper>
-          <Select
-            items={keyList}
-            value={selectedKey}
-            onChange={handleKeyChange}
-            placeholder="선택하세요."
-            errorMessage="필수 항목입니다."
-            onlyDropdown
-          />
-        </SelectWrapper>
-        <ArrowWrapper>
-          <Typography fs={16} fw="BOLD" color="GREEN.300">
-            ＞
-          </Typography>
-        </ArrowWrapper>
-        <SelectWrapper>
-          <Select
-            items={valueList}
-            value={selectedValue}
-            onChange={setSelectedValue}
-            placeholder="선택하세요."
-            errorMessage="필수 항목입니다."
-            onlyDropdown
-          />
-        </SelectWrapper>
+        <CardContentInner>
+          <SelectWrapper>
+            <Select
+              items={keyList}
+              value={selectedKey}
+              onChange={handleKeyChange}
+              placeholder="선택하세요."
+              errorMessage="필수 항목입니다."
+              noOptionMessage="항목을 선택하세요."
+              onlyDropdown
+              dropdownHeight={200}
+            />
+          </SelectWrapper>
+          <ArrowWrapper>
+            <IconWrapper>
+              <Icon type="arrow_forward_ios" size={24} color="GREEN.300" />
+            </IconWrapper>
+          </ArrowWrapper>
+          <SelectWrapper>
+            <Select
+              items={valueList}
+              value={selectedValue}
+              onChange={setSelectedValue}
+              placeholder="선택하세요."
+              errorMessage="필수 항목입니다."
+              noOptionMessage="항목을 선택하세요."
+              onlyDropdown
+              dropdownHeight={200}
+            />
+          </SelectWrapper>
+        </CardContentInner>
       </CardContent>
     </CardWrapper>
   );

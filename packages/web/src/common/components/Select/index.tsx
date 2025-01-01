@@ -9,7 +9,7 @@ import Label from "../FormLabel";
 import NoOption from "./_atomic/NoOption";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
-import Typography from "../Typography";
+import Icon from "../Icon";
 
 export interface SelectItem<T> {
   label: string;
@@ -21,6 +21,7 @@ interface SelectProps<T> {
   items: SelectItem<T>[];
   label?: string;
   errorMessage?: string;
+  noOptionMessage?: string;
   disabled?: boolean;
   value: T;
   onChange?: (value: T) => void;
@@ -28,6 +29,7 @@ interface SelectProps<T> {
   placeholder?: string;
   isRequired?: boolean;
   onlyDropdown?: boolean;
+  dropdownHeight?: number;
 }
 
 const SelectInner = styled.div`
@@ -50,9 +52,11 @@ const StyledSelect = styled.div.withConfig({
   isOpen?: boolean;
 }>`
   display: flex;
-  justify-content: flex-end;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   width: 100%;
-  padding: 8px 44px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -76,23 +80,30 @@ const StyledSelect = styled.div.withConfig({
   ${({ disabled }) => disabled && disabledStyle}
 `;
 
-const IconWrapper = styled.div`
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+const IconWrapperDown = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  transform: rotate(-90deg);
+`;
+
+const IconWrapperUp = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  transform: rotate(90deg);
 `;
 
 const SelectWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   display: flex;
-  gap: 4px;
 `;
 
 const SelectValue = styled.span.withConfig({
@@ -118,6 +129,7 @@ const SelectValue = styled.span.withConfig({
 const Select = <T,>({
   items,
   errorMessage = "",
+  noOptionMessage = "항목이 존재하지 않습니다.",
   label = "",
   disabled = false,
   value,
@@ -126,6 +138,7 @@ const Select = <T,>({
   placeholder = "항목을 선택해주세요",
   isRequired = true,
   onlyDropdown = false,
+  dropdownHeight = undefined,
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -195,17 +208,23 @@ const Select = <T,>({
               >
                 {selectedLabel}
               </SelectValue>
-              <IconWrapper>
-                {isOpen ? (
-                  <Typography fs={16}>▼</Typography> // CHACHA: TODO: 아래처럼 위 화살표로 변경해야 함.
-                ) : (
-                  <Typography fs={16}>▼</Typography>
-                )}
-              </IconWrapper>
+              {isOpen ? (
+                <IconWrapperUp>
+                  <Icon type="arrow_back_ios_new" size={18} />
+                </IconWrapperUp>
+              ) : (
+                <IconWrapperDown>
+                  <Icon type="arrow_back_ios_new" size={18} />
+                </IconWrapperDown>
+              )}
             </StyledSelect>
           )}
           {(onlyDropdown || isOpen) && (
-            <Dropdown onlyDropdown={onlyDropdown} marginTop={4}>
+            <Dropdown
+              onlyDropdown={onlyDropdown}
+              marginTop={4}
+              height={dropdownHeight}
+            >
               {items.length > 0 ? (
                 items.map(item => (
                   <SelectOption
@@ -220,7 +239,7 @@ const Select = <T,>({
                   </SelectOption>
                 ))
               ) : (
-                <NoOption>항목이 존재하지 않습니다</NoOption>
+                <NoOption>{noOptionMessage}</NoOption>
               )}
             </Dropdown>
           )}

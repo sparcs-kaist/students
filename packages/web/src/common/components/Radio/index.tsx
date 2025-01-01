@@ -31,8 +31,8 @@ const StyledRadioInner = styled.div<{
     rows !== 1 ? `repeat(${rows}, auto)` : "auto"};
   grid-template-columns: ${({ columns }) =>
     columns !== 1 ? `repeat(${columns}, auto)` : "auto"};
-  row-gap: ${({ rg }) => rg};
-  column-gap: ${({ cg }) => cg};
+  row-gap: ${({ rg, rows }) => (rows !== 1 ? rg : "0px")};
+  column-gap: ${({ cg, columns }) => (columns !== 1 ? cg : "0px")};
 `;
 
 const Radio = <T extends string>({

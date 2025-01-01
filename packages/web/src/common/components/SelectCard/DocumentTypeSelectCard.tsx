@@ -44,9 +44,9 @@ const CardWrapper = styled.div`
 
 const CardHeaderWrapper = styled.div`
   display: flex;
-  padding: 13px 33px;
+  padding: 12px 20px;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
   background-color: ${({ theme }) => theme.colors.GREEN[700]};
@@ -54,14 +54,14 @@ const CardHeaderWrapper = styled.div`
 
 const CardContent = styled.div`
   display: flex;
-  padding: 20px 32px;
+  flex-direction: column;
+  padding: 16px 20px;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  flex: 1 0 0;
+  height: 80px;
   align-self: stretch;
   border-radius: 0px 0px 4px 4px;
-  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]}; // CHACHA: D9D9D9 일단 GRAY 100으로?
+  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -71,53 +71,36 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
   documentTypes,
   type,
   setType,
-}) => (
-  <CardWrapper>
-    <CardHeaderWrapper>
-      <Typography fs={20} fw="SEMIBOLD" color="WHITE">
-        문서 유형 선택
-      </Typography>
-    </CardHeaderWrapper>
-    <CardContent>
-      <Radio
-        rg="8px"
-        cg="32px"
-        rows={2}
-        columns={2}
-        value={type}
-        onChange={(val: DocumentType) => setType(val)}
-      >
-        {documentTypes.map(e => (
-          <RadioOption key={e} value={e}>
-            <Typography fs={16} lh={20} fw="REGULAR">
-              {enumToString(e)}
-            </Typography>
-          </RadioOption>
-        ))}
-
-        {/* <RadioOption value={DocumentType.BudgetProposal}>
-          <Typography fs={16} lh={20} fw="REGULAR">
-            예산안
-          </Typography>
-        </RadioOption>
-        <RadioOption value={DocumentType.FinancialStatementProposal}>
-          <Typography fs={16} lh={20} fw="REGULAR">
-            결산안
-          </Typography>
-        </RadioOption>
-        <RadioOption value={DocumentType.BusinessPlan}>
-          <Typography fs={16} lh={20} fw="REGULAR">
-            사업 계획서
-          </Typography>
-        </RadioOption>
-        <RadioOption value={DocumentType.BusinessReport}>
-          <Typography fs={16} lh={20} fw="REGULAR">
-            사업 보고서
-          </Typography>
-        </RadioOption> */}
-      </Radio>
-    </CardContent>
-  </CardWrapper>
-);
+}) => {
+  const rows = Math.round(documentTypes.length / 2);
+  const columns = documentTypes.length / rows;
+  return (
+    <CardWrapper>
+      <CardHeaderWrapper>
+        <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
+          문서 유형 선택
+        </Typography>
+      </CardHeaderWrapper>
+      <CardContent>
+        <Radio
+          rg="8px"
+          cg="32px"
+          rows={rows}
+          columns={columns}
+          value={type}
+          onChange={(val: DocumentType) => setType(val)}
+        >
+          {documentTypes.map(e => (
+            <RadioOption key={e} value={e}>
+              <Typography fs={16} lh={20} fw="REGULAR">
+                {enumToString(e)}
+              </Typography>
+            </RadioOption>
+          ))}
+        </Radio>
+      </CardContent>
+    </CardWrapper>
+  );
+};
 
 export default DocumentTypeSelectCard;
