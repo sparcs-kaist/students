@@ -9,7 +9,7 @@ const SelectOption = styled.div.withConfig({
   align-self: stretch;
   width: 100%;
   gap: 10px;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 4px 8px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
@@ -25,7 +25,7 @@ const SelectOption = styled.div.withConfig({
     selectable &&
     css`
       &:hover {
-        background-color: ${({ theme }) => theme.colors.GRAY[200]};
+        background-color: ${({ theme }) => theme.colors.GRAY[100]};
       }
     `}
   cursor: ${({ selectable }) => (selectable ? `pointer` : null)};
