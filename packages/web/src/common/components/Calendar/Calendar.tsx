@@ -24,25 +24,34 @@ interface CalendarProps extends CalendarSizeProps {
   eventPeriods?: EventPeriod[];
   selectedDates: Date[];
   onDateClick?: (date: Date) => void;
-  width?: number;
+  width?: string;
+  height?: string;
   title?: string;
+  small?: boolean;
 }
 
 const CalendarWrapper = styled.div<{
   width?: CalendarProps["width"];
+  height?: CalendarProps["height"];
 }>`
-  width: ${({ width }) => (width ? `${width}px` : "100%")};
+  display: flex;
+  flex-direction: column;
+  width: ${({ width }) => width || "100%"};
+  height: ${({ height }) => height || "100%"};
 `;
 
 const CalendarContentWrapper = styled.div<{
   title?: CalendarProps["title"];
+  small?: CalendarProps["small"];
 }>`
   display: flex;
-  padding: 30px;
+  height: ${({ small }) => (small ? "calc(100% - 28px)" : "calc(100% - 40px)")};
+  height: ${({ title }) => title === "" && "100%"};
+  padding: ${({ small }) => (small ? "20px 18px" : "30px")};
   flex-direction: column;
   align-items: flex-end;
-  gap: 30px;
-  align-self: stretch;
+  gap: 12px;
+  flex-shrink: 0;
   border-radius: ${({ title }) => (title !== "" ? "0px 0px 4px 4px" : "4px")};
   ${({ title, theme }) =>
     title === ""
@@ -52,31 +61,38 @@ const CalendarContentWrapper = styled.div<{
   border-bottom: 2px solid ${theme.colors.GRAY[100]};`};
 `;
 
-const WeekWrapper = styled.div`
+const WeekWrapper = styled.div<{
+  small?: CalendarProps["small"];
+}>`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: auto;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   align-self: stretch;
   flex: 1 0 0;
+  height: 100%;
 `;
 
-const TitleWrapper = styled.div`
+const TitleWrapper = styled.div<{
+  small?: CalendarProps["small"];
+}>`
   display: flex;
-  height: 40px;
-  padding: 8px 20px;
+  height: ${({ small }) => (small ? "28px" : "40px")};
+  border-radius: 4px 4px 0px 0px;
+  background: ${({ theme }) => theme.colors.GREEN[600]};
+  display: flex;
+  padding: ${({ small }) => (small ? "8px 12px" : "10px 20px")};
   align-items: center;
   gap: 20px;
   align-self: stretch;
-  border-radius: 4px 4px 0px 0px;
-  background: ${({ theme }) => theme.colors.GREEN[600]};
 `;
 
 const Calendar: React.FC<CalendarProps> = ({
   title = "",
   width = undefined,
-  size = "md",
+  height = undefined,
+  small = false,
   existDates,
   eventPeriods = [],
   selectedDates,
@@ -123,7 +139,7 @@ const Calendar: React.FC<CalendarProps> = ({
       } else {
         eventPeriods.forEach(period => {
           if (
-            isSameDay(period.start, period.end) && // 2 eventPeriod 기간이 시작과 끝이 같을 때 처리 완료!
+            isSameDay(period.start, period.end) &&
             isSameDay(day, period.start)
           ) {
             type = "Selected";
@@ -145,21 +161,31 @@ const Calendar: React.FC<CalendarProps> = ({
     });
 
   return (
-    <CalendarWrapper width={width}>
+    <CalendarWrapper width={width} height={height}>
       {title !== "" && (
-        <TitleWrapper>
-          <Typography color="WHITE" fs={20} fw="BOLD" lh={20}>
-            {title}
-          </Typography>
+        <TitleWrapper small={small}>
+          {small ? (
+            <Typography color="WHITE" fs={16} fw="SEMIBOLD" lh={20}>
+              {title}
+            </Typography>
+          ) : (
+            <Typography color="WHITE" fs={18} fw="SEMIBOLD" lh={20}>
+              {title}
+            </Typography>
+          )}
         </TitleWrapper>
       )}
-      <CalendarContentWrapper title={title}>
-        <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
-        <WeekWrapper>
+      <CalendarContentWrapper title={title} small={small}>
+        <MonthNavigator
+          currentDate={currentDate}
+          onChange={setCurrentDate}
+          small={small}
+        />
+        <WeekWrapper small={small}>
           {weeks.map((weekStart: Date) => (
             <CalendarWeek
               week={getWeekData(weekStart)}
-              size={size}
+              small={small}
               key={weekStart.toISOString()}
               onDateClick={handleDateClick}
             />
