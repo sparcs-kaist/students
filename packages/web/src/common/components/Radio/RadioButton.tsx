@@ -13,12 +13,6 @@ const RadioButton = ({ checked = false }: { checked: boolean }) => (
   >
     <circle cx="8" cy="8" r="7" stroke={colors.GREEN[600]} strokeWidth="2" />
     {checked ? <circle cx="8" cy="8" r="4" fill={colors.GREEN[800]} /> : null}
-    {/* <circle
-      cx="8"
-      cy="8"
-      r="4"
-      fill={checked ? colors.GREEN[800] : colors.WHITE} */}
-    {/* /> */}
   </svg>
 );
 
