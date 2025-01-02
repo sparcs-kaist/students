@@ -2,10 +2,11 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
-import { UserModule } from "./feature/user/user.module";
+import { OrganizationModule } from "./feature/organization/organization.module";
+import { ProposalModule } from "./feature/proposal/proposal.module";
 
 @Module({
-  imports: [DrizzleModule, UserModule],
+  imports: [DrizzleModule, OrganizationModule, ProposalModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -28,6 +28,10 @@ const colors = {
     200: "#F5A3A8",
     700: "#B7202A",
   },
+
+  BLUE: {
+    900: "#3A2682",
+  },
 };
 
 export default colors;
