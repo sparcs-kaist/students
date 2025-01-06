@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { OrganizationMemberT, OrganizationT } from "src/drizzle/schema";
-import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 
 import {
   OrganizationRepository,

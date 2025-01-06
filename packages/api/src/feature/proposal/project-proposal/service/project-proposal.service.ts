@@ -18,7 +18,7 @@ import {
   ApiPrp006ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
-import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
 import { TeamPublicService } from "src/feature/organization/team/service/team.public.service";
 import { ProjectProposalRepository } from "../repository/project-proposal.repository";

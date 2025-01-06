@@ -13,7 +13,7 @@ import {
   ApiOrg009ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
-import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { OrganizationPublicService } from "@sparcs-students/api/feature/organization/service/organization.public.service";
 import { TeamRepository } from "../repository/team.repository";
 

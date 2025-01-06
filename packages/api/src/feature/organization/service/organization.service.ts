@@ -21,7 +21,7 @@ import {
 } from "@sparcs-students/interface/api/organization/index";
 import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum/organization.enum";
 
-import { SemesterPublicService } from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { UserPublicService } from "src/feature/user/service/user.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";

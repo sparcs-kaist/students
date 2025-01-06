@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { SemesterT } from "@sparcs-students/api/drizzle/schema";
-import { SemesterRepository } from "./semester.repository";
+import { SemesterRepository } from "../repository/semester.repository";
 
 @Injectable()
 export class SemesterPublicService {
