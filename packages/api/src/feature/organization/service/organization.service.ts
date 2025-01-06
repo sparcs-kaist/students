@@ -40,7 +40,7 @@ export class OrganizationService {
     const { startTerm, endTerm } =
       await this.semesterPublicService.getSemesterById(param.semesterId);
     const organizations =
-      await this.organizationRepository.getOrganizationsByTerms(
+      await this.organizationRepository.selectOrganizationsByTerms(
         startTerm,
         endTerm,
       );

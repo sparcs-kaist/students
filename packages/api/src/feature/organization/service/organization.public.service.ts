@@ -25,8 +25,9 @@ export class OrganizationPublicService {
    * @description 해당 id의 organization이 없으면 404 exception을 throw 합니다.
    */
   async getOrganizationById(id: number): Promise<OrganizationT> {
-    const organizations =
-      await this.organizationRepository.getOrganizationById(id);
+    const organizations = await this.organizationRepository.selectOrganization({
+      id,
+    });
     if (organizations.length === 0) {
       throw new NotFoundException(`Organization with ID ${id} not found.`);
     }
@@ -43,7 +44,7 @@ export class OrganizationPublicService {
     date: Date,
   ): Promise<OrganizationWithPresidentT> {
     const organizations =
-      await this.organizationRepository.getOrganizationWithPresidentById(
+      await this.organizationRepository.selectOrganizationWithPresidentById(
         id,
         date,
       );

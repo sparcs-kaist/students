@@ -12,7 +12,7 @@ export class SemesterPublicService {
    * @description semester가 없으면 404Exception을 throw합니다.
    */
   async getSemesterById(id: number): Promise<SemesterT> {
-    const semesters = await this.semesterRepository.getSemesterById(id);
+    const semesters = await this.semesterRepository.selectSemesterById(id);
     if (semesters.length === 0) {
       throw new NotFoundException(`Semester with ID ${id} not found.`);
     }

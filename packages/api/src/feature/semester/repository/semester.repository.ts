@@ -15,7 +15,7 @@ export class SemesterRepository {
    * @returns Semester id에 해당하는 Semester 객체를 리턴합니다.
    * @description 학생이 해당 동아리의 대표자 또는 대의원이 아닌 경우 404 exception을 throw 합니다.
    */
-  async getSemesterById(semester_id: number): Promise<SemesterT[]> {
+  async selectSemesterById(semester_id: number): Promise<SemesterT[]> {
     const res = await this.db
       .select()
       .from(Semester)

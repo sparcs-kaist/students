@@ -33,7 +33,7 @@ export class ProjectProposalRepository {
    * @returns 해당 동아리와 학기에 해당하는 ProjectProposals list 객체를 리턴합니다.
    * @description 이미 사업계획서를 모두 심사한 후를 기준으로 하는 상태로, 일반 학생들도 볼 수 있는 상태입니다.
    */
-  async getProjectProposalsForStudentsByOrganizationIdAndSemesterId(
+  async selectProjectProposalsForStudentsByOrganizationIdAndSemesterId(
     organizationId: number,
     semesterId: number,
   ): Promise<ApiPrp001ResponseOK["projects"]> {
@@ -76,7 +76,7 @@ export class ProjectProposalRepository {
    * @returns 해당 기구 해당 학기에 해당하는 ProjectProposal의 제출연월일을 리턴합니다.
    * @description 가장 최근의 제출일을 리턴합니다.
    */
-  async getProjectProposalSubmitDate(
+  async selectProjectProposalSubmitDate(
     organizationId: number,
     semesterId: number,
   ): Promise<Date[]> {
@@ -106,7 +106,7 @@ export class ProjectProposalRepository {
    *
    */
 
-  async getProjectProposalRevisionById(
+  async selectProjectProposalRevisionById(
     projectProposalId: number,
   ): Promise<ProjectProposalRevisionT[]> {
     const res = await this.db
@@ -122,7 +122,7 @@ export class ProjectProposalRepository {
     return res.map(row => row.project_proposal_revision);
   }
 
-  async getProjectProposalTimelinesByProjectId(
+  async selectProjectProposalTimelinesByProjectId(
     projectId: number,
   ): Promise<ProjectProposalTimelineT[]> {
     const res = await this.db
