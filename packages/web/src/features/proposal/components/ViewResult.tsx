@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -25,31 +27,31 @@ const columns = [
     id: "fileName",
     header: "파일명",
     cell: info => info.getValue(),
-    size: 64,
+    size: 200,
   }),
   columnHelper.accessor("organization", {
     id: "organization",
     header: "기구명",
     cell: info => info.getValue(),
-    size: 64,
+    size: 200,
   }),
   columnHelper.accessor("period", {
     id: "period",
     header: "반기",
     cell: info => info.getValue(),
-    size: 64,
+    size: 200,
   }),
   columnHelper.accessor("headPerson", {
     id: "headPerson",
     header: "기구장",
     cell: info => info.getValue(),
-    size: 64,
+    size: 200,
   }),
   columnHelper.accessor("submitDate", {
     id: "submitDate",
     header: "제출연월일",
     cell: info => formatDotDate(info.getValue() as Date),
-    size: 64,
+    size: 200,
   }),
 ];
 

@@ -8,134 +8,199 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table";
+import {
+  BudgetClassExpenseE,
+  BudgetDivisionIncomeE,
+  BudgetDomainE,
+} from "@sparcs-students/interface/common/enum/budget.enum";
+import Tag from "@sparcs-students/web/common/components/Tag/Tag";
+import {
+  getDarkTagDetail,
+  getTagDetail,
+} from "@sparcs-students/web/utils/getTagDetail";
+import {
+  budgetClassExpenseTagList,
+  budgetDivisionIncomeTagList,
+  budgetDomainTagList,
+} from "@sparcs-students/web/constants/tableTagList";
+import { useFormatter } from "next-intl";
+import DetailButton from "@sparcs-students/web/features/proposal/components/_atomic/DetailButton";
+import DarkTag from "@sparcs-students/web/common/components/Tag/DarkTag";
+import { Tooltip } from "@mui/material";
+import HelpOutlineButton from "@mui/icons-material/HelpOutline";
 
-interface ExpenditureTableProps {
+export interface ExpenditureProps {
   code: number;
-  division: string;
-  budgetType: string;
+  budgetDomain: BudgetDomainE;
+  budgetDivisionIncome: BudgetDivisionIncomeE;
   name: string;
-  item: string;
+  item: BudgetClassExpenseE;
   lastYear: number;
   thisYear: number;
   ratio: number;
   reason: string;
   status: string;
+  explanation: string;
 }
 
-const columnHelper = createColumnHelper<ExpenditureTableProps>();
+interface ExpenditureTableProps {
+  data: ExpenditureProps[];
+}
+
+const columnHelper = createColumnHelper<ExpenditureProps>();
 
 const columns = [
   columnHelper.accessor("code", {
     id: "code",
     header: "코드",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    // const { color, text } = getTagDetail(info.getValue(), ActTypeTagList);
-    // return <Tag color={color}>{text}</Tag>;
-    size: 64,
+    cell: info => {
+      switch (Math.trunc(info.getValue() / 100)) {
+        case 1:
+        case 4:
+          return <Tag color="BLUE">{info.getValue()}</Tag>;
+        case 2:
+        case 5:
+          return <Tag color="YELLOW">{info.getValue()}</Tag>;
+        case 3:
+        case 6:
+          return <Tag color="PINK">{info.getValue()}</Tag>;
+        default:
+          return <Tag color="GRAY">-</Tag>;
+      }
+    },
+    size: 80,
   }),
-  columnHelper.accessor("division", {
-    id: "division",
+  columnHelper.accessor("budgetDomain", {
+    id: "budgetDomain",
     header: "구분",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    size: 64,
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        budgetDomainTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 80,
   }),
-  columnHelper.accessor("budgetType", {
-    id: "budgetType",
+  columnHelper.accessor("budgetDivisionIncome", {
+    id: "budgetDivisionIncome",
     header: "예산 분류",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    size: 64,
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        budgetDivisionIncomeTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 120,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
     cell: info => info.getValue(),
-    size: 64,
+    size: 80,
   }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    size: 64,
+    cell: info => {
+      const { color, text } = getDarkTagDetail(
+        info.getValue(),
+        budgetClassExpenseTagList,
+      );
+      return <DarkTag color={color}>{text}</DarkTag>;
+    },
+    size: 100,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
     header: "작년 결산",
-    cell: info => info.getValue(),
-    size: 64,
+    cell: info => {
+      const format = useFormatter();
+      return format.number(info.getValue(), {
+        style: "currency",
+        currency: "KRW",
+      });
+    },
+    size: 120,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
     header: "올해 예산",
-    cell: info => info.getValue(),
-    size: 64,
+    cell: info => {
+      const format = useFormatter();
+      return format.number(info.getValue(), {
+        style: "currency",
+        currency: "KRW",
+      });
+    },
+    size: 120,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
     header: "비율",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    size: 64,
+    cell: info => {
+      if (info.getValue() > 100) {
+        return <Tag color="CHERRY">{info.getValue().toFixed(1)}%</Tag>;
+      }
+      if (info.getValue() <= 100) {
+        return <Tag color="THISTLE">{info.getValue().toFixed(1)}%</Tag>;
+      }
+      return <Tag color="GRAY">-</Tag>;
+    },
+    size: 90,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
     header: "근거",
-    cell: info => info.getValue(),
-    // TODO: Add Button (Componentize)
-    size: 64,
+    cell: info => <DetailButton detail={info.getValue()} />,
+    size: 60,
   }),
   columnHelper.accessor("status", {
     id: "status",
     header: "현황",
-    cell: info => info.getValue(),
-    // TODO: Add Tag
-    size: 64,
+    cell: info => {
+      switch (info.getValue()) {
+        case "승인":
+          return <DarkTag color="BLUE">{info.getValue()}</DarkTag>;
+        case "반려":
+          return <DarkTag color="RED">{info.getValue()}</DarkTag>;
+        case "사후승인":
+          return <DarkTag color="TEAL">{info.getValue()}</DarkTag>;
+        default:
+          return <Tag color="GRAY">-</Tag>;
+      }
+    },
+    // TODO: Add Tag by enum
+    size: 90,
+  }),
+  columnHelper.accessor("explanation", {
+    id: "explanation",
+    header: "설명",
+    cell: info => <DetailButton detail={info.getValue()} />,
+    size: 60,
   }),
 ];
 
-const ExpenditureTable: React.FC<ExpenditureTableProps> = ({
-  code = 101,
-  division = "학생회비",
-  budgetType = "운영비",
-  name = "격려금",
-  item = "상품비",
-  lastYear = 125000,
-  thisYear = 125000,
-  ratio = 100.0,
-  reason = "대충 어쩌구저쩌구한 근거",
-  status = "승인",
-}) => {
-  const tableData = [
-    // mock data
-    {
-      code,
-      division,
-      budgetType,
-      name,
-      item,
-      lastYear,
-      thisYear,
-      ratio,
-      reason,
-      status,
-    },
-  ];
-
+const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
   const table = useReactTable({
     columns,
-    data: tableData,
+    data,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-        지출
-      </Typography>
+      <FlexWrapper direction="row" gap={12}>
+        <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+          지출
+        </Typography>
+        <Tooltip title="지출 항목을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다.">
+          <HelpOutlineButton />
+        </Tooltip>
+      </FlexWrapper>
+
       <Table table={table} />
     </FlexWrapper>
   );

@@ -4,7 +4,7 @@ import React from "react";
 import { fn } from "@storybook/test";
 
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import Tag from "@sparcs-students/web/common/components/Tag";
+import Tag from "@sparcs-students/web/common/components/Tag/Tag";
 
 const meta: Meta<typeof Button> = {
   title: "components/Buttons/Button",

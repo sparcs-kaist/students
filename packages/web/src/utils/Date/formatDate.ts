@@ -5,6 +5,6 @@ const formatSimpleDate = (date: Date) =>
   format(date, "M월 d일", { locale: ko });
 
 const formatDotDate = (date: Date) =>
-  format(date, "YYYY.MM.DD.", { locale: ko });
+  format(date, "yyyy.MM.dd.", { locale: ko });
 
 export { formatSimpleDate, formatDotDate };

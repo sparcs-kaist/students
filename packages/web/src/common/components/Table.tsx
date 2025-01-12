@@ -18,8 +18,10 @@ interface TableProps<T> {
   onClick?: (row: T) => void;
 }
 const TableWrapper = styled.div`
-  width: calc(100% + (100vw - 100%));
-  padding: 0 calc((100vw - 100%) / 2);
+  width: 100%;
+  padding: 0;
+  //width: calc(100% + (100vw - 100%));
+  //padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
 
@@ -73,7 +75,7 @@ const EmptyCenterPlacer = styled.div`
 `;
 const Table = <T,>({
   table,
-  minWidth = 900,
+  minWidth = 400,
   height = undefined,
   emptyMessage = "내역이 없습니다",
   footer = null,
