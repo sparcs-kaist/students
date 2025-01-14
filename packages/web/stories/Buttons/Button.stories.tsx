@@ -38,7 +38,7 @@ export const example: Story = {
   args: {
     type: "default",
     buttonText: "Button",
-    children: <Tag color="GREEN">Example Tag Children</Tag>,
+    children: <Tag color="GREEN600">Example Tag Children</Tag>,
     iconType: "person",
   },
 };
