@@ -7,7 +7,7 @@ import TextButton from "../Buttons/TextButton";
 interface TableProps {
   header: string;
   clickable?: boolean;
-  rows: { tag?: string; content: string; date?: string; link?: string }[];
+  rows: { tag?: string; content: string; date?: Date; link?: string }[];
   buttonEnable?: boolean;
   mini?: boolean;
   moreLink?: string;
@@ -113,6 +113,31 @@ const SingleColumnTable: React.FC<TableProps> = ({
 }) => {
   const router = useRouter();
 
+  function formatDate(date?: Date): string {
+    if (date) {
+      const today = new Date(); // 오늘 날짜
+      const diffTime = today.getTime() - date.getTime(); // 시간 차이 (밀리초)
+      const diffDays = Math.floor(diffTime / (1000 * 3600 * 24)); // 일 단위로 변환
+
+      if (diffDays === 0) {
+        return "오늘";
+      }
+      if (diffDays === 1) {
+        return "어제";
+      }
+      if (diffDays >= 2 && diffDays <= 5) {
+        return `${diffDays}일 전`;
+      }
+      if (diffDays > 5) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+    }
+    return ""; // 기본적으로 반환되는 값은 없으므로 빈 문자열
+  }
+
   const handleRowClick = (link: string) => {
     if (link) {
       router.push(link);
@@ -158,7 +183,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
               {row.tag && <TableRowText mini={mini}>{row.tag}</TableRowText>}
               <TableRowText mini={mini}>{row.content}</TableRowText>
             </TableRowContents>
-            <TableRowText mini={mini}>{row.date}</TableRowText>
+            <TableRowText mini={mini}>{formatDate(row.date)}</TableRowText>
           </TableRow>
         ))
       ) : (
