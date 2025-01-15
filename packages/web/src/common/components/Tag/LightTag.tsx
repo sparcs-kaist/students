@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-type TagColor =
+export type LightTagColor =
   | "GREEN800"
   | "GREEN600"
   | "GREEN100"
@@ -20,7 +20,7 @@ type TagColor =
   | "THISTLE"
   | "CHERRY";
 
-const TagInner = styled.div<{ color: TagColor; width: string }>`
+const TagInner = styled.div<{ color: LightTagColor; width: string }>`
   position: relative;
   width: ${({ width }) => width};
   padding: ${({ width }) => (width === "fit-content" ? "4px 12px" : "4px 0px")};
@@ -89,11 +89,11 @@ const TagInner = styled.div<{ color: TagColor; width: string }>`
 `;
 
 interface TagProps extends React.PropsWithChildren {
-  color?: TagColor;
+  color?: LightTagColor;
   width?: string;
 }
 
-const Tag: React.FC<TagProps> = ({
+const LightTag: React.FC<TagProps> = ({
   children = <div />,
   color = "BLUE",
   width = "fit-content",
@@ -103,5 +103,4 @@ const Tag: React.FC<TagProps> = ({
   </TagInner>
 );
 
-export type { TagColor };
-export default Tag;
+export default LightTag;

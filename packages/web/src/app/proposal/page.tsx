@@ -15,7 +15,9 @@ import {
   mockExpenditureData,
   mockIncomeData,
   mockTotalData,
+  mockViewResultData,
 } from "@sparcs-students/web/features/proposal/services/_mock/mockProposalTableData";
+import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 
 const Proposal = () => (
   // const [semester, setSemester] = useState<string>(""); // 2022~2028년, 봄학기/가을학기
@@ -23,15 +25,7 @@ const Proposal = () => (
   // const [organization, setOrganization] = useState<string>("");
 
   <FlexWrapper direction="column" gap={16}>
-    <Typography
-      fs={30}
-      lh={40}
-      color="GREEN.800"
-      fw="SEMIBOLD"
-      style={{ padding: "0 80px" }}
-    >
-      예결산 조회
-    </Typography>
+    <PageTitle>예결산 조회</PageTitle>
     <FlexWrapper direction="column" gap={60} style={{ padding: "32 0px" }}>
       <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
         <FlexWrapper direction="column" gap={16}>
@@ -45,13 +39,7 @@ const Proposal = () => (
         </FlexWrapper>
       </FlexWrapper>
       <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
-        <ViewResult
-          fileName="전산학부 24년도 예산안"
-          organization="전산학부"
-          period="2024년도 하반기"
-          headPerson="김스튜"
-          submitDate={new Date("2025-01-10")}
-        />
+        <ViewResult {...mockViewResultData} />
 
         <IncomeTable data={mockIncomeData} />
         <ExpenditureTable data={mockExpenditureData} />

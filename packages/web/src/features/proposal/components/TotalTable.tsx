@@ -10,7 +10,7 @@ import {
 import Table from "@sparcs-students/web/common/components/Table";
 import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
 import { useFormatter } from "next-intl";
-import Tag from "@sparcs-students/web/common/components/Tag/Tag";
+import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
 import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
 import { budgetDomainTagList } from "@sparcs-students/web/constants/tableTagList";
 
@@ -37,7 +37,7 @@ const columns = [
         info.getValue(),
         budgetDomainTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return <LightTag color={color}>{text}</LightTag>;
     },
     size: 150,
   }),
@@ -47,13 +47,13 @@ const columns = [
     cell: info => {
       switch (info.getValue()) {
         case "수입":
-          return <Tag color="GREEN100">{info.getValue()}</Tag>;
+          return <LightTag color="GREEN100">{info.getValue()}</LightTag>;
         case "지출":
-          return <Tag color="GREEN600">{info.getValue()}</Tag>;
+          return <LightTag color="GREEN600">{info.getValue()}</LightTag>;
         case "총계":
-          return <Tag color="GREEN800">{info.getValue()}</Tag>;
+          return <LightTag color="GREEN800">{info.getValue()}</LightTag>;
         default:
-          return <Tag color="GRAY">-</Tag>;
+          return <LightTag color="GRAY">-</LightTag>;
       }
       // TODO: use enum for return
     },
@@ -88,12 +88,16 @@ const columns = [
     header: "비율",
     cell: info => {
       if (info.getValue() > 100) {
-        return <Tag color="CHERRY">{info.getValue().toFixed(1)}%</Tag>;
+        return (
+          <LightTag color="CHERRY">{info.getValue().toFixed(1)}%</LightTag>
+        );
       }
       if (info.getValue() <= 100) {
-        return <Tag color="THISTLE">{info.getValue().toFixed(1)}%</Tag>;
+        return (
+          <LightTag color="THISTLE">{info.getValue().toFixed(1)}%</LightTag>
+        );
       }
-      return <Tag color="GRAY">-</Tag>;
+      return <LightTag color="GRAY">-</LightTag>;
     },
     size: 150,
   }),

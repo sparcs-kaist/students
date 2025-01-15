@@ -1,9 +1,9 @@
-import { TagColor } from "@sparcs-students/web/common/components/Tag/Tag";
+import { LightTagColor } from "@sparcs-students/web/common/components/Tag/LightTag";
 import { DarkTagColor } from "@sparcs-students/web/common/components/Tag/DarkTag";
 
 interface StatusDetail {
   text: string;
-  color: TagColor;
+  color: LightTagColor;
 }
 
 interface DarkStatusDetail {

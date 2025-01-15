@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Tag from "@sparcs-students/web/common/components/Tag/Tag";
+import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
 
-const meta: Meta<typeof Tag> = {
-  title: "components/Tag",
-  component: Tag,
+const meta: Meta<typeof LightTag> = {
+  title: "components/LightTag",
+  component: LightTag,
   parameters: {
     layout: "centered",
   },

@@ -4,7 +4,7 @@ import React from "react";
 import { fn } from "@storybook/test";
 
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import Tag from "@sparcs-students/web/common/components/Tag/Tag";
+import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
 
 const meta: Meta<typeof Button> = {
   title: "components/Buttons/Button",
@@ -38,7 +38,7 @@ export const example: Story = {
   args: {
     type: "default",
     buttonText: "Button",
-    children: <Tag color="GREEN600">Example Tag Children</Tag>,
+    children: <LightTag color="GREEN600">Example Tag Children</LightTag>,
     iconType: "person",
   },
 };

@@ -6,6 +6,15 @@ import {
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import { ExpenditureProps } from "@sparcs-students/web/features/proposal/components/ExpenditureTable";
 import { TotalProps } from "@sparcs-students/web/features/proposal/components/TotalTable";
+import { ViewResultProps } from "@sparcs-students/web/features/proposal/components/ViewResult";
+
+export const mockViewResultData: ViewResultProps = {
+  fileName: "전산학부 24년도 예산안",
+  organization: "전산학부",
+  period: "2024년도 하반기",
+  headPerson: "김스튜",
+  submitDate: Date(),
+};
 
 export const mockIncomeData: IncomeProps[] = [
   {

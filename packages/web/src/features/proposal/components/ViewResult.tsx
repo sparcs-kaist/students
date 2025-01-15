@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -12,7 +10,7 @@ import {
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table";
 
-interface ViewResultProps {
+export interface ViewResultProps {
   fileName: string;
   organization: string;
   period: string;
@@ -56,11 +54,11 @@ const columns = [
 ];
 
 const ViewResult: React.FC<ViewResultProps> = ({
-  fileName = "전산학부 24년도 예산안",
-  organization = "전산학부",
-  period = "2024년도 하반기",
-  headPerson = "김스튜",
-  submitDate = new Date(),
+  fileName,
+  organization,
+  period,
+  headPerson,
+  submitDate,
 }) => {
   const tableData = [
     {

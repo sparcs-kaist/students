@@ -13,7 +13,7 @@ import {
   BudgetDivisionIncomeE,
   BudgetDomainE,
 } from "@sparcs-students/interface/common/enum/budget.enum";
-import Tag from "@sparcs-students/web/common/components/Tag/Tag";
+import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
 import {
   getDarkTagDetail,
   getTagDetail,
@@ -26,8 +26,7 @@ import {
 import { useFormatter } from "next-intl";
 import DetailButton from "@sparcs-students/web/features/proposal/components/_atomic/DetailButton";
 import DarkTag from "@sparcs-students/web/common/components/Tag/DarkTag";
-import { Tooltip } from "@mui/material";
-import HelpOutlineButton from "@mui/icons-material/HelpOutline";
+import ExpenditureHelpButton from "./_atomic/ExpenditureHelpButton";
 
 export interface ExpenditureProps {
   code: number;
@@ -57,15 +56,15 @@ const columns = [
       switch (Math.trunc(info.getValue() / 100)) {
         case 1:
         case 4:
-          return <Tag color="BLUE">{info.getValue()}</Tag>;
+          return <LightTag color="BLUE">{info.getValue()}</LightTag>;
         case 2:
         case 5:
-          return <Tag color="YELLOW">{info.getValue()}</Tag>;
+          return <LightTag color="YELLOW">{info.getValue()}</LightTag>;
         case 3:
         case 6:
-          return <Tag color="PINK">{info.getValue()}</Tag>;
+          return <LightTag color="PINK">{info.getValue()}</LightTag>;
         default:
-          return <Tag color="GRAY">-</Tag>;
+          return <LightTag color="GRAY">-</LightTag>;
       }
     },
     size: 80,
@@ -78,7 +77,7 @@ const columns = [
         info.getValue(),
         budgetDomainTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return <LightTag color={color}>{text}</LightTag>;
     },
     size: 80,
   }),
@@ -90,7 +89,7 @@ const columns = [
         info.getValue(),
         budgetDivisionIncomeTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return <LightTag color={color}>{text}</LightTag>;
     },
     size: 120,
   }),
@@ -141,12 +140,16 @@ const columns = [
     header: "비율",
     cell: info => {
       if (info.getValue() > 100) {
-        return <Tag color="CHERRY">{info.getValue().toFixed(1)}%</Tag>;
+        return (
+          <LightTag color="CHERRY">{info.getValue().toFixed(1)}%</LightTag>
+        );
       }
       if (info.getValue() <= 100) {
-        return <Tag color="THISTLE">{info.getValue().toFixed(1)}%</Tag>;
+        return (
+          <LightTag color="THISTLE">{info.getValue().toFixed(1)}%</LightTag>
+        );
       }
-      return <Tag color="GRAY">-</Tag>;
+      return <LightTag color="GRAY">-</LightTag>;
     },
     size: 90,
   }),
@@ -168,10 +171,10 @@ const columns = [
         case "사후승인":
           return <DarkTag color="TEAL">{info.getValue()}</DarkTag>;
         default:
-          return <Tag color="GRAY">-</Tag>;
+          return <LightTag color="GRAY">-</LightTag>;
       }
     },
-    // TODO: Add Tag by enum
+    // TODO: Add LightTag by enum
     size: 90,
   }),
   columnHelper.accessor("explanation", {
@@ -196,9 +199,7 @@ const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
           지출
         </Typography>
-        <Tooltip title="지출 항목을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다.">
-          <HelpOutlineButton />
-        </Tooltip>
+        <ExpenditureHelpButton />
       </FlexWrapper>
 
       <Table table={table} />
