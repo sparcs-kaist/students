@@ -41,10 +41,6 @@ export class OrganizationRepository {
     @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
   ) {}
 
-  async getOrganizationById(id: number): Promise<OrganizationT[]> {
-    return this.db.select().from(Organization).where(eq(Organization.id, id));
-  }
-
   async selectOrganization(
     target: Partial<OrganizationT>,
   ): Promise<OrganizationT[]> {
@@ -107,7 +103,7 @@ export class OrganizationRepository {
     return res;
   }
 
-  async getOrganizationWithPresidentById(
+  async selectOrganizationWithPresidentById(
     organizationId: number,
     date: Date,
   ): Promise<OrganizationWithPresidentT[]> {
@@ -146,7 +142,7 @@ export class OrganizationRepository {
     }));
   }
 
-  async getOrganizationsByTerms(
+  async selectOrganizationsByTerms(
     startTerm: Date,
     endTerm: Date,
   ): Promise<

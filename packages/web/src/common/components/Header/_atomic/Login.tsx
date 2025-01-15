@@ -13,6 +13,7 @@ const LoginInner = styled(Link)`
   display: flex;
   gap: 8px;
   align-items: center;
+  min-width: fit-content;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;

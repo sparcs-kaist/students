@@ -8,40 +8,57 @@ interface CalendarWeekProps {
     exist: boolean;
     type?: CalendarDateProps["type"];
   }[];
-  size?: CalendarDateProps["size"];
+  small?: boolean;
   onDateClick: (date: Date) => void;
 }
 
-export interface CalendarSizeProps {
-  size: CalendarDateProps["size"];
-}
+export interface CalendarSizeProps {}
 
 const WeekWrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   align-self: stretch;
-  width: 100%;
-  flex: 1;
+  height: fit-content;
+`;
+
+const SmallWeekWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  justify-content: space-between;
+  height: fit-content;
 `;
 
 const CalendarWeek: React.FC<CalendarWeekProps> = ({
   week,
-  size = "lg",
+  small = false,
   onDateClick,
-}) => (
-  <WeekWrapper>
-    {week.map(day => (
-      <CalendarDate
-        key={day.date.toISOString()}
-        date={day.date}
-        exist={day.exist}
-        type={day.type}
-        size={size}
-        onDateClick={onDateClick}
-      />
-    ))}
-  </WeekWrapper>
-);
+}) =>
+  small ? (
+    <SmallWeekWrapper>
+      {week.map(day => (
+        <CalendarDate
+          key={day.date.toISOString()}
+          date={day.date}
+          exist={day.exist}
+          type={day.type}
+          onDateClick={onDateClick}
+        />
+      ))}
+    </SmallWeekWrapper>
+  ) : (
+    <WeekWrapper>
+      {week.map(day => (
+        <CalendarDate
+          key={day.date.toISOString()}
+          date={day.date}
+          exist={day.exist}
+          type={day.type}
+          onDateClick={onDateClick}
+        />
+      ))}
+    </WeekWrapper>
+  );
 
 export default CalendarWeek;

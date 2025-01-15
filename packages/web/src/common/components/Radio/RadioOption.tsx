@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 import RadioButton from "./RadioButton";
 
@@ -9,13 +10,17 @@ export interface RadioOptionProps<T extends string> {
   checked?: boolean;
   children: React.ReactNode;
   onClick?: (value: T) => void;
+  width?: string;
 }
 
-const RadioOptionInner = styled.div`
+const RadioOptionInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ width?: string }>`
   display: flex;
   padding-left: 2px;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  width: ${({ width }) => width ?? ""};
   color: ${({ theme }) => theme.colors.BLACK};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
@@ -34,8 +39,9 @@ const RadioOption = <T extends string>({
   checked = false,
   children,
   onClick = () => {},
+  width = "",
 }: RadioOptionProps<T>) => (
-  <RadioOptionInner onClick={() => onClick(value)}>
+  <RadioOptionInner onClick={() => onClick(value)} width={width}>
     <RadioButton checked={checked} />
     {children}
   </RadioOptionInner>

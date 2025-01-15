@@ -18,7 +18,7 @@ import {
   ApiPrp006ResponseOK,
 } from "@sparcs-students/interface/api/proposal/index";
 import { UserPublicService } from "@sparcs-students/api/feature/user/service/user.public.service";
-import { SemesterPublicService } from "@sparcs-students/api/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { OrganizationPublicService } from "src/feature/organization/service/organization.public.service";
 import { TeamPublicService } from "src/feature/organization/team/service/team.public.service";
 import { ProjectProposalRepository } from "../repository/project-proposal.repository";
@@ -42,7 +42,7 @@ export class ProjectProposalService {
         param.semesterId,
       );
     const projectProposals =
-      await this.projectProposalRepository.getProjectProposalsForStudentsByOrganizationIdAndSemesterId(
+      await this.projectProposalRepository.selectProjectProposalsForStudentsByOrganizationIdAndSemesterId(
         param.organizationId,
         param.semesterId,
       );
@@ -53,7 +53,7 @@ export class ProjectProposalService {
     }
 
     const submitDate =
-      await this.projectProposalRepository.getProjectProposalSubmitDate(
+      await this.projectProposalRepository.selectProjectProposalSubmitDate(
         param.organizationId,
         param.semesterId,
       );
@@ -83,7 +83,7 @@ export class ProjectProposalService {
     projectId: number,
   ): Promise<ApiPrp002ResponseOK> {
     const prpRevs =
-      await this.projectProposalRepository.getProjectProposalRevisionById(
+      await this.projectProposalRepository.selectProjectProposalRevisionById(
         projectId,
       );
     if (prpRevs.length === 0) {
@@ -101,7 +101,7 @@ export class ProjectProposalService {
     );
 
     const timeLines =
-      await this.projectProposalRepository.getProjectProposalTimelinesByProjectId(
+      await this.projectProposalRepository.selectProjectProposalTimelinesByProjectId(
         projectId,
       );
 

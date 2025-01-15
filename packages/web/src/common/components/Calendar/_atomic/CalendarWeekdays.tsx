@@ -1,14 +1,9 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { CalendarDateProps } from "./CalendarDate";
+import styled from "styled-components";
 
-export interface CalendarSizeProps {
-  size: CalendarDateProps["size"];
-}
+export interface CalendarSizeProps {}
 
-const DayWrapper = styled.div<{
-  size?: CalendarDateProps["size"];
-}>`
+const DayWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,41 +14,28 @@ const DayWrapper = styled.div<{
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   color: ${({ theme }) => theme.colors.GRAY[400]};
   width: 100%;
-  ${({ size }) => {
-    switch (size) {
-      case "sm":
-        return css`
-          height: 32px;
-        `;
-      case "md":
-        return css`
-          height: 40px;
-        `;
-      case "lg":
-      default:
-        return css`
-          height: 48px;
-        `;
-    }
-  }}
 `;
 
 const WeekWrapper = styled.div<CalendarSizeProps>`
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-end;
+  align-self: stretch;
+  gap: 20px;
   width: 100%;
+  flex: 1 0 0;
 `;
 
-const CalendarWeekdays: React.FC<CalendarSizeProps> = ({ size }) => (
-  <WeekWrapper size={size}>
-    <DayWrapper size={size}>일</DayWrapper>
-    <DayWrapper size={size}>월</DayWrapper>
-    <DayWrapper size={size}>화</DayWrapper>
-    <DayWrapper size={size}>수</DayWrapper>
-    <DayWrapper size={size}>목</DayWrapper>
-    <DayWrapper size={size}>금</DayWrapper>
-    <DayWrapper size={size}>토</DayWrapper>
+const CalendarWeekdays = (
+  <WeekWrapper>
+    <DayWrapper>일</DayWrapper>
+    <DayWrapper>월</DayWrapper>
+    <DayWrapper>화</DayWrapper>
+    <DayWrapper>수</DayWrapper>
+    <DayWrapper>목</DayWrapper>
+    <DayWrapper>금</DayWrapper>
+    <DayWrapper>토</DayWrapper>
   </WeekWrapper>
 );
 

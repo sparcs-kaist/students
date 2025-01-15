@@ -8,8 +8,10 @@ type RadioProps<T extends string> = {
   children: ReactElement<RadioOptionProps<T>>[];
   value: T;
   onChange: (value: T) => void;
-  direction?: "row" | "column";
-  gap?: string;
+  rows?: number;
+  columns?: number;
+  rg?: string;
+  cg?: string;
 };
 
 function isRadioOptionElement<T extends string>(
@@ -19,20 +21,28 @@ function isRadioOptionElement<T extends string>(
 }
 
 const StyledRadioInner = styled.div<{
-  direction: "row" | "column";
-  gap: string;
+  rows?: number;
+  columns?: number;
+  rg: string;
+  cg: string;
 }>`
-  display: flex;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => gap};
+  display: grid;
+  grid-template-rows: ${({ rows }) =>
+    rows !== 1 ? `repeat(${rows}, auto)` : "auto"};
+  grid-template-columns: ${({ columns }) =>
+    columns !== 1 ? `repeat(${columns}, auto)` : "auto"};
+  row-gap: ${({ rg, rows }) => (rows !== 1 ? rg : "0px")};
+  column-gap: ${({ cg, columns }) => (columns !== 1 ? cg : "0px")};
 `;
 
 const Radio = <T extends string>({
-  direction = "column",
-  gap = "12px",
   value,
   onChange,
   children,
+  rows = 1,
+  columns = children.length,
+  rg = "12px",
+  cg = "12px",
 }: RadioProps<T>) => {
   const handleChange = (newValue: T) => {
     if (newValue !== value) {
@@ -41,7 +51,7 @@ const Radio = <T extends string>({
   };
 
   return (
-    <StyledRadioInner direction={direction} gap={gap}>
+    <StyledRadioInner rows={rows} columns={columns} rg={rg} cg={cg}>
       {React.Children.map(children, child => {
         if (isRadioOptionElement<T>(child)) {
           return cloneElement(child, {
