@@ -12,7 +12,7 @@ export class UserPublicService {
    * @description 해당하는 학생이 경우 404 exception을 throw 합니다.
    */
   async getUserById(id: number): Promise<UserT> {
-    const users = await this.userRepository.getUserById(id);
+    const users = await this.userRepository.selectUserById(id);
     if (users.length === 0) {
       throw new NotFoundException(`User with ID ${id} not found.`);
     }

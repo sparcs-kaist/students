@@ -19,7 +19,7 @@ export class UserRepository {
    * @param id User id
    * @returns User id에 해당하는 User 객체를 리턴합니다.
    */
-  async getUserById(userId: number): Promise<UserT[]> {
+  async selectUserById(userId: number): Promise<UserT[]> {
     const res = await this.db.select().from(User).where(eq(User.id, userId));
     return res;
   }
