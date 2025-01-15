@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -166,6 +166,12 @@ const columns = [
 ];
 
 const IncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   const table = useReactTable({
     columns,
     data,
@@ -178,7 +184,7 @@ const IncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         수입
       </Typography>
-      {data.length === 0 ? <div /> : <Table table={table} />}
+      {loaded && <Table table={table} />}
     </FlexWrapper>
   );
 };

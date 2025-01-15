@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -60,6 +60,12 @@ const ViewResult: React.FC<ViewResultProps> = ({
   headPerson,
   submitDate,
 }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   const tableData = [
     {
       fileName,
@@ -82,7 +88,7 @@ const ViewResult: React.FC<ViewResultProps> = ({
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         조회 결과
       </Typography>
-      <Table table={table} />
+      {loaded && <Table table={table} />}
     </FlexWrapper>
   );
 };

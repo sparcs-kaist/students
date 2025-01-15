@@ -40,7 +40,6 @@ const Proposal = () => (
       </FlexWrapper>
       <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
         <ViewResult {...mockViewResultData} />
-
         <IncomeTable data={mockIncomeData} />
         <ExpenditureTable data={mockExpenditureData} />
         <TotalTable data={mockTotalData} />

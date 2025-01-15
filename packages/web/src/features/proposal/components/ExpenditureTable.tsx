@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -186,6 +186,12 @@ const columns = [
 ];
 
 const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   const table = useReactTable({
     columns,
     data,
@@ -201,8 +207,7 @@ const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
         </Typography>
         <ExpenditureHelpButton />
       </FlexWrapper>
-
-      <Table table={table} />
+      {loaded && <Table table={table} />}
     </FlexWrapper>
   );
 };
