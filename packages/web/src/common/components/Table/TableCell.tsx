@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface TableCellProps {
@@ -27,7 +28,9 @@ const CommonCellWrapper = styled.div<{
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
