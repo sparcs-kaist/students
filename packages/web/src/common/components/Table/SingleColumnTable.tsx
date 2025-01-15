@@ -115,9 +115,9 @@ const SingleColumnTable: React.FC<TableProps> = ({
 
   function formatDate(date?: Date): string {
     if (date) {
-      const today = new Date(); // 오늘 날짜
-      const diffTime = today.getTime() - date.getTime(); // 시간 차이 (밀리초)
-      const diffDays = Math.floor(diffTime / (1000 * 3600 * 24)); // 일 단위로 변환
+      const today = new Date();
+      const diffTime = today.getTime() - date.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
 
       if (diffDays === 0) {
         return "오늘";
@@ -130,12 +130,12 @@ const SingleColumnTable: React.FC<TableProps> = ({
       }
       if (diffDays > 5) {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+        const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
       }
     }
-    return ""; // 기본적으로 반환되는 값은 없으므로 빈 문자열
+    return "";
   }
 
   const handleRowClick = (link: string) => {
