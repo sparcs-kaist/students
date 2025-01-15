@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+
+import { useRouter } from "next/navigation";
 import TextButton from "../Buttons/TextButton";
 
 interface TableProps {
@@ -8,6 +10,7 @@ interface TableProps {
   rows: { tag?: string; content: string; date?: string; link?: string }[];
   buttonEnable?: boolean;
   mini?: boolean;
+  moreLink?: string;
 }
 
 interface TableRowProps {
@@ -34,6 +37,7 @@ const HeaderText = styled.div<TableRowProps>`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
   color: ${({ theme }) => theme.colors.WHITE};
 `;
+
 const TableHeader = styled.div<TableRowProps>`
   display: flex;
   align-items: center;
@@ -42,7 +46,7 @@ const TableHeader = styled.div<TableRowProps>`
   height: auto;
   background-color: ${({ theme }) => theme.colors.GREEN[600]};
   padding: ${({ mini }) => (mini ? "8px 12px" : "8px 20px")};
-  font-weight: bold; /* 헤더 글씨 굵게 */
+  font-weight: bold;
 `;
 
 const TableRow = styled.div<TableRowProps>`
@@ -105,9 +109,20 @@ const SingleColumnTable: React.FC<TableProps> = ({
   rows,
   buttonEnable = true,
   mini = false,
+  moreLink = null,
 }) => {
+  const router = useRouter();
+
   const handleRowClick = (link: string) => {
-    window.location.href = link; // URL 변경 및 페이지 이동
+    if (link) {
+      router.push(link);
+    }
+  };
+
+  const handleMoreButtonClick = () => {
+    if (moreLink) {
+      router.push(moreLink);
+    }
   };
 
   return (
@@ -118,7 +133,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
           <TextButton
             text="더보기"
             onClick={() => {
-              /* TODO: 더보기 로직 추가 */
+              handleMoreButtonClick();
             }}
             white
             light
@@ -132,8 +147,8 @@ const SingleColumnTable: React.FC<TableProps> = ({
           <TableRow
             key={index}
             onClick={() => {
-              if (clickable) {
-                handleRowClick(row.link!);
+              if (clickable && row.link) {
+                handleRowClick(row.link);
               }
             }}
             clickable={clickable}
@@ -149,7 +164,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
       ) : (
         <TableRow mini={mini}>
           <EmptyRowText mini={mini}>테이블이 비어있습니다.</EmptyRowText>
-        </TableRow> // rows가 비어있을 때 렌더링할 컴포넌트
+        </TableRow>
       )}
     </TableWrapper>
   );
