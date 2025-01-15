@@ -30,7 +30,7 @@ const MonthDisplay = styled.div`
 
 const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   currentDate,
-  onChange = () => {},
+  onChange,
 }) => {
   const today = new Date();
 

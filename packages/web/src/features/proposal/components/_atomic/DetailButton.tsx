@@ -8,7 +8,7 @@ type DetailButtonProps = {
   detail: string;
 };
 
-const DetailButton = ({ detail = "detail" }: DetailButtonProps) => {
+const DetailButton = ({ detail }: DetailButtonProps) => {
   const openCheckModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>

@@ -3,7 +3,7 @@
 import colors from "@sparcs-students/web/styles/themes/colors";
 import React from "react";
 
-const RadioButton = ({ checked = false }: { checked: boolean }) => (
+const RadioButton = ({ checked }: { checked: boolean }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"

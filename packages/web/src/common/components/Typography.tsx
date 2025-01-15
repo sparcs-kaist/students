@@ -72,9 +72,8 @@ const TypographyInner = styled.div<TypographyProps>`
  *
  */
 
-const Typography: React.FC<TypographyProps> = ({
-  children = null,
-  ...rest
-}) => <TypographyInner {...rest}>{children}</TypographyInner>;
+const Typography: React.FC<TypographyProps> = ({ children, ...rest }) => (
+  <TypographyInner {...rest}>{children}</TypographyInner>
+);
 
 export default Typography;
