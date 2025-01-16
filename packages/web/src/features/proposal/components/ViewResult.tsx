@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Table from "@sparcs-students/web/common/components/Table";
+import Table from "@sparcs-students/web/common/components/Table/Table";
 
 export interface ViewResultProps {
   fileName: string;

@@ -7,7 +7,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Table from "@sparcs-students/web/common/components/Table";
+import Table from "@sparcs-students/web/common/components/Table/Table";
 import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
 import { useFormatter } from "next-intl";
 import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";

@@ -1,10 +1,10 @@
-import { IncomeProps } from "@sparcs-students/web/features/proposal/components/IncomeTable";
+import { IncomeProps } from "@sparcs-students/web/features/proposal/components/ViewerIncomeTable";
 import {
   BudgetClassExpenseE,
   BudgetDivisionIncomeE,
   BudgetDomainE,
 } from "@sparcs-students/interface/common/enum/budget.enum";
-import { ExpenditureProps } from "@sparcs-students/web/features/proposal/components/ExpenditureTable";
+import { ExpenditureProps } from "@sparcs-students/web/features/proposal/components/ViewerExpenditureTable";
 import { TotalProps } from "@sparcs-students/web/features/proposal/components/TotalTable";
 import { ViewResultProps } from "@sparcs-students/web/features/proposal/components/ViewResult";
 
@@ -27,7 +27,6 @@ export const mockIncomeData: IncomeProps[] = [
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거",
     status: "승인",
-    explanation: "대충 어쩌구저쩌구한 설명",
   },
 ];
 
@@ -43,7 +42,6 @@ export const mockExpenditureData: ExpenditureProps[] = [
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거",
     status: "승인",
-    explanation: "대충 어쩌구저쩌구한 설명",
   },
 ];
 

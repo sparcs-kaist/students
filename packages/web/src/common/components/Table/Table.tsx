@@ -5,8 +5,8 @@ import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import TableCell from "./Table/TableCell";
-import Typography from "./Typography";
+import TableCell from "./TableCell";
+import Typography from "../Typography";
 
 interface TableProps<T> {
   table: TableType<T>;
@@ -32,12 +32,13 @@ const TableInner = styled.table.withConfig({
   flex-direction: column;
   align-items: flex-start;
   min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
-  width: fit-content;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-radius: 4px;
   overflow: hidden;
   border-spacing: 0;
   height: ${({ height }) => (height ? `${height}px` : "none")};
+  table-layout: fixed;
+  width: 100%;
 `;
 const Header = styled.thead`
   display: flex;
@@ -60,7 +61,7 @@ const ContentRow = styled.tr.withConfig({
 })<{ selected: boolean; isClickable: boolean }>`
   width: 100%;
   display: flex;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.GREEN[100] : "transparent"};
@@ -69,7 +70,7 @@ const EmptyCenterPlacer = styled.div`
   height: 100%;
   display: flex;
   flex: 1;
-  padding: 12px 8px 12px 8px;
+  padding: 12px 20px;
   justify-content: center;
   align-items: center;
 `;

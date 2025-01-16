@@ -8,8 +8,8 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import SearchThreeInput from "@sparcs-students/web/features/proposal/components/SearchThreeInput";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/proposal/components/ViewResult";
-import IncomeTable from "@sparcs-students/web/features/proposal/components/IncomeTable";
-import ExpenditureTable from "@sparcs-students/web/features/proposal/components/ExpenditureTable";
+import ViewerIncomeTable from "@sparcs-students/web/features/proposal/components/ViewerIncomeTable";
+import ViewerExpenditureTable from "@sparcs-students/web/features/proposal/components/ViewerExpenditureTable";
 import TotalTable from "@sparcs-students/web/features/proposal/components/TotalTable";
 import {
   mockExpenditureData,
@@ -40,8 +40,8 @@ const Proposal = () => (
       </FlexWrapper>
       <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
         <ViewResult {...mockViewResultData} />
-        <IncomeTable data={mockIncomeData} />
-        <ExpenditureTable data={mockExpenditureData} />
+        <ViewerIncomeTable data={mockIncomeData} />
+        <ViewerExpenditureTable data={mockExpenditureData} />
         <TotalTable data={mockTotalData} />
       </FlexWrapper>
     </FlexWrapper>

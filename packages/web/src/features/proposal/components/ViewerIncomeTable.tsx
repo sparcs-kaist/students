@@ -7,46 +7,37 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Table from "@sparcs-students/web/common/components/Table";
-import {
-  BudgetClassExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
-} from "@sparcs-students/interface/common/enum/budget.enum";
+import Table from "@sparcs-students/web/common/components/Table/Table";
 import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
+import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
 import {
-  getDarkTagDetail,
-  getTagDetail,
-} from "@sparcs-students/web/utils/getTagDetail";
-import {
-  budgetClassExpenseTagList,
   budgetDivisionIncomeTagList,
   budgetDomainTagList,
 } from "@sparcs-students/web/constants/tableTagList";
-import { useFormatter } from "next-intl";
+import {
+  BudgetDivisionIncomeE,
+  BudgetDomainE,
+} from "@sparcs-students/interface/common/enum/budget.enum";
 import DetailButton from "@sparcs-students/web/features/proposal/components/_atomic/DetailButton";
 import DarkTag from "@sparcs-students/web/common/components/Tag/DarkTag";
-import ExpenditureHelpButton from "./_atomic/ExpenditureHelpButton";
 
-export interface ExpenditureProps {
+export interface IncomeProps {
   code: number;
   budgetDomain: BudgetDomainE;
   budgetDivisionIncome: BudgetDivisionIncomeE;
-  name: string;
-  item: BudgetClassExpenseE;
+  item: string;
   lastYear: number;
   thisYear: number;
   ratio: number;
   reason: string;
   status: string;
-  explanation: string;
 }
 
-interface ExpenditureTableProps {
-  data: ExpenditureProps[];
+interface IncomeTableProps {
+  data: IncomeProps[];
 }
 
-const columnHelper = createColumnHelper<ExpenditureProps>();
+const columnHelper = createColumnHelper<IncomeProps>();
 
 const columns = [
   columnHelper.accessor("code", {
@@ -93,33 +84,21 @@ const columns = [
     },
     size: 120,
   }),
-  columnHelper.accessor("name", {
-    id: "name",
-    header: "사업명",
-    cell: info => info.getValue(),
-    size: 80,
-  }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
-    cell: info => {
-      const { color, text } = getDarkTagDetail(
-        info.getValue(),
-        budgetClassExpenseTagList,
-      );
-      return <DarkTag color={color}>{text}</DarkTag>;
-    },
-    size: 100,
+    cell: info => info.getValue(),
+    size: 240,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
     header: "작년 결산",
     cell: info => {
-      const format = useFormatter();
-      return format.number(info.getValue(), {
+      const formatter = new Intl.NumberFormat("ko-KR", {
         style: "currency",
         currency: "KRW",
       });
+      return formatter.format(info.getValue());
     },
     size: 120,
   }),
@@ -127,11 +106,11 @@ const columns = [
     id: "thisYear",
     header: "올해 예산",
     cell: info => {
-      const format = useFormatter();
-      return format.number(info.getValue(), {
+      const formatter = new Intl.NumberFormat("ko-KR", {
         style: "currency",
         currency: "KRW",
       });
+      return formatter.format(info.getValue());
     },
     size: 120,
   }),
@@ -177,15 +156,9 @@ const columns = [
     // TODO: Add LightTag by enum
     size: 90,
   }),
-  columnHelper.accessor("explanation", {
-    id: "explanation",
-    header: "설명",
-    cell: info => <DetailButton detail={info.getValue()} />,
-    size: 60,
-  }),
 ];
 
-const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
+const ViewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -201,15 +174,12 @@ const ExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <FlexWrapper direction="row" gap={12}>
-        <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-          지출
-        </Typography>
-        <ExpenditureHelpButton />
-      </FlexWrapper>
+      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+        수입
+      </Typography>
       {loaded && <Table table={table} />}
     </FlexWrapper>
   );
 };
 
-export default ExpenditureTable;
+export default ViewerIncomeTable;
