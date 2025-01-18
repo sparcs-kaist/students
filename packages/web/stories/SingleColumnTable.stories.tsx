@@ -38,7 +38,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const TableWrapper = styled.div`
-  width: 100%;
+  width: 500px;
 `;
 
 export const example: Story = {
