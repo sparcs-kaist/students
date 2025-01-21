@@ -45,8 +45,8 @@ export const zTimestamp = z.object({
 export type Timestamp = z.infer<typeof zTimestamp>;
 
 export const zDuration = z.object({
-  start: zDateOnly,
-  end: zDateOnly.nullable(),
+  startTerm: zDateOnly,
+  endTerm: zDateOnly.nullable(),
 });
 
 export type Duration = z.infer<typeof zDuration>;
