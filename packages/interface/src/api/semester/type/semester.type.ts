@@ -17,7 +17,6 @@ export const zHalfYear = z.object({
   name: z.string(), // ex) 2024년 상반기
   year: z.number(),
   halfYearEnum: z.nativeEnum(HalfYearE),
-  duration: zDuration,
   regularSemester: zSemester,
   seasonalSemester: zSemester,
 });

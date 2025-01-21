@@ -50,3 +50,13 @@ export const zDuration = z.object({
 });
 
 export type Duration = z.infer<typeof zDuration>;
+
+export const zDurationCreate = zDuration
+  .omit({
+    endTerm: true,
+  })
+  .extend({
+    endTerm: zDateOnly.optional(),
+  });
+
+export type DurationCreate = z.infer<typeof zDurationCreate>;
