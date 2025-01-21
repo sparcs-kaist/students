@@ -41,6 +41,10 @@ const TableWrapper = styled.div`
   width: 500px;
 `;
 
+const today = new Date();
+const fiveDaysAgo = new Date(today); // 오늘 날짜 복사
+fiveDaysAgo.setDate(today.getDate() - 5);
+
 export const example: Story = {
   args: {
     moreLink: "",
@@ -49,12 +53,12 @@ export const example: Story = {
         tag: "[테스트]",
         content:
           "기ㅣ이이이이이이이이이이ㅣ이이ㅣ이이이이이이이이이이이이이이이이이이이이이이이이이이기ㅣ이이이이이이이이이이ㅣ이이ㅣ이이이이이이이이이이이이이이이이이이이이이이이이이이ㄴ",
-        date: new Date("2025-01-14"),
+        date: today,
       },
       {
         tag: "[테스트]",
         content: "짧은 텍스트",
-        date: new Date("2025-01-10"),
+        date: fiveDaysAgo,
       },
       { content: "태그 없을 때", date: new Date("2024-11-21") },
     ],
