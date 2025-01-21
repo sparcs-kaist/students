@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zOrgName,
+  zName,
   zUserName,
 } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
@@ -29,7 +29,7 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     organizationId: zId,
-    organizationName: zOrgName,
+    organizationName: zName,
     semesterId: zId,
     organizationPresidentId: zId,
     organizationPresidentName: zUserName,
