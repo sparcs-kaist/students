@@ -42,7 +42,6 @@ const TableHeader = styled.div<TableRowProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   height: auto;
   background-color: ${({ theme }) => theme.colors.GREEN[600]};
   padding: ${({ mini }) => (mini ? "8px 12px" : "8px 20px")};
@@ -53,7 +52,6 @@ const TableRow = styled.div<TableRowProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
