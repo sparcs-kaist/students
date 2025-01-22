@@ -1,8 +1,8 @@
 // 조직 유형 E
 export enum OrganizationTypeE {
-  UAPresident, // 학부 총학생회징딘
+  UAPresidents = 1, // 학부 총학생회징단
   CentralExecutive, // 중앙집행위원회
-  Autonomous = 1, // 자치기구
+  Autonomous, // 자치기구
   Standing, // 상설위원회
   Specialized, // 전문기구
   Special, // 특별기구
@@ -28,7 +28,7 @@ export const getDisplayNameOrganizationTypeE = (
   type: OrganizationTypeE | undefined,
 ) => {
   switch (type) {
-    case OrganizationTypeE.UAPresident:
+    case OrganizationTypeE.UAPresidents:
       return "총학생회장단";
     case OrganizationTypeE.CentralExecutive:
       return "중앙집행위원회";
