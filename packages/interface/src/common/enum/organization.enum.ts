@@ -1,6 +1,6 @@
 // 조직 유형 E
 export enum OrganizationTypeE {
-  UAPresidents = 1, // 학부 총학생회징단
+  UAPresidents = 1, // 학부 총학생회장단
   CentralExecutive, // 중앙집행위원회
   Autonomous, // 자치기구
   Standing, // 상설위원회
