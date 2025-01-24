@@ -16,6 +16,8 @@ const ToolTipWrapper = styled.div`
   width: 340px;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
+  position: absolute;
+  transform: translateY(-60%) translateX(32px);
 `;
 
 const ExpenditureHelpButton = () => {
