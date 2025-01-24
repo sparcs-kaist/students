@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-
+// import { useParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
@@ -23,6 +23,7 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 
 const Proposal = () => {
+  // const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
