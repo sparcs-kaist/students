@@ -164,7 +164,7 @@ const ViewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         수입
       </Typography>
-      {loaded && <Table table={table} />}
+      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>
   );
 };

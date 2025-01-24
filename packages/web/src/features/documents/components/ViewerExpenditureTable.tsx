@@ -188,7 +188,7 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
         </Typography>
         <ExpenditureHelpButton />
       </FlexWrapper>
-      {loaded && <Table table={table} />}
+      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>
   );
 };

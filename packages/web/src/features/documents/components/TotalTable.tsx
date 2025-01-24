@@ -121,7 +121,13 @@ const TotalTable: React.FC<TotalTableProps> = ({ data }) => {
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         통합
       </Typography>
-      {loaded && <Table table={table} rowStyleResolver={rowStyleResolver} />}
+      {loaded && (
+        <Table
+          table={table}
+          rowStyleResolver={rowStyleResolver}
+          emptyMessage="테이블 정보가 없습니다."
+        />
+      )}
     </FlexWrapper>
   );
 };
