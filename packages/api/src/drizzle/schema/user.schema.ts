@@ -1,36 +1,37 @@
 import {
   int,
   varchar,
-  timestamp,
   mysqlTable,
   foreignKey,
+  timestamp,
 } from "drizzle-orm/mysql-core";
-import { InferSelectModel } from "drizzle-orm";
 
+// User 테이블
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey().notNull(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
 
-export type UserT = InferSelectModel<typeof User>;
-
-export const UserStudent = mysqlTable(
-  "user_student",
+// Student 테이블
+export const Student = mysqlTable(
+  "student",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
+    studentNumber: varchar("student_number", { length: 20 }).notNull(),
     userId: int("user_id").notNull(),
-    studentNumber: varchar("student_number", { length: 20 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    userForeignKey: foreignKey({
+    userFk: foreignKey({
       columns: [table.userId],
       foreignColumns: [User.id],
+      name: "student_user_id_fk",
     }),
   }),
 );
-
-export type UserStudentT = InferSelectModel<typeof UserStudent>;
