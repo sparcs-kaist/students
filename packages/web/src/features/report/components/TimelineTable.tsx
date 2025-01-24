@@ -22,7 +22,6 @@ interface TimelineTableProps {
 const TableWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   overflow: hidden;
   border-radius: 4px;
 `;
@@ -49,7 +48,7 @@ const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
         const { startDate, endDate } = row.original; // row.original을 통해 원본 데이터를 접근
         return `${formatDate(startDate)} - ${formatDate(endDate)}`;
       },
-      size: 260,
+      size: 500,
     }),
     columnHelper.accessor("content", {
       header: "내용",
@@ -57,7 +56,7 @@ const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
         const rowContent = row.original.content;
         return `${rowContent === null ? "-" : rowContent}`;
       },
-      size: 302,
+      size: 800,
     }),
     columnHelper.accessor("memo", {
       header: "비고",
@@ -65,7 +64,7 @@ const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
         const content = row.original.memo;
         return `${content === null ? "-" : content}`;
       },
-      size: 370,
+      size: 1000,
     }),
   ];
 
