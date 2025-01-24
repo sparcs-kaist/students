@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import TextButton from "../Buttons/TextButton";
 
 interface TableButtonCellProps {
@@ -28,7 +29,9 @@ const ButtonsWrapper = styled.div`
   gap: 12px;
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};

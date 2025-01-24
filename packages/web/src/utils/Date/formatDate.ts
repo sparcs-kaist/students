@@ -4,4 +4,7 @@ import { ko } from "date-fns/locale";
 const formatSimpleDate = (date: Date) =>
   format(date, "M월 d일", { locale: ko });
 
-export { formatSimpleDate };
+const formatDotDate = (date: Date) =>
+  format(date, "yyyy.MM.dd.", { locale: ko });
+
+export { formatSimpleDate, formatDotDate };
