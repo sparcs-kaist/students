@@ -21,3 +21,42 @@ const testZWeekTimeValidation = () => {
 
 export { zWeekTime, testZWeekTimeValidation };
 export type { WeekTime };
+
+// DateOnly: "YYYY-MM-DD" 형식
+const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
+export const zDateOnly = z.custom<string>(val =>
+  typeof val === "string" ? dateOnlyRegex.test(val) : false,
+);
+export type DateOnly = z.infer<typeof zDateOnly>;
+
+// DateTime: ISO 8601 형식 "YYYY-MM-DDTHH:mm:ssZ"
+const dateTimeRegex =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|([+-]\d{2}:\d{2}))?$/;
+export const zDateTime = z.custom<string>(val =>
+  typeof val === "string" ? dateTimeRegex.test(val) : false,
+);
+export type DateTime = z.infer<typeof zDateTime>;
+
+// Timestamp: DateTime 값과 UTC 또는 KST 구분
+export const zTimestamp = z.object({
+  value: zDateTime,
+  timeZone: z.enum(["UTC", "KST"]),
+});
+export type Timestamp = z.infer<typeof zTimestamp>;
+
+export const zDuration = z.object({
+  startTerm: zDateOnly,
+  endTerm: zDateOnly.nullable(),
+});
+
+export type Duration = z.infer<typeof zDuration>;
+
+export const zDurationCreate = zDuration
+  .omit({
+    endTerm: true,
+  })
+  .extend({
+    endTerm: zDateOnly.optional(),
+  });
+
+export type DurationCreate = z.infer<typeof zDurationCreate>;

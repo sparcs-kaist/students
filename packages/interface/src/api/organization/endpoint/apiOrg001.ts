@@ -2,8 +2,8 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zOrgName,
-  zOrgNameEng,
+  zName,
+  zNameEng,
 } from "@sparcs-students/interface/common/stringLength";
 
 /**
@@ -32,8 +32,8 @@ const responseBodyMap = {
         organizations: z // 동아리
           .object({
             id: z.coerce.number().int().min(1),
-            name: zOrgName,
-            name_eng: zOrgNameEng,
+            name: zName,
+            name_eng: zNameEng,
           })
           .array(),
       })

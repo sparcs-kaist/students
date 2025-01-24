@@ -47,10 +47,10 @@ const SearchItemWrapper = styled.div`
 `;
 
 const SearchItem: React.FC<SearchItemProps> = ({
-  selected = "",
-  isSelected = false,
-  children = "",
-  onClick = () => {},
+  selected,
+  isSelected,
+  children,
+  onClick,
 }) => (
   <SearchItemWrapper
     onClick={() => (children !== selected ? onClick(children) : onClick(""))}
