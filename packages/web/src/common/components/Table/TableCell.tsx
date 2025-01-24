@@ -21,7 +21,7 @@ const CommonCellWrapper = styled.div<{
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: ${({ isHeader }) => (isHeader ? "12px 8px" : "12px 20px")};
+  padding: ${({ isHeader }) => (isHeader ? "8px 12px" : "12px 20px")};
   height: ${({ isHeader }) => (isHeader ? "36px" : "48px")};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
