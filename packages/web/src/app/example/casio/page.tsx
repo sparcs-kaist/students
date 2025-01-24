@@ -4,6 +4,7 @@ import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaWithHeader from "@sparcs-students/web/features/document/components/TextAreaWithHeader";
+import TimelineTable from "@sparcs-students/web/features/document/components/TimelineTable";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
@@ -22,6 +23,7 @@ const ContentsArea = styled.div`
   flex-direction: column;
   gap: 100px;
   width: 100%;
+  overflow-x: scroll;
 `;
 
 const RowWrapper = styled.div`
@@ -50,6 +52,21 @@ const Casio: React.FC = () => {
   const fourthRow = useRef<HTMLDivElement>(null);
   const fifthRow = useRef<HTMLDivElement>(null);
   const sixthRow = useRef<HTMLDivElement>(null);
+  const seventhRow = useRef<HTMLDivElement>(null);
+
+  const mockTimeLine = [
+    {
+      startDate: new Date("2025-01-24"),
+      endDate: new Date("2025-01-28"),
+      content: "집행운영회 운영",
+    },
+    {
+      startDate: new Date("2025-01-24"),
+      endDate: new Date("2025-01-28"),
+      content: "메모가 있는 경우",
+      memo: "기이이이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이인메모",
+    },
+  ];
 
   const breadcrumbItems = [
     { name: "카테고리", path: "/category" },
@@ -64,6 +81,7 @@ const Casio: React.FC = () => {
     { name: "사업 추진 목적", reference: fourthRow },
     { name: "사업 추진 대상자", reference: fifthRow },
     { name: "사업 세부 내용", reference: sixthRow },
+    { name: "사업 진행 타임라인", reference: seventhRow },
   ];
 
   return (
@@ -110,6 +128,15 @@ const Casio: React.FC = () => {
               header="세부 사업 내용"
               contents={["contents1"]}
             />
+          </div>
+          <div
+            ref={seventhRow}
+            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          >
+            <Typography fs={24} lh={30} fw="BOLD">
+              사업 진행 타임라인
+            </Typography>
+            <TimelineTable contents={mockTimeLine} />
           </div>
           <TableArea />
         </ContentsArea>

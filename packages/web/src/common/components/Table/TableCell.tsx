@@ -28,8 +28,8 @@ const CommonCellWrapper = styled.div<{
 `;
 
 const CellText = styled.div<{ isGray: boolean }>`
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
@@ -41,6 +41,8 @@ const CellText = styled.div<{ isGray: boolean }>`
 const HeaderInner = styled.div`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.WHITE};
+  font-size: 18px;
+  line-height: 20px;
 `;
 
 const SortWrapper = styled.div`
