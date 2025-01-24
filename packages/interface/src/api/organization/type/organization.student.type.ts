@@ -1,4 +1,4 @@
-import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum";
+import { OrganizationPresidentTypeEnum } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { zPhoneNumber } from "@sparcs-students/interface/common/type/phoneNumber.type";
@@ -11,7 +11,7 @@ import { zOperatingCommittee, zOrganization, zTeam } from "./organization.type";
 export const zOrganizationPresident = z.object({
   id: zId,
   organization: zOrganization.pick({ id: true }),
-  organizationPresidentTypeEnum: z.nativeEnum(OrganizationPresidentTypeE), // 정, 부
+  organizationPresidentTypeEnum: z.nativeEnum(OrganizationPresidentTypeEnum), // 정, 부
   title: z.string().max(100), // 회장, 위원장, ... 학부총학생회 산하 선거조작조사특임위원회 위원장이면 좀 길어서 100자 제한
   student: zStudent.pick({ id: true }), // Student.id
   phoneNumber: zPhoneNumber,

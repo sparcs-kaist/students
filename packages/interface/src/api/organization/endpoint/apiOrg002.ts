@@ -5,7 +5,7 @@ import {
   zName,
   zNameEng,
 } from "@sparcs-students/interface/common/stringLength";
-import { OrganizationTypeE } from "@sparcs-students/interface/common/enum";
+import { OrganizationTypeEnum } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
@@ -24,7 +24,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   name: zName,
   nameEng: zNameEng,
-  organizationTypeId: z.nativeEnum(OrganizationTypeE),
+  organizationTypeId: z.nativeEnum(OrganizationTypeEnum),
   foundingYear: z.coerce.number().int(),
   startTerm: z.coerce.date(),
   endTerm: z.coerce.date().optional(),

@@ -1,5 +1,5 @@
 // 권한 E
-export enum AssistantPermissionE {
+export enum AssistantPermissionEnum {
   President = 1, // 총학회장
   COC, // 중운위원
   GSRC, // 전학대의원
@@ -8,7 +8,7 @@ export enum AssistantPermissionE {
 }
 
 // 안건 상태 E
-export enum AgendaAcceptedStatusE {
+export enum AgendaAcceptedStatusEnum {
   Accepted = 1, // 승인
   Rejected, // 반려
   ReviseNeeded, // 수정요청
@@ -17,26 +17,26 @@ export enum AgendaAcceptedStatusE {
 }
 
 // Document Review Status E
-export enum DocumentReviewStatusE {
+export enum DocumentReviewStatusEnum {
   Accepted = 1, // 승인
   Rejected, // 반려
   Progress, // 검토중
 }
 
 // AssistantPermissionE
-export const getDisplayNameAssistantPermissionE = (
-  type: AssistantPermissionE | undefined,
+export const getDisplayNameAssistantPermissionEnum = (
+  type: AssistantPermissionEnum | undefined,
 ) => {
   switch (type) {
-    case AssistantPermissionE.President:
+    case AssistantPermissionEnum.President:
       return "총학회장";
-    case AssistantPermissionE.COC:
+    case AssistantPermissionEnum.COC:
       return "중운위원";
-    case AssistantPermissionE.GSRC:
+    case AssistantPermissionEnum.GSRC:
       return "전학대의원";
-    case AssistantPermissionE.UA:
+    case AssistantPermissionEnum.UA:
       return "총학중집";
-    case AssistantPermissionE.BAI:
+    case AssistantPermissionEnum.BAI:
       return "감사원";
     default:
       return "";
@@ -44,19 +44,19 @@ export const getDisplayNameAssistantPermissionE = (
 };
 
 // AgendaAcceptedStatusE
-export const getDisplayNameAgendaAcceptedStatusE = (
-  type: AgendaAcceptedStatusE | undefined,
+export const getDisplayNameAgendaAcceptedStatusEnum = (
+  type: AgendaAcceptedStatusEnum | undefined,
 ) => {
   switch (type) {
-    case AgendaAcceptedStatusE.Accepted:
+    case AgendaAcceptedStatusEnum.Accepted:
       return "승인";
-    case AgendaAcceptedStatusE.Rejected:
+    case AgendaAcceptedStatusEnum.Rejected:
       return "반려";
-    case AgendaAcceptedStatusE.ReviseNeeded:
+    case AgendaAcceptedStatusEnum.ReviseNeeded:
       return "수정요청";
-    case AgendaAcceptedStatusE.Progress:
+    case AgendaAcceptedStatusEnum.Progress:
       return "검토중";
-    case AgendaAcceptedStatusE.LateAccepted:
+    case AgendaAcceptedStatusEnum.LateAccepted:
       return "사후승인";
     default:
       return "";

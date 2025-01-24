@@ -1,6 +1,6 @@
 import {
-  OrganizationStateE,
-  OrganizationTypeE,
+  OrganizationStateEnum,
+  OrganizationTypeEnum,
 } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import {
@@ -18,10 +18,10 @@ export const zOrganization = z.object({
   id: z.string(),
   name: z.string(),
   nameEng: z.string(),
-  organizationTypeEnum: z.nativeEnum(OrganizationTypeE),
+  organizationTypeEnum: z.nativeEnum(OrganizationTypeEnum),
   foundingYear: z.coerce.number(),
   duration: zDuration,
-  organizationStateEnum: z.nativeEnum(OrganizationStateE), // 정규 or 비대위
+  organizationStateEnum: z.nativeEnum(OrganizationStateEnum), // 정규 or 비대위
 });
 
 export type IOrganization = z.infer<typeof zOrganization>;
@@ -32,6 +32,14 @@ export const zOrganizationCreate = zOrganization
     duration: true,
   })
   .merge(zDurationCreate);
+
+export const zOrganizationSummary = zOrganization.pick({
+  id: true,
+  name: true,
+  nameEng: true,
+  organizationTypeEnum: true,
+  organizationStateEnum: true,
+});
 
 // OperatingCommittee: 운영위원회 엔티티
 export const zOperatingCommittee = z.object({

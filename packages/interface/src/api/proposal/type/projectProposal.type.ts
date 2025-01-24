@@ -6,7 +6,7 @@ import {
 } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { zHalfYear } from "@sparcs-students/interface/api/semester/type/semester.type";
 import { zStudent } from "@sparcs-students/interface/api/user/type/user.type";
-import { DocumentItemStatusE } from "@sparcs-students/interface/common/enum";
+import { DocumentItemStatusEnum } from "@sparcs-students/interface/common/enum";
 import {
   zDateTime,
   zDuration,
@@ -18,8 +18,8 @@ export const zProjectProposal = z.object({
   id: zId,
   organization: zOrganization.pick({ id: true }),
   halfYear: zHalfYear.pick({ id: true }),
-  //   projectProposalStatusEnum: z.nativeEnum(ProjectProposalStatusE),
-  DocumentItemStatusEnum: z.nativeEnum(DocumentItemStatusE),
+  //   projectProposalStatusEnum: z.nativeEnum(ProjectProposalStatusEnum),
+  DocumentItemStatusEnum: z.nativeEnum(DocumentItemStatusEnum),
   name: zDocumentItemName,
   method: z.string(),
   prepareDuration: zDuration.nullable(),
