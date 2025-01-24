@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React from "react";
+import isPropValid from "@emotion/is-prop-valid";
 import Typography from "./Typography";
 
 const IndexWrapper = styled.div`
@@ -22,7 +23,9 @@ interface IndexProps {
   headerHeight: number;
 }
 
-const IndexArea = styled.div<{ headerHeight: number }>`
+const IndexArea = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ headerHeight: number }>`
   display: flex;
   flex-direction: column;
   gap: 32px;

@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import React from "react";
 import styled from "styled-components";
@@ -9,7 +10,9 @@ interface BreadCrumbItemProps {
   isLastChild?: boolean;
 }
 
-const BreadCrumbInner = styled.div<{ isLastChild: boolean; disabled: boolean }>`
+const BreadCrumbInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isLastChild: boolean; disabled: boolean }>`
   color: ${({ theme, isLastChild }) =>
     isLastChild ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};

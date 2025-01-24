@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface TableCellProps {
@@ -10,7 +11,9 @@ interface TableCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   isHeader: boolean;
   width: string | number;
   minWidth: number;
@@ -27,7 +30,9 @@ const CommonCellWrapper = styled.div<{
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 14px;
   line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};

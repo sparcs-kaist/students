@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import TextButton from "../Buttons/TextButton";
 
 interface TableButtonCellProps {
@@ -9,7 +10,9 @@ interface TableButtonCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   width: string | number;
   minWidth: number;
 }>`
@@ -28,7 +31,9 @@ const ButtonsWrapper = styled.div`
   gap: 12px;
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
