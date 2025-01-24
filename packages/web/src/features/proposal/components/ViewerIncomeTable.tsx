@@ -122,7 +122,12 @@ const columns = [
   columnHelper.accessor("reason", {
     id: "reason",
     header: "비고",
-    cell: info => <DetailButton detail={info.getValue()} />,
+    cell: info => (
+      <DetailButton
+        title={`${info.row.original.item}에 대한 비고`}
+        detail={info.getValue()}
+      />
+    ),
     size: 105,
   }),
   columnHelper.accessor("status", {

@@ -1,26 +1,26 @@
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import { overlay } from "overlay-kit";
 import IconButton from "@mui/material/IconButton";
+import DetailModal from "@sparcs-students/web/features/proposal/components/_atomic/DetailModal";
 
 type DetailButtonProps = {
+  title: string;
   detail: string;
 };
 
-const DetailButton = ({ detail }: DetailButtonProps) => {
+const DetailButton = ({ title, detail }: DetailButtonProps) => {
   const openCheckModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
-        <ConfirmModalContent
+        <DetailModal
           onConfirm={() => {
             close();
           }}
-          confirmButtonText="닫기"
-        >
-          {detail}
-        </ConfirmModalContent>
+          title={title}
+          detail={detail}
+        />
       </Modal>
     ));
   };

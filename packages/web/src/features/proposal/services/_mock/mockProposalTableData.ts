@@ -30,7 +30,8 @@ export const mockIncomeData: IncomeProps[] = [
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
-    reason: "대충 어쩌구저쩌구한 근거",
+    reason:
+      "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
   },
 ];
@@ -45,7 +46,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
-    reason: "대충 어쩌구저쩌구한 근거",
+    reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
     status: "승인",
   },
 ];

@@ -33,6 +33,7 @@ import DetailButton from "@sparcs-students/web/features/proposal/components/_ato
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import { budgetExpenseToString } from "@sparcs-students/web/features/documents/utils/enumToItem";
 import ExpenditureHelpButton from "./_atomic/ExpenditureHelpButton";
 
 export interface ExpenditureProps {
@@ -142,7 +143,12 @@ const columns = [
   columnHelper.accessor("reason", {
     id: "reason",
     header: "근거",
-    cell: info => <DetailButton detail={info.getValue()} />,
+    cell: info => (
+      <DetailButton
+        title={`${info.row.original.name}의 ${budgetExpenseToString(info.row.original.item)}에 대한 근거`}
+        detail={info.getValue()}
+      />
+    ),
     size: 105,
   }),
   columnHelper.accessor("status", {
