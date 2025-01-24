@@ -2,7 +2,7 @@ import { zUserName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { z } from "zod";
-import { zOrganizationSummary } from "@sparcs-students/interface/api/organization/type/organization.type";
+import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 
 export const zUser = z.object({
   id: zId,
@@ -25,7 +25,7 @@ export type IStudent = z.infer<typeof zStudent>;
 export const zMember = z.object({
   // 로그인 토큰 발급을 위한 Member.
   id: zId,
-  organization: zOrganizationSummary,
+  organization: zOrganization,
   user: zUser,
   studentNumber: zStudent.shape.studentNumber,
   name: zStudent.shape.user.shape.name,

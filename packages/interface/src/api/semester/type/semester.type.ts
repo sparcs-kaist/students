@@ -24,4 +24,12 @@ export const zHalfYear = z.object({
   seasonalSemester: zSemester,
 });
 
+export const zHalfYearSummary = zHalfYear.pick({
+  id: true,
+  name: true,
+  year: true,
+  halfYearEnum: true,
+});
+
 export type IHalfYear = z.infer<typeof zHalfYear>;
+export type IHalfYearSummary = z.infer<typeof zHalfYearSummary>;
