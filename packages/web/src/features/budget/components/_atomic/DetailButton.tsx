@@ -1,9 +1,8 @@
 import React from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import { overlay } from "overlay-kit";
-import IconButton from "@mui/material/IconButton";
-import DetailModal from "@sparcs-students/web/features/proposal/components/_atomic/DetailModal";
+import DetailModal from "@sparcs-students/web/features/documents/components/DetailModal";
+import Icon from "@sparcs-students/web/common/components/Icon";
 
 type DetailButtonProps = {
   title: string;
@@ -26,10 +25,6 @@ const DetailButton = ({ title, detail }: DetailButtonProps) => {
   };
   // TODO: 비고/근거 모달 구현
 
-  return (
-    <IconButton onClick={openCheckModal}>
-      <SearchIcon />
-    </IconButton>
-  );
+  return <Icon onClick={openCheckModal} type="search" size={19} />;
 };
 export default DetailButton;

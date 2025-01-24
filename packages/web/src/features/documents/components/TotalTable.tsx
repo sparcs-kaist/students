@@ -25,7 +25,7 @@ export interface TotalProps {
   type: string;
   lastYear: number;
   thisYear: number;
-  ratio: number;
+  ratio: number | null;
 }
 
 interface TotalTableProps {

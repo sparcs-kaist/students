@@ -12,9 +12,9 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
         selectedType: DocumentType.BudgetProposal,
         organization: [
@@ -50,11 +50,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessPlan,
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자2", value: "개발자2" },
@@ -88,11 +88,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessPlan,
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자3", value: "개발자3" },
@@ -126,11 +126,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessReport,
+        selectedType: DocumentType.ProjectReport,
         organization: [
           {
             key: { label: "개발자4", value: "개발자4" },
@@ -164,11 +164,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.FinancialStatementProposal,
+        selectedType: DocumentType.BudgetReport,
         organization: [
           {
             key: { label: "개발자5", value: "개발자5" },
@@ -202,11 +202,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessPlan,
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자6", value: "개발자6" },
@@ -240,11 +240,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessPlan,
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자7", value: "개발자7" },
@@ -278,11 +278,11 @@ export const mockData: ThreeInputItem[] = [
       documentType: {
         types: [
           DocumentType.BudgetProposal,
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
-          DocumentType.BusinessReport,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessReport,
+        selectedType: DocumentType.ProjectReport,
         organization: [
           {
             key: { label: "개발자8", value: "개발자8" },

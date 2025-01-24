@@ -4,9 +4,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 import styled from "styled-components";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import IconButton from "@mui/material/IconButton";
+import Icon from "@sparcs-students/web/common/components/Icon";
 
 export interface ViewResultProps {
   fileName: string;
@@ -35,7 +33,7 @@ const StyledTable = styled.table`
 
 const ContentRow = styled.tr`
   width: 100%;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   text-align: center;
   font-size: 16px;
   line-height: 20px;
@@ -55,10 +53,12 @@ const HeaderCell = styled.td`
 const ContentCell = styled.td`
   padding: 16px 20px;
   text-align: center;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const ContentButtonCell = styled.td`
   padding: 16px 20px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const DropdownHeader = styled.div`
@@ -171,23 +171,13 @@ const ViewResult: React.FC<ViewResultProps> = ({
                       <div style={{ flex: 1, textAlign: "center" }}>
                         {pairGroup[1].value}
                       </div>
-                      <IconButton
-                        sx={{
-                          minHeight: 0,
-                          minWidth: 0,
-                          padding: 0,
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          toggleOpen();
-                        }}
-                      >
-                        {isOpen ? (
-                          <KeyboardArrowUpIcon sx={{ fontSize: 20 }} />
-                        ) : (
-                          <KeyboardArrowDownIcon sx={{ fontSize: 20 }} />
-                        )}
-                      </IconButton>
+                      <Icon
+                        type={
+                          isOpen ? "keyboard_arrow_up" : "keyboard_arrow_down"
+                        }
+                        onClick={toggleOpen}
+                        size={20}
+                      />
                     </DropdownHeader>
                     {isOpen && (
                       <DropdownList>
