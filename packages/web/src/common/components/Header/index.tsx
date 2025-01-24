@@ -33,6 +33,7 @@ const NavLeftInner = styled.div`
   display: flex;
   height: 27px;
   align-items: center;
+  width: fit-content;
   gap: 5px;
 `;
 
@@ -41,14 +42,8 @@ const StyledNavList = styled(NavList)`
   padding: 0px 30px;
   align-items: center;
   gap: 24px;
-  width: ${({ theme }) => theme.responsive.CONTENT.xxl};
+  width: fit-content;
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    width: ${({ theme }) => theme.responsive.CONTENT.xl};
-  }
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    width: ${({ theme }) => theme.responsive.CONTENT.lg};
-  }
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     display: none;
   }
