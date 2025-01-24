@@ -28,6 +28,9 @@ const CommonCellWrapper = styled.div.withConfig({
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const CellText = styled.table.withConfig({

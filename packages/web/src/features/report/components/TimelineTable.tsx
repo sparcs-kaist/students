@@ -1,7 +1,12 @@
-import isPropValid from "@emotion/is-prop-valid";
-import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import React from "react";
 import styled from "styled-components";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  Row,
+  useReactTable,
+} from "@tanstack/react-table";
+import Table from "@sparcs-students/web/common/components/Table/Table";
 
 interface TimelineDetail {
   startDate: Date;
@@ -22,36 +27,59 @@ const TableWrapper = styled.div`
   border-radius: 4px;
 `;
 
-const TableRow = styled.div.withConfig({
-  shouldForwardProp: prop => isPropValid(prop),
-})<{ isLast: boolean }>`
-  display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  border-left: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  border-bottom-left-radius: ${({ isLast }) => (isLast ? "4px" : "0px")};
-  border-bottom-right-radius: ${({ isLast }) => (isLast ? "4px" : "0px")};
-`;
-
-const TableHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  background-color: ${({ theme }) => theme.colors.PRIMARY};
-`;
-
 const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 +1 해줘야 함
-    const day = date.getDate().toString().padStart(2, "0"); // 일도 2자리로 맞추기 위해 padStart 사용
-
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     return `${year}.${month}.${day}`;
   };
 
+  const columnHelper = createColumnHelper<TimelineDetail>();
+  const columns = [
+    {
+      id: "index", // custom accessor for the index column
+      header: "번호",
+      cell: ({ row }: { row: Row<TimelineDetail> }) => `${row.index + 1}`, // row.index를 사용하여 번호를 표시
+      size: 60,
+    },
+    columnHelper.accessor("startDate", {
+      header: "날짜",
+      cell: ({ row }) => {
+        const { startDate, endDate } = row.original; // row.original을 통해 원본 데이터를 접근
+        return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+      },
+      size: 260,
+    }),
+    columnHelper.accessor("content", {
+      header: "내용",
+      cell: ({ row }) => {
+        const rowContent = row.original.content;
+        return `${rowContent === null ? "-" : rowContent}`;
+      },
+      size: 302,
+    }),
+    columnHelper.accessor("memo", {
+      header: "비고",
+      cell: ({ row }) => {
+        const content = row.original.memo;
+        return `${content === null ? "-" : content}`;
+      },
+      size: 370,
+    }),
+  ];
+
+  const table = useReactTable({
+    columns,
+    data: contents,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
   return (
     <TableWrapper>
-      <TableHeader>
+      <Table table={table} />
+      {/* <TableHeader>
         <TableCell type="Header" width="60px">
           번호
         </TableCell>
@@ -83,7 +111,7 @@ const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
             </TableCell>
           </TableRow>
         </React.Fragment>
-      ))}
+      ))} */}
     </TableWrapper>
   );
 };
