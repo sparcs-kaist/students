@@ -45,7 +45,7 @@ const TableArea = styled.div`
   width: 100%;
   background-color: green;
 `;
-const Casio: React.FC = () => {
+const DocumentViewerDetailPage: React.FC = () => {
   const firstRow = useRef<HTMLDivElement>(null);
   const secondRow = useRef<HTMLDivElement>(null);
   const thirdRow = useRef<HTMLDivElement>(null);
@@ -151,4 +151,4 @@ const Casio: React.FC = () => {
   );
 };
 
-export default Casio;
+export default DocumentViewerDetailPage;
