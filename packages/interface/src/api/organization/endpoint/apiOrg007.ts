@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zOrgName } from "@sparcs-students/interface/common/stringLength";
+import { zName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
@@ -20,7 +20,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   organizationId: zId,
   semesterId: zId,
-  name: zOrgName,
+  name: zName,
   detail: z.coerce.string(),
 });
 

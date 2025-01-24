@@ -3,28 +3,31 @@
 import styled from "styled-components";
 
 const ResponsiveContent = styled.div`
-  width: 1120px;
   min-height: calc(100vh - 105px - 160px);
   margin: 80px auto;
 
-  @media (max-width: 1440px) {
-    width: 880px;
+  @media (min-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    width: ${({ theme }) => theme.responsive.CONTENT.xxl};
   }
 
-  @media (max-width: 1200px) {
-    width: 640px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    width: ${({ theme }) => theme.responsive.CONTENT.xl};
   }
 
-  @media (max-width: 960px) {
-    width: 560px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: ${({ theme }) => theme.responsive.CONTENT.lg};
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: ${({ theme }) => theme.responsive.CONTENT.md};
     min-height: calc(100vh - 105px - 80px);
     margin: 40px auto;
   }
 
-  @media (max-width: 720px) {
-    width: calc(100% - 40px);
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: ${({ theme }) => theme.responsive.CONTENT.sm};
     min-height: calc(100vh - 105px - 40px);
-    margin: 20px;
+    margin: 20px auto;
   }
 `;
 
