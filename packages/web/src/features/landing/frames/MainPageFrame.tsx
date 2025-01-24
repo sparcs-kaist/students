@@ -97,14 +97,18 @@ const LargeFrame: React.FC<MainPageFrameProps> = ({
         <StyledSpan>한곳</StyledSpan>에.
       </Typography>
       <ButtonWrapperLarge>
-        <Button>학생회비 납부여부 확인하러 가기</Button>
+        <Button>
+          <Typography fs={16} lh={16}>
+            학생회비 납부여부 확인하러 가기
+          </Typography>
+        </Button>
       </ButtonWrapperLarge>
     </PageTitleWrapper>
 
     <MainPageWrapper>
       <LeftWrapper>
         <Banner />
-        <SingleColumnTable header="공지사항" rows={notice} />
+        <SingleColumnTable header="공지사항" rows={notice} mini />
       </LeftWrapper>
       <RightWrapper>
         <Calendar title="학사일정" existDates={[]} selectedDates={[]} />
@@ -129,12 +133,16 @@ const SmallFrame: React.FC<MainPageFrameProps> = ({
         <StyledSpan>한곳</StyledSpan>에.
       </Typography>
       <ButtonWrapperSmall>
-        <Button>학생회비 납부여부 확인하러 가기</Button>
+        <Button>
+          <Typography fs={_isMobile ? 12 : 16} lh={_isMobile ? 12 : 16}>
+            학생회비 납부여부 확인하러 가기
+          </Typography>
+        </Button>
       </ButtonWrapperSmall>
     </PageTitleWrapper>
     <Banner />
     <Calendar title="학사일정" existDates={[]} selectedDates={[]} />
-    <SingleColumnTable header="공지사항" rows={notice} />
+    <SingleColumnTable header="공지사항" rows={notice} mini={_isMobile} />
   </VerticalWrapper>
 );
 
@@ -197,9 +205,9 @@ const MainPageFrame: React.FC = () => {
   ];
 
   return isSmallScreen ? (
-    <SmallFrame notice={notice.slice(0, 3)} _isMobile={isMobile} />
+    <SmallFrame notice={notice.slice(0, 4)} _isMobile={isMobile} />
   ) : (
-    <LargeFrame notice={notice.slice(0, 3)} />
+    <LargeFrame notice={notice.slice(0, 4)} />
   );
 };
 
