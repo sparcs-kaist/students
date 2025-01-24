@@ -23,12 +23,12 @@ import {
   BudgetDivisionIncomeE,
   BudgetDomainE,
 } from "@sparcs-students/interface/common/enum/budget.enum";
-import DetailButton from "@sparcs-students/web/features/budget/components/_atomic/DetailButton";
+import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 
-export interface IncomeProps {
+export interface ViewerIncomeProps {
   code: number;
   budgetDomain: BudgetDomainE;
   budgetDivisionIncome: BudgetDivisionIncomeE;
@@ -41,10 +41,10 @@ export interface IncomeProps {
 }
 
 interface IncomeTableProps {
-  data: IncomeProps[];
+  data: ViewerIncomeProps[];
 }
 
-const columnHelper = createColumnHelper<IncomeProps>();
+const columnHelper = createColumnHelper<ViewerIncomeProps>();
 
 const columns = [
   columnHelper.accessor("code", {

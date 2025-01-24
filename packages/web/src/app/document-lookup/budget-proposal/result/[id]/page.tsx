@@ -6,18 +6,20 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import ViewerIncomeTable, {
-  IncomeProps,
-} from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-import ViewerExpenditureTable, {
-  ExpenditureProps,
-} from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
+// import ViewerIncomeTable, {
+//   ViewerIncomeProps,
+// } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
+// import ViewerExpenditureTable, {
+//   ViewerExpenditureProps,
+// } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
   mockExpenditureData,
   mockIncomeData,
+  mockViewerExpenditureData,
+  mockViewerIncomeData,
   mockViewResultData,
 } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
@@ -27,6 +29,10 @@ import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
+import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
+import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
+import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 
 interface DomainAccum {
   incomeLastYear: number;
@@ -36,8 +42,8 @@ interface DomainAccum {
 }
 
 const dataToTotal = (
-  incomeData: IncomeProps[],
-  expenditureData: ExpenditureProps[],
+  incomeData: ViewerIncomeProps[],
+  expenditureData: ViewerExpenditureProps[],
 ) => {
   const incomeMap = incomeData.reduce<Record<BudgetDomainE, DomainAccum>>(
     (acc, cur) => {
@@ -144,6 +150,7 @@ const Proposal = () => {
   const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
+  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -177,9 +184,17 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        <ViewerIncomeTable data={mockIncomeData} />
-        <ViewerExpenditureTable data={mockExpenditureData} />
-        <TotalTable data={dataToTotal(mockIncomeData, mockExpenditureData)} />
+        {/* {userPermission === 1 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
+        {userPermission === 2 && <ReviewerIncomeTable data={mockIncomeData} />}
+        {/* {userPermission === 3 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
+
+        {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} />} */}
+        {userPermission === 2 && (
+          <ReviewerExpenditureTable data={mockExpenditureData} />
+        )}
+        <TotalTable
+          data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
+        />
       </FlexWrapper>
     </FlexWrapper>
   );

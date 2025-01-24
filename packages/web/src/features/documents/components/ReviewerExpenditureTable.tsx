@@ -35,8 +35,9 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { budgetExpenseToString } from "@sparcs-students/web/features/documents/utils/enumToItem";
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 
-export interface ViewerExpenditureProps {
+export interface ExpenditureProps {
   code: number;
   budgetDomain: BudgetDomainE;
   budgetDivisionExpense: BudgetDivisionExpenseE;
@@ -47,13 +48,14 @@ export interface ViewerExpenditureProps {
   ratio: number | null;
   reason: string;
   status: string;
+  review: string;
 }
 
 interface ExpenditureTableProps {
-  data: ViewerExpenditureProps[];
+  data: ExpenditureProps[];
 }
 
-const columnHelper = createColumnHelper<ViewerExpenditureProps>();
+const columnHelper = createColumnHelper<ExpenditureProps>();
 
 const columns = [
   columnHelper.accessor("code", {
@@ -164,9 +166,17 @@ const columns = [
     },
     size: 157.5,
   }),
+  columnHelper.accessor("review", {
+    id: "review",
+    header: "검토",
+    cell: info => <ReviewButton detail={info.getValue()} />,
+    size: 105,
+  }),
 ];
 
-const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
+const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
+  data,
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -193,4 +203,4 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
   );
 };
 
-export default ViewerExpenditureTable;
+export default ReviewerExpenditureTable;
