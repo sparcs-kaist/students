@@ -31,6 +31,8 @@ const RowWrapper = styled.div`
 `;
 
 const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   padding-bottom: 48px;
 `;
