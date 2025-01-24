@@ -45,7 +45,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 150,
+    size: 180,
   }),
   columnHelper.accessor("type", {
     id: "type",
@@ -54,7 +54,7 @@ const columns = [
       const { color, text } = getbudgetTypeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 120,
+    size: 144,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -66,7 +66,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 290,
+    size: 348,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -78,7 +78,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 290,
+    size: 348,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -87,7 +87,7 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 150,
+    size: 180,
   }),
 ];
 

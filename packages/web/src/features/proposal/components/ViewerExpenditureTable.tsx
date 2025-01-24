@@ -62,7 +62,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 80,
+    size: 100,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -74,7 +74,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 80,
+    size: 100,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -86,13 +86,13 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 120,
+    size: 150,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
     cell: info => info.getValue(),
-    size: 80,
+    size: 100,
   }),
   columnHelper.accessor("item", {
     id: "item",
@@ -104,7 +104,7 @@ const columns = [
       );
       return <DarkTag color={color}>{text}</DarkTag>;
     },
-    size: 100,
+    size: 125,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -116,7 +116,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 120,
+    size: 150,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -128,7 +128,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 120,
+    size: 150,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -137,13 +137,13 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 90,
+    size: 112.5,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
     header: "근거",
     cell: info => <DetailButton detail={info.getValue()} />,
-    size: 60,
+    size: 75,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -156,7 +156,7 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 90,
+    size: 112.5,
   }),
 ];
 

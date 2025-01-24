@@ -25,8 +25,8 @@ const Proposal = () => (
 
   <FlexWrapper direction="column" gap={48}>
     <PageTitle>예결산 조회</PageTitle>
-    <FlexWrapper direction="column" gap={60} style={{ padding: "32 0px" }}>
-      <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
+    <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
+      <FlexWrapper direction="column" gap={32}>
         <FlexWrapper direction="column" gap={16}>
           <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
             조회 가이드
@@ -36,12 +36,10 @@ const Proposal = () => (
           <Button buttonText="조회" style={{ marginLeft: "auto" }} />
         </FlexWrapper>
       </FlexWrapper>
-      <FlexWrapper direction="column" gap={60} style={{ padding: "0 100px" }}>
-        <ViewResult {...mockViewResultData} />
-        <ViewerIncomeTable data={mockIncomeData} />
-        <ViewerExpenditureTable data={mockExpenditureData} />
-        <TotalTable data={mockTotalData} />
-      </FlexWrapper>
+      <ViewResult {...mockViewResultData} />
+      <ViewerIncomeTable data={mockIncomeData} />
+      <ViewerExpenditureTable data={mockExpenditureData} />
+      <TotalTable data={mockTotalData} />
     </FlexWrapper>
   </FlexWrapper>
 );
