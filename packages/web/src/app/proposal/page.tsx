@@ -24,7 +24,7 @@ const Proposal = () => (
   // const [documentType, setDocumentType] = useState<string>(""); // 예산안, 결산안, 사업보고서, 사업계획서
   // const [organization, setOrganization] = useState<string>("");
 
-  <FlexWrapper direction="column" gap={16}>
+  <FlexWrapper direction="column" gap={48}>
     <PageTitle>예결산 조회</PageTitle>
     <FlexWrapper direction="column" gap={60} style={{ padding: "32 0px" }}>
       <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
