@@ -24,6 +24,7 @@ const DateRangeInputFrameInner = styled.div`
   align-items: center;
   gap: 12px;
   display: flex;
+  position: relative;
 `;
 
 const availableMonths = [

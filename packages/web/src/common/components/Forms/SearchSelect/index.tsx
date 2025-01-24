@@ -106,6 +106,13 @@ const SearchList = styled.div`
   scrollbar-width: none;
 `;
 
+const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+
 const SearchSelect: React.FC<SearchSelectProps> = ({
   label = "",
   placeholder,
@@ -148,7 +155,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   return (
     <InputWrapper onFocus={() => setListToggle(true)}>
       {label && <Label>{label}</Label>}
-      <InputWrapper>
+      <InputContainer>
         <Input
           placeholder={placeholder}
           hasError={!!errorMessage}
@@ -164,24 +171,26 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
             color={disabled ? colors.GRAY[200] : colors.BLACK}
           />
         </RightContentWrapper>
-      </InputWrapper>
-      {filteredOptions.length !== 0 && listToggle && (
-        <SearchList onFocus={() => setListToggle(true)}>
-          {filteredOptions.map(option => (
-            <SearchItem
-              key={option}
-              onClick={handleItemClick}
-              selected={selected}
-              isSelected={option === selected}
-            >
-              {option}
-            </SearchItem>
-          ))}
-        </SearchList>
-      )}
-      {errorMessage && !listToggle && !disabled && (
-        <ErrorMessage>{errorMessage}</ErrorMessage>
-      )}
+      </InputContainer>
+      <InputContainer>
+        {filteredOptions.length !== 0 && listToggle && (
+          <SearchList onFocus={() => setListToggle(true)}>
+            {filteredOptions.map(option => (
+              <SearchItem
+                key={option}
+                onClick={handleItemClick}
+                selected={selected}
+                isSelected={option === selected}
+              >
+                {option}
+              </SearchItem>
+            ))}
+          </SearchList>
+        )}
+        {errorMessage && !listToggle && !disabled && (
+          <ErrorMessage>{errorMessage}</ErrorMessage>
+        )}
+      </InputContainer>
     </InputWrapper>
   );
 };

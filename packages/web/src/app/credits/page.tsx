@@ -16,13 +16,13 @@ const CreditCardsFlexWrapper = styled(FlexWrapper)`
   gap: 40px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    gap: 20px;
+    gap: 10px;
   }
 `;
 
 const ResponsiveMemberCardSectionWrapper = styled.div`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    margin-left: 16px;
+    gap: 16px;
   }
 `;
 

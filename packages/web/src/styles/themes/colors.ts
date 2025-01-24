@@ -20,6 +20,7 @@ const colors = {
     100: "#C3E3D6",
     300: "#7FBDA4",
     600: "#298062",
+    700: "#00674B",
     800: "#09563F",
   },
   RED: {
@@ -30,6 +31,9 @@ const colors = {
   SPARCS: {
     main: "#EBA12A",
     member: "#EBA12A66",
+  },
+  BLUE: {
+    900: "#3A2682",
   },
 };
 
