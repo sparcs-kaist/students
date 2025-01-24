@@ -13,7 +13,9 @@ import {
   BudgetDivisionIncomeE,
   BudgetDomainE,
 } from "@sparcs-students/interface/common/enum/budget.enum";
-import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
+import LightTag, {
+  LightTagColor,
+} from "@sparcs-students/web/common/components/Tag/LightTag";
 import {
   getDarkTagDetail,
   getTagDetail,
@@ -22,10 +24,15 @@ import {
   budgetClassExpenseTagList,
   budgetDivisionIncomeTagList,
   budgetDomainTagList,
-} from "@sparcs-students/web/constants/tableTagList";
+  getbudgetCodeTag,
+  getbudgetRatioTag,
+  getbudgetStatusTag,
+} from "@sparcs-students/web/features/documents/utils/tableTagList";
 import { useFormatter } from "next-intl";
 import DetailButton from "@sparcs-students/web/features/proposal/components/_atomic/DetailButton";
-import DarkTag from "@sparcs-students/web/common/components/Tag/DarkTag";
+import DarkTag, {
+  DarkTagColor,
+} from "@sparcs-students/web/common/components/Tag/DarkTag";
 import ExpenditureHelpButton from "./_atomic/ExpenditureHelpButton";
 
 export interface ExpenditureProps {
@@ -52,19 +59,8 @@ const columns = [
     id: "code",
     header: "코드",
     cell: info => {
-      switch (Math.trunc(info.getValue() / 100)) {
-        case 1:
-        case 4:
-          return <LightTag color="BLUE">{info.getValue()}</LightTag>;
-        case 2:
-        case 5:
-          return <LightTag color="YELLOW">{info.getValue()}</LightTag>;
-        case 3:
-        case 6:
-          return <LightTag color="PINK">{info.getValue()}</LightTag>;
-        default:
-          return <LightTag color="GRAY">-</LightTag>;
-      }
+      const { color, text } = getbudgetCodeTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
     size: 80,
   }),
@@ -138,17 +134,8 @@ const columns = [
     id: "ratio",
     header: "비율",
     cell: info => {
-      if (info.getValue() > 100) {
-        return (
-          <LightTag color="CHERRY">{info.getValue().toFixed(1)}%</LightTag>
-        );
-      }
-      if (info.getValue() <= 100) {
-        return (
-          <LightTag color="THISTLE">{info.getValue().toFixed(1)}%</LightTag>
-        );
-      }
-      return <LightTag color="GRAY">-</LightTag>;
+      const { color, text } = getbudgetRatioTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
     size: 90,
   }),
@@ -162,18 +149,13 @@ const columns = [
     id: "status",
     header: "현황",
     cell: info => {
-      switch (info.getValue()) {
-        case "승인":
-          return <DarkTag color="BLUE">{info.getValue()}</DarkTag>;
-        case "반려":
-          return <DarkTag color="RED">{info.getValue()}</DarkTag>;
-        case "사후승인":
-          return <DarkTag color="TEAL">{info.getValue()}</DarkTag>;
-        default:
-          return <LightTag color="GRAY">-</LightTag>;
-      }
+      const { color, text } = getbudgetStatusTag(info.getValue());
+      return color !== "GRAY" ? (
+        <DarkTag color={color as DarkTagColor}>{text}</DarkTag>
+      ) : (
+        <LightTag color={color as LightTagColor}>{text}</LightTag>
+      );
     },
-    // TODO: Add LightTag by enum
     size: 90,
   }),
 ];

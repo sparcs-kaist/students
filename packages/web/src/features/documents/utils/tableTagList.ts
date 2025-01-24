@@ -144,3 +144,55 @@ export const budgetClassExpenseTagList: {
     color: "MAROON",
   },
 };
+
+export const getbudgetTypeTag = (type: string) => {
+  switch (type) {
+    case "수입":
+      return { color: "GREEN100", text: type };
+    case "지출":
+      return { color: "GREEN600", text: type };
+    case "총계":
+      return { color: "GREEN800", text: type };
+    default:
+      return { color: "GRAY", text: "-" };
+  }
+};
+
+export const getbudgetRatioTag = (ratio: number) => {
+  if (ratio > 100) {
+    return { color: "GREEN", text: `${ratio.toFixed(1)}%` };
+  }
+  if (ratio <= 100) {
+    return { color: "THISTLE", text: `${ratio.toFixed(1)}%` };
+  }
+  return { color: "GRAY", text: `-` };
+};
+
+export const getbudgetStatusTag = (type: string) => {
+  switch (type) {
+    case "승인":
+      return { color: "BLUE", text: type };
+    case "반려":
+      return { color: "RED", text: type };
+    case "사후승인":
+      return { color: "TEAL", text: type };
+    default:
+      return { color: "GRAY", text: type };
+  }
+};
+
+export const getbudgetCodeTag = (code: number) => {
+  switch (Math.trunc(code / 100)) {
+    case 1:
+    case 4:
+      return { color: "BLUE", text: code };
+    case 2:
+    case 5:
+      return { color: "YELLOW", text: code };
+    case 3:
+    case 6:
+      return { color: "PINK", text: code };
+    default:
+      return { color: "GRAY", text: "-" };
+  }
+};

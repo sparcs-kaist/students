@@ -10,9 +10,15 @@ import {
 import Table from "@sparcs-students/web/common/components/Table/Table";
 import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
 import { useFormatter } from "next-intl";
-import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
+import LightTag, {
+  LightTagColor,
+} from "@sparcs-students/web/common/components/Tag/LightTag";
 import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
-import { budgetDomainTagList } from "@sparcs-students/web/constants/tableTagList";
+import {
+  budgetDomainTagList,
+  getbudgetRatioTag,
+  getbudgetTypeTag,
+} from "@sparcs-students/web/features/documents/utils/tableTagList";
 
 export interface TotalProps {
   budgetDomain: BudgetDomainE;
@@ -45,17 +51,8 @@ const columns = [
     id: "type",
     header: "분류",
     cell: info => {
-      switch (info.getValue()) {
-        case "수입":
-          return <LightTag color="GREEN100">{info.getValue()}</LightTag>;
-        case "지출":
-          return <LightTag color="GREEN600">{info.getValue()}</LightTag>;
-        case "총계":
-          return <LightTag color="GREEN800">{info.getValue()}</LightTag>;
-        default:
-          return <LightTag color="GRAY">-</LightTag>;
-      }
-      // TODO: use enum for return
+      const { color, text } = getbudgetTypeTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
     size: 120,
   }),
@@ -87,17 +84,8 @@ const columns = [
     id: "ratio",
     header: "비율",
     cell: info => {
-      if (info.getValue() > 100) {
-        return (
-          <LightTag color="CHERRY">{info.getValue().toFixed(1)}%</LightTag>
-        );
-      }
-      if (info.getValue() <= 100) {
-        return (
-          <LightTag color="THISTLE">{info.getValue().toFixed(1)}%</LightTag>
-        );
-      }
-      return <LightTag color="GRAY">-</LightTag>;
+      const { color, text } = getbudgetRatioTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
     size: 150,
   }),
