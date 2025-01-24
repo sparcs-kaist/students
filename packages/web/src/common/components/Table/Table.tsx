@@ -16,6 +16,7 @@ interface TableProps<T> {
   footer?: React.ReactNode;
   rowLink?: (row: T) => string | { pathname: string };
   onClick?: (row: T) => void;
+  rowStyleResolver?: (row: T) => React.CSSProperties;
 }
 const TableWrapper = styled.div`
   width: 100%;
@@ -66,6 +67,7 @@ const ContentRow = styled.tr.withConfig({
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.GREEN[100] : "transparent"};
 `;
+
 const EmptyCenterPlacer = styled.div`
   height: 100%;
   display: flex;
@@ -82,6 +84,7 @@ const Table = <T,>({
   footer = null,
   rowLink = undefined,
   onClick = undefined,
+  rowStyleResolver = undefined,
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
   // eslint-disable-next-line no-underscore-dangle
@@ -151,24 +154,34 @@ const Table = <T,>({
         </Header>
         <Content>
           {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map(row => (
-              <ContentRow
-                key={row.id}
-                selected={row.getIsSelected()}
-                isClickable={!!rowLink || !!onClick}
-                onClick={() => handleRowClick(row.original)}
-              >
-                {row.getVisibleCells().map(cell => (
-                  <TableCell
-                    key={cell.id}
-                    width={cell.column.getSize()}
-                    type="Default"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </ContentRow>
-            ))
+            table.getRowModel().rows.map(row => {
+              const style = rowStyleResolver
+                ? rowStyleResolver(row.original)
+                : undefined;
+
+              return (
+                <ContentRow
+                  key={row.id}
+                  selected={row.getIsSelected()}
+                  isClickable={!!rowLink || !!onClick}
+                  onClick={() => handleRowClick(row.original)}
+                  style={style}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell
+                      key={cell.id}
+                      width={cell.column.getSize()}
+                      type="Default"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </ContentRow>
+              );
+            })
           ) : (
             <EmptyCenterPlacer>
               <Typography

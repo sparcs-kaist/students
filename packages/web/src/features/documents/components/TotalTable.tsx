@@ -19,6 +19,7 @@ import {
   getbudgetRatioTag,
   getbudgetTypeTag,
 } from "@sparcs-students/web/features/documents/utils/tableTagList";
+import { useTheme } from "styled-components";
 
 export interface TotalProps {
   budgetDomain: BudgetDomainE;
@@ -93,6 +94,7 @@ const columns = [
 
 const TotalTable: React.FC<TotalTableProps> = ({ data }) => {
   const [loaded, setLoaded] = useState(false);
+  const theme = useTheme();
 
   useEffect(() => {
     setLoaded(true);
@@ -105,12 +107,21 @@ const TotalTable: React.FC<TotalTableProps> = ({ data }) => {
     enableSorting: false,
   });
 
+  const rowStyleResolver = (row: TotalProps): React.CSSProperties => {
+    if (row.type === "총계") {
+      return {
+        backgroundColor: theme.colors.GREEN[50],
+      };
+    }
+    return {};
+  };
+
   return (
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         통합
       </Typography>
-      {loaded && <Table table={table} />}
+      {loaded && <Table table={table} rowStyleResolver={rowStyleResolver} />}
     </FlexWrapper>
   );
 };
