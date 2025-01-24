@@ -14,24 +14,24 @@ interface MemberCardSectionProps {
 const MemberCardWrapper = styled.div<{ leftMargin: number }>`
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   margin-left: ${({ leftMargin }) => leftMargin}px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 
-  // @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-  //   grid-template-columns: 1fr;
-  // }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const MemberCardSection: React.FC<MemberCardSectionProps> = ({

@@ -5,12 +5,12 @@ import React from "react";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import FoldableSectionTitle from "@sparcs-students/web/common/components/FoldableSectionTitle";
 import PageHead from "@sparcs-students/web/common/components/PageHead";
 
 import SectionTitle from "@sparcs-students/web/common/components/SectionTitle";
 import MemberCardSection from "@sparcs-students/web/features/credits/components/MemberCardSection";
 import credits from "@sparcs-students/web/features/credits/credits";
+import SemesterFoldableTitle from "@sparcs-students/web/features/credits/components/SemesterFoldableTitle";
 
 const CreditCardsFlexWrapper = styled(FlexWrapper)`
   gap: 40px;
@@ -41,11 +41,11 @@ const Credits: React.FC = () => {
             <>
               <SectionTitle size="lg">{credit.semester}</SectionTitle>
               <ResponsiveMemberCardSectionWrapper>
-                <MemberCardSection semesterCredit={credit} leftMargin={24} />
+                <MemberCardSection semesterCredit={credit} />
               </ResponsiveMemberCardSectionWrapper>
             </>
           ) : (
-            <FoldableSectionTitle
+            <SemesterFoldableTitle
               title={credit.semester}
               toggle={toggleFold}
               toggleHandler={() => {
@@ -55,7 +55,7 @@ const Credits: React.FC = () => {
               <ResponsiveMemberCardSectionWrapper>
                 <MemberCardSection semesterCredit={credit} />
               </ResponsiveMemberCardSectionWrapper>
-            </FoldableSectionTitle>
+            </SemesterFoldableTitle>
           )}
         </CreditCardsFlexWrapper>
       ))}
