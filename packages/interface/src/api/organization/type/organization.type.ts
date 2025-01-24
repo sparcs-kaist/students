@@ -15,9 +15,9 @@ import {
 
 // Organization: 기구 엔티티
 export const zOrganization = z.object({
-  id: z.string(),
-  name: z.string(),
-  nameEng: z.string(),
+  id: zId,
+  name: zName,
+  nameEng: zNameEng,
   organizationTypeEnum: z.nativeEnum(OrganizationTypeEnum),
   foundingYear: z.coerce.number(),
   duration: zDuration,

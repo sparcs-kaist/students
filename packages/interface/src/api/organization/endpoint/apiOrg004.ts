@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import { OrganizationPresidentTypeE } from "@sparcs-students/interface/common/enum";
+import { OrganizationPresidentTypeEnum } from "@sparcs-students/interface/common/enum";
 import { zPhoneNumber } from "@sparcs-students/interface/common/type/phoneNumber.type";
 
 /**
@@ -31,7 +31,7 @@ const responseBodyMap = {
     userId: zId,
     startTerm: z.coerce.date(),
     endTerm: z.coerce.date(),
-    organizationPresidentTypeE: z.nativeEnum(OrganizationPresidentTypeE),
+    organizationPresidentTypeE: z.nativeEnum(OrganizationPresidentTypeEnum),
     phoneNumber: zPhoneNumber,
   }),
 };

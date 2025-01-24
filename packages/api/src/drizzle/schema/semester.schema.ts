@@ -13,7 +13,7 @@ export const Semester = mysqlTable("semester", {
   year: int("year").notNull(),
   semesterEnum: int("semester_enum").notNull(),
   startTerm: varchar("start_term", { length: 20 }).notNull(),
-  endTerm: varchar("end_term", { length: 20 }),
+  endTerm: varchar("end_term", { length: 20 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),

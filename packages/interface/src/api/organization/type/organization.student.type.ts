@@ -158,6 +158,7 @@ export const zTeamLeader = z.object({
   id: zId,
   team: zTeam.pick({ id: true }),
   student: zStudent.pick({ id: true }),
+  title: zName,
   duration: zDuration,
 });
 
