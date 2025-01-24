@@ -1,5 +1,6 @@
 import {
   BudgetClassExpenseE,
+  BudgetDivisionExpenseE,
   BudgetDivisionIncomeE,
   BudgetDomainE,
 } from "@sparcs-students/interface/common/enum/budget.enum";
@@ -73,6 +74,23 @@ export const budgetDivisionIncomeTagList: {
   [BudgetDivisionIncomeE.CAC]: {
     text: "문화자치기금",
     color: "TEAL",
+  },
+};
+
+export const budgetDivisionExpenseTagList: {
+  [key in BudgetDivisionExpenseE]: StatusDetail;
+} = {
+  [BudgetDivisionExpenseE.Operating]: {
+    text: "운영비",
+    color: "CHERRY",
+  },
+  [BudgetDivisionExpenseE.Regular]: {
+    text: "정기사업비",
+    color: "MARINE",
+  },
+  [BudgetDivisionExpenseE.New]: {
+    text: "비정기사업비",
+    color: "LEMON",
   },
 };
 
@@ -158,12 +176,15 @@ export const getbudgetTypeTag = (type: string) => {
   }
 };
 
-export const getbudgetRatioTag = (ratio: number) => {
+export const getbudgetRatioTag = (ratio: number | null) => {
+  if (ratio === null) {
+    return { color: "GRAY", text: `-` };
+  }
   if (ratio > 100) {
-    return { color: "GREEN", text: `${ratio.toFixed(1)}%` };
+    return { color: "CHERRY", text: `${ratio.toFixed(2)}%` };
   }
   if (ratio <= 100) {
-    return { color: "THISTLE", text: `${ratio.toFixed(1)}%` };
+    return { color: "THISTLE", text: `${ratio.toFixed(2)}%` };
   }
   return { color: "GRAY", text: `-` };
 };

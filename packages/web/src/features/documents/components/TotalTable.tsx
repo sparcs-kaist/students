@@ -19,13 +19,14 @@ import {
   getbudgetRatioTag,
   getbudgetTypeTag,
 } from "@sparcs-students/web/features/documents/utils/tableTagList";
+import { useTheme } from "styled-components";
 
 export interface TotalProps {
   budgetDomain: BudgetDomainE;
   type: string;
   lastYear: number;
   thisYear: number;
-  ratio: number;
+  ratio: number | null;
 }
 
 interface TotalTableProps {
@@ -45,7 +46,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 150,
+    size: 270,
   }),
   columnHelper.accessor("type", {
     id: "type",
@@ -54,7 +55,7 @@ const columns = [
       const { color, text } = getbudgetTypeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 120,
+    size: 216,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -66,7 +67,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 290,
+    size: 522,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -78,7 +79,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 290,
+    size: 522,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -87,12 +88,13 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 150,
+    size: 270,
   }),
 ];
 
 const TotalTable: React.FC<TotalTableProps> = ({ data }) => {
   const [loaded, setLoaded] = useState(false);
+  const theme = useTheme();
 
   useEffect(() => {
     setLoaded(true);
@@ -105,12 +107,27 @@ const TotalTable: React.FC<TotalTableProps> = ({ data }) => {
     enableSorting: false,
   });
 
+  const rowStyleResolver = (row: TotalProps): React.CSSProperties => {
+    if (row.type === "총계") {
+      return {
+        backgroundColor: theme.colors.GREEN[50],
+      };
+    }
+    return {};
+  };
+
   return (
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
         통합
       </Typography>
-      {loaded && <Table table={table} />}
+      {loaded && (
+        <Table
+          table={table}
+          rowStyleResolver={rowStyleResolver}
+          emptyMessage="테이블 정보가 없습니다."
+        />
+      )}
     </FlexWrapper>
   );
 };

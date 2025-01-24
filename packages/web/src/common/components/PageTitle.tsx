@@ -11,7 +11,6 @@ const PageTitleInner = styled.div`
   line-height: 40px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
   color: ${({ theme }) => theme.colors.GREEN[800]};
-  padding: 0 80px;
 `;
 
 const PageTitle: React.FC<React.PropsWithChildren> = ({

@@ -8,20 +8,20 @@ import RadioOption from "@sparcs-students/web/common/components/Radio/RadioOptio
 
 export enum DocumentType {
   BudgetProposal = "예산안",
-  FinancialStatementProposal = "결산안",
-  BusinessPlan = "사업 계획서",
-  BusinessReport = "사업 보고서",
+  BudgetReport = "결산안",
+  ProjectProposal = "사업 계획서",
+  ProjectReport = "사업 보고서",
 }
 
 const enumToString = (docType: DocumentType): string => {
   switch (docType) {
     case DocumentType.BudgetProposal:
       return "예산안";
-    case DocumentType.FinancialStatementProposal:
+    case DocumentType.BudgetReport:
       return "결산안";
-    case DocumentType.BusinessPlan:
+    case DocumentType.ProjectProposal:
       return "사업 계획서";
-    case DocumentType.BusinessReport:
+    case DocumentType.ProjectReport:
       return "사업 보고서";
     default:
       return "";
