@@ -5,7 +5,6 @@ import React from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import SearchThreeInput from "@sparcs-students/web/features/proposal/components/SearchThreeInput";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/proposal/components/ViewResult";
 import ViewerIncomeTable from "@sparcs-students/web/features/proposal/components/ViewerIncomeTable";
@@ -32,7 +31,6 @@ const Proposal = () => (
           <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
             조회 가이드
           </Typography>
-          <SearchThreeInput />
         </FlexWrapper>
         <FlexWrapper direction="row" gap={8}>
           <Button buttonText="조회" style={{ marginLeft: "auto" }} />
