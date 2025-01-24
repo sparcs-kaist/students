@@ -13,7 +13,6 @@ interface BreadCrumbItemDetails {
 interface BreadCrumbProps {
   items: BreadCrumbItemDetails[];
   enableLast?: boolean;
-  isWithMain?: boolean;
 }
 
 const BreadCrumbContainer = styled.div`
@@ -25,23 +24,24 @@ const BreadCrumbContainer = styled.div`
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
   items,
   enableLast = false,
-  isWithMain = false,
 }) => {
-  if (isWithMain) {
-    items.unshift({ name: "메인", path: "/" });
-  }
+  const itemWithMain: BreadCrumbItemDetails[] = [
+    { name: "메인", path: "/" },
+    ...items,
+  ];
+
   return (
     <BreadCrumbContainer>
-      {items.map((item, index) => (
+      {itemWithMain.map((item, index) => (
         <React.Fragment key={item.name}>
           <Link href={item.path} passHref>
             <BreadCrumbItem
               text={item.name}
-              disabled={index === items.length - 1 ? !enableLast : false}
-              isLastChild={index === items.length - 1}
+              disabled={index === itemWithMain.length - 1 ? !enableLast : false}
+              isLastChild={index === itemWithMain.length - 1}
             />
           </Link>
-          {index < items.length - 1 && (
+          {index < itemWithMain.length - 1 && (
             <Icon type="chevron_right" size={20} color={colors.GRAY[400]} />
           )}
         </React.Fragment>
