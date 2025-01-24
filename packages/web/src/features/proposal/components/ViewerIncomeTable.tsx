@@ -54,7 +54,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 100,
+    size: 140,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -66,7 +66,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 100,
+    size: 140,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -78,13 +78,13 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 150,
+    size: 210,
   }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 300,
+    size: 420,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -96,7 +96,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 150,
+    size: 210,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -108,7 +108,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 150,
+    size: 210,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -117,13 +117,13 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 112.5,
+    size: 157.5,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
     header: "비고",
     cell: info => <DetailButton detail={info.getValue()} />,
-    size: 75,
+    size: 105,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -136,7 +136,7 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 112.5,
+    size: 157.5,
   }),
 ];
 
