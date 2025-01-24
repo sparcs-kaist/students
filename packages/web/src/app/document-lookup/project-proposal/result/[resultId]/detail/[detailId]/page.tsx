@@ -1,10 +1,12 @@
 "use client";
 
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import TextAreaWithHeader from "@sparcs-students/web/features/document/components/TextAreaWithHeader";
-import TimelineTable from "@sparcs-students/web/features/document/components/TimelineTable";
+import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
+import TimelineTable from "@sparcs-students/web/features/report/components/TimelineTable";
+import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
@@ -32,13 +34,6 @@ const RowWrapper = styled.div`
   gap: 60px;
 `;
 
-const TitleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 48px;
-`;
-
 // 나중에 표 들어갈 위치
 const TableArea = styled.div`
   height: 500px;
@@ -53,6 +48,8 @@ const DocumentViewerDetailPage: React.FC = () => {
   const fifthRow = useRef<HTMLDivElement>(null);
   const sixthRow = useRef<HTMLDivElement>(null);
   const seventhRow = useRef<HTMLDivElement>(null);
+
+  const { resultId } = useParams();
 
   const mockTimeLine = [
     {
@@ -69,9 +66,15 @@ const DocumentViewerDetailPage: React.FC = () => {
   ];
 
   const breadcrumbItems = [
-    { name: "카테고리", path: "/category" },
-    { name: "서브카테고리", path: "/category/subcategory" },
-    { name: "상세 페이지", path: "/category/subcategory/detail" },
+    { name: "예결산 조회", path: "/document-lookup" },
+    {
+      name: "사업계획서",
+      path: `/document-lookup/project-proposal/result/${resultId}`,
+    },
+    {
+      name: "사업명",
+      path: `/document-lookup/project-proposal/result/${resultId}`,
+    },
   ];
 
   const indexContents = [
@@ -85,13 +88,13 @@ const DocumentViewerDetailPage: React.FC = () => {
   ];
 
   return (
-    <>
-      <TitleWrapper>
+    <FlexWrapper direction="column" gap={48}>
+      <FlexWrapper direction="column" gap={10}>
         <Typography fw="BOLD" fs={30} lh={40} color="PRIMARY">
           예결산 조회
         </Typography>
         <BreadCrumb items={breadcrumbItems} />
-      </TitleWrapper>
+      </FlexWrapper>
       <ScrollAbleArea>
         <ContentsArea>
           <RowWrapper ref={firstRow}>
@@ -105,31 +108,31 @@ const DocumentViewerDetailPage: React.FC = () => {
             />
             <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
           </RowWrapper>
-          <div ref={thirdRow}>
+          <RowWrapper ref={thirdRow}>
             <TextAreaWithHeader
               header="담당부서 / 담당자"
               contents={["contents1", "contents2"]}
             />
-          </div>
-          <div ref={fourthRow}>
+          </RowWrapper>
+          <RowWrapper ref={fourthRow}>
             <TextAreaWithHeader
               header="사업 추진 목적"
               contents={["contents1"]}
             />
-          </div>
-          <div ref={fifthRow}>
+          </RowWrapper>
+          <RowWrapper ref={fifthRow}>
             <TextAreaWithHeader
               header="사업 수혜 대상자"
               contents={["contents1"]}
             />
-          </div>
-          <div ref={sixthRow}>
+          </RowWrapper>
+          <RowWrapper ref={sixthRow}>
             <TextAreaWithHeader
               header="세부 사업 내용"
               contents={["contents1"]}
             />
-          </div>
-          <div
+          </RowWrapper>
+          <RowWrapper
             ref={seventhRow}
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           >
@@ -137,17 +140,16 @@ const DocumentViewerDetailPage: React.FC = () => {
               사업 진행 타임라인
             </Typography>
             <TimelineTable contents={mockTimeLine} />
-          </div>
+          </RowWrapper>
           <TableArea />
         </ContentsArea>
-
         <Index
           title="목차"
           contents={indexContents}
           headerHeight={headerHeight}
         />
       </ScrollAbleArea>
-    </>
+    </FlexWrapper>
   );
 };
 

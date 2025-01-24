@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import React from "react";
 import styled from "styled-components";
@@ -21,7 +22,9 @@ const TableWrapper = styled.div`
   border-radius: 4px;
 `;
 
-const TableRow = styled.div<{ isLast: boolean }>`
+const TableRow = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isLast: boolean }>`
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
