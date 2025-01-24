@@ -13,34 +13,36 @@ interface BreadCrumbItemDetails {
 interface BreadCrumbProps {
   items: BreadCrumbItemDetails[];
   enableLast?: boolean;
+  isWithMain?: boolean;
 }
 
 const BreadCrumbContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 `;
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
   items,
   enableLast = false,
+  isWithMain = false,
 }) => {
-  const itemsWithMain = [{ name: "메인", path: "/" }, ...items];
-
+  if (isWithMain) {
+    items.unshift({ name: "메인", path: "/" });
+  }
   return (
     <BreadCrumbContainer>
-      {itemsWithMain.map((item, index) => (
+      {items.map((item, index) => (
         <React.Fragment key={item.name}>
           <Link href={item.path} passHref>
             <BreadCrumbItem
               text={item.name}
-              disabled={
-                index === itemsWithMain.length - 1 ? !enableLast : false
-              }
+              disabled={index === items.length - 1 ? !enableLast : false}
+              isLastChild={index === items.length - 1}
             />
           </Link>
-          {index < itemsWithMain.length - 1 && (
-            <Icon type="chevron_right" size={20} color={colors.PRIMARY} />
+          {index < items.length - 1 && (
+            <Icon type="chevron_right" size={20} color={colors.GRAY[400]} />
           )}
         </React.Fragment>
       ))}

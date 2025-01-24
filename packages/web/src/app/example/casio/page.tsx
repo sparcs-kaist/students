@@ -1,5 +1,7 @@
 "use client";
 
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaWithHeader from "@sparcs-students/web/features/document/components/TextAreaWithHeader";
 import React, { useRef } from "react";
@@ -28,22 +30,11 @@ const RowWrapper = styled.div`
   gap: 60px;
 `;
 
-const IndexArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  position: sticky;
-  top: ${headerHeight}px;
-  height: fit-content;
+const TitleWrapper = styled.div`
+  gap: 10px;
+  padding-bottom: 48px;
 `;
-const IndexWrapper = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 400;
-  white-space: nowrap;
-  width: fit-content;
-  cursor: pointer;
-`;
+
 // 나중에 표 들어갈 위치
 const TableArea = styled.div`
   height: 500px;
@@ -58,82 +49,76 @@ const Casio: React.FC = () => {
   const fifthRow = useRef<HTMLDivElement>(null);
   const sixthRow = useRef<HTMLDivElement>(null);
 
-  const scrollToTarget = (target: React.RefObject<HTMLDivElement>) => {
-    if (target.current) {
-      const top =
-        target.current.getBoundingClientRect().top +
-        window.scrollY -
-        headerHeight;
-      console.log(`Top value of target: ${top}`);
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-  };
+  const breadcrumbItems = [
+    { name: "카테고리", path: "/category" },
+    { name: "서브카테고리", path: "/category/subcategory" },
+    { name: "상세 페이지", path: "/category/subcategory/detail" },
+  ];
+
+  const indexContents = [
+    { name: "사업명, 사업개요", reference: firstRow },
+    { name: "사업 준비기간, 사업일시", reference: secondRow },
+    { name: "담당부서 / 담당자", reference: thirdRow },
+    { name: "사업 추진 목적", reference: fourthRow },
+    { name: "사업 추진 대상자", reference: fifthRow },
+    { name: "사업 세부 내용", reference: sixthRow },
+  ];
 
   return (
-    <ScrollAbleArea>
-      <ContentsArea>
-        <RowWrapper ref={firstRow}>
-          <TextAreaWithHeader header="사업명" contents={["contents1"]} />
-          <TextAreaWithHeader header="사업 개요" contents={["contents1"]} />
-        </RowWrapper>
-        <RowWrapper ref={secondRow}>
-          <TextAreaWithHeader
-            header="사업 준비 기간"
-            contents={["contents1"]}
-          />
-          <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
-        </RowWrapper>
-        <div ref={thirdRow}>
-          <TextAreaWithHeader
-            header="담당부서 / 담당자"
-            contents={["contents1", "contents2"]}
-          />
-        </div>
-        <div ref={fourthRow}>
-          <TextAreaWithHeader
-            header="사업 추진 목적"
-            contents={["contents1"]}
-          />
-        </div>
-        <div ref={fifthRow}>
-          <TextAreaWithHeader
-            header="사업 수혜 대상자"
-            contents={["contents1"]}
-          />
-        </div>
-        <div ref={sixthRow}>
-          <TextAreaWithHeader
-            header="세부 사업 내용"
-            contents={["contents1"]}
-          />
-        </div>
-        <TableArea />
-      </ContentsArea>
-
-      <IndexArea>
-        <Typography fs={24} lh={30} fw="BOLD">
-          목차
+    <>
+      <TitleWrapper>
+        <Typography fw="BOLD" fs={30} lh={40} color="PRIMARY">
+          예결산 조회
         </Typography>
-        <IndexWrapper onClick={() => scrollToTarget(firstRow)}>
-          사업명, 사업개요
-        </IndexWrapper>
-        <IndexWrapper onClick={() => scrollToTarget(secondRow)}>
-          사업 준비기간, 사업일시
-        </IndexWrapper>
-        <IndexWrapper onClick={() => scrollToTarget(thirdRow)}>
-          담당부서 / 담당자
-        </IndexWrapper>
-        <IndexWrapper onClick={() => scrollToTarget(fourthRow)}>
-          사업 추진 목적
-        </IndexWrapper>
-        <IndexWrapper onClick={() => scrollToTarget(fifthRow)}>
-          사업 추진 대상자
-        </IndexWrapper>
-        <IndexWrapper onClick={() => scrollToTarget(sixthRow)}>
-          사업 세부 내용
-        </IndexWrapper>
-      </IndexArea>
-    </ScrollAbleArea>
+        <BreadCrumb items={breadcrumbItems} />
+      </TitleWrapper>
+      <ScrollAbleArea>
+        <ContentsArea>
+          <RowWrapper ref={firstRow}>
+            <TextAreaWithHeader header="사업명" contents={["contents1"]} />
+            <TextAreaWithHeader header="사업 개요" contents={["contents1"]} />
+          </RowWrapper>
+          <RowWrapper ref={secondRow}>
+            <TextAreaWithHeader
+              header="사업 준비 기간"
+              contents={["contents1"]}
+            />
+            <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
+          </RowWrapper>
+          <div ref={thirdRow}>
+            <TextAreaWithHeader
+              header="담당부서 / 담당자"
+              contents={["contents1", "contents2"]}
+            />
+          </div>
+          <div ref={fourthRow}>
+            <TextAreaWithHeader
+              header="사업 추진 목적"
+              contents={["contents1"]}
+            />
+          </div>
+          <div ref={fifthRow}>
+            <TextAreaWithHeader
+              header="사업 수혜 대상자"
+              contents={["contents1"]}
+            />
+          </div>
+          <div ref={sixthRow}>
+            <TextAreaWithHeader
+              header="세부 사업 내용"
+              contents={["contents1"]}
+            />
+          </div>
+          <TableArea />
+        </ContentsArea>
+
+        <Index
+          title="목차"
+          contents={indexContents}
+          headerHeight={headerHeight}
+        />
+      </ScrollAbleArea>
+    </>
   );
 };
 
