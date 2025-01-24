@@ -1,6 +1,6 @@
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 
-import { ThreeInputItem } from "@sparcs-students/web/common/components/ThreeInput/index";
+import { ThreeInputItem } from "@sparcs-students/web/features/documents/components/ThreeInput/index";
 
 export const mockData: ThreeInputItem[] = [
   {
@@ -10,7 +10,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: true,
       documentType: {
-        types: [DocumentType.BudgetProposal, DocumentType.BusinessPlan],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BudgetProposal,
         organization: [
           {
@@ -43,7 +48,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: true,
       documentType: {
-        types: [DocumentType.BudgetProposal, DocumentType.BusinessPlan],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BusinessPlan,
         organization: [
           {
@@ -76,7 +86,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BusinessPlan,
         organization: [
           {
@@ -109,7 +124,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BusinessReport,
         organization: [
           {
@@ -143,8 +163,10 @@ export const mockData: ThreeInputItem[] = [
       isSpring: true,
       documentType: {
         types: [
+          DocumentType.BudgetProposal,
           DocumentType.FinancialStatementProposal,
           DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
         ],
         selectedType: DocumentType.FinancialStatementProposal,
         organization: [
@@ -179,8 +201,10 @@ export const mockData: ThreeInputItem[] = [
       isSpring: true,
       documentType: {
         types: [
+          DocumentType.BudgetProposal,
           DocumentType.FinancialStatementProposal,
           DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
         ],
         selectedType: DocumentType.BusinessPlan,
         organization: [
@@ -214,7 +238,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BusinessPlan,
         organization: [
           {
@@ -247,7 +276,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.FinancialStatementProposal,
+          DocumentType.BusinessPlan,
+          DocumentType.BusinessReport,
+        ],
         selectedType: DocumentType.BusinessReport,
         organization: [
           {

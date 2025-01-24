@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useState } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -17,12 +16,20 @@ import {
   mockViewResultData,
 } from "@sparcs-students/web/features/proposal/services/_mock/mockProposalTableData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
+import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
+import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
+import ThreeInput, {
+  ThreeInputItem,
+} from "@sparcs-students/web/features/documents/components/ThreeInput";
 
 const Proposal = () => {
-  // const [semester, setSemester] = useState<string>(""); // 2022~2028년, 봄학기/가을학기
-  // const [documentType, setDocumentType] = useState<string>(""); // 예산안, 결산안, 사업보고서, 사업계획서
-  // const [organization, setOrganization] = useState<string>("");
+  const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
+  const [year, setYear] = useState<number>(items[0].year);
+  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
+  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
+  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -33,6 +40,19 @@ const Proposal = () => {
             <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
               조회 가이드
             </Typography>
+            <ThreeInput
+              itemList={items}
+              year={year}
+              setYear={setYear}
+              isSpring={isSpring}
+              setIsSpring={setIsSpring}
+              type={type}
+              setType={setType}
+              selectedKey={selectedKey}
+              setSelectedKey={setSelectedKey}
+              selectedValue={selectedValue}
+              setSelectedValue={setSelectedValue}
+            />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
             <Button buttonText="조회" style={{ marginLeft: "auto" }} />
