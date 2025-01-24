@@ -5,6 +5,7 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 import styled from "styled-components";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 
 export interface ViewResultProps {
@@ -13,6 +14,8 @@ export interface ViewResultProps {
   period: string;
   headPerson: string;
   submitDate: Date | string;
+  handleDateChange?: (opt: Date) => void;
+  dateList: Date[];
 }
 
 interface KeyValueRow {
@@ -56,9 +59,34 @@ const ContentCell = styled.td`
 
 const ContentButtonCell = styled.td`
   padding: 16px 20px;
-  text-align: center;
+`;
+
+const DropdownHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const DropdownList = styled.div`
+  position: absolute;
+  top: 100%;
+  width: calc(50% - 160px);
+  padding: 12px;
+  transform: translateX(-20px);
+  gap: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  z-index: 1000;
+`;
+
+const ListItem = styled.div`
+  padding: 12px 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.GREEN[50]};
+  }
 `;
 
 function chunkArray<T>(array: T[], size: number): T[][] {
@@ -75,8 +103,11 @@ const ViewResult: React.FC<ViewResultProps> = ({
   period,
   headPerson,
   submitDate,
+  handleDateChange = (_opt: Date) => {},
+  dateList,
 }) => {
   const [loaded, setLoaded] = useState(false);
+  const [date, setDate] = useState(submitDate);
 
   useEffect(() => {
     setLoaded(true);
@@ -89,13 +120,24 @@ const ViewResult: React.FC<ViewResultProps> = ({
     { label: "기구장", value: headPerson },
     {
       label: "제출연월일",
-      value: formatDotDate(submitDate as Date),
+      value: formatDotDate(date as Date),
     },
   ];
 
   const first = data[0];
   const rest = data.slice(1);
   const chunkedRest = chunkArray(rest, 2);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleOpen = () => {
+    setIsOpen(prev => !prev);
+  };
+
+  const handleSelect = (opt: Date) => {
+    handleDateChange(opt);
+    setDate(opt);
+    setIsOpen(false);
+  };
 
   return (
     <FlexWrapper direction="column" gap={16}>
@@ -122,18 +164,40 @@ const ViewResult: React.FC<ViewResultProps> = ({
                 <HeaderCell>{pairGroup[1].label}</HeaderCell>
                 {pairGroup[1].label === "제출연월일" ? (
                   <ContentButtonCell>
-                    <div style={{ flex: 1, textAlign: "center" }}>
-                      {pairGroup[1].value}
-                    </div>
-                    <IconButton
-                      sx={{
-                        minHeight: 0,
-                        minWidth: 0,
-                        padding: 0,
-                      }}
+                    <DropdownHeader
+                      onClick={toggleOpen}
+                      style={{ cursor: "pointer" }}
                     >
-                      <KeyboardArrowDownIcon sx={{ fontSize: 20 }} />
-                    </IconButton>
+                      <div style={{ flex: 1, textAlign: "center" }}>
+                        {pairGroup[1].value}
+                      </div>
+                      <IconButton
+                        sx={{
+                          minHeight: 0,
+                          minWidth: 0,
+                          padding: 0,
+                        }}
+                        onClick={e => {
+                          e.stopPropagation();
+                          toggleOpen();
+                        }}
+                      >
+                        {isOpen ? (
+                          <KeyboardArrowUpIcon sx={{ fontSize: 20 }} />
+                        ) : (
+                          <KeyboardArrowDownIcon sx={{ fontSize: 20 }} />
+                        )}
+                      </IconButton>
+                    </DropdownHeader>
+                    {isOpen && (
+                      <DropdownList>
+                        {dateList.map((opt, idx) => (
+                          <ListItem key={idx} onClick={() => handleSelect(opt)}>
+                            {formatDotDate(opt)}
+                          </ListItem>
+                        ))}
+                      </DropdownList>
+                    )}
                   </ContentButtonCell>
                 ) : (
                   <ContentCell>{pairGroup[1].value}</ContentCell>

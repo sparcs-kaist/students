@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 // import { useState } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -18,29 +18,36 @@ import {
 } from "@sparcs-students/web/features/proposal/services/_mock/mockProposalTableData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 
-const Proposal = () => (
+const Proposal = () => {
   // const [semester, setSemester] = useState<string>(""); // 2022~2028년, 봄학기/가을학기
   // const [documentType, setDocumentType] = useState<string>(""); // 예산안, 결산안, 사업보고서, 사업계획서
   // const [organization, setOrganization] = useState<string>("");
+  const [date, setDate] = useState(mockViewResultData.submitDate);
 
-  <FlexWrapper direction="column" gap={48}>
-    <PageTitle>예결산 조회</PageTitle>
-    <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-      <FlexWrapper direction="column" gap={32}>
-        <FlexWrapper direction="column" gap={16}>
-          <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-            조회 가이드
-          </Typography>
+  return (
+    <FlexWrapper direction="column" gap={48}>
+      <PageTitle>예결산 조회</PageTitle>
+      <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
+        <FlexWrapper direction="column" gap={32}>
+          <FlexWrapper direction="column" gap={16}>
+            <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+              조회 가이드
+            </Typography>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={8}>
+            <Button buttonText="조회" style={{ marginLeft: "auto" }} />
+          </FlexWrapper>
         </FlexWrapper>
-        <FlexWrapper direction="row" gap={8}>
-          <Button buttonText="조회" style={{ marginLeft: "auto" }} />
-        </FlexWrapper>
+        <ViewResult
+          {...mockViewResultData}
+          submitDate={date}
+          handleDateChange={setDate}
+        />
+        <ViewerIncomeTable data={mockIncomeData} />
+        <ViewerExpenditureTable data={mockExpenditureData} />
+        <TotalTable data={mockTotalData} />
       </FlexWrapper>
-      <ViewResult {...mockViewResultData} />
-      <ViewerIncomeTable data={mockIncomeData} />
-      <ViewerExpenditureTable data={mockExpenditureData} />
-      <TotalTable data={mockTotalData} />
     </FlexWrapper>
-  </FlexWrapper>
-);
+  );
+};
 export default Proposal;

@@ -13,7 +13,12 @@ export const mockViewResultData: ViewResultProps = {
   organization: "전산학부",
   period: "2024년도 하반기",
   headPerson: "김스튜",
-  submitDate: Date(),
+  submitDate: new Date(),
+  dateList: [
+    new Date(2025, 0, 24),
+    new Date(2025, 0, 25),
+    new Date(2025, 0, 26),
+  ],
 };
 
 export const mockIncomeData: IncomeProps[] = [
