@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import Typography from "@sparcs-students/web/common/components/Typography";
 
 type BannerProps = {
   images?: string[];
@@ -16,10 +15,11 @@ const BannerWrapper = styled.div`
   align-items: center;
   padding: 0px;
   gap: 0px;
-
+  width: 100%;
   position: relative;
-
   border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 2.5 / 1;
 `;
 
 const Arrow = styled.button`
@@ -38,12 +38,6 @@ const Arrow = styled.button`
   color: white;
   border-radius: 4px;
   z-index: 1;
-`;
-
-const IndexWrapper = styled(Typography)`
-  display: flex;
-  margin-top: 8px;
-  justify-content: center;
 `;
 
 const StyledImage = styled(Image)`
@@ -80,24 +74,21 @@ const Banner: React.FC<BannerProps> = ({
     <div>
       <BannerWrapper>
         <Arrow onClick={handlePrev}>{"<"}</Arrow>
-
-        <div>
-          <StyledImage
-            src={`/${images[currentIndex]}`}
-            alt={alt[currentIndex]}
-            width={0}
-            height={0}
-            sizes="40vw"
-            onClick={() => onClick(currentIndex)}
-          />
-        </div>
+        <StyledImage
+          src={`/${images[currentIndex]}`}
+          alt={alt[currentIndex]}
+          width={0}
+          height={0}
+          sizes="40vw"
+          onClick={() => onClick(currentIndex)}
+        />
 
         <Arrow onClick={handleNext}>{">"}</Arrow>
       </BannerWrapper>
 
-      <IndexWrapper>
+      {/* <IndexWrapper>
         {currentIndex + 1} / {images.length}
-      </IndexWrapper>
+      </IndexWrapper> */}
     </div>
   );
 };
