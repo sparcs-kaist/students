@@ -38,9 +38,10 @@ const LeftWrapper = styled.div`
   }
 
   display: flex;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   flex-direction: column;
   justify-content: space-between;
+  gap: 20px;
 `;
 
 const RightWrapper = styled.div`
