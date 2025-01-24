@@ -23,14 +23,14 @@ const CommonCellWrapper = styled.div.withConfig({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
-  padding: 12px 8px;
+  padding: ${({ isHeader }) => (isHeader ? "12px 8px" : "12px 20px")};
+  height: ${({ isHeader }) => (isHeader ? "36px" : "48px")};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.div.withConfig({
+const CellText = styled.table.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isGray: boolean }>`
   font-size: 14px;
@@ -44,7 +44,9 @@ const CellText = styled.div.withConfig({
 `;
 
 const HeaderInner = styled.div`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+  font-size: 18px;
+  line-height: 20px;
   color: ${({ theme }) => theme.colors.WHITE};
   font-size: 18px;
   line-height: 20px;
@@ -62,7 +64,7 @@ const TableCell: React.FC<TableCellProps> = ({
   type,
   children,
   width = "150px",
-  minWidth = 100,
+  minWidth = 60,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
   let content;

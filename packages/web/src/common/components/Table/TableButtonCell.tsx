@@ -31,7 +31,7 @@ const ButtonsWrapper = styled.div`
   gap: 12px;
 `;
 
-const CellText = styled.div.withConfig({
+const CellText = styled.table.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isGray: boolean }>`
   font-size: 16px;

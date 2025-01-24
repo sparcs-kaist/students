@@ -47,7 +47,7 @@ const ChevronBlockWrapper = styled.div`
 
 const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   currentDate,
-  onChange = () => {},
+  onChange,
   small = false,
 }) => {
   const today = new Date();
