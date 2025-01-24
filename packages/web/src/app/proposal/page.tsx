@@ -38,7 +38,7 @@ const Proposal = () => (
           <Button buttonText="조회" style={{ marginLeft: "auto" }} />
         </FlexWrapper>
       </FlexWrapper>
-      <FlexWrapper direction="column" gap={32} style={{ padding: "0 100px" }}>
+      <FlexWrapper direction="column" gap={60} style={{ padding: "0 100px" }}>
         <ViewResult {...mockViewResultData} />
         <ViewerIncomeTable data={mockIncomeData} />
         <ViewerExpenditureTable data={mockExpenditureData} />
