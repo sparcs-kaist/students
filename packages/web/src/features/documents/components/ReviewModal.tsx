@@ -2,7 +2,7 @@ import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import React, { useState } from "react";
 import styled, { useTheme } from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
+import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 
 interface ReviewModalProps {
   onConfirm: () => void;
@@ -46,11 +46,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       <Typography fs={20} lh={28} fw="MEDIUM">
         검토 내용에 대한 설명
       </Typography>
-      <TextInput
+      <TextAreaInput
         placeholder={review === "" ? "내용을 입력하세요." : review}
         handleChange={setReviewText}
         value={reviewText}
-        style={{ height: "50%", whiteSpace: "pre" }}
       />
       <ButtonWrapper>
         <Button onClick={onConfirm} type="reverse">
