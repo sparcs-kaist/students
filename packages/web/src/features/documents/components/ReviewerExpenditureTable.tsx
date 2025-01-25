@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import {
@@ -37,6 +36,8 @@ import { budgetExpenseToString } from "@sparcs-students/web/features/documents/u
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 
+// ExpenditureProps 인터페이스는 위에 정의된 대로 사용
+
 export interface ExpenditureProps {
   code: number;
   budgetDomain: BudgetDomainE;
@@ -52,12 +53,16 @@ export interface ExpenditureProps {
 }
 
 interface ExpenditureTableProps {
-  data: ExpenditureProps[];
+  initialData: ExpenditureProps[];
 }
 
 const columnHelper = createColumnHelper<ExpenditureProps>();
 
-const columns = [
+// columns를 외부 함수로 정의
+const getColumns = (
+  handleReviewChange: (code: number, newReview: string) => void,
+  handleStatusChange: (code: number, newStatus: string) => void,
+) => [
   columnHelper.accessor("code", {
     id: "code",
     header: "코드",
@@ -65,7 +70,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 140,
+    size: 120,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -77,7 +82,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 140,
+    size: 157.5,
   }),
   columnHelper.accessor("budgetDivisionExpense", {
     id: "budgetDivisionExpense",
@@ -89,13 +94,13 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 210,
+    size: 195,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
     cell: info => info.getValue(),
-    size: 140,
+    size: 210,
   }),
   columnHelper.accessor("item", {
     id: "item",
@@ -107,7 +112,7 @@ const columns = [
       );
       return <DarkTag color={color}>{text}</DarkTag>;
     },
-    size: 175,
+    size: 180,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -119,7 +124,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 210,
+    size: 180,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -131,7 +136,7 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 210,
+    size: 180,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -140,18 +145,20 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 157.5,
+    size: 177,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
     header: "근거",
     cell: info => (
       <DetailButton
-        title={`${info.row.original.name}의 ${budgetExpenseToString(info.row.original.item)}에 대한 근거`}
+        title={`${info.row.original.name}의 ${budgetExpenseToString(
+          info.row.original.item,
+        )}에 대한 근거`}
         detail={info.getValue()}
       />
     ),
-    size: 105,
+    size: 90,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -164,24 +171,54 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 157.5,
+    size: 165,
   }),
   columnHelper.accessor("review", {
     id: "review",
     header: "검토",
-    cell: info => <ReviewButton detail={info.getValue()} />,
-    size: 105,
+    cell: info => (
+      <ReviewButton
+        status={info.row.original.status}
+        review={info.getValue()}
+        handleReviewChange={newReview =>
+          handleReviewChange(info.row.original.code, newReview)
+        }
+        handleStatusChange={newStatus =>
+          handleStatusChange(info.row.original.code, newStatus)
+        }
+      />
+    ),
+    size: 90,
   }),
 ];
 
 const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
-  data,
+  initialData,
 }) => {
+  const [data, setData] = useState<ExpenditureProps[]>(initialData);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
+
+  const handleReviewChange = (code: number, newReview: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, review: newReview } : item,
+      ),
+    );
+  };
+
+  const handleStatusChange = (code: number, newStatus: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, status: newStatus } : item,
+      ),
+    );
+  };
+
+  const columns = getColumns(handleReviewChange, handleStatusChange);
 
   const table = useReactTable({
     columns,

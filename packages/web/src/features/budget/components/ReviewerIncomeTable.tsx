@@ -27,6 +27,7 @@ import DetailButton from "@sparcs-students/web/features/documents/components/_at
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 
 export interface IncomeProps {
   code: number;
@@ -55,7 +56,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 140,
+    size: 130,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -67,7 +68,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 140,
+    size: 160,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -79,13 +80,13 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 210,
+    size: 200,
   }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 420,
+    size: 275,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -97,7 +98,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 210,
+    size: 185,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -109,7 +110,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 210,
+    size: 185,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -118,7 +119,7 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 157.5,
+    size: 180,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
@@ -129,7 +130,7 @@ const columns = [
         detail={info.getValue()}
       />
     ),
-    size: 105,
+    size: 90,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -142,7 +143,13 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 157.5,
+    size: 170,
+  }),
+  columnHelper.accessor("review", {
+    id: "review",
+    header: "검토",
+    cell: info => <ReviewButton detail={info.getValue()} />,
+    size: 90,
   }),
 ];
 

@@ -9,7 +9,8 @@ export type DarkTagColor =
   | "CYAN"
   | "ORCHID"
   | "BLUE"
-  | "RED"
+  | "RED500"
+  | "RED700"
   | "TEAL"
   | "YELLOW";
 
@@ -33,6 +34,12 @@ const TagInner = styled.div<{ color: DarkTagColor; width: string }>`
     }
     if (color === "YELLOW") {
       return theme.colors.YELLOW[600];
+    }
+    if (color === "RED500") {
+      return theme.colors.RED[500];
+    }
+    if (color === "RED700") {
+      return theme.colors.RED[700];
     }
     return theme.colors[color][700];
   }};

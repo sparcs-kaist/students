@@ -35,11 +35,15 @@ const ButtonInner = styled.div`
 
 const ButtonDefaultInner = styled(ButtonInner)`
   color: ${({ theme }) => theme.colors.WHITE};
-  background: ${({ theme }) => theme.colors.PRIMARY};
+  background: ${({ theme }) => theme.colors.GREEN[700]};
   cursor: pointer;
-  &:hover {
-    background: ${({ theme }) => theme.colors.GREEN[800]};
-  }
+`;
+
+const ButtonReverseInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.GREEN[700]};
+  background: ${({ theme }) => theme.colors.WHITE};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[700]};
+  cursor: pointer;
 `;
 
 const ButtonOutlinedInner = styled(ButtonInner)`
@@ -54,12 +58,13 @@ const ButtonOutlinedInner = styled(ButtonInner)`
 const ButtonDisabledInner = styled(ButtonInner)`
   color: ${({ theme }) => theme.colors.GRAY[100]};
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  background: ${({ theme }) => theme.colors.GRAY[100]};
+  background: ${({ theme }) => theme.colors.GRAY[50]};
   cursor: not-allowed;
 `;
 
 const ButtonTypeInner = {
   default: ButtonDefaultInner,
+  reverse: ButtonReverseInner,
   outlined: ButtonOutlinedInner,
   disabled: ButtonDisabledInner,
 };

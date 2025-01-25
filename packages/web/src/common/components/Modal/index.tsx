@@ -6,7 +6,7 @@ import styled from "styled-components";
 export interface ModalProps {
   isOpen?: boolean;
   onClose?: () => void;
-  width?: "fit-content" | "full";
+  width?: "fit-content" | "full" | string;
 }
 
 const ModalBackground = styled.div`
@@ -31,7 +31,7 @@ const ModalBackground = styled.div`
 
 const ModalContainer = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ width: "fit-content" | "full" }>`
+})<{ width: "fit-content" | "full" | string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;

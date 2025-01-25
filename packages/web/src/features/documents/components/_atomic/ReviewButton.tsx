@@ -5,19 +5,29 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 import ReviewModal from "@sparcs-students/web/features/documents/components/ReviewModal";
 
 type ReviewButtonProps = {
-  detail: string;
+  review: string;
+  status: string;
+  handleReviewChange: (detail: string) => void;
+  handleStatusChange: (status: string) => void;
 };
 
-const ReviewButton = ({ detail }: ReviewButtonProps) => {
+const ReviewButton = ({
+  review,
+  status,
+  handleReviewChange,
+  handleStatusChange,
+}: ReviewButtonProps) => {
   const openCheckModal = () => {
     overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
+      <Modal isOpen={isOpen} width="500px">
         <ReviewModal
           onConfirm={() => {
             close();
           }}
-          detail={detail}
-          status=""
+          review={review}
+          status={status}
+          handleReviewChange={handleReviewChange}
+          handleStatusChange={handleStatusChange}
         />
       </Modal>
     ));
