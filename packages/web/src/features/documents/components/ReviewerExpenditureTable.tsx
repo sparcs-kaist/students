@@ -58,7 +58,6 @@ interface ExpenditureTableProps {
 
 const columnHelper = createColumnHelper<ExpenditureProps>();
 
-// columns를 외부 함수로 정의
 const getColumns = (
   handleReviewChange: (code: number, newReview: string) => void,
   handleStatusChange: (code: number, newStatus: string) => void,

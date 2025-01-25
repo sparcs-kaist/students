@@ -43,12 +43,15 @@ export interface IncomeProps {
 }
 
 interface IncomeTableProps {
-  data: IncomeProps[];
+  initialData: IncomeProps[];
 }
 
 const columnHelper = createColumnHelper<IncomeProps>();
 
-const columns = [
+const getColumns = (
+  handleReviewChange: (code: number, newReview: string) => void,
+  handleStatusChange: (code: number, newStatus: string) => void,
+) => [
   columnHelper.accessor("code", {
     id: "code",
     header: "코드",
@@ -148,18 +151,47 @@ const columns = [
   columnHelper.accessor("review", {
     id: "review",
     header: "검토",
-    cell: info => <ReviewButton detail={info.getValue()} />,
+    cell: info => (
+      <ReviewButton
+        status={info.row.original.status}
+        review={info.getValue()}
+        handleReviewChange={newReview =>
+          handleReviewChange(info.row.original.code, newReview)
+        }
+        handleStatusChange={newStatus =>
+          handleStatusChange(info.row.original.code, newStatus)
+        }
+      />
+    ),
     size: 90,
   }),
 ];
 
-const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
+const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
+  const [data, setData] = useState(initialData);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
+  const handleReviewChange = (code: number, newReview: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, review: newReview } : item,
+      ),
+    );
+  };
+
+  const handleStatusChange = (code: number, newStatus: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, status: newStatus } : item,
+      ),
+    );
+  };
+
+  const columns = getColumns(handleReviewChange, handleStatusChange);
   const table = useReactTable({
     columns,
     data,

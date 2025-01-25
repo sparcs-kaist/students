@@ -222,7 +222,9 @@ const Proposal = () => {
           handleDateChange={setDate}
         />
         {/* {userPermission === 1 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
-        {userPermission === 2 && <ReviewerIncomeTable data={mockIncomeData} />}
+        {userPermission === 2 && (
+          <ReviewerIncomeTable initialData={mockIncomeData} />
+        )}
         {/* {userPermission === 3 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
 
         {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} />} */}
