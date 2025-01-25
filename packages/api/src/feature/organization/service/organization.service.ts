@@ -6,6 +6,7 @@ import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/index";
 
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
+import { OrganizationTypeEnum } from "@sparcs-students/interface/common/enum/organization.enum";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 
@@ -27,7 +28,7 @@ export class OrganizationService {
 
         // OrganizationType별로 그룹화
         const organizationTypeMap = new Map<
-          number,
+          OrganizationTypeEnum,
           { organizations: typeof organizations }
         >();
 
