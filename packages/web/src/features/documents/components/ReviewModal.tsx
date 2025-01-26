@@ -96,7 +96,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           </Button>
           <Button
             onClick={() => {
-              handleStatusChange("승인");
+              handleStatusChange("검토승인");
               onConfirm();
             }}
             type={
