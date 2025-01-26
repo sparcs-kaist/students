@@ -1,8 +1,10 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zId } from "@sparcs-students/interface/common/type/ids";
-import { zOrganizationRequestCreate } from "../type/organization.type";
+import {
+  zOrganization,
+  zOrganizationRequestCreate,
+} from "../type/organization.type";
 
 /**
  * @version v0.1
@@ -23,7 +25,7 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    organizationId: zId,
+    organization: zOrganization,
   }),
 };
 

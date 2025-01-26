@@ -18,7 +18,7 @@ export const Organization = mysqlTable("organization", {
   endTerm: varchar("end_term", { length: 20 }),
   organizationStateEnum: int("organization_state_enum").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
 
@@ -33,7 +33,7 @@ export const OperatingCommittee = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -55,7 +55,7 @@ export const Team = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -82,7 +82,7 @@ export const OrganizationPresident = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -109,7 +109,7 @@ export const OrganizationMember = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -136,7 +136,7 @@ export const OrganizationManager = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -165,7 +165,7 @@ export const OperatingCommitteeMember = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -192,7 +192,7 @@ export const TeamMember = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -219,7 +219,7 @@ export const TeamLeader = mysqlTable(
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({

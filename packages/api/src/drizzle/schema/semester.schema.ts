@@ -15,7 +15,7 @@ export const Semester = mysqlTable("semester", {
   startTerm: varchar("start_term", { length: 20 }).notNull(),
   endTerm: varchar("end_term", { length: 20 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
 
@@ -30,7 +30,7 @@ export const HalfYear = mysqlTable(
     regularSemesterId: int("regular_semester_id").notNull(),
     seasonalSemesterId: int("seasonal_semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
