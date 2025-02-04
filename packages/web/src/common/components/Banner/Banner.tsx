@@ -8,6 +8,13 @@ type BannerProps = {
   onClick?: (idx: number) => void;
 };
 
+// banner 하단 인덱스
+// const IndexWrapper = styled(Typography)`
+//   display: flex;
+//   margin-top: 8px;
+//   justify-content: center;
+// `;
+
 const BannerWrapper = styled.div`
   display: flex;
   flex-direction: row;
