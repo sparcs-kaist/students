@@ -72,7 +72,7 @@ const DropdownList = styled.div`
   top: 100%;
   width: calc(50% - 160px);
   padding: 12px;
-  transform: translateX(-20px);
+  transform: translateX(-20px) translateY(4px);
   gap: 10px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;

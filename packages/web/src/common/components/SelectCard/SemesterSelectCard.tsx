@@ -48,6 +48,7 @@ const CardContent = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   background-color: ${({ theme }) => theme.colors.WHITE};
+  justify-content: center;
 `;
 
 const CardContentWrapper = styled.div`
