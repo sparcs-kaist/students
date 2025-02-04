@@ -86,7 +86,8 @@ const Banner: React.FC<BannerProps> = ({
         <Arrow onClick={handleNext}>{">"}</Arrow>
       </BannerWrapper>
 
-      {/* <IndexWrapper>
+      {/* 배너 하단에 페이지 인덱스를 표시하는 부분
+      <IndexWrapper>
         {currentIndex + 1} / {images.length}
       </IndexWrapper> */}
     </div>
