@@ -1,8 +1,8 @@
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import {
   DarkStatusDetail,
@@ -11,17 +11,17 @@ import {
 
 export const budgetDomainTagList: {
   // 구분
-  [key in BudgetDomainE]: StatusDetail;
+  [key in BudgetDomainEnum]: StatusDetail;
 } = {
-  [BudgetDomainE.Student]: {
+  [BudgetDomainEnum.Student]: {
     text: "학생회비",
     color: "BLUE",
   },
-  [BudgetDomainE.School]: {
+  [BudgetDomainEnum.School]: {
     text: "본회계",
     color: "YELLOW",
   },
-  [BudgetDomainE.Autonomous]: {
+  [BudgetDomainEnum.Autonomous]: {
     text: "자치",
     color: "PINK",
   },
@@ -29,135 +29,135 @@ export const budgetDomainTagList: {
 
 export const budgetDivisionIncomeTagList: {
   // 예산 분류
-  [key in BudgetDivisionIncomeE]: StatusDetail;
+  [key in BudgetDivisionIncomeEnum]: StatusDetail;
 } = {
-  [BudgetDivisionIncomeE.Substratum]: {
+  [BudgetDivisionIncomeEnum.Substratum]: {
     text: "기층기구회계",
     color: "CYAN",
   },
-  [BudgetDivisionIncomeE.Central]: {
+  [BudgetDivisionIncomeEnum.Central]: {
     text: "중앙회계",
     color: "CYAN",
   },
-  [BudgetDivisionIncomeE.Incentive]: {
+  [BudgetDivisionIncomeEnum.Incentive]: {
     text: "격려기금",
     color: "MAROON",
   },
-  [BudgetDivisionIncomeE.Interest]: {
+  [BudgetDivisionIncomeEnum.Interest]: {
     text: "예금이자",
     color: "AMBER",
   },
-  [BudgetDivisionIncomeE.School]: {
+  [BudgetDivisionIncomeEnum.School]: {
     text: "학교지원금",
     color: "ORCHID",
   },
-  [BudgetDivisionIncomeE.Carryover]: {
+  [BudgetDivisionIncomeEnum.Carryover]: {
     text: "이월금",
     color: "MARINE",
   },
-  [BudgetDivisionIncomeE.Department]: {
+  [BudgetDivisionIncomeEnum.Department]: {
     text: "과비",
     color: "MELON",
   },
-  [BudgetDivisionIncomeE.Organizational]: {
+  [BudgetDivisionIncomeEnum.Organizational]: {
     text: "단비",
     color: "MELON",
   },
-  [BudgetDivisionIncomeE.External]: {
+  [BudgetDivisionIncomeEnum.External]: {
     text: "외부지원금",
     color: "LEMON",
   },
-  [BudgetDivisionIncomeE.Extra]: {
+  [BudgetDivisionIncomeEnum.Extra]: {
     text: "기타수익금",
     color: "LEMON",
   },
-  [BudgetDivisionIncomeE.CAC]: {
+  [BudgetDivisionIncomeEnum.CAC]: {
     text: "문화자치기금",
     color: "TEAL",
   },
 };
 
 export const budgetDivisionExpenseTagList: {
-  [key in BudgetDivisionExpenseE]: StatusDetail;
+  [key in BudgetDivisionExpenseEnum]: StatusDetail;
 } = {
-  [BudgetDivisionExpenseE.Operating]: {
+  [BudgetDivisionExpenseEnum.Operating]: {
     text: "운영비",
     color: "CHERRY",
   },
-  [BudgetDivisionExpenseE.Regular]: {
+  [BudgetDivisionExpenseEnum.Regular]: {
     text: "정기사업비",
     color: "MARINE",
   },
-  [BudgetDivisionExpenseE.New]: {
+  [BudgetDivisionExpenseEnum.New]: {
     text: "비정기사업비",
     color: "LEMON",
   },
 };
 
 export const budgetClassExpenseTagList: {
-  [key in BudgetClassExpenseE]: DarkStatusDetail;
+  [key in BudgetClassExpenseEnum]: DarkStatusDetail;
 } = {
-  [BudgetClassExpenseE.Product]: {
+  [BudgetClassExpenseEnum.Product]: {
     text: "상품비",
     color: "MELON",
   },
-  [BudgetClassExpenseE.Gift]: {
+  [BudgetClassExpenseEnum.Gift]: {
     text: "증정비",
     color: "MELON",
   },
-  [BudgetClassExpenseE.Supply]: {
+  [BudgetClassExpenseEnum.Supply]: {
     text: "물품비",
     color: "MELON",
   },
-  [BudgetClassExpenseE.Print]: {
+  [BudgetClassExpenseEnum.Print]: {
     text: "인쇄비",
     color: "MARINE",
   },
-  [BudgetClassExpenseE.Transport]: {
+  [BudgetClassExpenseEnum.Transport]: {
     text: "출장비",
     color: "CYAN",
   },
-  [BudgetClassExpenseE.Meeting]: {
+  [BudgetClassExpenseEnum.Meeting]: {
     text: "회의비",
     color: "ORCHID",
   },
-  [BudgetClassExpenseE.Labor]: {
+  [BudgetClassExpenseEnum.Labor]: {
     text: "인건비",
     color: "CYAN",
   },
-  [BudgetClassExpenseE.Welfare]: {
+  [BudgetClassExpenseEnum.Welfare]: {
     text: "복리후생비",
     color: "ORCHID",
   },
-  [BudgetClassExpenseE.Install]: {
+  [BudgetClassExpenseEnum.Install]: {
     text: "설치비",
     color: "MARINE",
   },
-  [BudgetClassExpenseE.Delivery]: {
+  [BudgetClassExpenseEnum.Delivery]: {
     text: "운반비",
     color: "MARINE",
   },
-  [BudgetClassExpenseE.Repair]: {
+  [BudgetClassExpenseEnum.Repair]: {
     text: "수선비",
     color: "MARINE",
   },
-  [BudgetClassExpenseE.Telecom]: {
+  [BudgetClassExpenseEnum.Telecom]: {
     text: "통신비",
     color: "MARINE",
   },
-  [BudgetClassExpenseE.Insurance]: {
+  [BudgetClassExpenseEnum.Insurance]: {
     text: "보험료",
     color: "CYAN",
   },
-  [BudgetClassExpenseE.Extra]: {
+  [BudgetClassExpenseEnum.Extra]: {
     text: "기타비",
     color: "LEMON",
   },
-  [BudgetClassExpenseE.Backup]: {
+  [BudgetClassExpenseEnum.Backup]: {
     text: "예비비",
     color: "LEMON",
   },
-  [BudgetClassExpenseE.Incentive]: {
+  [BudgetClassExpenseEnum.Incentive]: {
     text: "격려금",
     color: "MAROON",
   },
