@@ -141,7 +141,7 @@ const ViewResult: React.FC<ViewResultProps> = ({
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+      <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         조회 결과
       </Typography>
       {loaded && (

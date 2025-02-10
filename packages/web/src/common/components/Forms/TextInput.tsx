@@ -11,6 +11,7 @@ export interface TextInputProps
   errorMessage?: string;
   area?: boolean;
   disabled?: boolean;
+  constant?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
@@ -25,13 +26,19 @@ const disabledStyle = css`
   border-color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
+const constantStyle = css`
+  border-color: ${({ theme }) => theme.colors.GRAY[100]};
+  cursor: not-allowed;
+`;
+
 const areaInputStyle = css`
   height: 100px;
   resize: none;
   overflow: auto;
 `;
 
-const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
+const Input = styled.input.attrs<TextInputProps>(({ area, constant }) => ({
+  readOnly: constant,
   as: area ? "textarea" : "input",
 }))<TextInputProps & { hasError: boolean }>`
   display: block;
@@ -48,16 +55,17 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GREEN[600]};
+    border-color: ${({ theme, hasError, disabled, constant }) =>
+      !hasError && !disabled && !constant && theme.colors.GREEN[600]};
   }
   &:hover:not(:focus) {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GRAY[200]};
+    border-color: ${({ theme, hasError, disabled, constant }) =>
+      !hasError && !disabled && !constant && theme.colors.GRAY[200]};
   }
   &::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[100]};
   }
+  ${({ constant }) => constant && constantStyle}
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
   ${({ area }) => area && areaInputStyle} // TextAreaInput
@@ -84,6 +92,7 @@ const TextInput: React.FC<TextInputProps> = ({
   errorMessage = "",
   area = false,
   disabled = false,
+  constant = false,
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
@@ -110,6 +119,7 @@ const TextInput: React.FC<TextInputProps> = ({
           hasError={!!errorMessage}
           area={area}
           disabled={disabled}
+          constant={constant}
           value={value}
           onChange={handleValueChange}
           {...props}
