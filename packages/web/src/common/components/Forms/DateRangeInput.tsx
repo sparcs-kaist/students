@@ -43,12 +43,12 @@ const availableMonths = [
 ];
 
 const DateRangeInput: React.FC<DateRangeInputProps> = ({
-  label = "",
-  startValue = "",
-  endValue = "",
-  limitStartValue = "",
-  limitEndValue = "",
-  onChange = () => {},
+  startValue,
+  endValue,
+  limitStartValue,
+  limitEndValue,
+  onChange,
+  label,
   ...props
 }) => {
   const [error, setError] = useState("");

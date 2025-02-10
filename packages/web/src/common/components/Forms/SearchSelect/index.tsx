@@ -122,9 +122,9 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   handleChange = () => {},
   setErrorStatus = () => {},
   onChange = undefined,
-  options = [],
-  selected = "",
-  setSelected = () => {},
+  options,
+  selected,
+  setSelected,
   ...props
 }) => {
   const [listToggle, setListToggle] = useState(false);

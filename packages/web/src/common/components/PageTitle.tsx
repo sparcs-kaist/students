@@ -7,10 +7,10 @@ const PageTitleInner = styled.div`
   position: relative;
   width: fit-content;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 32px;
-  line-height: 48px;
+  font-size: 30px;
+  line-height: 40px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
-  color: ${({ theme }) => theme.colors.BLACK};
+  color: ${({ theme }) => theme.colors.GREEN[800]};
 `;
 
 const PageTitle: React.FC<React.PropsWithChildren> = ({

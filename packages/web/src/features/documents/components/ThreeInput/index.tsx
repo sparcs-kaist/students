@@ -43,12 +43,12 @@ const ThreeCardsWrapper = styled.div`
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
-  width: 1000px;
+  width: 100%;
 `;
 
 const VerticalWrapper = styled.div`
   display: flex;
-  width: 316px;
+  width: 30%;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;

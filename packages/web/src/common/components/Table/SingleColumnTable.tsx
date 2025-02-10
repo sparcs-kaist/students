@@ -178,7 +178,9 @@ const SingleColumnTable: React.FC<TableProps> = ({
             mini={mini}
           >
             <TableRowContents mini={mini}>
-              {row.tag && <TableRowText mini={mini}>{row.tag}</TableRowText>}
+              {row.tag && (
+                <TableRowText mini={mini}>{`[${row.tag}]`}</TableRowText>
+              )}
               <TableRowText mini={mini}>{row.content}</TableRowText>
             </TableRowContents>
             <TableRowText mini={mini}>{formatDate(row.date)}</TableRowText>

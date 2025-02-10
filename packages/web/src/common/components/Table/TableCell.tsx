@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface TableCellProps {
@@ -20,16 +21,18 @@ const CommonCellWrapper = styled.div<{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 48px;
-  padding: 12px 8px;
+  padding: ${({ isHeader }) => (isHeader ? "8px 12px" : "12px 20px")};
+  height: ${({ isHeader }) => (isHeader ? "36px" : "48px")};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
-  font-size: 16px;
-  line-height: 24px;
+const CellText = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
+  font-size: 14px;
+  line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
@@ -39,7 +42,9 @@ const CellText = styled.div<{ isGray: boolean }>`
 `;
 
 const HeaderInner = styled.div`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+  font-size: 18px;
+  line-height: 20px;
   color: ${({ theme }) => theme.colors.WHITE};
 `;
 
@@ -55,7 +60,7 @@ const TableCell: React.FC<TableCellProps> = ({
   type,
   children,
   width = "150px",
-  minWidth = 100,
+  minWidth = 60,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
   let content;

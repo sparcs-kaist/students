@@ -1,6 +1,6 @@
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 
-import { ThreeInputItem } from "@sparcs-students/web/common/components/ThreeInput/index";
+import { ThreeInputItem } from "@sparcs-students/web/features/documents/components/ThreeInput/index";
 
 export const mockData: ThreeInputItem[] = [
   {
@@ -10,7 +10,12 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: true,
       documentType: {
-        types: [DocumentType.BudgetProposal, DocumentType.BusinessPlan],
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
         selectedType: DocumentType.BudgetProposal,
         organization: [
           {
@@ -43,8 +48,13 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: true,
       documentType: {
-        types: [DocumentType.BudgetProposal, DocumentType.BusinessPlan],
-        selectedType: DocumentType.BusinessPlan,
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자2", value: "개발자2" },
@@ -76,8 +86,13 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
-        selectedType: DocumentType.BusinessPlan,
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자3", value: "개발자3" },
@@ -109,8 +124,13 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
-        selectedType: DocumentType.BusinessReport,
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
+        selectedType: DocumentType.ProjectReport,
         organization: [
           {
             key: { label: "개발자4", value: "개발자4" },
@@ -143,10 +163,12 @@ export const mockData: ThreeInputItem[] = [
       isSpring: true,
       documentType: {
         types: [
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.FinancialStatementProposal,
+        selectedType: DocumentType.BudgetReport,
         organization: [
           {
             key: { label: "개발자5", value: "개발자5" },
@@ -179,10 +201,12 @@ export const mockData: ThreeInputItem[] = [
       isSpring: true,
       documentType: {
         types: [
-          DocumentType.FinancialStatementProposal,
-          DocumentType.BusinessPlan,
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
         ],
-        selectedType: DocumentType.BusinessPlan,
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자6", value: "개발자6" },
@@ -214,8 +238,13 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
-        selectedType: DocumentType.BusinessPlan,
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
+        selectedType: DocumentType.ProjectProposal,
         organization: [
           {
             key: { label: "개발자7", value: "개발자7" },
@@ -247,8 +276,13 @@ export const mockData: ThreeInputItem[] = [
     value: {
       isSpring: false,
       documentType: {
-        types: [DocumentType.BusinessPlan, DocumentType.BusinessReport],
-        selectedType: DocumentType.BusinessReport,
+        types: [
+          DocumentType.BudgetProposal,
+          DocumentType.BudgetReport,
+          DocumentType.ProjectProposal,
+          DocumentType.ProjectReport,
+        ],
+        selectedType: DocumentType.ProjectReport,
         organization: [
           {
             key: { label: "개발자8", value: "개발자8" },

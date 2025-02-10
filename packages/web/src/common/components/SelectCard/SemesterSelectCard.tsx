@@ -37,6 +37,7 @@ const CardHeaderWrapper = styled.div`
 
 const CardContent = styled.div`
   display: flex;
+  width: 100%;
   height: 92px;
   padding: 16px 30px;
   align-items: center;
@@ -103,12 +104,12 @@ const SemesterSelectCard: React.FC<SemesterSelectCardProps> = ({
             >
               <RadioOption value="true" width="82px">
                 <Typography fs={16} lh={20} fw="REGULAR">
-                  봄학기
+                  상반기
                 </Typography>
               </RadioOption>
               <RadioOption value="false" width="82px">
                 <Typography fs={16} lh={20} fw="REGULAR">
-                  가을학기
+                  하반기
                 </Typography>
               </RadioOption>
             </Radio>

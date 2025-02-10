@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import Typography from "@sparcs-students/web/common/components/Typography";
 
 type BannerProps = {
   images?: string[];
   alt?: string[];
   onClick?: (idx: number) => void;
 };
+
+// banner 하단 인덱스
+// const IndexWrapper = styled(Typography)`
+//   display: flex;
+//   margin-top: 8px;
+//   justify-content: center;
+// `;
 
 const BannerWrapper = styled.div`
   display: flex;
@@ -16,10 +22,11 @@ const BannerWrapper = styled.div`
   align-items: center;
   padding: 0px;
   gap: 0px;
-
+  width: 100%;
   position: relative;
-
   border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 2.5 / 1;
 `;
 
 const Arrow = styled.button`
@@ -38,12 +45,6 @@ const Arrow = styled.button`
   color: white;
   border-radius: 4px;
   z-index: 1;
-`;
-
-const IndexWrapper = styled(Typography)`
-  display: flex;
-  margin-top: 8px;
-  justify-content: center;
 `;
 
 const StyledImage = styled(Image)`
@@ -80,24 +81,22 @@ const Banner: React.FC<BannerProps> = ({
     <div>
       <BannerWrapper>
         <Arrow onClick={handlePrev}>{"<"}</Arrow>
-
-        <div>
-          <StyledImage
-            src={`/${images[currentIndex]}`}
-            alt={alt[currentIndex]}
-            width={0}
-            height={0}
-            sizes="40vw"
-            onClick={() => onClick(currentIndex)}
-          />
-        </div>
+        <StyledImage
+          src={`/${images[currentIndex]}`}
+          alt={alt[currentIndex]}
+          width={0}
+          height={0}
+          sizes="40vw"
+          onClick={() => onClick(currentIndex)}
+        />
 
         <Arrow onClick={handleNext}>{">"}</Arrow>
       </BannerWrapper>
 
+      {/* 배너 하단에 페이지 인덱스를 표시하는 부분
       <IndexWrapper>
         {currentIndex + 1} / {images.length}
-      </IndexWrapper>
+      </IndexWrapper> */}
     </div>
   );
 };
