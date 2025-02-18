@@ -1,16 +1,16 @@
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 
-export const budgetDomainToString = (domain: BudgetDomainE) => {
+export const budgetDomainToString = (domain: BudgetDomainEnum) => {
   switch (domain) {
-    case BudgetDomainE.Student:
+    case BudgetDomainEnum.Student:
       return "학생회비";
-    case BudgetDomainE.School:
+    case BudgetDomainEnum.School:
       return "본회계";
-    case BudgetDomainE.Autonomous:
+    case BudgetDomainEnum.Autonomous:
       return "자치";
     default:
       return "";
@@ -18,69 +18,69 @@ export const budgetDomainToString = (domain: BudgetDomainE) => {
 };
 
 export const budgetDivisionIncomeToString = (
-  division: BudgetDivisionIncomeE,
+  division: BudgetDivisionIncomeEnum,
 ) => {
   switch (division) {
-    case BudgetDivisionIncomeE.Substratum:
+    case BudgetDivisionIncomeEnum.Substratum:
       return "기층기구회계";
-    case BudgetDivisionIncomeE.Central:
+    case BudgetDivisionIncomeEnum.Central:
       return "중앙회계";
-    case BudgetDivisionIncomeE.Incentive:
+    case BudgetDivisionIncomeEnum.Incentive:
       return "격려기금";
-    case BudgetDivisionIncomeE.Interest:
+    case BudgetDivisionIncomeEnum.Interest:
       return "예금이자";
-    case BudgetDivisionIncomeE.School:
+    case BudgetDivisionIncomeEnum.School:
       return "학교지원금";
-    case BudgetDivisionIncomeE.Carryover:
+    case BudgetDivisionIncomeEnum.Carryover:
       return "이월금";
-    case BudgetDivisionIncomeE.Department:
+    case BudgetDivisionIncomeEnum.Department:
       return "과비";
-    case BudgetDivisionIncomeE.Organizational:
+    case BudgetDivisionIncomeEnum.Organizational:
       return "단비";
-    case BudgetDivisionIncomeE.External:
+    case BudgetDivisionIncomeEnum.External:
       return "외부지원금";
-    case BudgetDivisionIncomeE.Extra:
+    case BudgetDivisionIncomeEnum.Extra:
       return "기타수익금";
-    case BudgetDivisionIncomeE.CAC:
+    case BudgetDivisionIncomeEnum.CAC:
       return "문화자치기금";
     default:
       return "";
   }
 };
 
-export const budgetExpenseToString = (expense: BudgetClassExpenseE) => {
+export const budgetExpenseToString = (expense: BudgetClassExpenseEnum) => {
   switch (expense) {
-    case BudgetClassExpenseE.Product:
+    case BudgetClassExpenseEnum.Product:
       return "상품비";
-    case BudgetClassExpenseE.Gift:
+    case BudgetClassExpenseEnum.Gift:
       return "증정비";
-    case BudgetClassExpenseE.Supply:
+    case BudgetClassExpenseEnum.Supply:
       return "물품비";
-    case BudgetClassExpenseE.Print:
+    case BudgetClassExpenseEnum.Print:
       return "인쇄비";
-    case BudgetClassExpenseE.Transport:
+    case BudgetClassExpenseEnum.Transport:
       return "출장비";
-    case BudgetClassExpenseE.Meeting:
+    case BudgetClassExpenseEnum.Meeting:
       return "회의비";
-    case BudgetClassExpenseE.Labor:
+    case BudgetClassExpenseEnum.Labor:
       return "인건비";
-    case BudgetClassExpenseE.Welfare:
+    case BudgetClassExpenseEnum.Welfare:
       return "복리후생비";
-    case BudgetClassExpenseE.Install:
+    case BudgetClassExpenseEnum.Install:
       return "설치비";
-    case BudgetClassExpenseE.Delivery:
+    case BudgetClassExpenseEnum.Delivery:
       return "운반비";
-    case BudgetClassExpenseE.Repair:
+    case BudgetClassExpenseEnum.Repair:
       return "수선비";
-    case BudgetClassExpenseE.Telecom:
+    case BudgetClassExpenseEnum.Telecom:
       return "통신비";
-    case BudgetClassExpenseE.Insurance:
+    case BudgetClassExpenseEnum.Insurance:
       return "보험료";
-    case BudgetClassExpenseE.Extra:
+    case BudgetClassExpenseEnum.Extra:
       return "기타비";
-    case BudgetClassExpenseE.Backup:
+    case BudgetClassExpenseEnum.Backup:
       return "예비비";
-    case BudgetClassExpenseE.Incentive:
+    case BudgetClassExpenseEnum.Incentive:
       return "격려금";
     default:
       return "";

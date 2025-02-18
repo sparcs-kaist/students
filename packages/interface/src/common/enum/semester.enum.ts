@@ -1,5 +1,5 @@
 // 학기
-export enum SemesterE {
+export enum SemesterEnum {
   Spring = 1, // 봄학기
   Summer, // 여름학기
   Fall, // 가을학기
@@ -7,7 +7,7 @@ export enum SemesterE {
 }
 
 // 반기
-export enum HalfYearE {
+export enum HalfYearEnum {
   First = 1, // 전반기
   Second, // 후반기
 }

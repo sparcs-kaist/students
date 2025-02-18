@@ -3,10 +3,9 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import { OrganizationModule } from "./feature/organization/organization.module";
-import { ProposalModule } from "./feature/proposal/proposal.module";
 
 @Module({
-  imports: [DrizzleModule, OrganizationModule, ProposalModule],
+  imports: [DrizzleModule, OrganizationModule],
   controllers: [AppController],
   providers: [AppService],
 })

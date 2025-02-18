@@ -1,9 +1,9 @@
 import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import { ViewResultProps } from "@sparcs-students/web/features/documents/components/ViewResult";
@@ -26,8 +26,8 @@ export const mockViewResultData: ViewResultProps = {
 export const mockViewerIncomeData: ViewerIncomeProps[] = [
   {
     code: 101,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 125000,
@@ -38,8 +38,8 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 102,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 125000,
@@ -50,8 +50,8 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 103,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 150000,
@@ -62,8 +62,8 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 201,
-    budgetDomain: BudgetDomainE.School,
-    budgetDivisionIncome: BudgetDivisionIncomeE.School,
+    budgetDomain: BudgetDomainEnum.School,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.School,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 150000,
@@ -77,10 +77,10 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
 export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   {
     code: 401,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
@@ -89,10 +89,10 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 402,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 12500,
     thisYear: 125000,
     ratio: 1000.0,
@@ -101,10 +101,10 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 403,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
@@ -113,10 +113,10 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 501,
-    budgetDomain: BudgetDomainE.School,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.School,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,

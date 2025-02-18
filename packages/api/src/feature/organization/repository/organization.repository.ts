@@ -1,39 +1,18 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import {
-  ApiOrg002RequestBody,
-  ApiOrg003RequestBody,
-  ApiOrg005RequestBody,
-  ApiOrg006RequestBody,
-} from "@sparcs-students/interface/api/organization/index";
-
-import { and, or, lte, gte, eq, isNull, desc } from "drizzle-orm";
+import { and, gt, inArray, isNotNull, lt, not, or, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-
 import {
-  Organization,
-  OrganizationTypeEnum,
-  OrganizationT,
-  OrganizationTypeEnumT,
-  User,
-  UserStudent,
-  OrganizationPresident,
-  OrganizationPresidentT,
-  UserT,
-  UserStudentT,
-  OrganizationMember,
-  OrganizationManager,
-  OrganizationMemberT,
-} from "src/drizzle/schema";
-
-export type OrganizationWithPresidentT = {
-  organization: OrganizationT;
-  organizationType: OrganizationTypeEnumT;
-  president: OrganizationPresidentT;
-  user: UserT;
-  userStudent: UserStudentT;
-};
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "src/drizzle/drizzle.provider";
+import { Organization } from "src/drizzle/schema";
+import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
+import {
+  IOrganization,
+  IOrganizationRequestCreate,
+} from "@sparcs-students/interface/api/organization/type/organization.type";
+import { MOrganization } from "../type/organization.model";
 
 @Injectable()
 export class OrganizationRepository {
@@ -41,406 +20,145 @@ export class OrganizationRepository {
     @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
   ) {}
 
-  async selectOrganization(
-    target: Partial<OrganizationT>,
-  ): Promise<OrganizationT[]> {
-    const {
-      id,
-      name,
-      nameEng,
-      organizationTypeEnumId,
-      foundingYear,
-      startTerm,
-      endTerm,
-    } = target;
-    let query = this.db.select().from(Organization).$dynamic();
-
-    const whereConditions = [];
-
-    if (id) {
-      whereConditions.push(eq(Organization.id, id));
-    }
-
-    if (name) {
-      whereConditions.push(eq(Organization.name, name));
-    }
-
-    if (nameEng) {
-      whereConditions.push(eq(Organization.nameEng, nameEng));
-    }
-
-    if (organizationTypeEnumId) {
-      whereConditions.push(
-        eq(Organization.organizationTypeEnumId, organizationTypeEnumId),
-      );
-    }
-
-    if (foundingYear) {
-      whereConditions.push(eq(Organization.foundingYear, foundingYear));
-    }
-
-    if (startTerm) {
-      whereConditions.push(
-        or(gte(Organization.endTerm, startTerm), isNull(Organization.endTerm)),
-      );
-    }
-
-    if (endTerm) {
-      whereConditions.push(lte(Organization.startTerm, endTerm));
-    }
-
-    // 삭제된 항목 제외
-    whereConditions.push(isNull(Organization.deletedAt));
-
-    // 조건이 하나라도 있으면 AND로 묶어서 처리
-    if (whereConditions.length > 0) {
-      query = query.where(and(...whereConditions));
-    }
-
-    // 쿼리 실행
-    const res = await query.execute();
-
-    return res;
+  // WARD: Transaction
+  async withTransaction<T>(
+    callback: (tx: DrizzleTransaction) => Promise<T>,
+  ): Promise<T> {
+    return this.db.transaction(callback);
   }
 
-  async selectOrganizationWithPresidentById(
-    organizationId: number,
-    date: Date,
-  ): Promise<OrganizationWithPresidentT[]> {
-    const res = await this.db
+  // find methods
+  async findTx(
+    tx: DrizzleTransaction,
+    organizationId: IOrganization["id"],
+  ): Promise<MOrganization | null> {
+    const [result] = await tx
       .select()
       .from(Organization)
-      .innerJoin(
-        OrganizationTypeEnum,
-        eq(Organization.organizationTypeEnumId, OrganizationTypeEnum.id),
-      )
-      .innerJoin(
-        OrganizationPresident,
-        eq(Organization.id, OrganizationPresident.organizationId),
-      )
-      .innerJoin(User, eq(OrganizationPresident.userId, User.id))
-      .innerJoin(UserStudent, eq(UserStudent.userId, User.id))
-      .where(
-        and(
-          eq(Organization.id, organizationId),
-          and(
-            lte(OrganizationPresident.startTerm, date),
-            or(
-              gte(OrganizationPresident.endTerm, date),
-              isNull(OrganizationPresident.endTerm),
+      .where(eq(Organization.id, organizationId))
+      .execute();
+
+    return result ? MOrganization.fromDBResult(result) : null;
+  }
+
+  async findAllTx(
+    tx: DrizzleTransaction,
+    organizationIds: IOrganization["id"][],
+  ): Promise<MOrganization[]>;
+  async findAllTx(
+    tx: DrizzleTransaction,
+    duration: DurationFull,
+  ): Promise<MOrganization[]>;
+  async findAllTx(
+    tx: DrizzleTransaction,
+    arg1: IOrganization["id"][] | DurationFull,
+  ): Promise<MOrganization[]> {
+    let query = tx.select().from(Organization).$dynamic();
+    const whereConditions = [];
+
+    if (arg1 instanceof Array) {
+      whereConditions.push(inArray(Organization.id, arg1));
+    } else if ("startTerm" in arg1 && "endTerm" in arg1) {
+      whereConditions.push(
+        not(
+          or(
+            gt(Organization.startTerm, arg1.endTerm),
+            and(
+              isNotNull(Organization.endTerm),
+              lt(Organization.endTerm, arg1.startTerm),
             ),
           ),
-          eq(OrganizationPresident.organizationPresidentTypeEnumId, 1), // 정후보만 찾음
         ),
       );
-    return res.map(row => ({
-      organization: row.organization,
-      organizationType: row.organization_type_enum,
-      president: row.organization_president,
-      user: row.user,
-      userStudent: row.user_student,
-    }));
-  }
-
-  async selectOrganizationsByTerms(
-    startTerm: Date,
-    endTerm: Date,
-  ): Promise<
-    {
-      organization: OrganizationT;
-      organizationTypeEnum: OrganizationTypeEnumT;
-    }[]
-  > {
-    const res = await this.db
-      .select()
-      .from(Organization)
-      .innerJoin(
-        OrganizationTypeEnum,
-        eq(Organization.organizationTypeEnumId, OrganizationTypeEnum.id),
-      )
-      .where(
-        or(
-          and(
-            lte(Organization.startTerm, endTerm),
-            gte(Organization.endTerm, startTerm),
-          ),
-          and(
-            lte(Organization.startTerm, endTerm),
-            isNull(Organization.endTerm),
-          ),
-        ),
-      );
-
-    return res.map(row => ({
-      ...row,
-      organizationTypeEnum: row.organization_type_enum,
-    }));
-  }
-
-  async ckOrganizationBeforeCreate(
-    body: ApiOrg002RequestBody,
-  ): Promise<number> {
-    const select = await this.db
-      .select()
-      .from(Organization)
-      .where(
-        and(
-          eq(Organization.name, body.name),
-          eq(Organization.nameEng, body.nameEng),
-          eq(Organization.organizationTypeEnumId, body.organizationTypeId),
-          eq(Organization.foundingYear, body.foundingYear),
-          eq(Organization.startTerm, body.startTerm),
-        ),
-      )
-      .limit(1);
-    if (select.length === 0) {
-      return 0;
     }
-    return select[0].id;
+
+    whereConditions.push(isNotNull(Organization.deletedAt));
+    query = query.where(and(...whereConditions));
+
+    const res = await query.execute();
+    return res.map(r => MOrganization.fromDBResult(r));
   }
 
-  async createOrganization(body: ApiOrg002RequestBody): Promise<number> {
-    await this.db
+  // fetch methods
+  async fetchTx(
+    tx: DrizzleTransaction,
+    id: IOrganization["id"],
+  ): Promise<MOrganization> {
+    const result = await this.findTx(tx, id);
+    if (!result) {
+      throw new HttpException("Organization not found", HttpStatus.NOT_FOUND);
+    }
+    return result;
+  }
+
+  async fetch(id: IOrganization["id"]): Promise<MOrganization> {
+    return this.db.transaction(async tx => this.fetchTx(tx, id));
+  }
+
+  async fetchAllTx(
+    tx: DrizzleTransaction,
+    arg1: IOrganization["id"][] | DurationFull,
+  ): Promise<MOrganization[]> {
+    if (Array.isArray(arg1)) {
+      // arg1이 organizationIds 배열인 경우
+      // 요청한 ID를 Set으로 변환하여 중복 제거
+      const uniqueIds = Array.from(new Set(arg1));
+
+      const results = await this.findAllTx(tx, uniqueIds);
+      // 반환된 ID를 Set으로 변환하여 중복 제거
+      const returnedIds = new Set(results.map(org => org.id));
+
+      if (returnedIds.size === uniqueIds.length) {
+        throw new HttpException("No Organizations found", HttpStatus.NOT_FOUND);
+      }
+      return results;
+    }
+    // arg1이 DurationFull인 경우
+    const results = await this.findAllTx(tx, arg1);
+    if (results.length === 0) {
+      throw new HttpException("No Organizations found", HttpStatus.NOT_FOUND);
+    }
+    return results;
+  }
+
+  async fetchAll(ids: IOrganization["id"][]): Promise<MOrganization[]>;
+  async fetchAll(duration: DurationFull): Promise<MOrganization[]>;
+  async fetchAll(
+    arg1: IOrganization["id"][] | DurationFull,
+  ): Promise<MOrganization[]> {
+    return this.db.transaction(async tx => this.fetchAllTx(tx, arg1));
+  }
+
+  // insert methods
+  async insertTx(
+    tx: DrizzleTransaction,
+    data: IOrganizationRequestCreate,
+  ): Promise<MOrganization> {
+    const result = await tx
       .insert(Organization)
       .values({
-        name: body.name,
-        nameEng: body.nameEng,
-        organizationTypeEnumId: body.organizationTypeId,
-        foundingYear: body.foundingYear,
-        startTerm: body.startTerm,
-        endTerm: body.endTerm ? body.endTerm : null,
+        name: data.name,
+        nameEng: data.nameEng,
+        organizationTypeEnum: data.organizationTypeEnum,
+        foundingYear: data.foundingYear,
+        startTerm: data.duration.startTerm,
+        endTerm: data.duration.endTerm ?? null,
+        organizationStateEnum: data.organizationStateEnum,
       })
       .execute();
-
-    const res = await this.ckOrganizationBeforeCreate(body);
-    return res;
-  }
-
-  async ckOrganizationPresidentBeforeCreate(
-    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
-  ): Promise<number> {
-    const select = await this.db
-      .select()
-      .from(OrganizationPresident)
-      .where(
-        and(
-          eq(OrganizationPresident.organizationId, body.organizationId),
-          eq(
-            OrganizationPresident.organizationPresidentTypeEnumId,
-            body.organizationPresidentTypeE,
-          ),
-
-          isNull(OrganizationPresident.endTerm),
-        ),
-      )
-      .limit(1)
-      .orderBy(desc(OrganizationPresident.createdAt));
-    if (select.length === 0) {
-      return 0;
-    }
-    return select[0].id;
-  }
-
-  async updateOrganizationPresidentRetire(
-    organizationPresidentId: number,
-    endTerm: Date,
-  ): Promise<number> {
-    await this.db
-      .update(OrganizationPresident)
-      .set({ endTerm })
-      .where(eq(OrganizationPresident.id, organizationPresidentId))
-      .execute();
-
-    const resSelect = await this.db
-      .select()
-      .from(OrganizationPresident)
-      .where(eq(OrganizationPresident.id, organizationPresidentId));
-    if (resSelect.length === 0 || resSelect[0].id !== organizationPresidentId) {
-      return 0;
-    }
-    return resSelect[0].id;
-  }
-
-  async createOrganizationPresident(
-    body: Omit<ApiOrg003RequestBody, "ignorePrev">,
-  ): Promise<number> {
-    await this.db
-      .insert(OrganizationPresident)
-      .values({
-        organizationId: body.organizationId,
-        userId: body.userId,
-        organizationPresidentTypeEnumId: body.organizationPresidentTypeE,
-        phoneNumber: body.phoneNumber,
-        startTerm: body.startTerm,
-        endTerm: body.endTerm ? body.endTerm : null,
-      })
-      .execute();
-
-    const res = await this.ckOrganizationPresidentBeforeCreate(body);
-    return res;
-  }
-
-  async ckOrganizationPresidentAlready(userId: number): Promise<number> {
-    // TODO: 지금은 공직일 때만 체크하는 로직이 없는데, 언젠가는 추가해야 함
-    const select = await this.db
-      .select()
-      .from(OrganizationPresident)
-      .where(
-        and(
-          eq(OrganizationPresident.userId, userId),
-          isNull(OrganizationPresident.endTerm),
-        ),
-      )
-      .limit(1);
-    if (select.length === 0) {
-      // TODO: 해당 president가 공직이 아닐 경우 그냥 0을 리턴하는 로직을 추가해야 함.
-      return 0;
-    }
-    return select[0].id;
-  }
-
-  async selectOrganizationPresidentById(
-    organizationPresidentId: number,
-  ): Promise<OrganizationPresidentT[]> {
-    const res = this.db
-      .select()
-      .from(OrganizationPresident)
-      .where(and(eq(OrganizationPresident.id, organizationPresidentId)));
-    return res;
-  }
-
-  async ckOrganizationMemberBeforeCreate(
-    body: ApiOrg005RequestBody,
-  ): Promise<number> {
-    const res = await this.db
-      .select()
-      .from(OrganizationMember)
-      .where(
-        and(
-          eq(OrganizationMember.organizationId, body.organizationId),
-          eq(OrganizationMember.userId, body.userId),
-          isNull(OrganizationMember.endTerm),
-        ),
-      )
-      .orderBy(desc(OrganizationMember.createdAt))
-      .limit(1);
-    if (res.length === 0) {
-      return 0;
-    }
-    return res[0].id;
-  }
-
-  async createOrganizationMember(body: ApiOrg005RequestBody): Promise<number> {
-    await this.db
-      .insert(OrganizationMember)
-      .values({
-        organizationId: body.organizationId,
-        userId: body.userId,
-        startTerm: body.startTerm,
-        endTerm: body.endTerm ? body.endTerm : null,
-      })
-      .execute();
-
-    const res = await this.ckOrganizationMemberBeforeCreate(body);
-    return res;
-  }
-
-  async selectOrganizationMemberByUserIdAndOrganizationId(
-    userId: number,
-    organizationId: number,
-  ): Promise<OrganizationMemberT[]> {
-    const res = await this.db
-      .select()
-      .from(OrganizationMember)
-      .where(
-        and(
-          eq(OrganizationMember.userId, userId),
-          eq(OrganizationMember.organizationId, organizationId),
-          isNull(OrganizationMember.endTerm),
-        ),
-      );
-    return res;
-  }
-
-  async ckOrganizationManagerBeforeCreate(
-    body: ApiOrg006RequestBody,
-  ): Promise<number> {
-    const res = await this.db
-      .select()
-      .from(OrganizationManager)
-      .where(
-        and(
-          eq(OrganizationManager.organizationId, body.organizationId),
-          eq(OrganizationManager.userId, body.userId),
-          eq(OrganizationManager.semesterId, body.semesterId),
-        ),
-      )
-      .orderBy(desc(OrganizationManager.createdAt))
-      .limit(1);
-    if (res.length === 0) {
-      return 0;
-    }
-    return res[0].id;
-  }
-
-  async createOrganizationManager(body: ApiOrg006RequestBody): Promise<number> {
-    await this.db
-      .insert(OrganizationManager)
-      .values({
-        organizationId: body.organizationId,
-        userId: body.userId,
-        semesterId: body.semesterId,
-      })
-      .execute();
-
-    const res = await this.ckOrganizationManagerBeforeCreate(body);
-    return res;
-  }
-
-  async selectOrganizationMember(target: Partial<OrganizationMemberT>) {
-    const { id, userId, startTerm, endTerm, organizationId } = target;
-    let query = this.db.select().from(OrganizationMember).$dynamic();
-
-    const whereConditions = [];
-
-    if (id) {
-      whereConditions.push(eq(OrganizationMember.id, id));
-    }
-
-    if (userId) {
-      whereConditions.push(eq(OrganizationMember.userId, userId));
-    }
-
-    if (startTerm) {
-      whereConditions.push(
-        or(
-          gte(OrganizationMember.endTerm, startTerm),
-          isNull(OrganizationMember.endTerm),
-        ),
+    const insertedId = result[0].insertId;
+    const organization = await this.findTx(tx, insertedId);
+    if (!organization) {
+      throw new HttpException(
+        "Failed to create organization",
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    if (endTerm) {
-      whereConditions.push(lte(OrganizationMember.startTerm, endTerm));
-    }
+    return organization;
+  }
 
-    if (organizationId) {
-      whereConditions.push(
-        eq(OrganizationMember.organizationId, organizationId),
-      );
-    }
-
-    // 삭제된 항목 제외
-    whereConditions.push(isNull(OrganizationMember.deletedAt));
-
-    // 조건이 하나라도 있으면 AND로 묶어서 처리
-    if (whereConditions.length > 0) {
-      query = query.where(and(...whereConditions));
-    }
-
-    // 쿼리 실행
-    const res = await query.execute();
-
-    return res;
+  async insert(data: IOrganizationRequestCreate): Promise<MOrganization> {
+    return this.db.transaction(async tx => this.insertTx(tx, data));
   }
 }

@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table/Table";
-import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
+import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
 import { useFormatter } from "next-intl";
 import LightTag, {
   LightTagColor,
@@ -22,7 +22,7 @@ import {
 import { useTheme } from "styled-components";
 
 export interface TotalProps {
-  budgetDomain: BudgetDomainE;
+  budgetDomain: BudgetDomainEnum;
   type: string;
   lastYear: number;
   thisYear: number;
