@@ -44,7 +44,7 @@ const TextAreaRow = styled.div`
 
 const TextAreaWithHeader: React.FC<TextAreaProps> = ({ header, contents }) => (
   <TextAreaWithHeaderWrapper>
-    <div>{header}</div>
+    {header}
     <TextAreaRow>
       {contents.map((elm, index) => (
         <React.Fragment key={index}>

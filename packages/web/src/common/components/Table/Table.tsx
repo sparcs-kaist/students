@@ -158,6 +158,7 @@ const Table = <T,>({
         <Content>
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map(row => {
+              // 표 스타일 디자인과 맞추기
               const style = rowStyleResolver
                 ? rowStyleResolver(row.original)
                 : undefined;

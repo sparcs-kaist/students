@@ -5,7 +5,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
-import TimelineTable from "@sparcs-students/web/features/report/components/TimelineTable";
+
 import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 import styled from "styled-components";
@@ -41,29 +41,15 @@ const TableArea = styled.div`
   background-color: green;
 `;
 const DocumentViewerDetailPage: React.FC = () => {
-  const firstRow = useRef<HTMLDivElement>(null);
-  const secondRow = useRef<HTMLDivElement>(null);
-  const thirdRow = useRef<HTMLDivElement>(null);
-  const fourthRow = useRef<HTMLDivElement>(null);
-  const fifthRow = useRef<HTMLDivElement>(null);
-  const sixthRow = useRef<HTMLDivElement>(null);
-  const seventhRow = useRef<HTMLDivElement>(null);
+  const documentTitle = useRef<HTMLDivElement>(null);
+  const documentPeriod = useRef<HTMLDivElement>(null);
+  const manager = useRef<HTMLDivElement>(null);
+  const documentPurpose = useRef<HTMLDivElement>(null);
+  const documentTarget = useRef<HTMLDivElement>(null);
+  const documentDetail = useRef<HTMLDivElement>(null);
+  const documentTimeline = useRef<HTMLDivElement>(null);
 
   const { resultId } = useParams();
-
-  const mockTimeLine = [
-    {
-      startDate: new Date("2025-01-24"),
-      endDate: new Date("2025-01-28"),
-      content: "집행운영회 운영",
-    },
-    {
-      startDate: new Date("2025-01-24"),
-      endDate: new Date("2025-01-28"),
-      content: "메모가 있는 경우",
-      memo: "기이이이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이ㅣ이이이이이ㅣ이이인메모",
-    },
-  ];
 
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
@@ -78,13 +64,13 @@ const DocumentViewerDetailPage: React.FC = () => {
   ];
 
   const indexContents = [
-    { name: "사업명, 사업개요", reference: firstRow },
-    { name: "사업 준비기간, 사업일시", reference: secondRow },
-    { name: "담당부서 / 담당자", reference: thirdRow },
-    { name: "사업 추진 목적", reference: fourthRow },
-    { name: "사업 추진 대상자", reference: fifthRow },
-    { name: "사업 세부 내용", reference: sixthRow },
-    { name: "사업 진행 타임라인", reference: seventhRow },
+    { name: "사업명, 사업개요", reference: documentTitle },
+    { name: "사업 준비기간, 사업일시", reference: documentPeriod },
+    { name: "담당부서 / 담당자", reference: manager },
+    { name: "사업 추진 목적", reference: documentPurpose },
+    { name: "사업 추진 대상자", reference: documentTarget },
+    { name: "사업 세부 내용", reference: documentDetail },
+    { name: "사업 진행 타임라인", reference: documentTimeline },
   ];
 
   return (
@@ -97,49 +83,49 @@ const DocumentViewerDetailPage: React.FC = () => {
       </FlexWrapper>
       <ScrollAbleArea>
         <ContentsArea>
-          <RowWrapper ref={firstRow}>
+          <FlexWrapper direction="row" gap={60} ref={documentTitle}>
             <TextAreaWithHeader header="사업명" contents={["contents1"]} />
             <TextAreaWithHeader header="사업 개요" contents={["contents1"]} />
-          </RowWrapper>
-          <RowWrapper ref={secondRow}>
+          </FlexWrapper>
+          <RowWrapper ref={documentPeriod}>
             <TextAreaWithHeader
               header="사업 준비 기간"
               contents={["contents1"]}
             />
             <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
           </RowWrapper>
-          <RowWrapper ref={thirdRow}>
+          <RowWrapper ref={manager}>
             <TextAreaWithHeader
               header="담당부서 / 담당자"
               contents={["contents1", "contents2"]}
             />
           </RowWrapper>
-          <RowWrapper ref={fourthRow}>
+          <RowWrapper ref={documentPurpose}>
             <TextAreaWithHeader
               header="사업 추진 목적"
               contents={["contents1"]}
             />
           </RowWrapper>
-          <RowWrapper ref={fifthRow}>
+          <RowWrapper ref={documentTarget}>
             <TextAreaWithHeader
               header="사업 수혜 대상자"
               contents={["contents1"]}
             />
           </RowWrapper>
-          <RowWrapper ref={sixthRow}>
+          <RowWrapper ref={documentDetail}>
             <TextAreaWithHeader
               header="세부 사업 내용"
               contents={["contents1"]}
             />
           </RowWrapper>
           <RowWrapper
-            ref={seventhRow}
+            ref={documentTimeline}
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           >
             <Typography fs={24} lh={30} fw="BOLD">
               사업 진행 타임라인
             </Typography>
-            <TimelineTable contents={mockTimeLine} />
+            {/* 여기에 사업 표 */}
           </RowWrapper>
           <TableArea />
         </ContentsArea>

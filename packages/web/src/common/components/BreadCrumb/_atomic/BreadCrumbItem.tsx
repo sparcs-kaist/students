@@ -26,8 +26,8 @@ const BreadCrumbItem: React.FC<BreadCrumbItemProps> = ({
 }) => (
   <BreadCrumbInner disabled={disabled} isLastChild={isLastChild}>
     <Typography
-      fs={24}
-      lh={24}
+      fs={20}
+      lh={20}
       fw="REGULAR"
       onClick={!disabled ? onClick : undefined}
     >

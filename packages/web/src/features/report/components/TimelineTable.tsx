@@ -78,39 +78,6 @@ const TimelineTable: React.FC<TimelineTableProps> = ({ contents }) => {
   return (
     <TableWrapper>
       <Table table={table} />
-      {/* <TableHeader>
-        <TableCell type="Header" width="60px">
-          번호
-        </TableCell>
-        <TableCell type="Header" width="260px">
-          날짜
-        </TableCell>
-        <TableCell type="Header" width="302px">
-          내용
-        </TableCell>
-        <TableCell type="Header" width="170px">
-          비고
-        </TableCell>
-      </TableHeader>
-      {contents.map((elm, index) => (
-        <React.Fragment key={index}>
-          <TableRow isLast={index === contents.length - 1}>
-            <TableCell type="Default" width="60px">
-              {index + 1}
-            </TableCell>
-            <TableCell
-              type="Default"
-              width="260px"
-            >{`${formatDate(elm.startDate)} - ${formatDate(elm.endDate)}`}</TableCell>
-            <TableCell type="Default" width="302px">
-              {elm.content == null ? "-" : elm.content}
-            </TableCell>
-            <TableCell type="Default" width="170px">
-              {elm.memo == null ? "-" : elm.memo}
-            </TableCell>
-          </TableRow>
-        </React.Fragment>
-      ))} */}
     </TableWrapper>
   );
 };
