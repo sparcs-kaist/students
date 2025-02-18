@@ -28,18 +28,6 @@ const ContentsArea = styled.div`
   overflow-x: scroll;
 `;
 
-const RowWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 60px;
-`;
-
-// 나중에 표 들어갈 위치
-const TableArea = styled.div`
-  height: 500px;
-  width: 100%;
-  background-color: green;
-`;
 const DocumentViewerDetailPage: React.FC = () => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
@@ -87,47 +75,48 @@ const DocumentViewerDetailPage: React.FC = () => {
             <TextAreaWithHeader header="사업명" contents={["contents1"]} />
             <TextAreaWithHeader header="사업 개요" contents={["contents1"]} />
           </FlexWrapper>
-          <RowWrapper ref={documentPeriod}>
+          <FlexWrapper direction="row" gap={60} ref={documentPeriod}>
             <TextAreaWithHeader
               header="사업 준비 기간"
               contents={["contents1"]}
             />
             <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
-          </RowWrapper>
-          <RowWrapper ref={manager}>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={manager}>
             <TextAreaWithHeader
               header="담당부서 / 담당자"
               contents={["contents1", "contents2"]}
             />
-          </RowWrapper>
-          <RowWrapper ref={documentPurpose}>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentPurpose}>
             <TextAreaWithHeader
               header="사업 추진 목적"
               contents={["contents1"]}
             />
-          </RowWrapper>
-          <RowWrapper ref={documentTarget}>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentTarget}>
             <TextAreaWithHeader
               header="사업 수혜 대상자"
               contents={["contents1"]}
             />
-          </RowWrapper>
-          <RowWrapper ref={documentDetail}>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentDetail}>
             <TextAreaWithHeader
               header="세부 사업 내용"
               contents={["contents1"]}
             />
-          </RowWrapper>
-          <RowWrapper
+          </FlexWrapper>
+          <FlexWrapper
+            direction="row"
+            gap={60}
             ref={documentTimeline}
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           >
             <Typography fs={24} lh={30} fw="BOLD">
               사업 진행 타임라인
             </Typography>
-            {/* 여기에 사업 표 */}
-          </RowWrapper>
-          <TableArea />
+          </FlexWrapper>
+          {/* 여기에 사업 표 */}
         </ContentsArea>
         <Index
           title="목차"
