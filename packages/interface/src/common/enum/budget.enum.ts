@@ -1,12 +1,12 @@
 // 예산 영역 E
-export enum BudgetDomainE {
+export enum BudgetDomainEnum {
   Student = 1, // 학생회비
   School, // 본회계
   Autonomous, // 자치
 }
 
 // 예산 구분(수입) E
-export enum BudgetDivisionIncomeE {
+export enum BudgetDivisionIncomeEnum {
   Substratum = 1, // 기층기구회계
   Central, // 중앙회계
   Incentive, // 격려기금
@@ -21,14 +21,14 @@ export enum BudgetDivisionIncomeE {
 }
 
 // 예산 구분(지출) E
-export enum BudgetDivisionExpenseE {
+export enum BudgetDivisionExpenseEnum {
   Operating = 1, // 운영비
   Regular, // 정기사업비
   New, // 비정기사업비
 }
 
 // 예산 클래스 E
-export enum BudgetClassExpenseE {
+export enum BudgetClassExpenseEnum {
   Product = 1, // 상품비
   Gift, // 증정비
   Supply, // 물품비
@@ -48,7 +48,7 @@ export enum BudgetClassExpenseE {
 }
 
 // 거래 유형 E
-export enum TransactionTypeE {
+export enum TransactionTypeEnum {
   OfficialCard = 1, // 공금카드
   Bank, // 계좌이체
   Cash, // 현금거래
@@ -57,7 +57,7 @@ export enum TransactionTypeE {
 }
 
 // 보고서 파일 유형 E
-export enum ReportFileTypeE {
+export enum ReportFileTypeEnum {
   Receipt = 1, // 영수증
   CardPayment, // 카드매출전표
   Withdrawal, // 출금명세서
@@ -66,15 +66,15 @@ export enum ReportFileTypeE {
 }
 
 // BudgetDomainE
-export const getDisplayNameBudgetDomainE = (
-  type: BudgetDomainE | undefined,
+export const getDisplayNameBudgetDomainEnum = (
+  type: BudgetDomainEnum | undefined,
 ) => {
   switch (type) {
-    case BudgetDomainE.Student:
+    case BudgetDomainEnum.Student:
       return "학생회비";
-    case BudgetDomainE.School:
+    case BudgetDomainEnum.School:
       return "본회계";
-    case BudgetDomainE.Autonomous:
+    case BudgetDomainEnum.Autonomous:
       return "자치";
     default:
       return "";
@@ -82,31 +82,31 @@ export const getDisplayNameBudgetDomainE = (
 };
 
 // BudgetDivisionIncomeE
-export const getDisplayNameBudgetDivisionIncomeE = (
-  type: BudgetDivisionIncomeE | undefined,
+export const getDisplayNameBudgetDivisionIncomeEnum = (
+  type: BudgetDivisionIncomeEnum | undefined,
 ) => {
   switch (type) {
-    case BudgetDivisionIncomeE.Substratum:
+    case BudgetDivisionIncomeEnum.Substratum:
       return "기층기구회계";
-    case BudgetDivisionIncomeE.Central:
+    case BudgetDivisionIncomeEnum.Central:
       return "중앙회계";
-    case BudgetDivisionIncomeE.Incentive:
+    case BudgetDivisionIncomeEnum.Incentive:
       return "격려기금";
-    case BudgetDivisionIncomeE.Interest:
+    case BudgetDivisionIncomeEnum.Interest:
       return "예금이자";
-    case BudgetDivisionIncomeE.School:
+    case BudgetDivisionIncomeEnum.School:
       return "학교지원금";
-    case BudgetDivisionIncomeE.Carryover:
+    case BudgetDivisionIncomeEnum.Carryover:
       return "이월금";
-    case BudgetDivisionIncomeE.Department:
+    case BudgetDivisionIncomeEnum.Department:
       return "과비";
-    case BudgetDivisionIncomeE.Organizational:
+    case BudgetDivisionIncomeEnum.Organizational:
       return "단비";
-    case BudgetDivisionIncomeE.External:
+    case BudgetDivisionIncomeEnum.External:
       return "외부지원금";
-    case BudgetDivisionIncomeE.Extra:
+    case BudgetDivisionIncomeEnum.Extra:
       return "기타수익금";
-    case BudgetDivisionIncomeE.CAC:
+    case BudgetDivisionIncomeEnum.CAC:
       return "문화자치기금";
     default:
       return "";
@@ -114,15 +114,15 @@ export const getDisplayNameBudgetDivisionIncomeE = (
 };
 
 // BudgetDivisionExpenseE
-export const getDisplayNameBudgetDivisionExpenseE = (
-  type: BudgetDivisionExpenseE | undefined,
+export const getDisplayNameBudgetDivisionExpenseEnum = (
+  type: BudgetDivisionExpenseEnum | undefined,
 ) => {
   switch (type) {
-    case BudgetDivisionExpenseE.Operating:
+    case BudgetDivisionExpenseEnum.Operating:
       return "운영비";
-    case BudgetDivisionExpenseE.Regular:
+    case BudgetDivisionExpenseEnum.Regular:
       return "정기사업비";
-    case BudgetDivisionExpenseE.New:
+    case BudgetDivisionExpenseEnum.New:
       return "비정기사업비";
     default:
       return "";
@@ -130,41 +130,41 @@ export const getDisplayNameBudgetDivisionExpenseE = (
 };
 
 // BudgetClassExpenseE
-export const getDisplayNameBudgetClassExpenseE = (
-  type: BudgetClassExpenseE | undefined,
+export const getDisplayNameBudgetClassExpenseEnum = (
+  type: BudgetClassExpenseEnum | undefined,
 ) => {
   switch (type) {
-    case BudgetClassExpenseE.Product:
+    case BudgetClassExpenseEnum.Product:
       return "상품비";
-    case BudgetClassExpenseE.Gift:
+    case BudgetClassExpenseEnum.Gift:
       return "증정비";
-    case BudgetClassExpenseE.Supply:
+    case BudgetClassExpenseEnum.Supply:
       return "물품비";
-    case BudgetClassExpenseE.Print:
+    case BudgetClassExpenseEnum.Print:
       return "인쇄비";
-    case BudgetClassExpenseE.Transport:
+    case BudgetClassExpenseEnum.Transport:
       return "출장비";
-    case BudgetClassExpenseE.Meeting:
+    case BudgetClassExpenseEnum.Meeting:
       return "회의비";
-    case BudgetClassExpenseE.Labor:
+    case BudgetClassExpenseEnum.Labor:
       return "인건비";
-    case BudgetClassExpenseE.Welfare:
+    case BudgetClassExpenseEnum.Welfare:
       return "복리후생비";
-    case BudgetClassExpenseE.Install:
+    case BudgetClassExpenseEnum.Install:
       return "설치비";
-    case BudgetClassExpenseE.Delivery:
+    case BudgetClassExpenseEnum.Delivery:
       return "운반비";
-    case BudgetClassExpenseE.Repair:
+    case BudgetClassExpenseEnum.Repair:
       return "수선비";
-    case BudgetClassExpenseE.Telecom:
+    case BudgetClassExpenseEnum.Telecom:
       return "통신비";
-    case BudgetClassExpenseE.Insurance:
+    case BudgetClassExpenseEnum.Insurance:
       return "보험료";
-    case BudgetClassExpenseE.Extra:
+    case BudgetClassExpenseEnum.Extra:
       return "기타비";
-    case BudgetClassExpenseE.Backup:
+    case BudgetClassExpenseEnum.Backup:
       return "예비비";
-    case BudgetClassExpenseE.Incentive:
+    case BudgetClassExpenseEnum.Incentive:
       return "격려금";
     default:
       return "";
@@ -172,19 +172,19 @@ export const getDisplayNameBudgetClassExpenseE = (
 };
 
 // TransactionTypeE
-export const getDisplayNameTransactionTypeE = (
-  type: TransactionTypeE | undefined,
+export const getDisplayNameTransactionTypeEnum = (
+  type: TransactionTypeEnum | undefined,
 ) => {
   switch (type) {
-    case TransactionTypeE.OfficialCard:
+    case TransactionTypeEnum.OfficialCard:
       return "공금카드";
-    case TransactionTypeE.Bank:
+    case TransactionTypeEnum.Bank:
       return "계좌이체";
-    case TransactionTypeE.Cash:
+    case TransactionTypeEnum.Cash:
       return "현금거래";
-    case TransactionTypeE.PrivateCard:
+    case TransactionTypeEnum.PrivateCard:
       return "개인카드";
-    case TransactionTypeE.Personal:
+    case TransactionTypeEnum.Personal:
       return "사비집행";
     default:
       return "";
@@ -192,19 +192,19 @@ export const getDisplayNameTransactionTypeE = (
 };
 
 // ReportFileTypeE
-export const getDisplayNameReportFileTypeE = (
-  type: ReportFileTypeE | undefined,
+export const getDisplayNameReportFileTypeEnum = (
+  type: ReportFileTypeEnum | undefined,
 ) => {
   switch (type) {
-    case ReportFileTypeE.Receipt:
+    case ReportFileTypeEnum.Receipt:
       return "영수증";
-    case ReportFileTypeE.CardPayment:
+    case ReportFileTypeEnum.CardPayment:
       return "카드매출전표";
-    case ReportFileTypeE.Withdrawal:
+    case ReportFileTypeEnum.Withdrawal:
       return "출금명세서";
-    case ReportFileTypeE.Cash:
+    case ReportFileTypeEnum.Cash:
       return "현금영수증";
-    case ReportFileTypeE.BankTransfer:
+    case ReportFileTypeEnum.BankTransfer:
       return "개인/법인통장 이체명세서";
     default:
       return "";

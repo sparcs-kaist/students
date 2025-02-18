@@ -1,9 +1,9 @@
 import { IncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import { ExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import { ViewResultProps } from "@sparcs-students/web/features/documents/components/ViewResult";
@@ -24,8 +24,8 @@ export const mockViewResultData: ViewResultProps = {
 export const mockIncomeData: IncomeProps[] = [
   {
     code: 101,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 125000,
@@ -36,8 +36,8 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 102,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 125000,
@@ -48,8 +48,8 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 103,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionIncome: BudgetDivisionIncomeE.Substratum,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 150000,
@@ -60,8 +60,8 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 201,
-    budgetDomain: BudgetDomainE.School,
-    budgetDivisionIncome: BudgetDivisionIncomeE.School,
+    budgetDomain: BudgetDomainEnum.School,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.School,
     item: "기층기구회계 지원금",
     lastYear: 125000,
     thisYear: 150000,
@@ -75,10 +75,10 @@ export const mockIncomeData: IncomeProps[] = [
 export const mockExpenditureData: ExpenditureProps[] = [
   {
     code: 401,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
@@ -87,10 +87,10 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 402,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 12500,
     thisYear: 125000,
     ratio: 100.0,
@@ -99,10 +99,10 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 403,
-    budgetDomain: BudgetDomainE.Student,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,
@@ -111,10 +111,10 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 501,
-    budgetDomain: BudgetDomainE.School,
-    budgetDivisionExpense: BudgetDivisionExpenseE.Operating,
+    budgetDomain: BudgetDomainEnum.School,
+    budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
-    item: BudgetClassExpenseE.Product,
+    item: BudgetClassExpenseEnum.Product,
     lastYear: 125000,
     thisYear: 125000,
     ratio: 100.0,

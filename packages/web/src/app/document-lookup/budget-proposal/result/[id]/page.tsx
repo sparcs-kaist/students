@@ -26,7 +26,7 @@ import { mockData } from "@sparcs-students/web/features/documents/components/Thr
 import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
-import { BudgetDomainE } from "@sparcs-students/interface/common/enum/budget.enum";
+import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
 
 interface DomainAccum {
   incomeLastYear: number;
@@ -39,7 +39,7 @@ const dataToTotal = (
   incomeData: IncomeProps[],
   expenditureData: ExpenditureProps[],
 ) => {
-  const incomeMap = incomeData.reduce<Record<BudgetDomainE, DomainAccum>>(
+  const incomeMap = incomeData.reduce<Record<BudgetDomainEnum, DomainAccum>>(
     (acc, cur) => {
       const { budgetDomain, lastYear, thisYear } = cur;
 
@@ -59,11 +59,11 @@ const dataToTotal = (
         },
       };
     },
-    {} as Record<BudgetDomainE, DomainAccum>,
+    {} as Record<BudgetDomainEnum, DomainAccum>,
   );
 
   const combinedMap = expenditureData.reduce<
-    Record<BudgetDomainE, DomainAccum>
+    Record<BudgetDomainEnum, DomainAccum>
   >((acc, cur) => {
     const { budgetDomain, lastYear, thisYear } = cur;
 
@@ -86,7 +86,7 @@ const dataToTotal = (
 
   const resultArray = Object.entries(combinedMap).reduce<TotalProps[]>(
     (acc, [key, sums]) => {
-      const domain = Number(key) as BudgetDomainE;
+      const domain = Number(key) as BudgetDomainEnum;
 
       const incomeRow = {
         budgetDomain: domain,
@@ -124,7 +124,7 @@ const dataToTotal = (
       return [...acc, incomeRow, expenditureRow, totalRow];
     },
     [] as {
-      budgetDomain: BudgetDomainE;
+      budgetDomain: BudgetDomainEnum;
       type: string;
       lastYear: number;
       thisYear: number;

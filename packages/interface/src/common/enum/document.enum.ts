@@ -1,4 +1,4 @@
-export enum DocumentItemStatusE {
+export enum DocumentItemStatusEnum {
   Incomplete = 1, // 미제출
   Submitted, // 제출
   Accepted, // 승인

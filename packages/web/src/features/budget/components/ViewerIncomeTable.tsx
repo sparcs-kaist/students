@@ -20,8 +20,8 @@ import {
   getbudgetStatusTag,
 } from "@sparcs-students/web/features/documents/utils/tableTagList";
 import {
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import DetailButton from "@sparcs-students/web/features/budget/components/_atomic/DetailButton";
 import DarkTag, {
@@ -30,8 +30,8 @@ import DarkTag, {
 
 export interface IncomeProps {
   code: number;
-  budgetDomain: BudgetDomainE;
-  budgetDivisionIncome: BudgetDivisionIncomeE;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionIncome: BudgetDivisionIncomeEnum;
   item: string;
   lastYear: number;
   thisYear: number;

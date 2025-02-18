@@ -2,11 +2,9 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zName,
-  zNameEng,
-} from "@sparcs-students/interface/common/stringLength";
-import { OrganizationTypeE } from "@sparcs-students/interface/common/enum";
-import { zId } from "@sparcs-students/interface/common/type/ids";
+  zOrganization,
+  zOrganizationRequestCreate,
+} from "../type/organization.type";
 
 /**
  * @version v0.1
@@ -22,17 +20,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  name: zName,
-  nameEng: zNameEng,
-  organizationTypeId: z.nativeEnum(OrganizationTypeE),
-  foundingYear: z.coerce.number().int(),
-  startTerm: z.coerce.date(),
-  endTerm: z.coerce.date().optional(),
+  organization: zOrganizationRequestCreate,
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    organizationId: zId,
+    organization: zOrganization,
   }),
 };
 
