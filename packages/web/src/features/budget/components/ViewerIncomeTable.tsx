@@ -8,51 +8,43 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table/Table";
-import {
-  BudgetClassExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
-} from "@sparcs-students/interface/common/enum/budget.enum";
 import LightTag, {
   LightTagColor,
 } from "@sparcs-students/web/common/components/Tag/LightTag";
+import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
 import {
-  getDarkTagDetail,
-  getTagDetail,
-} from "@sparcs-students/web/utils/getTagDetail";
-import {
-  budgetClassExpenseTagList,
   budgetDivisionIncomeTagList,
   budgetDomainTagList,
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
 } from "@sparcs-students/web/features/documents/utils/tableTagList";
-import { useFormatter } from "next-intl";
-import DetailButton from "@sparcs-students/web/features/proposal/components/_atomic/DetailButton";
+import {
+  BudgetDivisionIncomeE,
+  BudgetDomainE,
+} from "@sparcs-students/interface/common/enum/budget.enum";
+import DetailButton from "@sparcs-students/web/features/budget/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
-import ExpenditureHelpButton from "./_atomic/ExpenditureHelpButton";
 
-export interface ExpenditureProps {
+export interface IncomeProps {
   code: number;
   budgetDomain: BudgetDomainE;
   budgetDivisionIncome: BudgetDivisionIncomeE;
-  name: string;
-  item: BudgetClassExpenseE;
+  item: string;
   lastYear: number;
   thisYear: number;
-  ratio: number;
+  ratio: number | null;
   reason: string;
   status: string;
 }
 
-interface ExpenditureTableProps {
-  data: ExpenditureProps[];
+interface IncomeTableProps {
+  data: IncomeProps[];
 }
 
-const columnHelper = createColumnHelper<ExpenditureProps>();
+const columnHelper = createColumnHelper<IncomeProps>();
 
 const columns = [
   columnHelper.accessor("code", {
@@ -62,7 +54,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 80,
+    size: 140,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -74,7 +66,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 80,
+    size: 140,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -86,49 +78,37 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 120,
-  }),
-  columnHelper.accessor("name", {
-    id: "name",
-    header: "사업명",
-    cell: info => info.getValue(),
-    size: 80,
+    size: 210,
   }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
-    cell: info => {
-      const { color, text } = getDarkTagDetail(
-        info.getValue(),
-        budgetClassExpenseTagList,
-      );
-      return <DarkTag color={color}>{text}</DarkTag>;
-    },
-    size: 100,
+    cell: info => info.getValue(),
+    size: 420,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
     header: "작년 결산",
     cell: info => {
-      const format = useFormatter();
-      return format.number(info.getValue(), {
+      const formatter = new Intl.NumberFormat("ko-KR", {
         style: "currency",
         currency: "KRW",
       });
+      return formatter.format(info.getValue());
     },
-    size: 120,
+    size: 210,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
     header: "올해 예산",
     cell: info => {
-      const format = useFormatter();
-      return format.number(info.getValue(), {
+      const formatter = new Intl.NumberFormat("ko-KR", {
         style: "currency",
         currency: "KRW",
       });
+      return formatter.format(info.getValue());
     },
-    size: 120,
+    size: 210,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -137,13 +117,18 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 90,
+    size: 157.5,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
-    header: "근거",
-    cell: info => <DetailButton detail={info.getValue()} />,
-    size: 60,
+    header: "비고",
+    cell: info => (
+      <DetailButton
+        title={`${info.row.original.item}에 대한 비고`}
+        detail={info.getValue()}
+      />
+    ),
+    size: 105,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -156,11 +141,11 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 90,
+    size: 157.5,
   }),
 ];
 
-const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
+const ViewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -176,15 +161,12 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <FlexWrapper direction="row" gap={12}>
-        <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-          지출
-        </Typography>
-        <ExpenditureHelpButton />
-      </FlexWrapper>
-      {loaded && <Table table={table} />}
+      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+        수입
+      </Typography>
+      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>
   );
 };
 
-export default ViewerExpenditureTable;
+export default ViewerIncomeTable;

@@ -19,7 +19,10 @@ const ModalBackground = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(85, 85, 85, 0.1);
+  padding: 24px 32px 32px 32px;
+  border-radius: 8px;
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+  gap: 32px;
 
   width: 100%;
   height: 100%;
