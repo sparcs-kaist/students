@@ -13,7 +13,26 @@ const MemberWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  gap: 6px;
+  gap: 3px;
+`;
+
+const StyledCard = styled(Card)`
+  padding: 10px 15px 15px 15px;
+  gap: 10px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    width: 180px;
+    height: 80px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 136px;
+    height: 68px;
+  }
+
+  // @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+  //   width: 122px;
+  //   height: 68px;
+  // }
 `;
 
 const MemberCard = ({ member }: { member: Member }) => {
@@ -30,7 +49,7 @@ const MemberCard = ({ member }: { member: Member }) => {
   };
 
   return (
-    <Card padding="10px 15px 15px 15px" gap={5}>
+    <StyledCard>
       <MemberWrapper>
         <Image src={SparcsLogo} alt="SPARCS Logo" height={20} />
         <Typography
@@ -58,12 +77,12 @@ const MemberCard = ({ member }: { member: Member }) => {
         ff="RALEWAY"
         fw="EXTRABOLD"
         fs={10}
-        lh={20}
+        lh={13}
         color="GRAY.900"
       >
         {displayText}
       </Typography>
-    </Card>
+    </StyledCard>
   );
 };
 

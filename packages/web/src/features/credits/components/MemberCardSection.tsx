@@ -8,14 +8,12 @@ import MemberCard from "./MemberCard";
 
 interface MemberCardSectionProps {
   semesterCredit: SemesterCredit;
-  leftMargin?: number;
 }
 
-const MemberCardWrapper = styled.div<{ leftMargin: number }>`
+const MemberCardWrapper = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(6, 1fr);
-  margin-left: ${({ leftMargin }) => leftMargin}px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
     grid-template-columns: repeat(5, 1fr);
@@ -31,12 +29,17 @@ const MemberCardWrapper = styled.div<{ leftMargin: number }>`
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     grid-template-columns: repeat(2, 1fr);
+    & > *:nth-child(2n + 1) {
+      justify-self: end;
+    }
+    & > *:nth-child(2n) {
+      justify-self: start;
+    }
   }
 `;
 
 const MemberCardSection: React.FC<MemberCardSectionProps> = ({
   semesterCredit,
-  leftMargin = 0,
 }) => {
   const compareMembers = (a: Member, b: Member) => {
     if (a.roleType === b.roleType) {
@@ -46,7 +49,7 @@ const MemberCardSection: React.FC<MemberCardSectionProps> = ({
   };
 
   return (
-    <MemberCardWrapper leftMargin={leftMargin}>
+    <MemberCardWrapper>
       {semesterCredit.members
         .sort((a, b) => compareMembers(a, b))
         .map(member => (

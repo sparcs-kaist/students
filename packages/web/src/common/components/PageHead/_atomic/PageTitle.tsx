@@ -11,11 +11,11 @@ const PageTitleInner = styled.div`
   font-size: 30px;
   line-height: 24px;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    font-size: 24px;
-    line-height: 36px;
+    font-size: 20px;
+    line-height: 30px;
   }
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
-  color: ${({ theme }) => theme.colors.BLACK};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.BOLD};
+  color: ${({ theme }) => theme.colors.GREEN[800]};
 `;
 
 const PageTitle: React.FC<React.PropsWithChildren> = ({

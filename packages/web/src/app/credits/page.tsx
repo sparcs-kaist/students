@@ -7,7 +7,6 @@ import styled from "styled-components";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-students/web/common/components/PageHead";
 
-import SectionTitle from "@sparcs-students/web/common/components/SectionTitle";
 import MemberCardSection from "@sparcs-students/web/features/credits/components/MemberCardSection";
 import credits from "@sparcs-students/web/features/credits/credits";
 import SemesterFoldableTitle from "@sparcs-students/web/features/credits/components/SemesterFoldableTitle";
@@ -27,36 +26,33 @@ const ResponsiveMemberCardSectionWrapper = styled.div`
 `;
 
 const Credits: React.FC = () => {
-  const [toggleFold, setToggleFold] = React.useState(false);
+  const [toggleFold, setToggleFold] = React.useState(
+    new Array(credits.length).fill(true),
+  );
   return (
-    <FlexWrapper direction="column" gap={60}>
+    <FlexWrapper direction="column" gap={30}>
       <PageHead title="만든 사람들" />
       {credits.map((credit, index) => (
         <CreditCardsFlexWrapper
           direction="column"
-          gap={40}
+          gap={30}
           key={credit.semester}
         >
-          {index === 0 ? (
-            <>
-              <SectionTitle size="lg">{credit.semester}</SectionTitle>
-              <ResponsiveMemberCardSectionWrapper>
-                <MemberCardSection semesterCredit={credit} />
-              </ResponsiveMemberCardSectionWrapper>
-            </>
-          ) : (
-            <SemesterFoldableTitle
-              title={credit.semester}
-              toggle={toggleFold}
-              toggleHandler={() => {
-                setToggleFold(!toggleFold);
-              }}
-            >
-              <ResponsiveMemberCardSectionWrapper>
-                <MemberCardSection semesterCredit={credit} />
-              </ResponsiveMemberCardSectionWrapper>
-            </SemesterFoldableTitle>
-          )}
+          <SemesterFoldableTitle
+            title={credit.semester}
+            toggle={toggleFold[index]}
+            toggleHandler={() => {
+              setToggleFold(prev => {
+                const newToggleFold = [...prev];
+                newToggleFold[index] = !newToggleFold[index];
+                return newToggleFold;
+              });
+            }}
+          >
+            <ResponsiveMemberCardSectionWrapper>
+              <MemberCardSection semesterCredit={credit} />
+            </ResponsiveMemberCardSectionWrapper>
+          </SemesterFoldableTitle>
         </CreditCardsFlexWrapper>
       ))}
     </FlexWrapper>

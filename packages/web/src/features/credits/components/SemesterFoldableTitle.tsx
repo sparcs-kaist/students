@@ -1,23 +1,23 @@
-"use client";
-
 import React from "react";
 
 import styled from "styled-components";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@sparcs-students/web/common/components/Typography";
 
 const FoldableSectionOuter = styled.div`
   width: 100%;
   max-width: calc(100vw + (100% - 100vw));
+  gap: 10px;
 `;
 
 const FoldableSectionTitleInner = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 8px;
+  padding: 10px 0;
   width: 100%;
 `;
 
@@ -33,7 +33,7 @@ const SemesterFoldableTitle: React.FC<{
         {title}
       </Typography>
       <IconButton onClick={toggleHandler}>
-        <KeyboardArrowDownIcon />
+        {toggle ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
     </FoldableSectionTitleInner>
     {toggle && children}
