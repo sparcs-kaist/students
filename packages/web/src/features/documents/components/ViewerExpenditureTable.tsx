@@ -9,9 +9,9 @@ import {
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table/Table";
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionExpenseE,
-  BudgetDomainE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
+  BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 import LightTag, {
   LightTagColor,
@@ -38,10 +38,10 @@ import ExpenditureHelpButton from "@sparcs-students/web/features/documents/compo
 
 export interface ViewerExpenditureProps {
   code: number;
-  budgetDomain: BudgetDomainE;
-  budgetDivisionExpense: BudgetDivisionExpenseE;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionExpense: BudgetDivisionExpenseEnum;
   name: string;
-  item: BudgetClassExpenseE;
+  item: BudgetClassExpenseEnum;
   lastYear: number;
   thisYear: number;
   ratio: number | null;

@@ -3,11 +3,11 @@ import { z } from "zod";
 import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { zHalfYear } from "@sparcs-students/interface/api/semester/type/semester.type";
 import {
-  BudgetClassExpenseE,
-  BudgetDivisionExpenseE,
-  BudgetDivisionIncomeE,
-  BudgetDomainE,
-  DocumentItemStatusE,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
+  DocumentItemStatusEnum,
 } from "@sparcs-students/interface/common/enum";
 import { zDateTime } from "@sparcs-students/interface/common/type/time.type";
 import {
@@ -22,9 +22,9 @@ export const zBudgetProposalIncome = z.object({
   organization: zOrganization.pick({ id: true }),
   halfYear: zHalfYear.pick({ id: true }),
   // budgetReportIncome: zBudgetReportIncome.pick({ id: true }).nullable(),
-  documentItemStatusEnum: z.nativeEnum(DocumentItemStatusE),
-  budgetDomainEnum: z.nativeEnum(BudgetDomainE),
-  budgetDivisionIncomeEnum: z.nativeEnum(BudgetDivisionIncomeE),
+  documentItemStatusEnum: z.nativeEnum(DocumentItemStatusEnum),
+  budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
+  budgetDivisionIncomeEnum: z.nativeEnum(BudgetDivisionIncomeEnum),
   name: zDocumentItemName,
   amount: zMoney,
   detail: z.string(),
@@ -38,10 +38,10 @@ export const zBudgetProposalExpense = z.object({
   halfYear: zHalfYear.pick({ id: true }),
   projectProposal: zProjectProposal.pick({ id: true }),
   // budgetReportReport: zBudgetReportIncome.pick({ id: true }).nullable(),
-  documentItemStatusEnum: z.nativeEnum(DocumentItemStatusE),
-  budgetDomainEnum: z.nativeEnum(BudgetDomainE),
-  budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseE),
-  budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseE),
+  documentItemStatusEnum: z.nativeEnum(DocumentItemStatusEnum),
+  budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
+  budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
+  budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
   amount: zMoney,
   detail: z.string(),
   submittedAt: zDateTime.nullable(),
