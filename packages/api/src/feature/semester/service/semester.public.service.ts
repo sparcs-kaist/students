@@ -1,22 +1,29 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { SemesterT } from "@sparcs-students/api/drizzle/schema";
+import { Injectable } from "@nestjs/common";
+import { IHalfYear } from "@sparcs-students/interface/api/semester/type/semester.type";
 import { SemesterRepository } from "../repository/semester.repository";
+import { VHalfYearSummary } from "../type/halfYear.summary.model";
+import { HalfYearRepository } from "../repository/halfYear.repository";
 
 @Injectable()
 export class SemesterPublicService {
-  constructor(private semesterRepository: SemesterRepository) {}
+  constructor(
+    private semesterRepository: SemesterRepository,
+    private readonly halfYearRepository: HalfYearRepository,
+  ) {}
 
   /**
-   * @param id semester id
-   * @returns Semester id에 해당하는 Semester 객체를 리턴합니다.
-   * @description semester가 없으면 404Exception을 throw합니다.
+   * @param
+   * @returns VHalfYearSummary[]
+   * @description 모든 HalfYearSummary를 리턴합니다.
    */
-  async getSemesterById(id: number): Promise<SemesterT> {
-    const semesters = await this.semesterRepository.selectSemesterById(id);
-    if (semesters.length === 0) {
-      throw new NotFoundException(`Semester with ID ${id} not found.`);
-    }
 
-    return semesters[0];
+  async fetchHalfYearSummaryAll(): Promise<VHalfYearSummary[]> {
+    const result = await this.halfYearRepository.fetchSummaryAll();
+    return result;
+  }
+
+  async fetchHalfYearAll(): Promise<IHalfYear[]> {
+    const halfYears = await this.halfYearRepository.fetchAll();
+    return halfYears;
   }
 }

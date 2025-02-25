@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-students/web/styles/themes/colors";
 import isPropValid from "@emotion/is-prop-valid";
@@ -11,7 +11,9 @@ interface TableCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellHeaderWrapper = styled.th.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   isHeader: boolean;
   width: string | number;
   minWidth: number;
@@ -28,7 +30,26 @@ const CommonCellWrapper = styled.div<{
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.table.withConfig({
+const CommonCellBodyWrapper = styled.td.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
+  isHeader: boolean;
+  width: string | number;
+  minWidth: number;
+}>`
+  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  min-width: ${({ minWidth }) => `${minWidth}px`};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: ${({ isHeader }) => (isHeader ? "12px 8px" : "12px 20px")};
+  height: ${({ isHeader }) => (isHeader ? "36px" : "48px")};
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  background-color: ${({ theme, isHeader }) =>
+    isHeader ? theme.colors.PRIMARY : "transparent"};
+`;
+
+const CellText = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isGray: boolean }>`
   font-size: 14px;
@@ -46,6 +67,8 @@ const HeaderInner = styled.div`
   font-size: 18px;
   line-height: 20px;
   color: ${({ theme }) => theme.colors.WHITE};
+  font-size: 18px;
+  line-height: 20px;
 `;
 
 const SortWrapper = styled.div`
@@ -64,6 +87,10 @@ const TableCell: React.FC<TableCellProps> = ({
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
   let content;
+  const CommonCellWrapper = useMemo(
+    () => (isHeader ? CommonCellHeaderWrapper : CommonCellBodyWrapper),
+    [isHeader],
+  );
 
   switch (type) {
     case "Default":

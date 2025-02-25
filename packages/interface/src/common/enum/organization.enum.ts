@@ -1,5 +1,5 @@
 // 조직 유형 E
-export enum OrganizationTypeE {
+export enum OrganizationTypeEnum {
   UAPresidents = 1, // 학부 총학생회장단
   CentralExecutive, // 중앙집행위원회
   Autonomous, // 자치기구
@@ -13,40 +13,40 @@ export enum OrganizationTypeE {
 }
 
 // 조직 대표 유형 E
-export enum OrganizationPresidentTypeE {
+export enum OrganizationPresidentTypeEnum {
   Chief = 1, // 정
   Vice, // 부
 }
 
-export enum OrganizationStateE {
+export enum OrganizationStateEnum {
   Regular = 1, // 정규
   Emergency, // 비대위
 }
 
 // OrganizationTypeE
-export const getDisplayNameOrganizationTypeE = (
-  type: OrganizationTypeE | undefined,
+export const getDisplayNameOrganizationTypeEnum = (
+  type: OrganizationTypeEnum | undefined,
 ) => {
   switch (type) {
-    case OrganizationTypeE.UAPresidents:
+    case OrganizationTypeEnum.UAPresidents:
       return "총학생회장단";
-    case OrganizationTypeE.CentralExecutive:
+    case OrganizationTypeEnum.CentralExecutive:
       return "중앙집행위원회";
-    case OrganizationTypeE.Autonomous:
+    case OrganizationTypeEnum.Autonomous:
       return "자치기구";
-    case OrganizationTypeE.Standing:
+    case OrganizationTypeEnum.Standing:
       return "상설위원회";
-    case OrganizationTypeE.Specialized:
+    case OrganizationTypeEnum.Specialized:
       return "전문기구";
-    case OrganizationTypeE.Special:
+    case OrganizationTypeEnum.Special:
       return "특별기구";
-    case OrganizationTypeE.StudentCouncil:
+    case OrganizationTypeEnum.StudentCouncil:
       return "학과학생회";
-    case OrganizationTypeE.Preparatory:
+    case OrganizationTypeEnum.Preparatory:
       return "준비위원회";
-    case OrganizationTypeE.Affairs:
+    case OrganizationTypeEnum.Affairs:
       return "특임위원회";
-    case OrganizationTypeE.Inspect:
+    case OrganizationTypeEnum.Inspect:
       return "조사위원회";
     default:
       return "";
@@ -54,13 +54,13 @@ export const getDisplayNameOrganizationTypeE = (
 };
 
 // OrganizationPresidentTypeE
-export const getDisplayNameOrganizationPresidentTypeE = (
-  type: OrganizationPresidentTypeE | undefined,
+export const getDisplayNameOrganizationPresidentTypeEnum = (
+  type: OrganizationPresidentTypeEnum | undefined,
 ) => {
   switch (type) {
-    case OrganizationPresidentTypeE.Chief:
+    case OrganizationPresidentTypeEnum.Chief:
       return "정";
-    case OrganizationPresidentTypeE.Vice:
+    case OrganizationPresidentTypeEnum.Vice:
       return "부";
     default:
       return "";

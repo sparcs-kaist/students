@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1737857056499,
+      "tag": "0000_curved_jamie_braddock",
+      "breakpoints": true
+    }
+  ]
+}

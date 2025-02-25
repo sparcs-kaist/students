@@ -6,7 +6,7 @@ import {
   zUserName,
 } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import { AgendaAcceptedStatusE } from "@sparcs-students/interface/common/enum";
+import { AgendaAcceptedStatusEnum } from "@sparcs-students/interface/common/enum";
 
 /**
  * @version v0.1
@@ -40,7 +40,7 @@ const responseBodyMap = {
         name: z.coerce.string().max(255),
         startTerm: z.date(),
         endTerm: z.date(),
-        acceptedStatus: z.nativeEnum(AgendaAcceptedStatusE),
+        acceptedStatus: z.nativeEnum(AgendaAcceptedStatusEnum),
       })
       .array(),
   }),

@@ -7,6 +7,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 /**
  * @version v0.1
  * @description 새로운 학부생이 로그인을 했을 때 userDB에 추가합니다.
+ * TODO: 로그인 구현에 맞게 Upsert (PUT)로 변경해야 함
  */
 
 const url = () => `/users/sign-up/student`;

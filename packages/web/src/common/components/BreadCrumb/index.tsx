@@ -18,29 +18,31 @@ interface BreadCrumbProps {
 const BreadCrumbContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 `;
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
   items,
   enableLast = false,
 }) => {
-  const itemsWithMain = [{ name: "메인", path: "/" }, ...items];
+  const itemWithMain: BreadCrumbItemDetails[] = [
+    { name: "메인", path: "/" },
+    ...items,
+  ];
 
   return (
     <BreadCrumbContainer>
-      {itemsWithMain.map((item, index) => (
+      {itemWithMain.map((item, index) => (
         <React.Fragment key={item.name}>
           <Link href={item.path} passHref>
             <BreadCrumbItem
               text={item.name}
-              disabled={
-                index === itemsWithMain.length - 1 ? !enableLast : false
-              }
+              disabled={index === itemWithMain.length - 1 ? !enableLast : false}
+              isLastChild={index === itemWithMain.length - 1}
             />
           </Link>
-          {index < itemsWithMain.length - 1 && (
-            <Icon type="chevron_right" size={20} color={colors.PRIMARY} />
+          {index < itemWithMain.length - 1 && (
+            <Icon type="chevron_right" size={20} color={colors.GRAY[400]} />
           )}
         </React.Fragment>
       ))}
