@@ -66,6 +66,9 @@ const ContentRow = styled.tr.withConfig({
   cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.GREEN[100] : "transparent"};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const EmptyCenterPlacer = styled.div`
@@ -155,6 +158,7 @@ const Table = <T,>({
         <Content>
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map(row => {
+              // 표 스타일 디자인과 맞추기
               const style = rowStyleResolver
                 ? rowStyleResolver(row.original)
                 : undefined;

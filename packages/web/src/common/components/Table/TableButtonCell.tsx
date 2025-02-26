@@ -10,7 +10,9 @@ interface TableButtonCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   width: string | number;
   minWidth: number;
 }>`
