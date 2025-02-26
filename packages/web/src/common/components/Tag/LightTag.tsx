@@ -33,6 +33,10 @@ const TagInner = styled.div<{ color: LightTagColor; width: string }>`
     padding: 2px 8px;
   }
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  border-style: solid;
+  border-width: ${({ color }) => (color === "GREEN100" ? "1px" : "0px")};
+  border-color: ${({ theme, color }) =>
+    color === "GREEN100" && theme.colors.GREEN[700]};
   color: ${({ theme, color }) => {
     if (color === "GRAY") {
       return theme.colors.BLACK;

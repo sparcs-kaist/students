@@ -54,7 +54,7 @@ const CellText = styled.div.withConfig({
 })<{ isGray: boolean }>`
   font-size: 14px;
   line-height: 14px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
   overflow: hidden;
