@@ -9,6 +9,7 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
+  constant?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
@@ -23,7 +24,14 @@ export const disabledStyle = css`
   border-color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
-const Input = styled.input<TextInputProps & { hasError: boolean }>`
+const constantStyle = css`
+  border-color: ${({ theme }) => theme.colors.GRAY[100]};
+  cursor: not-allowed;
+`;
+
+const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
+  readOnly: constant,
+}))<TextInputProps & { hasError: boolean }>`
   display: block;
   width: 100%;
   padding: 8px 12px 8px 12px;
@@ -38,16 +46,17 @@ const Input = styled.input<TextInputProps & { hasError: boolean }>`
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GREEN[600]};
+    border-color: ${({ theme, hasError, disabled, constant }) =>
+      !hasError && !disabled && !constant && theme.colors.GREEN[600]};
   }
   &:hover:not(:focus) {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GRAY[200]};
+    border-color: ${({ theme, hasError, disabled, constant }) =>
+      !hasError && !disabled && !constant && theme.colors.GRAY[200]};
   }
   &::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[100]};
   }
+  ${({ constant }) => constant && constantStyle}
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
 `;
