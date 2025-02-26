@@ -21,6 +21,18 @@ const FoldableSectionTitleInner = styled.div`
   width: 100%;
 `;
 
+const SemesterTitle = styled(Typography)`
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.BOLD};
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+  }
+`;
+
 const SemesterFoldableTitle: React.FC<{
   title: string;
   toggle?: boolean;
@@ -29,9 +41,7 @@ const SemesterFoldableTitle: React.FC<{
 }> = ({ title, toggle = null, toggleHandler = () => {}, children = null }) => (
   <FoldableSectionOuter>
     <FoldableSectionTitleInner>
-      <Typography fs={24} lh={30} fw="BOLD">
-        {title}
-      </Typography>
+      <SemesterTitle>{title}</SemesterTitle>
       <IconButton onClick={toggleHandler}>
         {toggle ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </IconButton>
