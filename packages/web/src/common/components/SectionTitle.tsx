@@ -21,8 +21,9 @@ const IdentityBar = styled.div`
 
 const Title = styled.p<{ size: Size }>`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: ${({ size }) => (size === "sm" ? "20px" : "24px")};
-  line-height: ${({ size }) => (size === "sm" ? "28px" : "32px")};
+  font-size: ${({ size }) =>
+    size === "sm" ? "20px" : "20px"}; // TODO: 반응형 사이즈 재확인
+  line-height: ${({ size }) => (size === "sm" ? "24px" : "24px")};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
 `;

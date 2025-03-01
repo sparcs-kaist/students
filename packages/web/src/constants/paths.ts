@@ -51,7 +51,7 @@ const paths = {
       },
     ],
   },
-  MADE_BY: { name: "만든 사람들", path: "/" },
+  MADE_BY: { name: "만든 사람들", path: "/credits" },
   LICENSE: { name: "라이센스", path: "/" },
   TERMS_OF_SERVICE: { name: "이용 약관", path: "/" },
   LOGIN: { name: "로그인", path: "/login" },
