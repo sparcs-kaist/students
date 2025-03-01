@@ -29,6 +29,9 @@ const StyledCard = styled(Card)`
     height: 68px;
   }
 
+  box-shadow: none;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+
   // @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
   //   width: 122px;
   //   height: 68px;
