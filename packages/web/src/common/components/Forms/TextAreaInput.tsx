@@ -1,37 +1,29 @@
-import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
-import styled, { css } from "styled-components";
+import React, { ChangeEvent, TextareaHTMLAttributes, useEffect } from "react";
+import styled from "styled-components";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
+import {
+  errorBorderStyle,
+  disabledStyle,
+  InputWrapper,
+  InputContainer,
+} from "./TextInput";
 
-// PhoneInput, RentalInput에서 사용하기 위해 export
-export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface TextAreaInputProps
+  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
-  constant?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
 
-export const errorBorderStyle = css`
-  border-color: ${({ theme }) => theme.colors.RED[700]};
-`;
-
-export const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[50]};
-  border-color: ${({ theme }) => theme.colors.GRAY[100]};
-`;
-
-const constantStyle = css`
-  border-color: ${({ theme }) => theme.colors.GRAY[100]};
-  cursor: not-allowed;
-`;
-
-const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
-  readOnly: constant,
-}))<TextInputProps & { hasError: boolean }>`
+const StyledTextArea = styled.textarea<{ hasError: boolean }>`
+  height: 190px;
+  resize: none;
+  overflow: auto;
   display: block;
   width: 100%;
   padding: 8px 12px 8px 12px;
@@ -46,37 +38,21 @@ const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
-    border-color: ${({ theme, hasError, disabled, constant }) =>
-      !hasError && !disabled && !constant && theme.colors.GREEN[600]};
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.GREEN[600]};
   }
   &:hover:not(:focus) {
-    border-color: ${({ theme, hasError, disabled, constant }) =>
-      !hasError && !disabled && !constant && theme.colors.GRAY[200]};
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.GRAY[200]};
   }
   &::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[100]};
   }
-  ${({ constant }) => constant && constantStyle}
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
 `;
 
-export const InputWrapper = styled.div`
-  width: 100%;
-  flex-direction: column;
-  display: flex;
-  gap: 4px;
-`;
-
-export const InputContainer = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-`;
-
-// Component
-const TextInput: React.FC<TextInputProps> = ({
+const TextAreaInput: React.FC<TextAreaInputProps> = ({
   label = "",
   placeholder,
   errorMessage = "",
@@ -84,9 +60,10 @@ const TextInput: React.FC<TextInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
+  id,
   ...props
 }) => {
-  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;
     handleChange(inputValue);
   };
@@ -102,12 +79,14 @@ const TextInput: React.FC<TextInputProps> = ({
     <InputWrapper>
       {label && <Label>{label}</Label>}
       <InputContainer>
-        <Input
+        <StyledTextArea
+          id={id}
           placeholder={placeholder}
           hasError={!!errorMessage}
           disabled={disabled}
           value={value}
           onChange={handleValueChange}
+          aria-invalid={!!errorMessage}
           {...props}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
@@ -116,4 +95,4 @@ const TextInput: React.FC<TextInputProps> = ({
   );
 };
 
-export default TextInput;
+export default TextAreaInput;

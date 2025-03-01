@@ -194,9 +194,23 @@ export const getbudgetStatusTag = (type: string) => {
     case "승인":
       return { color: "BLUE", text: type };
     case "반려":
-      return { color: "RED", text: type };
+      return { color: "RED700", text: type };
     case "사후승인":
       return { color: "TEAL", text: type };
+    case "검토승인":
+      return { color: "CYAN", text: type };
+    case "검토반려":
+      return { color: "RED500", text: type };
+    case "추가경정":
+      return { color: "CYAN", text: type };
+    case "검토중":
+      return { color: "MELON", text: type };
+    case "수정 요청":
+      return { color: "LEMON", text: type };
+    case "임시저장":
+      return { color: "ORCHID", text: type };
+    case "미저장":
+      return { color: "YELLOW", text: type };
     default:
       return { color: "GRAY", text: type };
   }

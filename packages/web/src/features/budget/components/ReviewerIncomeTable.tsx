@@ -27,8 +27,9 @@ import DetailButton from "@sparcs-students/web/features/documents/components/_at
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 
-export interface ViewerIncomeProps {
+export interface IncomeProps {
   code: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionIncome: BudgetDivisionIncomeEnum;
@@ -38,15 +39,19 @@ export interface ViewerIncomeProps {
   ratio: number | null;
   reason: string;
   status: string;
+  review: string;
 }
 
 interface IncomeTableProps {
-  data: ViewerIncomeProps[];
+  initialData: IncomeProps[];
 }
 
-const columnHelper = createColumnHelper<ViewerIncomeProps>();
+const columnHelper = createColumnHelper<IncomeProps>();
 
-const columns = [
+const getColumns = (
+  handleReviewChange: (code: number, newReview: string) => void,
+  handleStatusChange: (code: number, newStatus: string) => void,
+) => [
   columnHelper.accessor("code", {
     id: "code",
     header: "코드",
@@ -54,7 +59,7 @@ const columns = [
       const { color, text } = getbudgetCodeTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 140,
+    size: 130,
   }),
   columnHelper.accessor("budgetDomain", {
     id: "budgetDomain",
@@ -66,7 +71,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 140,
+    size: 160,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -78,13 +83,13 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 210,
+    size: 200,
   }),
   columnHelper.accessor("item", {
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 420,
+    size: 275,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -96,7 +101,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 210,
+    size: 185,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -108,7 +113,7 @@ const columns = [
       });
       return formatter.format(info.getValue());
     },
-    size: 210,
+    size: 185,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",
@@ -117,7 +122,7 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 157.5,
+    size: 180,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
@@ -128,7 +133,7 @@ const columns = [
         detail={info.getValue()}
       />
     ),
-    size: 105,
+    size: 90,
   }),
   columnHelper.accessor("status", {
     id: "status",
@@ -141,17 +146,52 @@ const columns = [
         <LightTag color={color as LightTagColor}>{text}</LightTag>
       );
     },
-    size: 157.5,
+    size: 170,
+  }),
+  columnHelper.accessor("review", {
+    id: "review",
+    header: "검토",
+    cell: info => (
+      <ReviewButton
+        status={info.row.original.status}
+        review={info.getValue()}
+        handleReviewChange={newReview =>
+          handleReviewChange(info.row.original.code, newReview)
+        }
+        handleStatusChange={newStatus =>
+          handleStatusChange(info.row.original.code, newStatus)
+        }
+      />
+    ),
+    size: 90,
   }),
 ];
 
-const ViewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
+const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
+  const [data, setData] = useState(initialData);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
+  const handleReviewChange = (code: number, newReview: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, review: newReview } : item,
+      ),
+    );
+  };
+
+  const handleStatusChange = (code: number, newStatus: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, status: newStatus } : item,
+      ),
+    );
+  };
+
+  const columns = getColumns(handleReviewChange, handleStatusChange);
   const table = useReactTable({
     columns,
     data,
@@ -169,4 +209,4 @@ const ViewerIncomeTable: React.FC<IncomeTableProps> = ({ data }) => {
   );
 };
 
-export default ViewerIncomeTable;
+export default ReviewerIncomeTable;

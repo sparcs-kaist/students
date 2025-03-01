@@ -30,14 +30,28 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
   confirmButtonText = "확인",
 }) => (
   <ModalContentInner>
-    <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
+    <Typography
+      fs={20}
+      lh={28}
+      fw="MEDIUM"
+      style={{ textAlign: "center", padding: "16px", whiteSpace: "pre" }}
+    >
       {children}
     </Typography>
     <ButtonWrapper>
-      <Button type="outlined" onClick={onClose}>
+      <Button
+        type="outlined"
+        onClick={onClose}
+        style={{ fontSize: "14px", lineHeight: "12px" }}
+      >
         {closeButtonText}
       </Button>
-      <Button onClick={onConfirm}>{confirmButtonText}</Button>
+      <Button
+        onClick={onConfirm}
+        style={{ fontSize: "14px", lineHeight: "12px" }}
+      >
+        {confirmButtonText}
+      </Button>
     </ButtonWrapper>
   </ModalContentInner>
 );
