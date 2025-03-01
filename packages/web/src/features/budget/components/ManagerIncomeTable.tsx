@@ -1,0 +1,237 @@
+import React, { useEffect, useState } from "react";
+
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import Typography from "@sparcs-students/web/common/components/Typography";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import Table from "@sparcs-students/web/common/components/Table/Table";
+import LightTag, {
+  LightTagColor,
+} from "@sparcs-students/web/common/components/Tag/LightTag";
+import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
+import {
+  budgetDivisionIncomeTagList,
+  // budgetDomainTagList,
+  getbudgetCodeTag,
+  getbudgetRatioTag,
+  getbudgetStatusTag,
+} from "@sparcs-students/web/features/documents/utils/tableTagList";
+import {
+  BudgetDivisionIncomeEnum,
+  BudgetDomainEnum,
+  getDisplayNameBudgetDomainEnum,
+} from "@sparcs-students/interface/common/enum/budget.enum";
+import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
+import DarkTag, {
+  DarkTagColor,
+} from "@sparcs-students/web/common/components/Tag/DarkTag";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import Select from "@sparcs-students/web/common/components/Select";
+
+export interface IncomeProps {
+  code: number;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionIncome: BudgetDivisionIncomeEnum;
+  item: string;
+  lastYear: number;
+  thisYear: number;
+  ratio: number | null;
+  reason: string;
+  status: string;
+  review: string;
+}
+
+interface IncomeTableProps {
+  initialData: IncomeProps[];
+}
+
+const columnHelper = createColumnHelper<IncomeProps>();
+
+const getColumns = (
+  handleReviewChange: (code: number, newReview: string) => void,
+  handleStatusChange: (code: number, newStatus: string) => void,
+) => [
+  columnHelper.accessor("code", {
+    id: "code",
+    header: "코드",
+    cell: info => {
+      const { color, text } = getbudgetCodeTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
+    },
+    size: 130,
+  }),
+  columnHelper.accessor("budgetDomain", {
+    id: "budgetDomain",
+    header: "구분",
+    cell: info => {
+      const handleChange = (newStatus: string) => {
+        handleStatusChange(info.row.original.code, newStatus);
+      };
+
+      return (
+        <Select
+          items={[
+            {
+              label: "학생회비",
+              value: getDisplayNameBudgetDomainEnum(BudgetDomainEnum.Student),
+            },
+            {
+              label: "본회계",
+              value: getDisplayNameBudgetDomainEnum(BudgetDomainEnum.School),
+            },
+            {
+              label: "자치",
+              value: getDisplayNameBudgetDomainEnum(
+                BudgetDomainEnum.Autonomous,
+              ),
+            },
+          ]}
+          value={getDisplayNameBudgetDomainEnum(info.getValue())}
+          onChange={handleChange}
+          placeholder="구분"
+          errorMessage="필수 항목입니다."
+        />
+      );
+    },
+    size: 500,
+  }),
+  columnHelper.accessor("budgetDivisionIncome", {
+    id: "budgetDivisionIncome",
+    header: "예산 분류",
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        budgetDivisionIncomeTagList,
+      );
+      return <LightTag color={color}>{text}</LightTag>;
+    },
+    size: 200,
+  }),
+  columnHelper.accessor("item", {
+    id: "item",
+    header: "항목",
+    cell: info => info.getValue(),
+    size: 275,
+  }),
+  columnHelper.accessor("lastYear", {
+    id: "lastYear",
+    header: "작년 결산",
+    cell: info => {
+      const formatter = new Intl.NumberFormat("ko-KR", {
+        style: "currency",
+        currency: "KRW",
+      });
+      return formatter.format(info.getValue());
+    },
+    size: 185,
+  }),
+  columnHelper.accessor("thisYear", {
+    id: "thisYear",
+    header: "올해 예산",
+    cell: info => {
+      const formatter = new Intl.NumberFormat("ko-KR", {
+        style: "currency",
+        currency: "KRW",
+      });
+      return formatter.format(info.getValue());
+    },
+    size: 185,
+  }),
+  columnHelper.accessor("ratio", {
+    id: "ratio",
+    header: "비율",
+    cell: info => {
+      const { color, text } = getbudgetRatioTag(info.getValue());
+      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
+    },
+    size: 180,
+  }),
+  columnHelper.accessor("reason", {
+    id: "reason",
+    header: "비고",
+    cell: info => (
+      <DetailButton
+        title={`${info.row.original.item}에 대한 비고`}
+        detail={info.getValue()}
+      />
+    ),
+    size: 90,
+  }),
+  columnHelper.accessor("status", {
+    id: "status",
+    header: "현황",
+    cell: info => {
+      const { color, text } = getbudgetStatusTag(info.getValue());
+      return color !== "GRAY" ? (
+        <DarkTag color={color as DarkTagColor}>{text}</DarkTag>
+      ) : (
+        <LightTag color={color as LightTagColor}>{text}</LightTag>
+      );
+    },
+    size: 170,
+  }),
+  columnHelper.accessor("review", {
+    id: "review",
+    header: "검토",
+    cell: info => (
+      <ReviewButton
+        status={info.row.original.status}
+        review={info.getValue()}
+        handleReviewChange={newReview =>
+          handleReviewChange(info.row.original.code, newReview)
+        }
+        handleStatusChange={newStatus =>
+          handleStatusChange(info.row.original.code, newStatus)
+        }
+      />
+    ),
+    size: 90,
+  }),
+];
+
+const ManagerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
+  const [data, setData] = useState(initialData);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  const handleReviewChange = (code: number, newReview: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, review: newReview } : item,
+      ),
+    );
+  };
+
+  const handleStatusChange = (code: number, newStatus: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.code === code ? { ...item, status: newStatus } : item,
+      ),
+    );
+  };
+
+  const columns = getColumns(handleReviewChange, handleStatusChange);
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return (
+    <FlexWrapper direction="column" gap={16}>
+      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+        수입
+      </Typography>
+      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
+    </FlexWrapper>
+  );
+};
+
+export default ManagerIncomeTable;

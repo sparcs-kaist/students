@@ -57,7 +57,7 @@ const CellText = styled.div.withConfig({
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 `;

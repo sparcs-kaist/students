@@ -66,7 +66,7 @@ const ContentRow = styled.tr.withConfig({
   cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.GREEN[100] : "transparent"};
-  overflow: hidden;
+  /* overflow: hidden; */
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
