@@ -34,6 +34,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
         placeholder="검토에 대한 설명을 입력하세요."
         handleChange={setReviewText}
         value={reviewText}
+        style={{ height: "100px" }}
       />
       <ThreeButtonWrapper>
         <Button
