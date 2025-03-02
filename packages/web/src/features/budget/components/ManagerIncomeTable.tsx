@@ -83,17 +83,7 @@ const TableHeaderWrapper = styled.tr`
   width: 100%;
 `;
 
-const TableContentWrapper = styled.tbody`
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: stretch;
-  border-radius: 0px 0px 4px 4px;
-  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  background: ${({ theme }) => theme.colors.WHITE}; */
-`;
+const TableContentWrapper = styled.tbody``;
 
 const TableRowWrapper = styled.tr`
   display: flex;
@@ -249,11 +239,12 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`incomes.${rowIndex}.ratio`}
         render={() => {
-          const lastYear = getValues(`incomes.${rowIndex}.lastYear`);
-          const lastYearString = lastYear.toString();
+          const lastYear = parseInt(
+            getValues(`incomes.${rowIndex}.lastYear`) as unknown as string,
+          );
           const thisYear = getValues(`incomes.${rowIndex}.thisYear`);
           const ratio = useMemo(() => {
-            if (!lastYear || lastYearString === "0") {
+            if (lastYear <= 0) {
               return null;
             }
             return (thisYear / lastYear) * 100;
