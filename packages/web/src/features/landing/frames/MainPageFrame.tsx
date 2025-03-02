@@ -8,7 +8,6 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import colors from "@sparcs-students/web/styles/themes/colors";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Notice from "@sparcs-students/web/common/components/Notice";
 
 interface RowProps {
   tag?: string;
@@ -93,7 +92,6 @@ const LargeFrame: React.FC<MainPageFrameProps> = ({
   _isMobile = false,
 }) => (
   <VerticalWrapper>
-    <Notice text="청원에 대한 안내글이 들어갈 자리입니다." />
     <PageTitleWrapper>
       <Typography fw="BOLD" fs={30} style={{ width: "fit-content" }}>
         KAIST 4천 학우의 생활에 <StyledSpan>필요한 서비스</StyledSpan>를{" "}
