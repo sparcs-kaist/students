@@ -13,7 +13,6 @@ const Dropdown = styled.div.withConfig({
   /* TODO: marginTop magic number인데 좀 더 깔끔하게 바꾸는 방법 */
   position: ${({ onlyDropdown, insideTable }) =>
     onlyDropdown || insideTable ? "relative" : "absolute"};
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;

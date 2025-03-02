@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   useForm,
   useFieldArray,
@@ -18,7 +18,7 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
-import SelectInTable from "@sparcs-students/web/common/components/SelectInTable";
+import SelectInTable from "@sparcs-students/web/common/components/TagSelect";
 
 import {
   budgetDivisionIncomeTagList,
@@ -34,6 +34,8 @@ import {
 
 import styled from "styled-components";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
+import InputSelect from "@sparcs-students/web/common/components/InputSelect";
+import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 
 export interface IncomeProps {
   code: number;
@@ -207,7 +209,14 @@ const TableRow: React.FC<TableRowProps> = ({
         name={`incomes.${rowIndex}.item`}
         render={({ field }) => (
           <TableCell type="Default" width="400px">
-            {field.value}
+            <InputSelect
+              items={getDivisionItemsList(
+                getValues(`incomes.${rowIndex}.budgetDomain`),
+              )}
+              value={field.value}
+              onChange={newVal => field.onChange(newVal)}
+              errorMessage="필수 항목입니다."
+            />
           </TableCell>
         )}
       />
@@ -215,10 +224,12 @@ const TableRow: React.FC<TableRowProps> = ({
         name={`incomes.${rowIndex}.lastYear`}
         render={({ field }) => (
           <TableCell type="Default" width="130px">
-            {new Intl.NumberFormat("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            }).format(field.value)}
+            <TableTextInput
+              value={field.value}
+              handleChange={newVal => field.onChange(newVal)}
+              placeholder="금액 입력"
+              prefix="₩"
+            />
           </TableCell>
         )}
       />
@@ -226,17 +237,28 @@ const TableRow: React.FC<TableRowProps> = ({
         name={`incomes.${rowIndex}.thisYear`}
         render={({ field }) => (
           <TableCell type="Default" width="130px">
-            {new Intl.NumberFormat("ko-KR", {
-              style: "currency",
-              currency: "KRW",
-            }).format(field.value)}
+            <TableTextInput
+              value={field.value}
+              handleChange={newVal => field.onChange(newVal)}
+              placeholder="금액 입력"
+              prefix="₩"
+            />
           </TableCell>
         )}
       />
       <Controller
         name={`incomes.${rowIndex}.ratio`}
-        render={({ field }) => {
-          const { color, text } = getbudgetRatioTag(field.value);
+        render={() => {
+          const lastYear = getValues(`incomes.${rowIndex}.lastYear`);
+          const lastYearString = lastYear.toString();
+          const thisYear = getValues(`incomes.${rowIndex}.thisYear`);
+          const ratio = useMemo(() => {
+            if (!lastYear || lastYearString === "0") {
+              return null;
+            }
+            return (thisYear / lastYear) * 100;
+          }, [lastYear, thisYear]);
+          const { color, text } = getbudgetRatioTag(ratio);
           return (
             <TableCell type="Default" width="120px">
               <LightTag color={color as LightTagColor}>{text}</LightTag>
