@@ -62,9 +62,13 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               handleStatusChange("검토반려");
               onConfirm();
             }}
-            type={status === "반려" ? "disabled" : "default"}
+            type={
+              status === "반려" || status === "검토반려"
+                ? "disabled"
+                : "default"
+            }
             style={
-              status === "반려"
+              status === "반려" || status === "검토반려"
                 ? {}
                 : {
                     border: `1px solid ${theme.colors.RED[700]}`,
@@ -100,7 +104,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               onConfirm();
             }}
             type={
-              status === "승인" || reviewText !== "" ? "disabled" : "default"
+              status === "승인" || status === "검토승인" || reviewText !== ""
+                ? "disabled"
+                : "default"
             }
           >
             승인

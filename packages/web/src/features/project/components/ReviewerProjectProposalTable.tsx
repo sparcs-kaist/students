@@ -16,22 +16,27 @@ import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 
-export interface ViewerProjectProposalProps {
+export interface ProjectProposalProps {
   id: string;
   name: string;
   projectPeriod: string;
   status: string; // TODO: enum으로 변경
+  review: string;
 }
 
-interface ProjectProposalTableProps {
+interface ReviewerProjectProposalTableProps {
   pageId: string | string[];
-  data: ViewerProjectProposalProps[];
+  initialData: ProjectProposalProps[];
 }
 
-const columnHelper = createColumnHelper<ViewerProjectProposalProps>();
+const columnHelper = createColumnHelper<ProjectProposalProps>();
 
-const columns = [
+const getColumns = (
+  handleReviewChange: (id: string, newReview: string) => void,
+  handleStatusChange: (id: string, newStatus: string) => void,
+) => [
   columnHelper.accessor("id", {
     id: "id",
     header: "번호",
@@ -63,12 +68,29 @@ const columns = [
     },
     size: 165,
   }),
+  columnHelper.accessor("review", {
+    id: "review",
+    header: "검토",
+    cell: info => (
+      <ReviewButton
+        status={info.row.original.status}
+        review={info.getValue()}
+        handleReviewChange={newReview =>
+          handleReviewChange(info.row.original.id, newReview)
+        }
+        handleStatusChange={newStatus =>
+          handleStatusChange(info.row.original.id, newStatus)
+        }
+      />
+    ),
+    size: 90,
+  }),
 ];
 
-const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
-  pageId,
-  data,
-}) => {
+const ReviewerProjectProposalTable: React.FC<
+  ReviewerProjectProposalTableProps
+> = ({ pageId, initialData }) => {
+  const [data, setData] = useState<ProjectProposalProps[]>(initialData);
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
 
@@ -76,6 +98,23 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
     setLoaded(true);
   }, []);
 
+  const handleReviewChange = (id: string, newReview: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.id === id ? { ...item, review: newReview } : item,
+      ),
+    );
+  };
+
+  const handleStatusChange = (id: string, newStatus: string) => {
+    setData(prevData =>
+      prevData.map(item =>
+        item.id === id ? { ...item, status: newStatus } : item,
+      ),
+    );
+  };
+
+  const columns = getColumns(handleReviewChange, handleStatusChange);
   const table = useReactTable({
     columns,
     data,
@@ -105,4 +144,4 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
   );
 };
 
-export default ViewerProjectProposalTable;
+export default ReviewerProjectProposalTable;

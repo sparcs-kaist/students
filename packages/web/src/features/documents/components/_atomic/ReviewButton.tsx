@@ -1,8 +1,8 @@
 import React from "react";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import { overlay } from "overlay-kit";
-import Icon from "@sparcs-students/web/common/components/Icon";
 import ReviewModal from "@sparcs-students/web/features/documents/components/ReviewModal";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
 
 type ReviewButtonProps = {
   review: string;
@@ -33,6 +33,15 @@ const ReviewButton = ({
     ));
   };
 
-  return <Icon onClick={openCheckModal} type="edit" size={18} />;
+  return (
+    <Button
+      onClick={e => {
+        e.stopPropagation();
+        openCheckModal();
+      }}
+      iconType="edit"
+      type="icon"
+    />
+  );
 };
 export default ReviewButton;
