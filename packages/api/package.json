@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "pnpm db up -d && pnpm start:dev",
     "prod": "pnpm migrate:prod && pnpm start:prod",
-    "db": "docker compose -f ../../.docker/docker-compose.dev.yml -p ar-007-students",
+    "db": "docker compose -f ../../.docker/docker-compose.dev.yml --env-file ../../.env -p ar-007-students",
     "env": "echo $NODE_ENV",
     "clean": "rm -rf dist",
     "generate": "pnpm db up --wait && pnpm drizzle-kit push:mysql --config ./src/drizzle/drizzle.config.ts",
