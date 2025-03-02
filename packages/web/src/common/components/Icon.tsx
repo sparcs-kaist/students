@@ -4,6 +4,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Icon as MUIIcon } from "@mui/material";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface IconProps {
   type: string;
@@ -12,13 +13,12 @@ interface IconProps {
   color?: string;
 }
 
-const IconInner = styled.div<{
-  size: number;
+const IconInner = styled(MUIIcon).withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   clickable: boolean;
 }>`
   display: flex;
-  font-size: ${({ size }) => size}px;
-  color: ${({ color, theme }) => color || theme.colors.BLACK};
   ${({ clickable }) =>
     clickable &&
     css`
@@ -32,8 +32,12 @@ const Icon: React.FC<IconProps> = ({
   onClick = undefined,
   color = colors.BLACK,
 }) => (
-  <IconInner size={size} clickable={!!onClick} color={color} onClick={onClick}>
-    <MUIIcon fontSize="inherit">{type}</MUIIcon>
+  <IconInner
+    clickable={!!onClick}
+    onClick={onClick}
+    style={{ color, fontSize: size }}
+  >
+    {type}
   </IconInner>
 );
 
