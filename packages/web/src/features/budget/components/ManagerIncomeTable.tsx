@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import {
+  useForm,
+  useFieldArray,
+  FormProvider,
+  Controller,
+  UseFormSetValue,
+  UseFormGetValues,
+} from "react-hook-form";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import Table from "@sparcs-students/web/common/components/Table/Table";
 import LightTag, {
   LightTagColor,
 } from "@sparcs-students/web/common/components/Tag/LightTag";
-import { getTagDetail } from "@sparcs-students/web/utils/getTagDetail";
+import DarkTag, {
+  DarkTagColor,
+} from "@sparcs-students/web/common/components/Tag/DarkTag";
+import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
+import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import SelectInTable from "@sparcs-students/web/common/components/SelectInTable";
+
 import {
   budgetDivisionIncomeTagList,
-  // budgetDomainTagList,
+  budgetDomainTagList,
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
@@ -22,14 +30,10 @@ import {
 import {
   BudgetDivisionIncomeEnum,
   BudgetDomainEnum,
-  getDisplayNameBudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum/budget.enum";
-import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
-import DarkTag, {
-  DarkTagColor,
-} from "@sparcs-students/web/common/components/Tag/DarkTag";
-import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
-import Select from "@sparcs-students/web/common/components/Select";
+
+import styled from "styled-components";
+import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 
 export interface IncomeProps {
   code: number;
@@ -44,193 +48,356 @@ export interface IncomeProps {
   review: string;
 }
 
-interface IncomeTableProps {
+interface FormValues {
+  incomes: IncomeProps[];
+}
+
+interface ManagerIncomeTableProps {
   initialData: IncomeProps[];
 }
 
-const columnHelper = createColumnHelper<IncomeProps>();
+interface TableRowProps {
+  setValue: UseFormSetValue<FormValues>;
+  getValues: UseFormGetValues<FormValues>;
+  rowIndex: number;
+  changeCode: () => void;
+}
 
-const getColumns = (
-  handleReviewChange: (code: number, newReview: string) => void,
-  handleStatusChange: (code: number, newStatus: string) => void,
-) => [
-  columnHelper.accessor("code", {
-    id: "code",
-    header: "코드",
-    cell: info => {
-      const { color, text } = getbudgetCodeTag(info.getValue());
-      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
-    },
-    size: 130,
-  }),
-  columnHelper.accessor("budgetDomain", {
-    id: "budgetDomain",
-    header: "구분",
-    cell: info => {
-      const handleChange = (newStatus: string) => {
-        handleStatusChange(info.row.original.code, newStatus);
+const TableWrapper = styled.table`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-x: auto;
+`;
+
+const TableHeader = styled.thead``;
+
+const TableHeaderWrapper = styled.tr`
+  display: flex;
+  height: 36px;
+  align-items: center;
+  border-radius: 4px 4px 0px 0px;
+  overflow: hidden;
+  width: 100%;
+`;
+
+const TableContentWrapper = styled.tbody`
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 0px 0px 4px 4px;
+  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  background: ${({ theme }) => theme.colors.WHITE}; */
+`;
+
+const TableRowWrapper = styled.tr`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px 0px 4px 4px;
+  border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  background: ${({ theme }) => theme.colors.WHITE};
+`;
+
+const TableRow: React.FC<TableRowProps> = ({
+  setValue,
+  getValues,
+  rowIndex,
+  changeCode,
+}) => {
+  const budgetDomainList = Object.entries(budgetDomainTagList).map(
+    ([key, { text, color }]) => {
+      const value = () => {
+        switch (key) {
+          case "1":
+            return BudgetDomainEnum.Student;
+          case "2":
+            return BudgetDomainEnum.School;
+          case "3":
+            return BudgetDomainEnum.Autonomous;
+          default:
+            return BudgetDomainEnum.Undefined;
+        }
       };
+      return {
+        label: text,
+        value: value(),
+        color,
+      };
+    },
+  );
 
-      return (
-        <Select
-          items={[
-            {
-              label: "학생회비",
-              value: getDisplayNameBudgetDomainEnum(BudgetDomainEnum.Student),
-            },
-            {
-              label: "본회계",
-              value: getDisplayNameBudgetDomainEnum(BudgetDomainEnum.School),
-            },
-            {
-              label: "자치",
-              value: getDisplayNameBudgetDomainEnum(
-                BudgetDomainEnum.Autonomous,
-              ),
-            },
-          ]}
-          value={getDisplayNameBudgetDomainEnum(info.getValue())}
-          onChange={handleChange}
-          placeholder="구분"
-          errorMessage="필수 항목입니다."
-        />
-      );
-    },
-    size: 500,
-  }),
-  columnHelper.accessor("budgetDivisionIncome", {
-    id: "budgetDivisionIncome",
-    header: "예산 분류",
-    cell: info => {
-      const { color, text } = getTagDetail(
-        info.getValue(),
-        budgetDivisionIncomeTagList,
-      );
-      return <LightTag color={color}>{text}</LightTag>;
-    },
-    size: 200,
-  }),
-  columnHelper.accessor("item", {
-    id: "item",
-    header: "항목",
-    cell: info => info.getValue(),
-    size: 275,
-  }),
-  columnHelper.accessor("lastYear", {
-    id: "lastYear",
-    header: "작년 결산",
-    cell: info => {
-      const formatter = new Intl.NumberFormat("ko-KR", {
-        style: "currency",
-        currency: "KRW",
-      });
-      return formatter.format(info.getValue());
-    },
-    size: 185,
-  }),
-  columnHelper.accessor("thisYear", {
-    id: "thisYear",
-    header: "올해 예산",
-    cell: info => {
-      const formatter = new Intl.NumberFormat("ko-KR", {
-        style: "currency",
-        currency: "KRW",
-      });
-      return formatter.format(info.getValue());
-    },
-    size: 185,
-  }),
-  columnHelper.accessor("ratio", {
-    id: "ratio",
-    header: "비율",
-    cell: info => {
-      const { color, text } = getbudgetRatioTag(info.getValue());
-      return <LightTag color={color as LightTagColor}>{text}</LightTag>;
-    },
-    size: 180,
-  }),
-  columnHelper.accessor("reason", {
-    id: "reason",
-    header: "비고",
-    cell: info => (
-      <DetailButton
-        title={`${info.row.original.item}에 대한 비고`}
-        detail={info.getValue()}
-      />
-    ),
-    size: 90,
-  }),
-  columnHelper.accessor("status", {
-    id: "status",
-    header: "현황",
-    cell: info => {
-      const { color, text } = getbudgetStatusTag(info.getValue());
-      return color !== "GRAY" ? (
-        <DarkTag color={color as DarkTagColor}>{text}</DarkTag>
-      ) : (
-        <LightTag color={color as LightTagColor}>{text}</LightTag>
-      );
-    },
-    size: 170,
-  }),
-  columnHelper.accessor("review", {
-    id: "review",
-    header: "검토",
-    cell: info => (
-      <ReviewButton
-        status={info.row.original.status}
-        review={info.getValue()}
-        handleReviewChange={newReview =>
-          handleReviewChange(info.row.original.code, newReview)
-        }
-        handleStatusChange={newStatus =>
-          handleStatusChange(info.row.original.code, newStatus)
-        }
-      />
-    ),
-    size: 90,
-  }),
-];
+  const divisionItemsList = Object.entries(budgetDivisionIncomeTagList).map(
+    ([_, { text, color }]) => ({
+      label: text,
+      value: text,
+      color,
+    }),
+  );
 
-const ManagerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
-  const [data, setData] = useState(initialData);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
-
-  const handleReviewChange = (code: number, newReview: string) => {
-    setData(prevData =>
-      prevData.map(item =>
-        item.code === code ? { ...item, review: newReview } : item,
-      ),
-    );
+  const getDivisionItemsList = (newValue: BudgetDomainEnum) => {
+    switch (newValue) {
+      case 1:
+        return divisionItemsList.slice(0, 4);
+      case 2:
+        return divisionItemsList.slice(4, 5);
+      case 3:
+        return divisionItemsList.slice(5, 11);
+      default:
+        return [];
+    }
   };
-
-  const handleStatusChange = (code: number, newStatus: string) => {
-    setData(prevData =>
-      prevData.map(item =>
-        item.code === code ? { ...item, status: newStatus } : item,
-      ),
-    );
-  };
-
-  const columns = getColumns(handleReviewChange, handleStatusChange);
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    enableSorting: false,
-  });
 
   return (
-    <FlexWrapper direction="column" gap={16}>
-      <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-        수입
-      </Typography>
-      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
-    </FlexWrapper>
+    <TableRowWrapper>
+      <Controller
+        name={`incomes.${rowIndex}.code`}
+        render={({ field }) => {
+          const { color, text } = getbudgetCodeTag(field.value);
+          return (
+            <TableCell type="Default" width="130px">
+              <LightTag color={color as LightTagColor}>{text}</LightTag>
+            </TableCell>
+          );
+        }}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.budgetDomain`}
+        render={({ field }) => (
+          <TableCell type="Default" width="120px">
+            <SelectInTable<BudgetDomainEnum>
+              items={budgetDomainList.slice(0, 3)}
+              value={field.value || "-"}
+              onChange={newValue => {
+                setValue(`incomes.${rowIndex}.budgetDomain`, newValue);
+                field.onChange(newValue);
+                changeCode();
+              }}
+              placeholder="-"
+              errorMessage="필수 항목입니다."
+              width="65px"
+            />
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.budgetDivisionIncome`}
+        render={({ field }) => (
+          <TableCell type="Default" width="150px">
+            <SelectInTable
+              items={getDivisionItemsList(
+                getValues(`incomes.${rowIndex}.budgetDomain`),
+              )}
+              value={field.value || "-"}
+              onChange={newVal => field.onChange(newVal)}
+              placeholder="-"
+              errorMessage="필수 항목입니다."
+              width="90px"
+            />
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.item`}
+        render={({ field }) => (
+          <TableCell type="Default" width="400px">
+            {field.value}
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.lastYear`}
+        render={({ field }) => (
+          <TableCell type="Default" width="130px">
+            {new Intl.NumberFormat("ko-KR", {
+              style: "currency",
+              currency: "KRW",
+            }).format(field.value)}
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.thisYear`}
+        render={({ field }) => (
+          <TableCell type="Default" width="130px">
+            {new Intl.NumberFormat("ko-KR", {
+              style: "currency",
+              currency: "KRW",
+            }).format(field.value)}
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.ratio`}
+        render={({ field }) => {
+          const { color, text } = getbudgetRatioTag(field.value);
+          return (
+            <TableCell type="Default" width="120px">
+              <LightTag color={color as LightTagColor}>{text}</LightTag>
+            </TableCell>
+          );
+        }}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.reason`}
+        render={({ field }) => (
+          <TableCell type="Default" width="90px">
+            <DetailButton
+              title={`${field.value}에 대한 비고`}
+              detail={field.value}
+            />
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.status`}
+        render={({ field }) => {
+          const { color, text } = getbudgetStatusTag(field.value);
+          return (
+            <TableCell type="Default" width="100px">
+              {color !== "GRAY" ? (
+                <DarkTag color={color as DarkTagColor}>{text}</DarkTag>
+              ) : (
+                <LightTag color={color as LightTagColor}>{text}</LightTag>
+              )}
+            </TableCell>
+          );
+        }}
+      />
+      <Controller
+        name={`incomes.${rowIndex}.review`}
+        render={({ field }) => (
+          <TableCell type="Default" width="90px">
+            <ReviewButton
+              status={field.value}
+              review={field.value}
+              handleStatusChange={field.onChange}
+              handleReviewChange={field.onChange}
+            />
+          </TableCell>
+        )}
+      />
+    </TableRowWrapper>
+  );
+};
+
+const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
+  initialData,
+}) => {
+  const formMethods = useForm<FormValues>({
+    defaultValues: {
+      incomes: initialData,
+    },
+  });
+
+  const { handleSubmit, control, setValue, getValues } = formMethods;
+  const { fields } = useFieldArray({ control, name: "incomes" });
+
+  const incomes = formMethods.watch("incomes");
+
+  const onSubmit = (data: FormValues) => {
+    console.log("Submitted incomes:", data.incomes);
+  };
+
+  const changeCode = () => {
+    let studentsFeeCount = 100;
+    let schoolFeeCount = 200;
+    let autonomousFeeCount = 300;
+
+    incomes.forEach((income, index) => {
+      let newCode = income.code;
+
+      switch (income.budgetDomain) {
+        case 1:
+          studentsFeeCount += 1;
+          newCode = studentsFeeCount;
+          break;
+        case 2:
+          schoolFeeCount += 1;
+          newCode = schoolFeeCount;
+          break;
+        case 3:
+          autonomousFeeCount += 1;
+          newCode = autonomousFeeCount;
+          break;
+        default:
+          newCode = 0;
+          break;
+      }
+
+      setValue(`incomes.${index}.code`, newCode, {
+        shouldValidate: true,
+      });
+    });
+  };
+
+  return (
+    <FormProvider {...formMethods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FlexWrapper direction="column" gap={16}>
+          <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+            수입
+          </Typography>
+          <TableWrapper>
+            <TableHeader>
+              <TableHeaderWrapper>
+                <TableCell type="Header" width="130px">
+                  코드
+                </TableCell>
+                <TableCell type="Header" width="120px">
+                  구분
+                </TableCell>
+                <TableCell type="Header" width="150px">
+                  예산 분류
+                </TableCell>
+                <TableCell type="Header" width="400px">
+                  항목
+                </TableCell>
+                <TableCell type="Header" width="130px">
+                  작년 결산
+                </TableCell>
+                <TableCell type="Header" width="130px">
+                  올해 예산
+                </TableCell>
+                <TableCell type="Header" width="120px">
+                  비율
+                </TableCell>
+                <TableCell type="Header" width="90px">
+                  비고
+                </TableCell>
+                <TableCell type="Header" width="100px">
+                  현황
+                </TableCell>
+                <TableCell type="Header" width="90px">
+                  검토
+                </TableCell>
+              </TableHeaderWrapper>
+            </TableHeader>
+            <TableContentWrapper>
+              {fields.map((_, index) => {
+                const key = `${index}-content`;
+                return (
+                  <TableRow
+                    changeCode={changeCode}
+                    setValue={setValue}
+                    getValues={getValues}
+                    key={key}
+                    rowIndex={index}
+                  />
+                );
+              })}
+            </TableContentWrapper>
+          </TableWrapper>
+          <button type="submit">Submit</button>
+        </FlexWrapper>
+      </form>
+    </FormProvider>
   );
 };
 

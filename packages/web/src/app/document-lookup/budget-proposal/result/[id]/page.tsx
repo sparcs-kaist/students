@@ -29,7 +29,7 @@ import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 
-import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+import ManagerIncomeTable from "@sparcs-students/web/features/budget/components/ManagerIncomeTable";
 import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
 import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
 import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
@@ -224,7 +224,7 @@ const Proposal = () => {
         />
         {/* {userPermission === 1 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
         {userPermission === 2 && (
-          <ReviewerIncomeTable initialData={mockIncomeData} />
+          <ManagerIncomeTable initialData={mockIncomeData} />
         )}
         {/* {userPermission === 3 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
 

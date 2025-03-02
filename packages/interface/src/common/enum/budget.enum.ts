@@ -3,6 +3,7 @@ export enum BudgetDomainEnum {
   Student = 1, // 학생회비
   School, // 본회계
   Autonomous, // 자치
+  Undefined, // not defined!
 }
 
 // 예산 구분(수입) E
@@ -78,6 +79,19 @@ export const getDisplayNameBudgetDomainEnum = (
       return "자치";
     default:
       return "";
+  }
+};
+
+export const getEnumBudgetDomain = (type: string | undefined) => {
+  switch (type) {
+    case "학생회비":
+      return BudgetDomainEnum.Student;
+    case "본회계":
+      return BudgetDomainEnum.School;
+    case "자치":
+      return BudgetDomainEnum.Autonomous;
+    default:
+      return BudgetDomainEnum.Undefined;
   }
 };
 
