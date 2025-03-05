@@ -48,7 +48,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
           style={
             status === "반려" || status === "검토반려"
               ? {
-                  width: "85px",
+                  width: "fit-content",
                   height: "36px",
                   fontSize: "14px",
                   lineHeight: "14px",
@@ -57,7 +57,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
                   border: `1px solid ${theme.colors.RED[700]}`,
                   backgroundColor: theme.colors.RED[50],
                   color: theme.colors.RED[700],
-                  width: "85px",
+                  width: "fit-content",
                   height: "36px",
                   fontSize: "14px",
                   lineHeight: "14px",
@@ -75,7 +75,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
           style={
             status === "수정 요청"
               ? {
-                  width: "85px",
+                  width: "fit-content",
                   height: "36px",
                   fontSize: "14px",
                   lineHeight: "14px",
@@ -84,7 +84,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
                   border: `1px solid ${theme.colors.GREEN[600]}`,
                   backgroundColor: theme.colors.GREEN[50],
                   color: theme.colors.GREEN[600],
-                  width: "85px",
+                  width: "fit-content",
                   height: "36px",
                   fontSize: "14px",
                   lineHeight: "14px",
@@ -104,7 +104,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
               : "default"
           }
           style={{
-            width: "85px",
+            width: "fit-content",
             height: "36px",
             fontSize: "14px",
             lineHeight: "14px",
