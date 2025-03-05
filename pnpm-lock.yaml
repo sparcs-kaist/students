@@ -257,6 +257,9 @@ importers:
       react:
         specifier: ^18
         version: 18.2.0
+      react-datepicker:
+        specifier: ^7.4.0
+        version: 7.6.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-dom:
         specifier: ^18
         version: 18.2.0(react@18.2.0)
@@ -318,6 +321,9 @@ importers:
       '@types/react':
         specifier: ^18
         version: 18.2.64
+      '@types/react-datepicker':
+        specifier: ^7.0.0
+        version: 7.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/react-dom':
         specifier: ^18
         version: 18.2.21
@@ -1553,14 +1559,20 @@ packages:
   '@floating-ui/dom@1.6.3':
     resolution: {integrity: sha512-RnDthu3mzPlQ31Ss/BTwQ1zjzIhr3lk1gZB1OC56h/1vEtaXkESrOqL5fQVMfXpwGtRwX+YsZBdyHtJMQnkArw==}
 
-  '@floating-ui/react-dom@2.0.8':
-    resolution: {integrity: sha512-HOdqOt3R3OGeTKidaLvJKcgg75S6tibQ3Tif4eyd91QnIJWr0NLvoXFpJA/j8HqkFSL68GDca9AuyWEHlhyClw==}
+  '@floating-ui/react-dom@2.1.2':
+    resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@floating-ui/utils@0.2.1':
-    resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+  '@floating-ui/react@0.27.5':
+    resolution: {integrity: sha512-BX3jKxo39Ba05pflcQmqPPwc0qdNsdNi/eweAFtoIdrJWNen2sVEWMEac3i6jU55Qfx+lOcdMNKYn2CtWmlnOQ==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+
+  '@floating-ui/utils@0.2.9':
+    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
   '@formatjs/ecma402-abstract@2.2.2':
     resolution: {integrity: sha512-zReeOJo3gA6Lgk4gTsUUdCwwTBa+Tw0LcqKHD84JCAJdPSxsxKdKPAPXihVgKDZevIWFGi4UTpy7JJ3D5EWeSw==}
@@ -1820,15 +1832,6 @@ packages:
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
-
-  '@mjackson/form-data-parser@0.4.0':
-    resolution: {integrity: sha512-zDQ0sFfXqn2bJaZ/ypXfGUe0lUjCzXybBHYEoyWaO2w1dZ0nOM9nRER8tVVv3a8ZIgO/zF6p2I5ieWJAUOzt3w==}
-
-  '@mjackson/headers@0.5.1':
-    resolution: {integrity: sha512-sJpFgecPT/zJvwk3GRNVWNs8EkwaJoUNU2D0VMlp+gDJs6cuSTm1q/aCZi3ZtuV6CgDEQ4l2ZjUG3A9JrQlbNA==}
-
-  '@mjackson/multipart-parser@0.6.3':
-    resolution: {integrity: sha512-aQhySnM6OpAYMMG+m7LEygYye99hB1md/Cy1AFE0yD5hfNW+X4JDu7oNVY9Gc6IW8PZ45D1rjFLDIUdnkXmwrA==}
 
   '@mui/base@5.0.0-beta.38':
     resolution: {integrity: sha512-AsjD6Y1X5A1qndxz8xCcR8LDqv31aiwlgWMPxFAX/kCKiIGKlK65yMeVZ62iQr/6LBz+9hSKLiD1i4TZdAHKcQ==}
@@ -2563,6 +2566,10 @@ packages:
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
+
+  '@types/react-datepicker@7.0.0':
+    resolution: {integrity: sha512-4tWwOUq589tozyQPBVEqGNng5DaZkomx5IVNuur868yYdgjH6RaL373/HKiVt1IDoNNXYiTGspm1F7kjrarM8Q==}
+    deprecated: This is a stub types definition. react-datepicker provides its own type definitions, so you do not need this installed.
 
   '@types/react-dom@18.2.21':
     resolution: {integrity: sha512-gnvBA/21SA4xxqNXEwNiVcP0xSGHh/gi1VhWv9Bl46a0ItbTT5nFY+G9VSQpaG/8N/qdJpJ+vftQ4zflTtnjLw==}
@@ -3310,6 +3317,10 @@ packages:
     resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
 
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
+
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
@@ -3381,9 +3392,6 @@ packages:
 
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
-
-  compare-versions@6.1.1:
-    resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
 
   component-emitter@1.3.1:
     resolution: {integrity: sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==}
@@ -6028,6 +6036,12 @@ packages:
     peerDependencies:
       react: ^16.3.0 || ^17.0.1 || ^18.0.0
 
+  react-datepicker@7.6.0:
+    resolution: {integrity: sha512-9cQH6Z/qa4LrGhzdc3XoHbhrxNcMi9MKjZmYgF/1MNNaJwvdSjv3Xd+jjvrEEbKEf71ZgCA3n7fQbdwd70qCRw==}
+    peerDependencies:
+      react: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.9.0 || ^17 || ^18 || ^19 || ^19.0.0-rc
+
   react-docgen-typescript@2.2.2:
     resolution: {integrity: sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==}
     peerDependencies:
@@ -6054,11 +6068,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
-  react-inspector@6.0.2:
-    resolution: {integrity: sha512-x+b7LxhmHXjHoU/VrFAzw5iutsILRoYyDq97EDYdFpPLcvqtEzk4ZSZSQjnFPbr5T57tLXnHcqFYoN1pI6u8uQ==}
-    peerDependencies:
-      react: ^16.8.4 || ^17.0.0 || ^18.0.0
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -6074,16 +6083,6 @@ packages:
   react-refresh@0.14.2:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
     engines: {node: '>=0.10.0'}
-
-  react-router@7.1.1:
-    resolution: {integrity: sha512-39sXJkftkKWRZ2oJtHhCxmoCrBCULr/HAH4IT5DHlgu/Q0FCPV0S4Lx+abjDTx/74xoZzNYDYbOZWlJjruyuDQ==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
 
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
@@ -6500,25 +6499,6 @@ packages:
   store2@2.14.3:
     resolution: {integrity: sha512-4QcZ+yx7nzEFiV4BMLnr/pRa5HYzNITX2ri0Zh6sT9EyQHbBHacC6YigllUPU9X3D0f/22QCgfokpKs52YRrUg==}
 
-  storybook-addon-remix-react-router@4.0.1:
-    resolution: {integrity: sha512-Plhul9kInTKdOhoHumiJ0KRmuIVYhT5WBCnAlNt9MlsmDGEuuiimh8msyj5LPWnGD51/t38i14xI8gmmTyu1ow==}
-    peerDependencies:
-      '@storybook/blocks': ^8.0.0
-      '@storybook/channels': ^8.0.0
-      '@storybook/components': ^8.0.0
-      '@storybook/core-events': ^8.0.0
-      '@storybook/manager-api': ^8.0.0
-      '@storybook/preview-api': ^8.0.0
-      '@storybook/theming': ^8.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-router: ^7.0.2
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
   storybook@8.3.6:
     resolution: {integrity: sha512-9GVbtej6ZzPRUM7KRQ7848506FfHrUiJGqPuIQdoSJd09EmuEoLjmLAgEOmrHBQKgGYMaM7Vh9GsTLim6vwZTQ==}
     hasBin: true
@@ -6688,6 +6668,9 @@ packages:
   synckit@0.8.8:
     resolution: {integrity: sha512-HwOKAP7Wc5aRGYdKH+dw0PRRpbO841v2DENBtjnR5HFWoiNByAl7vrx3p0G/rCyYXQsrxqtX48TImFtPcIHSpQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  tabbable@6.2.0:
+    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -8680,20 +8663,28 @@ snapshots:
 
   '@floating-ui/core@1.6.0':
     dependencies:
-      '@floating-ui/utils': 0.2.1
+      '@floating-ui/utils': 0.2.9
 
   '@floating-ui/dom@1.6.3':
     dependencies:
       '@floating-ui/core': 1.6.0
-      '@floating-ui/utils': 0.2.1
+      '@floating-ui/utils': 0.2.9
 
-  '@floating-ui/react-dom@2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@floating-ui/react-dom@2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/dom': 1.6.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@floating-ui/utils@0.2.1': {}
+  '@floating-ui/react@0.27.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/utils': 0.2.9
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tabbable: 6.2.0
+
+  '@floating-ui/utils@0.2.9': {}
 
   '@formatjs/ecma402-abstract@2.2.2':
     dependencies:
@@ -9034,24 +9025,14 @@ snapshots:
       '@types/react': 18.2.64
       react: 18.2.0
 
-  '@mjackson/form-data-parser@0.4.0':
-    dependencies:
-      '@mjackson/multipart-parser': 0.6.3
-
-  '@mjackson/headers@0.5.1': {}
-
-  '@mjackson/multipart-parser@0.6.3':
-    dependencies:
-      '@mjackson/headers': 0.5.1
-
   '@mui/base@5.0.0-beta.38(@types/react@18.2.64)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.24.0
-      '@floating-ui/react-dom': 2.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/react-dom': 2.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mui/types': 7.2.13(@types/react@18.2.64)
       '@mui/utils': 5.15.13(@types/react@18.2.64)(react@18.2.0)
       '@popperjs/core': 2.11.8
-      clsx: 2.1.0
+      clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -9126,7 +9107,7 @@ snapshots:
       '@mui/styled-engine': 5.15.11(@emotion/react@11.11.4(@types/react@18.2.64)(react@18.2.0))(@emotion/styled@11.11.0(@emotion/react@11.11.4(@types/react@18.2.64)(react@18.2.0))(@types/react@18.2.64)(react@18.2.0))(react@18.2.0)
       '@mui/types': 7.2.13(@types/react@18.2.64)
       '@mui/utils': 5.15.13(@types/react@18.2.64)(react@18.2.0)
-      clsx: 2.1.0
+      clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
       react: 18.2.0
@@ -9829,15 +9810,9 @@ snapshots:
       '@types/express': 4.17.21
       file-system-cache: 2.3.0
 
-  '@swc/counter@0.1.3': {}
-
   '@swc/helpers@0.5.2':
     dependencies:
       tslib: 2.6.2
-
-  '@swc/plugin-styled-components@6.0.4':
-    dependencies:
-      '@swc/counter': 0.1.3
 
   '@tanstack/query-core@5.28.4': {}
 
@@ -10023,6 +9998,13 @@ snapshots:
   '@types/qs@6.9.12': {}
 
   '@types/range-parser@1.2.7': {}
+
+  '@types/react-datepicker@7.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react-datepicker: 7.6.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   '@types/react-dom@18.2.21':
     dependencies:
@@ -10955,6 +10937,8 @@ snapshots:
 
   clsx@2.1.0: {}
 
+  clsx@2.1.1: {}
+
   co@4.6.0: {}
 
   collect-v8-coverage@1.0.2: {}
@@ -11024,8 +11008,6 @@ snapshots:
     dependencies:
       array-ify: 1.0.0
       dot-prop: 5.3.0
-
-  compare-versions@6.1.1: {}
 
   component-emitter@1.3.1: {}
 
@@ -14105,6 +14087,14 @@ snapshots:
       react: 18.2.0
       tween-functions: 1.2.0
 
+  react-datepicker@7.6.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@floating-ui/react': 0.27.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      clsx: 2.1.1
+      date-fns: 3.6.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
   react-docgen-typescript@2.2.2(typescript@5.4.2):
     dependencies:
       typescript: 5.4.2
@@ -14142,10 +14132,6 @@ snapshots:
     dependencies:
       react: 18.2.0
 
-  react-inspector@6.0.2(react@18.2.0):
-    dependencies:
-      react: 18.2.0
-
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -14155,16 +14141,6 @@ snapshots:
   react-is@18.2.0: {}
 
   react-refresh@0.14.2: {}
-
-  react-router@7.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@types/cookie': 0.6.0
-      cookie: 1.0.2
-      react: 18.2.0
-      set-cookie-parser: 2.7.1
-      turbo-stream: 2.4.0
-    optionalDependencies:
-      react-dom: 18.2.0(react@18.2.0)
 
   react-transition-group@4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
@@ -14658,23 +14634,6 @@ snapshots:
 
   store2@2.14.3: {}
 
-  storybook-addon-remix-react-router@4.0.1(@storybook/blocks@8.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(storybook@8.3.6))(@storybook/channels@7.6.17)(@storybook/components@8.3.6(storybook@8.3.6))(@storybook/core-events@7.6.17)(@storybook/manager-api@8.3.6(storybook@8.3.6))(@storybook/preview-api@8.4.2(storybook@8.3.6))(@storybook/theming@8.3.6(storybook@8.3.6))(react-dom@18.2.0(react@18.2.0))(react-router@7.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@mjackson/form-data-parser': 0.4.0
-      '@storybook/blocks': 8.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(storybook@8.3.6)
-      '@storybook/channels': 7.6.17
-      '@storybook/components': 8.3.6(storybook@8.3.6)
-      '@storybook/core-events': 7.6.17
-      '@storybook/manager-api': 8.3.6(storybook@8.3.6)
-      '@storybook/preview-api': 8.4.2(storybook@8.3.6)
-      '@storybook/theming': 8.3.6(storybook@8.3.6)
-      compare-versions: 6.1.1
-      react-inspector: 6.0.2(react@18.2.0)
-      react-router: 7.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-    optionalDependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   storybook@8.3.6:
     dependencies:
       '@storybook/core': 8.3.6
@@ -14864,6 +14823,8 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.1.1
       tslib: 2.6.2
+
+  tabbable@6.2.0: {}
 
   tapable@2.2.1: {}
 

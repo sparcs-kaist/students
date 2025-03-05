@@ -37,6 +37,7 @@
     "next-intl": "^3.24.0",
     "overlay-kit": "^1.2.1",
     "react": "^18",
+    "react-datepicker": "^7.4.0",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "styled-components": "^6.1.8",
@@ -59,6 +60,7 @@
     "@tanstack/react-query-devtools": "^5.28.4",
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-datepicker": "^7.0.0",
     "@types/react-dom": "^18",
     "storybook": "^8.3.6",
     "typescript": "^5"
