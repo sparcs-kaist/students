@@ -1,9 +1,34 @@
-import { ProjectProposalProps } from "@sparcs-students/web/features/project/components/ViewerProjectProposalTable";
+import { ViewerProjectProposalProps } from "@sparcs-students/web/features/project/components/ViewerProjectProposalTable";
 import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
 import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
+import { ProjectProposalProps } from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
 
 export const mockProjectProposalData: ProjectProposalProps[] = [
+  {
+    id: "1",
+    name: "집행위원회 운영",
+    projectPeriod: "2024.09.06 - 2024.12.06",
+    status: "승인",
+    review: "",
+  },
+  {
+    id: "2",
+    name: "기업체 탐방",
+    projectPeriod: "2024.09.06 - 2024.12.06",
+    status: "승인",
+    review: "ㅁㄴㅇㄹ",
+  },
+  {
+    id: "3",
+    name: "연구실 탐방",
+    projectPeriod: "2024.09.06 - 2024.12.06",
+    status: "승인",
+    review: "ㅁㄴㅇㄹ",
+  },
+];
+
+export const mockViewerProjectProposalData: ViewerProjectProposalProps[] = [
   {
     id: "1",
     name: "집행위원회 운영",
