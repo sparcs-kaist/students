@@ -24,25 +24,18 @@ const credits: SemesterCredit[] = [
     semester: "2025년 봄",
     members: [
       {
-        nickname: "chacha",
-        name: "안채연",
-        role: "PM",
-        roleType: RoleType.PM,
-        comment: "chacha",
-      },
-      {
-        nickname: "gb",
-        name: "권혁원",
-        role: "BE",
-        roleType: RoleType.APM_BE,
-        comment: "gb",
-      },
-      {
         nickname: "ella",
         name: "김민주",
         role: "BE",
         roleType: RoleType.member,
         comment: "방이 좋아요 :)",
+      },
+      {
+        nickname: "shiro",
+        name: "이재환",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "@.@",
       },
     ],
   },
