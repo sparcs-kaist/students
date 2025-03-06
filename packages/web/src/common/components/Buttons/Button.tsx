@@ -62,11 +62,17 @@ const ButtonDisabledInner = styled(ButtonInner)`
   cursor: not-allowed;
 `;
 
+const ButtonIconInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.BLACK};
+  cursor: pointer;
+`;
+
 const ButtonTypeInner = {
   default: ButtonDefaultInner,
   reverse: ButtonReverseInner,
   outlined: ButtonOutlinedInner,
   disabled: ButtonDisabledInner,
+  icon: ButtonIconInner,
 };
 
 const ButtonWithTextInner = styled.div`
@@ -77,6 +83,10 @@ const ButtonWithTextInner = styled.div`
   gap: 4px;
   display: inline-flex;
 `;
+
+const IconButton = (iconType: string) => (
+  <Icon type={iconType} size={18} color="black" />
+);
 
 const ButtonWithIconAndText = (iconType: string, buttonText: string) => (
   <ButtonWithTextInner>
@@ -105,6 +115,7 @@ const Button = ({
   const ButtonChosenInner = ButtonTypeInner[type];
 
   const ButtonContent = () => {
+    if (type === "icon") return IconButton(iconType);
     if (iconType !== "") return ButtonWithIconAndText(iconType, buttonText);
     if (buttonText !== "") return ButtonWithText(buttonText);
     return ButtonWithChildren(children);
