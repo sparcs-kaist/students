@@ -216,6 +216,7 @@ export const TeamLeader = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     teamId: int("team_id").notNull(),
     studentId: int("student_id").notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
     startTerm: varchar("start_term", { length: 20 }).notNull(),
     endTerm: varchar("end_term", { length: 20 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
