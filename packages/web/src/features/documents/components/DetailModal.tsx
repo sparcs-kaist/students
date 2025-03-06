@@ -1,12 +1,20 @@
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 
 interface DetailModalProps {
   onConfirm: () => void;
   title: string;
   detail: string;
+}
+
+interface EditableDetailModalProps {
+  onConfirm: () => void;
+  title: string;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 const ModalContentInner = styled.div`
@@ -48,3 +56,39 @@ const DetailModal: React.FC<DetailModalProps> = ({
 );
 
 export default DetailModal;
+
+export const EditableDetailModal: React.FC<EditableDetailModalProps> = ({
+  onConfirm,
+  title,
+  value,
+  onChange,
+}) => {
+  const [localText, setLocalText] = useState<string>(value);
+
+  useEffect(() => {
+    setLocalText(value);
+  }, [value]);
+
+  return (
+    <ModalContentInner>
+      <Typography fs={20} lh={28} fw="MEDIUM">
+        {title}
+      </Typography>
+      <TextAreaInput
+        placeholder="설명을 입력하세요."
+        value={localText}
+        handleChange={setLocalText}
+      />
+      <ButtonWrapper>
+        <Button
+          onClick={() => {
+            onChange(localText);
+            onConfirm();
+          }}
+        >
+          닫기
+        </Button>
+      </ButtonWrapper>
+    </ModalContentInner>
+  );
+};

@@ -12,6 +12,11 @@ interface ReviewModalProps {
   handleStatusChange: (status: string) => void;
 }
 
+interface ReadOnlyReviewModalProps {
+  onConfirm: () => void;
+  review: string;
+}
+
 const ModalContentInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -22,13 +27,23 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 `;
 
 const ThreeButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
+`;
+
+const ContentWrapper = styled.div`
+  padding: 20px 25px;
+  gap: 10px;
+  border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  font-size: 16px;
+  line-height: 20px;
+  white-space: pre;
 `;
 
 const ReviewModal: React.FC<ReviewModalProps> = ({
@@ -112,3 +127,20 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 };
 
 export default ReviewModal;
+
+export const ReadOnlyReviewModal: React.FC<ReadOnlyReviewModalProps> = ({
+  onConfirm,
+  review,
+}) => (
+  <ModalContentInner>
+    <Typography fs={20} lh={28} fw="MEDIUM">
+      검토 내용에 대한 설명
+    </Typography>
+    <ContentWrapper>{review}</ContentWrapper>
+    <ButtonWrapper>
+      <Button onClick={onConfirm} type="default">
+        닫기
+      </Button>
+    </ButtonWrapper>
+  </ModalContentInner>
+);

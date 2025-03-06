@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   useForm,
   useFieldArray,
@@ -16,9 +16,9 @@ import LightTag, {
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
-import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
-import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
-import SelectInTable from "@sparcs-students/web/common/components/TagSelect";
+import { EditableDetailButton } from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
+import { ReadOnlyReviewButton } from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import TagSelect from "@sparcs-students/web/common/components/TagSelect";
 
 import {
   budgetDivisionIncomeTagList,
@@ -30,17 +30,26 @@ import {
 import {
   BudgetDivisionIncomeEnum,
   BudgetDomainEnum,
+  BudgetDivisionIncomeItemEnumList,
+  // BudgetDivisionIncomeItemEnum,
+  // DomainItemSelectItem,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 
 import styled from "styled-components";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
-import InputSelect from "@sparcs-students/web/common/components/InputSelect";
+import InputSelect, {
+  SelectItem,
+} from "@sparcs-students/web/common/components/InputSelect"; // SelectItem,
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
+import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import Icon from "@sparcs-students/web/common/components/Icon";
+import isPropValid from "@emotion/is-prop-valid";
 
 export interface IncomeProps {
   code: number;
   budgetDomain: BudgetDomainEnum;
-  budgetDivisionIncome: BudgetDivisionIncomeEnum;
+  budgetDivisionIncome: BudgetDivisionIncomeEnum | undefined;
   item: string;
   lastYear: number;
   thisYear: number;
@@ -51,11 +60,11 @@ export interface IncomeProps {
 }
 
 interface FormValues {
-  incomes: IncomeProps[];
+  incomes: ManagerIncomeProps[];
 }
 
 interface ManagerIncomeTableProps {
-  initialData: IncomeProps[];
+  initialData: ManagerIncomeProps[];
 }
 
 interface TableRowProps {
@@ -63,13 +72,14 @@ interface TableRowProps {
   getValues: UseFormGetValues<FormValues>;
   rowIndex: number;
   changeCode: () => void;
+  deleteRow: (rowIndex: number) => void;
+  isLast: boolean;
 }
 
 const TableWrapper = styled.table`
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow-x: auto;
+  position: relative;
+  height: fit-content;
+  overflow-y: visible;
 `;
 
 const TableHeader = styled.thead``;
@@ -83,18 +93,31 @@ const TableHeaderWrapper = styled.tr`
   width: 100%;
 `;
 
-const TableContentWrapper = styled.tbody``;
+const TableContentWrapper = styled.tbody`
+  overflow-y: visible;
+`;
 
-const TableRowWrapper = styled.tr`
+const TableRowWrapper = styled.tr.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isLast: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border-radius: 0px 0px 4px 4px;
+  border-radius: ${({ isLast }) => (isLast ? "0px 0px 4px 4px" : "0px")};
   border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-left: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   background: ${({ theme }) => theme.colors.WHITE};
+  cursor: pointer;
+  overflow-y: visible;
+`;
+
+const TitleWithButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const TableRow: React.FC<TableRowProps> = ({
@@ -102,7 +125,11 @@ const TableRow: React.FC<TableRowProps> = ({
   getValues,
   rowIndex,
   changeCode,
+  deleteRow,
+  isLast,
 }) => {
+  const [itemList, setItemList] = useState<SelectItem[]>([]);
+
   const budgetDomainList = Object.entries(budgetDomainTagList).map(
     ([key, { text, color }]) => {
       const value = () => {
@@ -146,8 +173,31 @@ const TableRow: React.FC<TableRowProps> = ({
     }
   };
 
+  const getBudgetDivisionIncomeItemsList = (division: string) => {
+    switch (division) {
+      case "기층기구회계":
+        return BudgetDivisionIncomeItemEnumList.slice(0, 2);
+      case "중앙회계":
+        return BudgetDivisionIncomeItemEnumList.slice(2, 4);
+      case "격려기금":
+        return BudgetDivisionIncomeItemEnumList.slice(4, 5);
+      case "학교지원금":
+        return BudgetDivisionIncomeItemEnumList.slice(5, 6);
+      case "이월금":
+        return BudgetDivisionIncomeItemEnumList.slice(6, 7);
+      case "과비":
+        return BudgetDivisionIncomeItemEnumList.slice(7, 8);
+      case "단비":
+        return BudgetDivisionIncomeItemEnumList.slice(8, 9);
+      case undefined:
+        return [];
+      default:
+        return [];
+    }
+  };
+
   return (
-    <TableRowWrapper>
+    <TableRowWrapper isLast={isLast}>
       <Controller
         name={`incomes.${rowIndex}.code`}
         render={({ field }) => {
@@ -163,11 +213,15 @@ const TableRow: React.FC<TableRowProps> = ({
         name={`incomes.${rowIndex}.budgetDomain`}
         render={({ field }) => (
           <TableCell type="Default" width="120px">
-            <SelectInTable<BudgetDomainEnum>
+            <TagSelect<BudgetDomainEnum>
               items={budgetDomainList.slice(0, 3)}
               value={field.value || "-"}
               onChange={newValue => {
                 setValue(`incomes.${rowIndex}.budgetDomain`, newValue);
+                setValue(
+                  `incomes.${rowIndex}.budgetDivisionIncome`,
+                  BudgetDivisionIncomeEnum.Undefined,
+                );
                 field.onChange(newValue);
                 changeCode();
               }}
@@ -180,29 +234,39 @@ const TableRow: React.FC<TableRowProps> = ({
       />
       <Controller
         name={`incomes.${rowIndex}.budgetDivisionIncome`}
-        render={({ field }) => (
-          <TableCell type="Default" width="150px">
-            <SelectInTable
-              items={getDivisionItemsList(
+        render={({ field }) => {
+          const divisionOptions = useMemo(
+            () =>
+              getDivisionItemsList(
                 getValues(`incomes.${rowIndex}.budgetDomain`),
-              )}
-              value={field.value || "-"}
-              onChange={newVal => field.onChange(newVal)}
-              placeholder="-"
-              errorMessage="필수 항목입니다."
-              width="90px"
-            />
-          </TableCell>
-        )}
+              ),
+            [getValues(`incomes.${rowIndex}.budgetDomain`)],
+          );
+
+          return (
+            <TableCell type="Default" width="150px">
+              <TagSelect
+                items={divisionOptions}
+                value={field.value || divisionOptions[0]}
+                onChange={newVal => {
+                  setItemList(getBudgetDivisionIncomeItemsList(newVal));
+                  setValue(`incomes.${rowIndex}.item`, "");
+                  field.onChange(newVal);
+                }}
+                placeholder="-"
+                errorMessage="필수 항목입니다."
+                width="90px"
+              />
+            </TableCell>
+          );
+        }}
       />
       <Controller
         name={`incomes.${rowIndex}.item`}
         render={({ field }) => (
           <TableCell type="Default" width="400px">
             <InputSelect
-              items={getDivisionItemsList(
-                getValues(`incomes.${rowIndex}.budgetDomain`),
-              )}
+              items={itemList}
               value={field.value}
               onChange={newVal => field.onChange(newVal)}
               errorMessage="필수 항목입니다."
@@ -242,7 +306,9 @@ const TableRow: React.FC<TableRowProps> = ({
           const lastYear = parseInt(
             getValues(`incomes.${rowIndex}.lastYear`) as unknown as string,
           );
-          const thisYear = getValues(`incomes.${rowIndex}.thisYear`);
+          const thisYear = parseInt(
+            getValues(`incomes.${rowIndex}.thisYear`) as unknown as string,
+          );
           const ratio = useMemo(() => {
             if (lastYear <= 0) {
               return null;
@@ -259,14 +325,18 @@ const TableRow: React.FC<TableRowProps> = ({
       />
       <Controller
         name={`incomes.${rowIndex}.reason`}
-        render={({ field }) => (
-          <TableCell type="Default" width="90px">
-            <DetailButton
-              title={`${field.value}에 대한 비고`}
-              detail={field.value}
-            />
-          </TableCell>
-        )}
+        render={({ field }) => {
+          const projectItem = getValues(`incomes.${rowIndex}.item`);
+          return (
+            <TableCell type="Default" width="90px">
+              <EditableDetailButton
+                projectItem={projectItem}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </TableCell>
+          );
+        }}
       />
       <Controller
         name={`incomes.${rowIndex}.status`}
@@ -287,15 +357,19 @@ const TableRow: React.FC<TableRowProps> = ({
         name={`incomes.${rowIndex}.review`}
         render={({ field }) => (
           <TableCell type="Default" width="90px">
-            <ReviewButton
-              status={field.value}
-              review={field.value}
-              handleStatusChange={field.onChange}
-              handleReviewChange={field.onChange}
-            />
+            <ReadOnlyReviewButton review={field.value} />
           </TableCell>
         )}
       />
+      <TableCell type="Default" width="90px">
+        <Icon
+          type="delete"
+          size={16}
+          onClick={() => {
+            deleteRow(rowIndex);
+          }}
+        />
+      </TableCell>
     </TableRowWrapper>
   );
 };
@@ -303,6 +377,9 @@ const TableRow: React.FC<TableRowProps> = ({
 const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   initialData,
 }) => {
+  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
+    undefined,
+  );
   const formMethods = useForm<FormValues>({
     defaultValues: {
       incomes: initialData,
@@ -310,9 +387,45 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   });
 
   const { handleSubmit, control, setValue, getValues } = formMethods;
-  const { fields } = useFieldArray({ control, name: "incomes" });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "incomes",
+  });
 
   const incomes = formMethods.watch("incomes");
+
+  const defaultNewRow = [
+    {
+      code: 0,
+      budgetDomain: BudgetDomainEnum.Undefined,
+      budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
+      item: "",
+      lastYear: "",
+      thisYear: "",
+      ratio: 100.0,
+      reason: "",
+      status: "",
+      review: "",
+    },
+  ];
+
+  const addNewRow = () => {
+    const newRow = { ...defaultNewRow[0], id: fields.length };
+    append(newRow);
+
+    const length = incomes.length + 1;
+    setDynamicHeight(36 + length * 48 + 250);
+  };
+
+  const deleteRow = (rowIndex: number) => {
+    if (incomes.length === 1) {
+      return;
+    }
+    remove(rowIndex);
+    const length = incomes.length - 1;
+
+    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+  };
 
   const onSubmit = (data: FormValues) => {
     console.log("Submitted incomes:", data.incomes);
@@ -354,60 +467,74 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlexWrapper direction="column" gap={16}>
-          <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-            수입
-          </Typography>
-          <TableWrapper>
-            <TableHeader>
-              <TableHeaderWrapper>
-                <TableCell type="Header" width="130px">
-                  코드
-                </TableCell>
-                <TableCell type="Header" width="120px">
-                  구분
-                </TableCell>
-                <TableCell type="Header" width="150px">
-                  예산 분류
-                </TableCell>
-                <TableCell type="Header" width="400px">
-                  항목
-                </TableCell>
-                <TableCell type="Header" width="130px">
-                  작년 결산
-                </TableCell>
-                <TableCell type="Header" width="130px">
-                  올해 예산
-                </TableCell>
-                <TableCell type="Header" width="120px">
-                  비율
-                </TableCell>
-                <TableCell type="Header" width="90px">
-                  비고
-                </TableCell>
-                <TableCell type="Header" width="100px">
-                  현황
-                </TableCell>
-                <TableCell type="Header" width="90px">
-                  검토
-                </TableCell>
-              </TableHeaderWrapper>
-            </TableHeader>
-            <TableContentWrapper>
-              {fields.map((_, index) => {
-                const key = `${index}-content`;
-                return (
+          <TitleWithButtonWrapper>
+            <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
+              수입
+            </Typography>
+            <Button type="default" onClick={addNewRow}>
+              추가
+            </Button>
+          </TitleWithButtonWrapper>
+          <FlexWrapper
+            direction="column"
+            gap={16}
+            height={`${dynamicHeight}px`}
+            xOverflow
+          >
+            <TableWrapper>
+              <TableHeader>
+                <TableHeaderWrapper>
+                  <TableCell type="Header" width="130px">
+                    코드
+                  </TableCell>
+                  <TableCell type="Header" width="120px">
+                    구분
+                  </TableCell>
+                  <TableCell type="Header" width="150px">
+                    예산 분류
+                  </TableCell>
+                  <TableCell type="Header" width="400px">
+                    항목
+                  </TableCell>
+                  <TableCell type="Header" width="130px">
+                    작년 결산
+                  </TableCell>
+                  <TableCell type="Header" width="130px">
+                    올해 예산
+                  </TableCell>
+                  <TableCell type="Header" width="120px">
+                    비율
+                  </TableCell>
+                  <TableCell type="Header" width="90px">
+                    비고
+                  </TableCell>
+                  <TableCell type="Header" width="100px">
+                    현황
+                  </TableCell>
+                  <TableCell type="Header" width="90px">
+                    검토
+                  </TableCell>
+                  <TableCell type="Header" width="90px">
+                    삭제
+                  </TableCell>
+                </TableHeaderWrapper>
+              </TableHeader>
+              <TableContentWrapper>
+                {fields.map((field, index) => (
                   <TableRow
                     changeCode={changeCode}
                     setValue={setValue}
                     getValues={getValues}
-                    key={key}
+                    key={field.id}
                     rowIndex={index}
+                    deleteRow={() => deleteRow(index)}
+                    isLast={index === incomes.length - 1}
                   />
-                );
-              })}
-            </TableContentWrapper>
-          </TableWrapper>
-          <button type="submit">Submit</button>
+                ))}
+              </TableContentWrapper>
+            </TableWrapper>
+            {/* <button type="submit">Submit</button> for console */}
+          </FlexWrapper>
         </FlexWrapper>
       </form>
     </FormProvider>

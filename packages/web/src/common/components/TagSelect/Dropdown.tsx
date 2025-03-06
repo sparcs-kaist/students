@@ -14,18 +14,21 @@ const Dropdown = styled.div.withConfig({
   position: ${({ onlyDropdown, insideTable }) =>
     onlyDropdown || insideTable ? "relative" : "absolute"};
 
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  //display: flex;
+  //flex-direction: column;
+  //align-items: flex-start;
   width: ${({ maxContent }) => (maxContent ? "max-content" : "100%")};
   height: ${({ height }) => (height ? `${height}px` : "fit-content")};
   margin-top: ${({ marginTop, onlyDropdown }) =>
     onlyDropdown ? 0 : marginTop || 0}px;
   padding: 8px;
   border-radius: 4px;
+  border-left-color: ${({ theme }) => theme.colors.GRAY["100"]};
+  border-right-color: ${({ theme }) => theme.colors.GRAY["100"]};
+  border-bottom-color: ${({ theme }) => theme.colors.GRAY["100"]};
   background-color: ${({ theme }) => theme.colors.WHITE};
   gap: 8px;
-  ${({ onlyDropdown }) => (onlyDropdown ? "" : "z-index: 1000;")};
+  ${({ onlyDropdown }) => (onlyDropdown ? "" : "z-index: 3000;")};
   max-height: 200px;
   overflow-y: auto;
 `;

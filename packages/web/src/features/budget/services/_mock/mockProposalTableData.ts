@@ -179,6 +179,34 @@ export const mockIncomeData: IncomeProps[] = [
   },
 ];
 
+export interface ManagerIncomeProps {
+  code: number;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionIncome: BudgetDivisionIncomeEnum;
+  item: string;
+  lastYear: number | string;
+  thisYear: number | string;
+  ratio: number | null;
+  reason: string;
+  status: string;
+  review: string;
+}
+
+export const mockManagerIncomeData: ManagerIncomeProps[] = [
+  {
+    code: 0,
+    budgetDomain: BudgetDomainEnum.Undefined,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
+    item: "",
+    lastYear: "",
+    thisYear: "",
+    ratio: 100.0,
+    reason: "",
+    status: "",
+    review: "",
+  },
+];
+
 export const mockExpenditureData: ExpenditureProps[] = [
   {
     code: 401,

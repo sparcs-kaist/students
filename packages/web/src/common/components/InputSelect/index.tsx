@@ -63,7 +63,7 @@ const StyledSelect = styled.div.withConfig({
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
 
@@ -101,26 +101,6 @@ const SelectWrapper = styled.div`
   flex-direction: column;
   display: flex;
 `;
-
-// const SelectValue = styled.span.withConfig({
-//   shouldForwardProp: prop => isPropValid(prop),
-// })<{ isSelected: boolean; disabled: boolean }>`
-//   display: flex;
-//   width: 81px;
-//   height: 24px;
-//   flex-direction: column;
-//   justify-content: center;
-//   flex-shrink: 0;
-//   color: ${({ theme, isSelected, disabled }) => {
-//     if (disabled) {
-//       return theme.colors.GRAY[400];
-//     }
-//     if (isSelected) {
-//       return theme.colors.BLACK;
-//     }
-//     return theme.colors.GRAY[200];
-//   }};
-// `;
 
 const Select = ({
   items,

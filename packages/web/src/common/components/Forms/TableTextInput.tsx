@@ -1,5 +1,6 @@
 import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
 import styled, { css } from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
@@ -43,7 +44,9 @@ const InputContainer = styled.div`
   align-items: center;
 `;
 
-const Prefix = styled.span<{ hasPrefix: boolean }>`
+const Prefix = styled.span.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ hasPrefix: boolean }>`
   position: absolute;
   left: ${({ hasPrefix }) => (hasPrefix ? "10px" : "0px")};
   font-size: 14px;
@@ -51,9 +54,13 @@ const Prefix = styled.span<{ hasPrefix: boolean }>`
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
-  readOnly: constant,
-}))<TextInputProps & { hasError: boolean; hasPrefix: boolean }>`
+const Input = styled.input
+  .withConfig({
+    shouldForwardProp: prop => isPropValid(prop),
+  })
+  .attrs<TextInputProps>(({ constant }) => ({
+    readOnly: constant,
+  }))<TextInputProps & { hasError: boolean; hasPrefix: boolean }>`
   display: block;
   width: 100%;
   padding-left: ${({ hasPrefix }) => (hasPrefix ? "24px" : "10px")};
@@ -95,6 +102,7 @@ const TableTextInput: React.FC<TextInputProps> = ({
     }
 
     handleChange(inputValue);
+    console.log(inputValue);
   };
 
   useEffect(() => {

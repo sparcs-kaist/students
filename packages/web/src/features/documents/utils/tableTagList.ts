@@ -79,6 +79,10 @@ export const budgetDivisionIncomeTagList: {
     text: "문화자치기금",
     color: "TEAL",
   },
+  [BudgetDivisionIncomeEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
+  },
 };
 
 export const budgetDivisionExpenseTagList: {

@@ -16,8 +16,10 @@ import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
-  mockExpenditureData,
-  mockIncomeData,
+  // mockExpenditureData,
+  // mockIncomeData,
+  // mockIncomeManagerData,
+  mockManagerIncomeData,
   mockViewerExpenditureData,
   mockViewerIncomeData,
   mockViewResultData,
@@ -30,14 +32,14 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 
 import ManagerIncomeTable from "@sparcs-students/web/features/budget/components/ManagerIncomeTable";
-import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
+// import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
 import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
 import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
-import styled from "styled-components";
-import { overlay } from "overlay-kit";
-import Modal from "@sparcs-students/web/common/components/Modal";
-import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
-import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+// import styled from "styled-components";
+// import { overlay } from "overlay-kit";
+// import Modal from "@sparcs-students/web/common/components/Modal";
+// import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
+// import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
 
 interface DomainAccum {
@@ -47,12 +49,12 @@ interface DomainAccum {
   expenditureThisYear: number;
 }
 
-const ButtonWrapper = styled.div`
-  gap: 30px;
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-`;
+// const ButtonWrapper = styled.div`
+//   gap: 30px;
+//   flex-direction: row;
+//   display: flex;
+//   justify-content: center;
+// `;
 
 const dataToTotal = (
   incomeData: ViewerIncomeProps[],
@@ -163,32 +165,32 @@ const Proposal = () => {
   const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = 3; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
-  const openSaveModal = () => {
-    // TODO: add save logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <ConfirmModalContent onConfirm={() => close()}>
-          저장되었습니다.
-        </ConfirmModalContent>
-      </Modal>
-    ));
-  };
-
-  const openDiscardModal = () => {
-    // TODO: add discard logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <CancellableModalContent
-          onConfirm={() => close()}
-          onClose={() => close()}
-        >
-          임시저장 내역을{"\n"}모두 삭제하시겠습니까?
-        </CancellableModalContent>
-      </Modal>
-    ));
-  };
+  // const openSaveModal = () => {
+  //   // TODO: add save logic
+  //   overlay.open(({ isOpen, close }) => (
+  //     <Modal isOpen={isOpen} width="400px">
+  //       <ConfirmModalContent onConfirm={() => close()}>
+  //         저장되었습니다.
+  //       </ConfirmModalContent>
+  //     </Modal>
+  //   ));
+  // };
+  //
+  // const openDiscardModal = () => {
+  //   // TODO: add discard logic
+  //   overlay.open(({ isOpen, close }) => (
+  //     <Modal isOpen={isOpen} width="400px">
+  //       <CancellableModalContent
+  //         onConfirm={() => close()}
+  //         onClose={() => close()}
+  //       >
+  //         임시저장 내역을{"\n"}모두 삭제하시겠습니까?
+  //       </CancellableModalContent>
+  //     </Modal>
+  //   ));
+  // };
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -223,35 +225,37 @@ const Proposal = () => {
           handleDateChange={setDate}
         />
         {/* {userPermission === 1 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
-        {userPermission === 2 && (
-          <ManagerIncomeTable initialData={mockIncomeData} />
+        {/* {userPermission === 2 && ( */}
+        {/*   <ReviewerIncomeTable initialData={mockViewerIncomeData} /> */}
+        {/* )} */}
+        {userPermission === 3 && (
+          <ManagerIncomeTable initialData={mockManagerIncomeData} />
         )}
-        {/* {userPermission === 3 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
 
         {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} />} */}
-        {userPermission === 2 && (
-          <ReviewerExpenditureTable initialData={mockExpenditureData} />
-        )}
+        {/* {userPermission === 2 && ( */}
+        {/*   <ReviewerExpenditureTable initialData={mockExpenditureData} /> */}
+        {/* )} */}
         <TotalTable
           data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
         />
-        {userPermission === 2 && (
-          <ButtonWrapper>
-            <Button
-              type="reverse"
-              onClick={openDiscardModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              삭제
-            </Button>
-            <Button
-              onClick={openSaveModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              제출
-            </Button>
-          </ButtonWrapper>
-        )}
+        {/* {userPermission === 2 && ( */}
+        {/*   <ButtonWrapper> */}
+        {/*     <Button */}
+        {/*       type="reverse" */}
+        {/*       onClick={openDiscardModal} */}
+        {/*       style={{ width: "100px", padding: "8px 16px" }} */}
+        {/*     > */}
+        {/*       삭제 */}
+        {/*     </Button> */}
+        {/*     <Button */}
+        {/*       onClick={openSaveModal} */}
+        {/*       style={{ width: "100px", padding: "8px 16px" }} */}
+        {/*     > */}
+        {/*       제출 */}
+        {/*     </Button> */}
+        {/*   </ButtonWrapper> */}
+        {/* )} */}
       </FlexWrapper>
     </FlexWrapper>
   );

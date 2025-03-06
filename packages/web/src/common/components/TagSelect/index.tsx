@@ -38,7 +38,8 @@ interface TagSelectProps<T> {
 const SelectInner = styled.div`
   gap: 4px;
   position: relative;
-  height: fit-content;
+  height: 24px;
+  overflow-y: visible;
 `;
 
 const disabledStyle = css`
@@ -102,6 +103,7 @@ const SelectWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   display: flex;
+  overflow-y: visible;
 `;
 
 const SelectValue = styled.span.withConfig({
