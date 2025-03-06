@@ -22,10 +22,9 @@ const Dropdown = styled.div.withConfig({
   margin-top: ${({ marginTop, onlyDropdown }) =>
     onlyDropdown ? 0 : marginTop || 0}px;
   padding: 8px;
-  border-radius: 4px;
-  border-left-color: ${({ theme }) => theme.colors.GRAY["100"]};
-  border-right-color: ${({ theme }) => theme.colors.GRAY["100"]};
-  border-bottom-color: ${({ theme }) => theme.colors.GRAY["100"]};
+  border-radius: 0px 0px 4px 4px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY["100"]};
+  border-top-color: ${({ theme }) => theme.colors.WHITE};
   background-color: ${({ theme }) => theme.colors.WHITE};
   gap: 8px;
   ${({ onlyDropdown }) => (onlyDropdown ? "" : "z-index: 3000;")};

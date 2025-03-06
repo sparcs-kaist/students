@@ -239,7 +239,7 @@ const TagSelect = <T,>({
             <Dropdown
               onlyDropdown={onlyDropdown}
               insideTable
-              marginTop={4}
+              marginTop={12}
               height={dropdownHeight}
             >
               {items.length > 0 ? (

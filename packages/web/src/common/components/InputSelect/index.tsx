@@ -194,8 +194,7 @@ const Select = ({
           {(onlyDropdown || isOpen) && (
             <Dropdown
               onlyDropdown={onlyDropdown}
-              insideTable
-              marginTop={4}
+              marginTop={15}
               height={dropdownHeight}
             >
               {items.length > 0 ? (

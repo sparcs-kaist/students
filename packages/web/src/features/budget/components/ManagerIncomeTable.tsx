@@ -378,7 +378,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   initialData,
 }) => {
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
-    undefined,
+    334, // TODO: magic number 36 + 48 + 250
   );
   const formMethods = useForm<FormValues>({
     defaultValues: {

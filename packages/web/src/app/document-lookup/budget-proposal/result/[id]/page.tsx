@@ -19,9 +19,10 @@ import TotalTable, {
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
   mockExpenditureData,
+  // mockExpenditureData,
+  // mockManagerIncomeData,
   // mockIncomeData,
   // mockIncomeManagerData,
-  // mockManagerIncomeData,
   mockViewerExpenditureData,
   mockViewerIncomeData,
   mockViewResultData,
@@ -35,14 +36,13 @@ import ThreeInput, {
 
 // import ManagerIncomeTable from "@sparcs-students/web/features/budget/components/ManagerIncomeTable";
 import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-// import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-// import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import styled from "styled-components";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
+// import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 
 interface DomainAccum {

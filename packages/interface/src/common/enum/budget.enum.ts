@@ -270,41 +270,12 @@ export interface DomainItemSelectItem {
   value: BudgetDivisionIncomeItemEnum;
 }
 
-export const BudgetDivisionIncomeItemEnumList = [
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(1),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(1),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(2),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(2),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(3),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(3),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(4),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(4),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(5),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(5),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(6),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(6),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(7),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(7),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(8),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(8),
-  },
-  {
-    label: getDisplayNameBudgetDivisionIncomeItemEnum(9),
-    value: getDisplayNameBudgetDivisionIncomeItemEnum(9),
-  },
-];
+export const BudgetDivisionIncomeItemEnumListInter = Object.values(
+  BudgetDivisionIncomeItemEnum,
+).filter(value => typeof value === "number") as number[];
+
+export const BudgetDivisionIncomeItemEnumList =
+  BudgetDivisionIncomeItemEnumListInter.map(e => ({
+    value: getDisplayNameBudgetDivisionIncomeItemEnum(e),
+    label: getDisplayNameBudgetDivisionIncomeItemEnum(e),
+  }));
