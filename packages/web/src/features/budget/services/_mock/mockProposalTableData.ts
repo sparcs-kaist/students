@@ -35,6 +35,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 102,
@@ -47,6 +48,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 103,
@@ -59,6 +61,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 201,
@@ -71,6 +74,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
 ];
 
