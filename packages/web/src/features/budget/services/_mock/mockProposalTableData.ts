@@ -35,6 +35,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 102,
@@ -47,6 +48,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 103,
@@ -59,6 +61,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
   {
     code: 201,
@@ -71,6 +74,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
   },
 ];
 
@@ -175,6 +179,34 @@ export const mockIncomeData: IncomeProps[] = [
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
     status: "승인",
+    review: "",
+  },
+];
+
+export interface ManagerIncomeProps {
+  code: number;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionIncome: BudgetDivisionIncomeEnum;
+  item: string;
+  lastYear: number | string;
+  thisYear: number | string;
+  ratio: number | null;
+  reason: string;
+  status: string;
+  review: string;
+}
+
+export const mockManagerIncomeData: ManagerIncomeProps[] = [
+  {
+    code: 0,
+    budgetDomain: BudgetDomainEnum.Undefined,
+    budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
+    item: "",
+    lastYear: "",
+    thisYear: "",
+    ratio: 100.0,
+    reason: "",
+    status: "",
     review: "",
   },
 ];

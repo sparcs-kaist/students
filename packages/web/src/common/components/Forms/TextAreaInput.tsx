@@ -1,5 +1,6 @@
 import React, { ChangeEvent, TextareaHTMLAttributes, useEffect } from "react";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 import {
@@ -20,7 +21,9 @@ export interface TextAreaInputProps
   setErrorStatus?: (hasError: boolean) => void;
 }
 
-const StyledTextArea = styled.textarea<{ hasError: boolean }>`
+const StyledTextArea = styled.textarea.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ hasError: boolean }>`
   height: 190px;
   resize: none;
   overflow: auto;
@@ -65,6 +68,8 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;
+    console.log("e is", e);
+    console.log(inputValue);
     handleChange(inputValue);
   };
 

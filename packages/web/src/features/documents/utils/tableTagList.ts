@@ -25,6 +25,10 @@ export const budgetDomainTagList: {
     text: "자치",
     color: "PINK",
   },
+  [BudgetDomainEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
+  },
 };
 
 export const budgetDivisionIncomeTagList: {
@@ -74,6 +78,10 @@ export const budgetDivisionIncomeTagList: {
   [BudgetDivisionIncomeEnum.CAC]: {
     text: "문화자치기금",
     color: "TEAL",
+  },
+  [BudgetDivisionIncomeEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
   },
 };
 

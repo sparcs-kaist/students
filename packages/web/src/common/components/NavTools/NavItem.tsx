@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import NavSubMenu from "./NavSubMenu";
 
 type Path = {
@@ -12,7 +13,9 @@ type Path = {
   highlight?: boolean;
 };
 
-const NavItemInner = styled.div<{ highlight?: boolean }>`
+const NavItemInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop) && prop !== "hasError",
+})<{ highlight?: boolean }>`
   position: relative;
   display: inline-flex;
   justify-content: center;

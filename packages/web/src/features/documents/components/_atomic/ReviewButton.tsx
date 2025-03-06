@@ -1,14 +1,20 @@
 import React from "react";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import { overlay } from "overlay-kit";
-import ReviewModal from "@sparcs-students/web/features/documents/components/ReviewModal";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import Icon from "@sparcs-students/web/common/components/Icon";
+import ReviewModal, {
+  ReadOnlyReviewModal,
+} from "@sparcs-students/web/features/documents/components/ReviewModal";
 
 type ReviewButtonProps = {
   review: string;
   status: string;
   handleReviewChange: (detail: string) => void;
   handleStatusChange: (status: string) => void;
+};
+
+type ReadOnlyReviewButtonProps = {
+  review: string;
 };
 
 const ReviewButton = ({
@@ -33,15 +39,23 @@ const ReviewButton = ({
     ));
   };
 
-  return (
-    <Button
-      onClick={e => {
-        e.stopPropagation();
-        openCheckModal();
-      }}
-      iconType="edit"
-      type="icon"
-    />
-  );
+  return <Icon onClick={openCheckModal} type="edit" size={18} />;
 };
 export default ReviewButton;
+
+export const ReadOnlyReviewButton = ({ review }: ReadOnlyReviewButtonProps) => {
+  const openCheckModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="500px">
+        <ReadOnlyReviewModal
+          onConfirm={() => {
+            close();
+          }}
+          review={review}
+        />
+      </Modal>
+    ));
+  };
+
+  return <Icon onClick={openCheckModal} type="search" size={18} />;
+};

@@ -3,6 +3,7 @@ export enum BudgetDomainEnum {
   Student = 1, // 학생회비
   School, // 본회계
   Autonomous, // 자치
+  Undefined, // not defined!
 }
 
 // 예산 구분(수입) E
@@ -18,6 +19,7 @@ export enum BudgetDivisionIncomeEnum {
   External, // 외부지원금
   Extra, // 기타수익금
   CAC, // 문화자치기금
+  Undefined,
 }
 
 // 예산 구분(지출) E
@@ -45,6 +47,18 @@ export enum BudgetClassExpenseEnum {
   Extra, // 기타비
   Backup, // 예비비
   Incentive, // 격려금
+}
+
+export enum BudgetDivisionIncomeItemEnum { // 예산 항목
+  SubstratumSubsidy = 1, // 기층기구회계 지원금
+  SubstratumCarryover, // 기층기구회계 이월금
+  CentralSubsidy, // 중앙회계 지원금
+  CentralCarryover, // 중앙회계 이월금
+  Incentive, // 격려금
+  SchoolSubsidy, // 학생지원팀 지원금
+  Carryover, // 이월금
+  Department, // 과비
+  Organizational, // 단비
 }
 
 // 거래 유형 E
@@ -78,6 +92,19 @@ export const getDisplayNameBudgetDomainEnum = (
       return "자치";
     default:
       return "";
+  }
+};
+
+export const getEnumBudgetDomain = (type: string | undefined) => {
+  switch (type) {
+    case "학생회비":
+      return BudgetDomainEnum.Student;
+    case "본회계":
+      return BudgetDomainEnum.School;
+    case "자치":
+      return BudgetDomainEnum.Autonomous;
+    default:
+      return BudgetDomainEnum.Undefined;
   }
 };
 
@@ -210,3 +237,45 @@ export const getDisplayNameReportFileTypeEnum = (
       return "";
   }
 };
+
+export const getDisplayNameBudgetDivisionIncomeItemEnum = (
+  type: BudgetDivisionIncomeItemEnum | undefined,
+) => {
+  switch (type) {
+    case BudgetDivisionIncomeItemEnum.SubstratumSubsidy:
+      return "기층기구회계 지원금";
+    case BudgetDivisionIncomeItemEnum.SubstratumCarryover:
+      return "기층기구회계 이월금";
+    case BudgetDivisionIncomeItemEnum.CentralSubsidy:
+      return "중앙회계 지원금";
+    case BudgetDivisionIncomeItemEnum.CentralCarryover:
+      return "중앙회계 이월금";
+    case BudgetDivisionIncomeItemEnum.Incentive:
+      return "격려금";
+    case BudgetDivisionIncomeItemEnum.SchoolSubsidy:
+      return "학생지원팀 지원금";
+    case BudgetDivisionIncomeItemEnum.Carryover:
+      return "이월금";
+    case BudgetDivisionIncomeItemEnum.Department:
+      return "과비";
+    case BudgetDivisionIncomeItemEnum.Organizational:
+      return "단비";
+    default:
+      return "";
+  }
+};
+
+export interface DomainItemSelectItem {
+  label: string;
+  value: BudgetDivisionIncomeItemEnum;
+}
+
+export const BudgetDivisionIncomeItemEnumListInter = Object.values(
+  BudgetDivisionIncomeItemEnum,
+).filter(value => typeof value === "number") as number[];
+
+export const BudgetDivisionIncomeItemEnumList =
+  BudgetDivisionIncomeItemEnumListInter.map(e => ({
+    value: getDisplayNameBudgetDivisionIncomeItemEnum(e),
+    label: getDisplayNameBudgetDivisionIncomeItemEnum(e),
+  }));
