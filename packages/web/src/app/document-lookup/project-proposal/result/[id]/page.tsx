@@ -19,6 +19,7 @@ import {
   mockProjectProposalData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 
 const Proposal = () => {
   const { id } = useParams();
@@ -32,7 +33,15 @@ const Proposal = () => {
 
   return (
     <FlexWrapper direction="column" gap={48}>
-      <PageTitle>예결산 조회</PageTitle>
+      <FlexWrapper direction="column" gap={10}>
+        <PageTitle>예결산 조회</PageTitle>
+        <BreadCrumb
+          items={[
+            { name: "예결산 조회", path: "/document-lookup" },
+            { name: "사업계획서", path: "/project-proposal" },
+          ]}
+        />
+      </FlexWrapper>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
         <FlexWrapper direction="column" gap={32}>
           <FlexWrapper direction="column" gap={16}>

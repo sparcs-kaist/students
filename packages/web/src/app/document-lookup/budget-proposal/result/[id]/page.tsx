@@ -39,6 +39,7 @@ import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 
 interface DomainAccum {
   incomeLastYear: number;
@@ -192,7 +193,15 @@ const Proposal = () => {
 
   return (
     <FlexWrapper direction="column" gap={48}>
-      <PageTitle>예결산 조회</PageTitle>
+      <FlexWrapper direction="column" gap={10}>
+        <PageTitle>예결산 조회</PageTitle>
+        <BreadCrumb
+          items={[
+            { name: "예결산 조회", path: "/document-lookup" },
+            { name: "예산안", path: "/budget-proposal" },
+          ]}
+        />
+      </FlexWrapper>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
         <FlexWrapper direction="column" gap={32}>
           <FlexWrapper direction="column" gap={16}>
