@@ -43,7 +43,6 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   justify-content: center;
   align-items: center;
   padding: ${({ isHeader }) => (isHeader ? "12px 8px" : "12px 20px")};
-  height: ${({ isHeader }) => (isHeader ? "36px" : "48px")};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
@@ -51,13 +50,12 @@ const CommonCellBodyWrapper = styled.td.withConfig({
 
 const CellText = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isGray: boolean }>`
+})<{ isGray: boolean; isSelect?: boolean }>`
   font-size: 14px;
   line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;

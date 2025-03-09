@@ -38,6 +38,7 @@ export interface ViewerIncomeProps {
   ratio: number | null;
   reason: string;
   status: string;
+  review: string;
 }
 
 interface IncomeTableProps {

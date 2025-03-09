@@ -37,7 +37,7 @@ const TableInner = styled.table.withConfig({
   border-radius: 4px;
   overflow: hidden;
   border-spacing: 0;
-  height: ${({ height }) => (height ? `${height}px` : "none")};
+  /* height: ${({ height }) => (height ? `${height}px` : "fit-content")}; */
   table-layout: fixed;
   width: 100%;
 `;
@@ -56,6 +56,7 @@ const Content = styled.tbody`
   flex: 1;
   overflow-y: auto;
   width: 100%;
+  height: fit-content;
 `;
 const ContentRow = styled.tr.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
@@ -66,9 +67,10 @@ const ContentRow = styled.tr.withConfig({
   cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.GREEN[100] : "transparent"};
-  overflow: hidden;
+  /* overflow: hidden; */
   white-space: nowrap;
   text-overflow: ellipsis;
+  height: fit-content;
 `;
 
 const EmptyCenterPlacer = styled.div`
@@ -162,7 +164,6 @@ const Table = <T,>({
               const style = rowStyleResolver
                 ? rowStyleResolver(row.original)
                 : undefined;
-
               return (
                 <ContentRow
                   key={row.id}

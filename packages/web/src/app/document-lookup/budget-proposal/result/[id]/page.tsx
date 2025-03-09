@@ -6,18 +6,23 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-// import ViewerIncomeTable, {
-//   ViewerIncomeProps,
-// } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-// import ViewerExpenditureTable, {
-//   ViewerExpenditureProps,
-// } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
+import {
+  // ViewerIncomeTable,
+  ViewerIncomeProps,
+} from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
+import {
+  // ViewerExpenditureTable,
+  ViewerExpenditureProps,
+} from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
   mockExpenditureData,
-  mockIncomeData,
+  // mockExpenditureData,
+  // mockManagerIncomeData,
+  // mockIncomeData,
+  // mockIncomeManagerData,
   mockViewerExpenditureData,
   mockViewerIncomeData,
   mockViewResultData,
@@ -29,10 +34,8 @@ import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 
-import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+// import ManagerIncomeTable from "@sparcs-students/web/features/budget/components/ManagerIncomeTable";
 import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import styled from "styled-components";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
@@ -40,6 +43,8 @@ import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/Co
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+// import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 
 interface DomainAccum {
   incomeLastYear: number;
@@ -233,9 +238,11 @@ const Proposal = () => {
         />
         {/* {userPermission === 1 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
         {userPermission === 2 && (
-          <ReviewerIncomeTable initialData={mockIncomeData} />
+          <ReviewerIncomeTable initialData={mockViewerIncomeData} />
         )}
-        {/* {userPermission === 3 && <ViewerIncomeTable data={mockViewerIncomeData} />} */}
+        {/* {userPermission === 3 && ( */}
+        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} /> */}
+        {/* )} */}
 
         {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} type="proposal" pageId={id} />} */}
         {userPermission === 2 && (
