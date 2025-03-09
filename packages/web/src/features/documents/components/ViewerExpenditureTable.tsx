@@ -189,7 +189,7 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <FlexWrapper direction="row" gap={12}>
+      <FlexWrapper direction="row" gap={12} style={{ whiteSpace: "nowrap" }}>
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
           지출
         </Typography>
