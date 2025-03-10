@@ -35,6 +35,7 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { budgetExpenseToString } from "@sparcs-students/web/features/documents/utils/enumToItem";
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
+import { useRouter } from "next/navigation";
 
 export interface ViewerExpenditureProps {
   code: number;
@@ -51,6 +52,8 @@ export interface ViewerExpenditureProps {
 
 interface ExpenditureTableProps {
   data: ViewerExpenditureProps[];
+  type: string; // "proposal" || "report"
+  pageId: string | string[];
 }
 
 const columnHelper = createColumnHelper<ViewerExpenditureProps>();
@@ -75,7 +78,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 140,
+    size: 160,
   }),
   columnHelper.accessor("budgetDivisionExpense", {
     id: "budgetDivisionExpense",
@@ -138,7 +141,7 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 157.5,
+    size: 175,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
@@ -166,9 +169,13 @@ const columns = [
   }),
 ];
 
-const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
+const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
+  data,
+  type,
+  pageId,
+}) => {
   const [loaded, setLoaded] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     setLoaded(true);
   }, []);
@@ -182,13 +189,23 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({ data }) => {
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <FlexWrapper direction="row" gap={12}>
+      <FlexWrapper direction="row" gap={12} style={{ whiteSpace: "nowrap" }}>
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
           지출
         </Typography>
         <ExpenditureHelpButton />
       </FlexWrapper>
-      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
+      {loaded && (
+        <Table
+          table={table}
+          emptyMessage="테이블 정보가 없습니다."
+          onClick={row =>
+            router.push(
+              `/document-lookup/project-${type}/result/${pageId}/detail/${row.code}`, // TODO: change when api connect
+            )
+          }
+        />
+      )}
     </FlexWrapper>
   );
 };
