@@ -56,12 +56,22 @@ export const zOperatingCommitteeRequestCreate = zOperatingCommittee
   })
   .extend({ duration: zDurationCreate });
 
+export const zOperatingCommitteRequestUpdate = zOperatingCommittee.pick({
+  id: true,
+  name: true,
+  nameEng: true,
+  duration: true,
+});
+
 export type IOperatingCommittee = z.infer<typeof zOperatingCommittee>;
 export type IOperatingCommitteeResponse = z.infer<
   typeof zOperatingCommitteeResponse
 >;
 export type IOperatingCommitteeRequestCreate = z.infer<
   typeof zOperatingCommitteeRequestCreate
+>;
+export type IOperatingCommitteeRequestUpdate = z.infer<
+  typeof zOperatingCommitteRequestUpdate
 >;
 
 // Team: 팀 엔티티

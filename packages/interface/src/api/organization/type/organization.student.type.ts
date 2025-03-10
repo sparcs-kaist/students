@@ -115,6 +115,8 @@ export const zOperatingCommitteeMemberRequestCreate = zOperatingCommitteeMember
   })
   .extend({ duration: zDurationCreate });
 
+export const zOperatingCommitteeMemberRequestUpdate = zOperatingCommitteeMember;
+
 export const zOperatingCommitteeMemberResponse =
   zOperatingCommitteeMember.extend({
     operatingCommittee: zOperatingCommittee,
@@ -126,6 +128,9 @@ export type IOperatingCommitteeMember = z.infer<
 >;
 export type IOperatingCommitteeMemberRequestCreate = z.infer<
   typeof zOperatingCommitteeMemberRequestCreate
+>;
+export type IOperatingCommitteeMemberRequestUpdate = z.infer<
+  typeof zOperatingCommitteeMemberRequestUpdate
 >;
 export type IOperatingCommitteeMemberResponse = z.infer<
   typeof zOperatingCommitteeMemberResponse
