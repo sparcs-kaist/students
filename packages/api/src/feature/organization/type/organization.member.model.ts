@@ -19,15 +19,15 @@ export class MOrganizationMember implements IOrganizationMember {
     Object.assign(this, data);
   }
 
-  static fromDBResult(data: OrganizationDBResult) {
+  static fromDBResult(result: OrganizationDBResult) {
     return new MOrganizationMember({
-      ...data,
-      id: data.id,
-      organization: { id: data.organizationId },
-      student: { id: data.studentId },
+      ...result,
+      id: result.id,
+      organization: { id: result.organizationId },
+      student: { id: result.studentId },
       duration: {
-        startTerm: data.startTerm,
-        endTerm: data.endTerm,
+        startTerm: result.startTerm,
+        endTerm: result.endTerm,
       },
     });
   }

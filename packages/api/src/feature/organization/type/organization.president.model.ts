@@ -27,18 +27,18 @@ export class MOrganizationPresident implements IOrganizationPresident {
     Object.assign(this, data);
   }
 
-  static fromDBResult(data: OrganizationPresidentDBResult) {
+  static fromDBResult(result: OrganizationPresidentDBResult) {
     return new MOrganizationPresident({
-      ...data,
-      id: data.id,
-      organization: { id: data.organizationId },
-      organizationPresidentTypeEnum: data.organizationPresidentTypeEnum,
-      title: data.title,
-      student: { id: data.studentId },
-      phoneNumber: data.phoneNumber,
+      ...result,
+      id: result.id,
+      organization: { id: result.organizationId },
+      organizationPresidentTypeEnum: result.organizationPresidentTypeEnum,
+      title: result.title,
+      student: { id: result.studentId },
+      phoneNumber: result.phoneNumber,
       duration: {
-        startTerm: data.startTerm,
-        endTerm: data.endTerm,
+        startTerm: result.startTerm,
+        endTerm: result.endTerm,
       },
     });
   }
