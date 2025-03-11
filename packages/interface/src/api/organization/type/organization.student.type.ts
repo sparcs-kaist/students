@@ -145,6 +145,12 @@ export const zTeamMemberRequestCreate = zTeamMember
   })
   .extend({ duration: zDurationCreate });
 
+export const zTeamMemberRequestUpdate = zTeamMember.pick({
+  id: true,
+  student: true,
+  duration: true,
+});
+
 export const zTeamMemberResponse = zTeamMember.extend({
   team: zTeam,
   student: zStudent,
@@ -152,6 +158,7 @@ export const zTeamMemberResponse = zTeamMember.extend({
 
 export type ITeamMember = z.infer<typeof zTeamMember>;
 export type ITeamMemberRequestCreate = z.infer<typeof zTeamMemberRequestCreate>;
+export type ITeamMemberRequestUpdate = z.infer<typeof zTeamMemberRequestUpdate>;
 export type ITeamMemberResponse = z.infer<typeof zTeamMemberResponse>;
 
 export const zTeamLeader = z.object({
@@ -174,6 +181,14 @@ export const zTeamLeaderResponse = zTeamLeader.extend({
   student: zStudent,
 });
 
+export const zTeamLeaderRequestUpdate = zTeamLeader.pick({
+  id: true,
+  student: true,
+  title: true,
+  duration: true,
+});
+
 export type ITeamLeader = z.infer<typeof zTeamLeader>;
 export type ITeamLeaderRequestCreate = z.infer<typeof zTeamLeaderRequestCreate>;
+export type ITeamLeaderRequestUpdate = z.infer<typeof zTeamLeaderRequestUpdate>;
 export type ITeamLeaderResponse = z.infer<typeof zTeamLeaderResponse>;

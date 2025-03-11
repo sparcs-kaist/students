@@ -1,6 +1,17 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, gt, inArray, isNotNull, lt, not, or, eq } from "drizzle-orm";
+import {
+  and,
+  gt,
+  inArray,
+  isNotNull,
+  lt,
+  not,
+  or,
+  eq,
+  SQL,
+  isNull,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -9,13 +20,20 @@ import {
 import { TeamLeader } from "src/drizzle/schema";
 import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
 import {
-  ITeamLeader,
   ITeamLeaderRequestCreate,
+  ITeamLeaderRequestUpdate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
 import { MTeamLeader } from "../type/team.leader.model";
 
+type ITeamLeaderQuery = {
+  id?: number;
+  ids?: number[];
+  team?: number;
+  duration?: DurationFull;
+};
+
 @Injectable()
-export class TeamRepository {
+export class TeamLeaderRepository {
   constructor(
     @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
   ) {}
@@ -30,145 +48,106 @@ export class TeamRepository {
   // find methods
   async findTx(
     tx: DrizzleTransaction,
-    team: ITeamLeader["team"],
-  ): Promise<MTeamLeader | null>;
-  async findTx(
-    tx: DrizzleTransaction,
-    id: ITeamLeader["id"],
-  ): Promise<MTeamLeader | null>;
-  async findTx(
-    tx: DrizzleTransaction,
-    arg1: ITeamLeader["team"] | ITeamLeader["id"],
-  ): Promise<MTeamLeader | null> {
-    let query = tx.select().from(TeamLeader).$dynamic();
+    param: ITeamLeaderQuery,
+  ): Promise<MTeamLeader[] | null> {
+    const whereClause: SQL[] = [];
 
-    if (typeof arg1 === "number") {
-      query = query.where(eq(TeamLeader.id, arg1));
-    } else {
-      query = query.where(eq(TeamLeader.teamId, arg1.id));
+    if (param.id) {
+      whereClause.push(eq(TeamLeader.id, param.id));
     }
-
-    const [result] = await query.execute();
-
-    return result ? MTeamLeader.fromDBResult(result) : null;
-  }
-
-  async findAllTx(
-    tx: DrizzleTransaction,
-    teamLeaderIds: ITeamLeader["id"][],
-  ): Promise<MTeamLeader[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    duration: DurationFull,
-  ): Promise<MTeamLeader[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    arg1: ITeamLeader["id"][] | DurationFull,
-  ): Promise<MTeamLeader[]> {
-    let query = tx.select().from(TeamLeader).$dynamic();
-    const whereConditions = [];
-
-    if (arg1 instanceof Array) {
-      whereConditions.push(inArray(TeamLeader.id, arg1));
-    } else if ("startTerm" in arg1 && "endTerm" in arg1) {
-      whereConditions.push(
+    if (param.id) {
+      whereClause.push(inArray(TeamLeader.id, param.ids));
+    }
+    if (param.duration) {
+      whereClause.push(
         not(
           or(
-            gt(TeamLeader.startTerm, arg1.endTerm),
+            gt(TeamLeader.startTerm, param.duration.endTerm),
             and(
               isNotNull(TeamLeader.endTerm),
-              lt(TeamLeader.endTerm, arg1.startTerm),
+              lt(TeamLeader.endTerm, param.duration.startTerm),
             ),
           ),
         ),
       );
     }
 
-    whereConditions.push(isNotNull(TeamLeader.deletedAt));
-    query = query.where(and(...whereConditions));
+    whereClause.push(isNotNull(TeamLeader.deletedAt));
 
-    const res = await query.execute();
-    return res.map(r => MTeamLeader.fromDBResult(r));
+    const result = await tx
+      .select()
+      .from(TeamLeader)
+      .where(and(...whereClause))
+      .execute();
+
+    return result.map(row => MTeamLeader.fromDBResult(row));
   }
 
-  // fetch methods
-  async fetchTx(
-    tx: DrizzleTransaction,
-    id: ITeamLeader["id"],
-  ): Promise<MTeamLeader> {
-    const result = await this.findTx(tx, id);
-    if (!result) {
-      throw new HttpException("Team leader not found", HttpStatus.NOT_FOUND);
-    }
-    return result;
-  }
-
-  async fetch(id: ITeamLeader["id"]): Promise<MTeamLeader> {
-    return this.db.transaction(async tx => this.fetchTx(tx, id));
-  }
-
-  async fetchAllTx(
-    tx: DrizzleTransaction,
-    arg1: ITeamLeader["id"][] | DurationFull,
-  ): Promise<MTeamLeader[]> {
-    if (Array.isArray(arg1)) {
-      // arg1이 teamLeaderIds 배열인 경우
-      // 요청한 ID를 Set으로 변환하여 중복 제거
-      const uniqueIds = Array.from(new Set(arg1));
-
-      const results = await this.findAllTx(tx, uniqueIds);
-      // 반환된 ID를 Set으로 변환하여 중복 제거
-      const returnedIds = new Set(results.map(org => org.id));
-
-      if (returnedIds.size === uniqueIds.length) {
-        throw new HttpException("No Team leaders found", HttpStatus.NOT_FOUND);
-      }
-      return results;
-    }
-    // arg1이 DurationFull인 경우
-    const results = await this.findAllTx(tx, arg1);
-    if (results.length === 0) {
-      throw new HttpException("No Team leaders found", HttpStatus.NOT_FOUND);
-    }
-    return results;
-  }
-
-  async fetchAll(ids: ITeamLeader["id"][]): Promise<MTeamLeader[]>;
-  async fetchAll(duration: DurationFull): Promise<MTeamLeader[]>;
-  async fetchAll(
-    arg1: ITeamLeader["id"][] | DurationFull,
-  ): Promise<MTeamLeader[]> {
-    return this.db.transaction(async tx => this.fetchAllTx(tx, arg1));
+  async find(param: ITeamLeaderQuery): Promise<MTeamLeader[] | null> {
+    return this.withTransaction(async tx => this.findTx(tx, param));
   }
 
   // insert methods
   async insertTx(
     tx: DrizzleTransaction,
-    data: ITeamLeaderRequestCreate,
-  ): Promise<MTeamLeader> {
-    const result = await tx
-      .insert(TeamLeader)
-      .values({
-        teamId: data.team.id,
-        studentId: data.student.id,
-        title: data.title,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm,
-      })
-      .execute();
-    const insertedId = result[0].insertId;
-    const team = await this.findTx(tx, insertedId);
-    if (!team) {
-      throw new HttpException(
-        "Failed to create team leader",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    param: ITeamLeaderRequestCreate,
+  ): Promise<void> {
+    const [result] = await tx.insert(TeamLeader).values({
+      ...param,
+      title: param.title,
+      studentId: param.student.id,
+      teamId: param.team.id,
+      startTerm: param.duration.startTerm,
+      endTerm: param.duration.endTerm,
+    });
+    if (result.insertId === undefined) {
+      throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);
     }
-
-    return team;
   }
 
-  async insert(data: ITeamLeaderRequestCreate): Promise<MTeamLeader> {
-    return this.db.transaction(async tx => this.insertTx(tx, data));
+  async insert(param: ITeamLeaderRequestCreate): Promise<void> {
+    return this.db.transaction(async tx => this.insertTx(tx, param));
+  }
+
+  // update methods
+  async updateTx(
+    tx: DrizzleTransaction,
+    param: ITeamLeaderRequestUpdate,
+  ): Promise<void> {
+    const [result] = await tx
+      .update(TeamLeader)
+      .set({
+        title: param.title,
+        studentId: param.student.id,
+        startTerm: param.duration.startTerm,
+        endTerm: param.duration.endTerm,
+      })
+      .where(and(eq(TeamLeader.id, param.id), isNull(TeamLeader.deletedAt)));
+    if (result.affectedRows === 0) {
+      throw new HttpException("Failed to update", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async update(param: ITeamLeaderRequestUpdate): Promise<void> {
+    await this.withTransaction(async tx => this.updateTx(tx, param));
+  }
+
+  // delete method
+  async deleteTx(
+    tx: DrizzleTransaction,
+    param: ITeamLeaderQuery,
+  ): Promise<void> {
+    const cur = new Date();
+    const [result] = await tx
+      .update(TeamLeader)
+      .set({ deletedAt: cur })
+      .where(and(eq(TeamLeader.id, param.id), isNull(TeamLeader.deletedAt)));
+    if (result.affectedRows === 0) {
+      throw new HttpException("Failed to delete", HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(param: ITeamLeaderQuery): Promise<void> {
+    await this.withTransaction(async tx => this.deleteTx(tx, param));
   }
 }

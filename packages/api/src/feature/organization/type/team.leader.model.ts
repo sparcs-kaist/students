@@ -4,7 +4,7 @@ import { InferSelectModel } from "drizzle-orm";
 
 import { TeamLeader } from "@sparcs-students/api/drizzle/schema/organization.schema";
 
-export type TeamDBResult = InferSelectModel<typeof TeamLeader>;
+export type TeamLeaderDBResult = InferSelectModel<typeof TeamLeader>;
 
 export class MTeamLeader implements ITeamLeader {
   id: ITeamLeader["id"];
@@ -21,7 +21,7 @@ export class MTeamLeader implements ITeamLeader {
     Object.assign(this, data);
   }
 
-  static fromDBResult(result: TeamDBResult) {
+  static fromDBResult(result: TeamLeaderDBResult) {
     return new MTeamLeader({
       ...result,
       id: result.id,

@@ -79,6 +79,8 @@ export const zTeamRequestCreate = zTeam
   })
   .extend({ duration: zDurationCreate });
 
+export const zTeamRequestUpdate = zTeam;
+
 export const zTeamResponse = zTeam.extend({
   organization: zOrganization,
 });
@@ -86,3 +88,4 @@ export const zTeamResponse = zTeam.extend({
 export type ITeam = z.infer<typeof zTeam>;
 export type ITeamResponse = z.infer<typeof zTeamResponse>;
 export type ITeamRequestCreate = z.infer<typeof zTeamRequestCreate>;
+export type ITeamRequestUpdate = z.infer<typeof zTeamRequestUpdate>;
