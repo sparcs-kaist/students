@@ -27,6 +27,7 @@ export interface ViewerProjectProposalProps {
 interface ProjectProposalTableProps {
   pageId: string | string[];
   data: ViewerProjectProposalProps[];
+  isProposal?: boolean;
 }
 
 const columnHelper = createColumnHelper<ViewerProjectProposalProps>();
@@ -68,6 +69,7 @@ const columns = [
 const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
   pageId,
   data,
+  isProposal = true,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
@@ -87,7 +89,7 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12}>
         <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-          사업계획서
+          {isProposal ? "사업계획서" : "사업보고서"}
         </Typography>
       </FlexWrapper>
       {loaded && (
