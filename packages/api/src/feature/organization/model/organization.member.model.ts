@@ -22,7 +22,6 @@ export class MOrganizationMember implements IOrganizationMember {
   static fromDBResult(result: OrganizationDBResult) {
     return new MOrganizationMember({
       ...result,
-      id: result.id,
       organization: { id: result.organizationId },
       student: { id: result.studentId },
       duration: {
