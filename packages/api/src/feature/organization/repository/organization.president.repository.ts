@@ -12,7 +12,7 @@ import {
   IOrganizationPresident,
   IOrganizationPresidentRequestCreate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationPresident } from "../model/organizationPresident.model";
+import { MOrganizationPresident } from "../model/organization.president.model";
 
 @Injectable()
 export class OrganizationPresidentRepository {

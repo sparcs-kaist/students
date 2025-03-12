@@ -30,11 +30,15 @@ export class MOrganizationPresident implements IOrganizationPresident {
   static fromDBResult(result: OrganizationPresidentDBResult) {
     return new MOrganizationPresident({
       ...result,
-      id: result.id,
-      organization: { id: result.organizationId },
+      // id: result.id,
+      organization: {
+        id: result.organizationId,
+      },
       organizationPresidentTypeEnum: result.organizationPresidentTypeEnum,
-      title: result.title,
-      student: { id: result.studentId },
+      // title: result.title,
+      student: {
+        id: result.studentId,
+      },
       phoneNumber: result.phoneNumber,
       duration: {
         startTerm: result.startTerm,
