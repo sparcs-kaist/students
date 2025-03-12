@@ -1,6 +1,17 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, gt, inArray, isNotNull, lt, not, or, eq } from "drizzle-orm";
+import {
+  and,
+  gt,
+  inArray,
+  isNotNull,
+  lt,
+  not,
+  or,
+  eq,
+  SQL,
+  isNull,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -9,10 +20,18 @@ import {
 import { OrganizationMember } from "src/drizzle/schema";
 import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
 import {
-  IOrganizationMember,
   IOrganizationMemberRequestCreate,
+  IOrganizationMemberRequestUpdate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
 import { MOrganizationMember } from "../model/organization.member.model";
+
+type IOrganizationMemberQuery = {
+  id?: number;
+  ids?: number[];
+  studentId?: number;
+  organizationId?: number;
+  duration?: DurationFull;
+};
 
 @Injectable()
 export class OrganizationMemberRepository {
@@ -30,145 +49,138 @@ export class OrganizationMemberRepository {
   // find methods
   async findTx(
     tx: DrizzleTransaction,
-    organizationMemberId: IOrganizationMember["id"],
-  ): Promise<MOrganizationMember | null> {
-    const [result] = await tx
-      .select()
-      .from(OrganizationMember)
-      .where(eq(OrganizationMember.id, organizationMemberId))
-      .execute();
-
-    return result ? MOrganizationMember.fromDBResult(result) : null;
-  }
-
-  async findAllTx(
-    tx: DrizzleTransaction,
-    organizationMemberIds: IOrganizationMember["id"][],
-  ): Promise<MOrganizationMember[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    duration: DurationFull,
-  ): Promise<MOrganizationMember[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganizationMember["id"][] | DurationFull,
-  ): Promise<MOrganizationMember[]> {
-    let query = tx.select().from(OrganizationMember).$dynamic();
-    const whereConditions = [];
-
-    if (Array.isArray(arg1)) {
-      // arg1이 ID 배열일 경우
-      whereConditions.push(inArray(OrganizationMember.id, arg1));
-    } else if ("startTerm" in arg1 && "endTerm" in arg1) {
-      // arg1이 DurationFull일 경우
-      // 제외 조건 1 : startTerm이 arg1.endTerm보다 큰 경우
-      // 제외 조건 2 : endTerm이 null이 아닌데 arg1.startTerm보다 작은 경우
-      whereConditions.push(
+    param: IOrganizationMemberQuery,
+  ): Promise<MOrganizationMember[] | null> {
+    const whereClause: SQL[] = [];
+    if (param.id) {
+      whereClause.push(eq(OrganizationMember.id, param.id));
+    }
+    if (param.ids) {
+      whereClause.push(inArray(OrganizationMember.id, param.ids));
+    }
+    if (param.studentId) {
+      whereClause.push(eq(OrganizationMember.studentId, param.studentId));
+    }
+    if (param.organizationId) {
+      whereClause.push(
+        eq(OrganizationMember.organizationId, param.organizationId),
+      );
+    }
+    if (param.duration) {
+      whereClause.push(
         not(
           or(
-            gt(OrganizationMember.startTerm, arg1.endTerm),
+            gt(OrganizationMember.startTerm, param.duration.endTerm),
             and(
               isNotNull(OrganizationMember.endTerm),
-              lt(OrganizationMember.endTerm, arg1.startTerm),
+              lt(OrganizationMember.endTerm, param.duration.startTerm),
             ),
           ),
         ),
       );
     }
 
-    whereConditions.push(isNotNull(OrganizationMember.deletedAt));
-    query = query.where(and(...whereConditions));
+    whereClause.push(isNotNull(OrganizationMember.deletedAt));
 
-    const res = await query.execute();
-    return res.map(r => MOrganizationMember.fromDBResult(r));
-  }
+    const result = await tx
+      .select()
+      .from(OrganizationMember)
+      .where(and(...whereClause))
+      .execute();
 
-  // fetch methods
-  async fetchTx(
-    tx: DrizzleTransaction,
-    id: IOrganizationMember["id"],
-  ): Promise<MOrganizationMember> {
-    const member = await this.findTx(tx, id);
-    if (!member) {
-      throw new HttpException("Member not found", HttpStatus.NOT_FOUND);
+    if (result.length === 0) {
+      return null;
     }
-    return member;
+    return result.map(r => MOrganizationMember.fromDBResult(r));
   }
 
-  async fetch(id: IOrganizationMember["id"]): Promise<MOrganizationMember> {
-    return this.db.transaction(async tx => this.fetchTx(tx, id));
-  }
-
-  async fetchAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganizationMember["id"][] | DurationFull,
-  ): Promise<MOrganizationMember[]> {
-    if (Array.isArray(arg1)) {
-      // arg1이 ID 배열일 경우
-      const uniqueIds = Array.from(new Set(arg1));
-
-      const results = await this.findAllTx(tx, uniqueIds);
-
-      const returnedIds = new Set(results.map(org => org.id));
-
-      if (returnedIds.size === uniqueIds.length) {
-        throw new HttpException(
-          "No OrganizationMembers found",
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      return results;
-    }
-    // arg1이 DurationFull일 경우
-    const results = await this.findAllTx(tx, arg1);
-    if (results.length === 0) {
-      throw new HttpException(
-        "No OrganizationMembers found",
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return results;
-  }
-
-  async fetchAll(
-    ids: IOrganizationMember["id"][],
-  ): Promise<MOrganizationMember[]>;
-  async fetchAll(duration: DurationFull): Promise<MOrganizationMember[]>;
-  async fetchAll(
-    arg1: IOrganizationMember["id"][] | DurationFull,
-  ): Promise<MOrganizationMember[]> {
-    return this.db.transaction(async tx => this.fetchAllTx(tx, arg1));
+  async find(
+    param: IOrganizationMemberQuery,
+  ): Promise<MOrganizationMember[] | null> {
+    return this.withTransaction(async tx => this.findTx(tx, param));
   }
 
   // insert methods
   async insertTx(
     tx: DrizzleTransaction,
-    data: IOrganizationMemberRequestCreate,
-  ): Promise<MOrganizationMember> {
-    const result = await tx
-      .insert(OrganizationMember)
-      .values({
-        organizationId: data.organization.id,
-        studentId: data.student.id,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm ?? null,
-      })
-      .execute();
-    const insertedId = result[0].insertId;
-    const organizationMember = await this.findTx(tx, insertedId);
-    if (!organizationMember) {
+    param: IOrganizationMemberRequestCreate,
+  ): Promise<void> {
+    const [result] = await tx.insert(OrganizationMember).values({
+      ...param,
+      organizationId: param.organization.id,
+      studentId: param.student.id,
+      startTerm: param.duration.startTerm,
+      endTerm: param.duration.endTerm,
+    });
+    if (result.insertId === undefined) {
       throw new HttpException(
-        "Failed to create organizationMember",
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        "Failed to insert organizationMember",
+        HttpStatus.BAD_REQUEST,
       );
     }
-
-    return organizationMember;
   }
 
-  async insert(
-    data: IOrganizationMemberRequestCreate,
-  ): Promise<MOrganizationMember> {
-    return this.db.transaction(async tx => this.insertTx(tx, data));
+  async insert(param: IOrganizationMemberRequestCreate): Promise<void> {
+    return this.db.transaction(async tx => this.insertTx(tx, param));
+  }
+
+  async updateTx(
+    tx: DrizzleTransaction,
+    param: IOrganizationMemberRequestUpdate,
+  ): Promise<void> {
+    const [result] = await tx
+      .update(OrganizationMember)
+      .set({
+        startTerm: param.duration.startTerm,
+        endTerm: param.duration.endTerm,
+      })
+      .where(
+        and(
+          eq(OrganizationMember.id, param.id),
+          eq(OrganizationMember.organizationId, param.organization.id),
+          eq(OrganizationMember.studentId, param.student.id),
+          isNull(OrganizationMember.deletedAt),
+        ),
+      );
+    if (result.affectedRows === 0) {
+      throw new HttpException(
+        "Failed to update organizationMember",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async update(param: IOrganizationMemberRequestUpdate): Promise<void> {
+    await this.withTransaction(async tx => this.updateTx(tx, param));
+  }
+
+  // delete methods
+  async deleteTx(
+    tx: DrizzleTransaction,
+    param: IOrganizationMemberQuery,
+  ): Promise<void> {
+    const [result] = await tx
+      .update(OrganizationMember)
+      .set({
+        deletedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(OrganizationMember.id, param.id),
+          eq(OrganizationMember.studentId, param.studentId),
+          eq(OrganizationMember.organizationId, param.organizationId),
+          isNull(OrganizationMember.deletedAt),
+        ),
+      );
+    if (result.affectedRows === 0) {
+      throw new HttpException(
+        "Failed to delete organizationMember",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async delete(param: IOrganizationMemberQuery): Promise<void> {
+    await this.withTransaction(async tx => this.deleteTx(tx, param));
   }
 }

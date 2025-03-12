@@ -1,6 +1,17 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, gt, inArray, isNotNull, lt, not, or, eq } from "drizzle-orm";
+import {
+  and,
+  gt,
+  inArray,
+  isNotNull,
+  lt,
+  not,
+  or,
+  eq,
+  SQL,
+  isNull,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -9,10 +20,20 @@ import {
 import { OrganizationPresident } from "src/drizzle/schema";
 import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
 import {
-  IOrganizationPresident,
   IOrganizationPresidentRequestCreate,
+  IOrganizationPresidentRequestUpdate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
 import { MOrganizationPresident } from "../model/organization.president.model";
+
+type IOrganizationPresidentQuery = {
+  id?: number;
+  ids?: number[];
+  studentId?: number;
+  organizationId?: number;
+  organizationPresidentTypeEnum?: number;
+  phoneNumber?: string;
+  duration?: DurationFull;
+};
 
 @Injectable()
 export class OrganizationPresidentRepository {
@@ -30,150 +51,152 @@ export class OrganizationPresidentRepository {
   // find methods
   async findTx(
     tx: DrizzleTransaction,
-    organizationPresidentId: IOrganizationPresident["id"],
-  ): Promise<MOrganizationPresident | null> {
-    const [result] = await tx
-      .select()
-      .from(OrganizationPresident)
-      .where(eq(OrganizationPresident.id, organizationPresidentId))
-      .execute();
-
-    return result ? MOrganizationPresident.fromDBResult(result) : null;
-  }
-
-  async findAllTx(
-    tx: DrizzleTransaction,
-    organizationPresidentIds: IOrganizationPresident["id"][],
-  ): Promise<MOrganizationPresident[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    duration: DurationFull,
-  ): Promise<MOrganizationPresident[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganizationPresident["id"][] | DurationFull,
-  ): Promise<MOrganizationPresident[]> {
-    let query = tx.select().from(OrganizationPresident).$dynamic();
-    const whereConditions = [];
-
-    if (arg1 instanceof Array) {
-      whereConditions.push(inArray(OrganizationPresident.id, arg1));
-    } else if ("startTerm" in arg1 && "endTerm" in arg1) {
-      whereConditions.push(
+    param: IOrganizationPresidentQuery,
+  ): Promise<MOrganizationPresident[] | null> {
+    const whereClause: SQL[] = [];
+    if (param.id) {
+      whereClause.push(eq(OrganizationPresident.id, param.id));
+    }
+    if (param.ids) {
+      whereClause.push(inArray(OrganizationPresident.id, param.ids));
+    }
+    if (param.studentId) {
+      whereClause.push(eq(OrganizationPresident.studentId, param.studentId));
+    }
+    if (param.organizationId) {
+      whereClause.push(
+        eq(OrganizationPresident.organizationId, param.organizationId),
+      );
+    }
+    if (param.organizationPresidentTypeEnum) {
+      whereClause.push(
+        eq(
+          OrganizationPresident.organizationPresidentTypeEnum,
+          param.organizationPresidentTypeEnum,
+        ),
+      );
+    }
+    if (param.phoneNumber) {
+      whereClause.push(
+        eq(OrganizationPresident.phoneNumber, param.phoneNumber),
+      );
+    }
+    if (param.duration) {
+      whereClause.push(
         not(
           or(
-            gt(OrganizationPresident.startTerm, arg1.endTerm),
+            gt(OrganizationPresident.startTerm, param.duration.endTerm),
             and(
               isNotNull(OrganizationPresident.endTerm),
-              lt(OrganizationPresident.endTerm, arg1.startTerm),
+              lt(OrganizationPresident.endTerm, param.duration.startTerm),
             ),
           ),
         ),
       );
     }
 
-    whereConditions.push(isNotNull(OrganizationPresident.deletedAt));
-    query = query.where(and(...whereConditions));
+    whereClause.push(isNotNull(OrganizationPresident.deletedAt));
 
-    const res = await query.execute();
-    return res.map(r => MOrganizationPresident.fromDBResult(r));
-  }
+    const result = await tx
+      .select()
+      .from(OrganizationPresident)
+      .where(and(...whereClause))
+      .execute();
 
-  // fetch methods
-  async fetchTx(
-    tx: DrizzleTransaction,
-    id: IOrganizationPresident["id"],
-  ): Promise<MOrganizationPresident> {
-    const result = await this.findTx(tx, id);
-    if (!result) {
-      throw new HttpException(
-        "OrganizationPresident not found",
-        HttpStatus.NOT_FOUND,
-      );
+    if (result.length === 0) {
+      return null;
     }
-    return result;
+    return result.map(r => MOrganizationPresident.fromDBResult(r));
   }
 
-  async fetch(
-    id: IOrganizationPresident["id"],
-  ): Promise<MOrganizationPresident> {
-    return this.db.transaction(async tx => this.fetchTx(tx, id));
-  }
-
-  async fetchAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganizationPresident["id"][] | DurationFull,
-  ): Promise<MOrganizationPresident[]> {
-    if (Array.isArray(arg1)) {
-      // arg1이 organizationPresidentIds 배열인 경우
-      // 요청한 ID를 Set으로 변환하여 중복 제거
-      const uniqueIds = Array.from(new Set(arg1));
-
-      const results = await this.findAllTx(tx, uniqueIds);
-      // 반환된 ID를 Set으로 변환하여 중복 제거
-      const returnedIds = new Set(results.map(org => org.id));
-
-      if (returnedIds.size === uniqueIds.length) {
-        throw new HttpException(
-          "No OrganizationPresidents found",
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      return results;
-    }
-    // arg1이 DurationFull인 경우
-    const results = await this.findAllTx(tx, arg1);
-    if (results.length === 0) {
-      throw new HttpException(
-        "No OrganizationPresidents found",
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return results;
-  }
-
-  async fetchAll(
-    ids: IOrganizationPresident["id"][],
-  ): Promise<MOrganizationPresident[]>;
-  async fetchAll(duration: DurationFull): Promise<MOrganizationPresident[]>;
-  async fetchAll(
-    arg1: IOrganizationPresident["id"][] | DurationFull,
-  ): Promise<MOrganizationPresident[]> {
-    return this.db.transaction(async tx => this.fetchAllTx(tx, arg1));
+  async find(
+    param: IOrganizationPresidentQuery,
+  ): Promise<MOrganizationPresident[] | null> {
+    return this.withTransaction(async tx => this.findTx(tx, param));
   }
 
   // insert methods
   async insertTx(
     tx: DrizzleTransaction,
-    data: IOrganizationPresidentRequestCreate,
-  ): Promise<MOrganizationPresident> {
-    const result = await tx
-      .insert(OrganizationPresident)
-      .values({
-        organizationId: data.organization.id,
-        organizationPresidentTypeEnum: data.organizationPresidentTypeEnum,
-        title: data.title,
-        studentId: data.student.id,
-        phoneNumber: data.phoneNumber,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm ?? null,
-      })
-      .execute();
-    const insertedId = result[0].insertId;
-    const organizationPresident = await this.findTx(tx, insertedId);
-    if (!organizationPresident) {
+    param: IOrganizationPresidentRequestCreate,
+  ): Promise<void> {
+    const [result] = await tx.insert(OrganizationPresident).values({
+      ...param,
+      organizationId: param.organization.id,
+      studentId: param.student.id,
+      startTerm: param.duration.startTerm,
+      endTerm: param.duration.endTerm,
+    });
+    if (result.insertId === undefined) {
       throw new HttpException(
-        "Failed to create organizationPresident",
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        "Failed to insert organizationPresident",
+        HttpStatus.BAD_REQUEST,
       );
     }
-
-    return organizationPresident;
   }
 
-  async insert(
-    data: IOrganizationPresidentRequestCreate,
-  ): Promise<MOrganizationPresident> {
-    return this.db.transaction(async tx => this.insertTx(tx, data));
+  async insert(param: IOrganizationPresidentRequestCreate): Promise<void> {
+    return this.withTransaction(async tx => this.insertTx(tx, param));
+  }
+
+  async updateTx(
+    tx: DrizzleTransaction,
+    param: IOrganizationPresidentRequestUpdate,
+  ): Promise<void> {
+    const [result] = await tx
+      .update(OrganizationPresident)
+      .set({
+        organizationPresidentTypeEnum: param.organizationPresidentTypeEnum,
+        title: param.title,
+        phoneNumber: param.phoneNumber,
+        startTerm: param.duration.startTerm,
+        endTerm: param.duration.endTerm,
+      })
+      .where(
+        and(
+          eq(OrganizationPresident.id, param.id),
+          eq(OrganizationPresident.organizationId, param.organization.id),
+          eq(OrganizationPresident.studentId, param.student.id),
+          isNull(OrganizationPresident.deletedAt),
+        ),
+      );
+    if (result.affectedRows === 0) {
+      throw new HttpException(
+        "Failed to update organizationPresident",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async update(param: IOrganizationPresidentRequestUpdate): Promise<void> {
+    return this.withTransaction(async tx => this.updateTx(tx, param));
+  }
+
+  // delete methods
+  async deleteTx(
+    tx: DrizzleTransaction,
+    param: IOrganizationPresidentQuery,
+  ): Promise<void> {
+    const [result] = await tx
+      .update(OrganizationPresident)
+      .set({ deletedAt: new Date() })
+      .where(
+        and(
+          eq(OrganizationPresident.id, param.id),
+          eq(OrganizationPresident.studentId, param.studentId),
+          eq(OrganizationPresident.organizationId, param.organizationId),
+          isNull(OrganizationPresident.deletedAt),
+        ),
+      );
+    if (result.affectedRows === 0) {
+      throw new HttpException(
+        "Failed to delete organizationPresident",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async delete(param: IOrganizationPresidentQuery): Promise<void> {
+    await this.withTransaction(async tx => this.deleteTx(tx, param));
   }
 }

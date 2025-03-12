@@ -28,6 +28,8 @@ export const zOrganizationPresidentRequestCreate = zOrganizationPresident
   })
   .extend({ duration: zDurationCreate });
 
+export const zOrganizationPresidentRequestUpdate = zOrganizationPresident;
+
 export const zOrganizationPresidentResponse = zOrganizationPresident.extend({
   organization: zOrganization,
   student: zStudent,
@@ -36,6 +38,9 @@ export const zOrganizationPresidentResponse = zOrganizationPresident.extend({
 export type IOrganizationPresident = z.infer<typeof zOrganizationPresident>;
 export type IOrganizationPresidentRequestCreate = z.infer<
   typeof zOrganizationPresidentRequestCreate
+>;
+export type IOrganizationPresidentRequestUpdate = z.infer<
+  typeof zOrganizationPresidentRequestUpdate
 >;
 export type IOrganizationPresidentResponse = z.infer<
   typeof zOrganizationPresidentResponse
@@ -57,6 +62,8 @@ export const zOrganizationMemberRequestCreate = zOrganizationMember
   })
   .extend({ duration: zDurationCreate });
 
+export const zOrganizationMemberRequestUpdate = zOrganizationMember;
+
 export const zOrganizationMemberResponse = zOrganizationMember.extend({
   organization: zOrganization,
   student: zStudent,
@@ -65,6 +72,9 @@ export const zOrganizationMemberResponse = zOrganizationMember.extend({
 export type IOrganizationMember = z.infer<typeof zOrganizationMember>;
 export type IOrganizationMemberRequestCreate = z.infer<
   typeof zOrganizationMemberRequestCreate
+>;
+export type IOrganizationMemberRequestUpdate = z.infer<
+  typeof zOrganizationMemberRequestUpdate
 >;
 export type IOrganizationMemberResponse = z.infer<
   typeof zOrganizationMemberResponse
