@@ -23,7 +23,7 @@ import {
   IOrganizationPresidentRequestCreate,
   IOrganizationPresidentRequestUpdate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationPresident } from "../model/organization.president.model";
+import { MOrganizationPresident } from "../type/organization.president.model";
 
 type IOrganizationPresidentQuery = {
   id?: number;

@@ -23,7 +23,7 @@ import {
   IOrganizationMemberRequestCreate,
   IOrganizationMemberRequestUpdate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationMember } from "../model/organization.member.model";
+import { MOrganizationMember } from "../type/organization.member.model";
 
 type IOrganizationMemberQuery = {
   id?: number;
