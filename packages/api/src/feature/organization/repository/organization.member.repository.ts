@@ -12,7 +12,7 @@ import {
   IOrganizationMember,
   IOrganizationMemberRequestCreate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationMember } from "../type/organization.member.model"; // type이랑 model 경로 중에서 뭘 써야하는 지 잘 모르겠어서 우선 type에 만들어뒀어여,,
+import { MOrganizationMember } from "../model/organization.member.model";
 
 @Injectable()
 export class OrganizationMemberRepository {
