@@ -12,7 +12,7 @@ import {
   IOrganization,
   IOrganizationRequestCreate,
 } from "@sparcs-students/interface/api/organization/type/organization.type";
-import { MOrganization } from "../type/organization.model";
+import { MOrganization } from "../model/organization.model";
 
 @Injectable()
 export class OrganizationRepository {
