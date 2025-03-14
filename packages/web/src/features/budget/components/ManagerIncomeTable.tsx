@@ -45,19 +45,8 @@ import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/service
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
-
-export interface IncomeProps {
-  code: number;
-  budgetDomain: BudgetDomainEnum;
-  budgetDivisionIncome: BudgetDivisionIncomeEnum | undefined;
-  item: string;
-  lastYear: number;
-  thisYear: number;
-  ratio: number | null;
-  reason: string;
-  status: string;
-  review: string;
-}
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import colors from "@sparcs-students/web/styles/themes/colors";
 
 interface FormValues {
   incomes: ManagerIncomeProps[];
@@ -74,12 +63,14 @@ interface TableRowProps {
   changeCode: () => void;
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
+  fieldsLength: number;
 }
 
 const TableWrapper = styled.table`
   position: relative;
   height: fit-content;
   overflow-y: visible;
+  border-collapse: collapse;
 `;
 
 const TableHeader = styled.thead``;
@@ -90,7 +81,7 @@ const TableHeaderWrapper = styled.tr`
   align-items: center;
   border-radius: 4px 4px 0px 0px;
   overflow: hidden;
-  width: 100%;
+  width: fit-content;
 `;
 
 const TableContentWrapper = styled.tbody`
@@ -103,7 +94,7 @@ const TableRowWrapper = styled.tr.withConfig({
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  //justify-content: center;
   border-radius: ${({ isLast }) => (isLast ? "0px 0px 4px 4px" : "0px")};
   border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
@@ -111,6 +102,7 @@ const TableRowWrapper = styled.tr.withConfig({
   background: ${({ theme }) => theme.colors.WHITE};
   cursor: pointer;
   overflow-y: visible;
+  width: fit-content;
 `;
 
 const TitleWithButtonWrapper = styled.div`
@@ -127,6 +119,7 @@ const TableRow: React.FC<TableRowProps> = ({
   changeCode,
   deleteRow,
   isLast,
+  fieldsLength,
 }) => {
   const [itemList, setItemList] = useState<SelectItem[]>([]);
 
@@ -153,9 +146,9 @@ const TableRow: React.FC<TableRowProps> = ({
   );
 
   const divisionItemsList = Object.entries(budgetDivisionIncomeTagList).map(
-    ([_, { text, color }]) => ({
+    ([key, { text, color }]) => ({
       label: text,
-      value: text,
+      value: Number(key) as BudgetDivisionIncomeEnum,
       color,
     }),
   );
@@ -173,21 +166,23 @@ const TableRow: React.FC<TableRowProps> = ({
     }
   };
 
-  const getBudgetDivisionIncomeItemsList = (division: string) => {
+  const getBudgetDivisionIncomeItemsList = (
+    division: BudgetDivisionIncomeEnum,
+  ) => {
     switch (division) {
-      case "기층기구회계":
+      case BudgetDivisionIncomeEnum.Substratum:
         return BudgetDivisionIncomeItemEnumList.slice(0, 2);
-      case "중앙회계":
+      case BudgetDivisionIncomeEnum.Central:
         return BudgetDivisionIncomeItemEnumList.slice(2, 4);
-      case "격려기금":
+      case BudgetDivisionIncomeEnum.Incentive:
         return BudgetDivisionIncomeItemEnumList.slice(4, 5);
-      case "학교지원금":
+      case BudgetDivisionIncomeEnum.School:
         return BudgetDivisionIncomeItemEnumList.slice(5, 6);
-      case "이월금":
+      case BudgetDivisionIncomeEnum.Carryover:
         return BudgetDivisionIncomeItemEnumList.slice(6, 7);
-      case "과비":
+      case BudgetDivisionIncomeEnum.Department:
         return BudgetDivisionIncomeItemEnumList.slice(7, 8);
-      case "단비":
+      case BudgetDivisionIncomeEnum.Organizational:
         return BudgetDivisionIncomeItemEnumList.slice(8, 9);
       case undefined:
         return [];
@@ -245,7 +240,7 @@ const TableRow: React.FC<TableRowProps> = ({
 
           return (
             <TableCell type="Default" width="150px">
-              <TagSelect
+              <TagSelect<BudgetDivisionIncomeEnum>
                 items={divisionOptions}
                 value={field.value || divisionOptions[0]}
                 onChange={newVal => {
@@ -368,6 +363,11 @@ const TableRow: React.FC<TableRowProps> = ({
           onClick={() => {
             deleteRow(rowIndex);
           }}
+          color={
+            fieldsLength === 1 && rowIndex === 0
+              ? colors.GRAY["50"]
+              : colors.BLACK
+          }
         />
       </TableCell>
     </TableRowWrapper>
@@ -394,49 +394,14 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
 
   const incomes = formMethods.watch("incomes");
 
-  const defaultNewRow = [
-    {
-      code: 0,
-      budgetDomain: BudgetDomainEnum.Undefined,
-      budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
-      item: "",
-      lastYear: "",
-      thisYear: "",
-      ratio: 100.0,
-      reason: "",
-      status: "",
-      review: "",
-    },
-  ];
-
-  const addNewRow = () => {
-    const newRow = { ...defaultNewRow[0], id: fields.length };
-    append(newRow);
-
-    const length = incomes.length + 1;
-    setDynamicHeight(36 + length * 48 + 250);
-  };
-
-  const deleteRow = (rowIndex: number) => {
-    if (incomes.length === 1) {
-      return;
-    }
-    remove(rowIndex);
-    const length = incomes.length - 1;
-
-    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
-  };
-
-  const onSubmit = (data: FormValues) => {
-    console.log("Submitted incomes:", data.incomes);
-  };
-
   const changeCode = () => {
     let studentsFeeCount = 100;
     let schoolFeeCount = 200;
     let autonomousFeeCount = 300;
 
-    incomes.forEach((income, index) => {
+    const updatedIncomes = getValues("incomes");
+
+    updatedIncomes.forEach((income, index) => {
       let newCode = income.code;
 
       switch (income.budgetDomain) {
@@ -463,6 +428,48 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
     });
   };
 
+  const defaultNewRow = [
+    {
+      code: 0,
+      budgetDomain: BudgetDomainEnum.Undefined,
+      budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
+      item: "",
+      lastYear: "",
+      thisYear: "",
+      ratio: 100.0,
+      reason: "",
+      status: DocumentReviewStatusEnum.Unsaved,
+      review: "",
+    },
+  ];
+
+  const addNewRow = () => {
+    const newRow = { ...defaultNewRow[0], id: fields.length };
+    append(newRow);
+
+    const length = incomes.length + 1;
+    setDynamicHeight(36 + length * 48 + 250);
+  };
+
+  const deleteRow = (rowIndex: number) => {
+    if (incomes.length === 1) {
+      return;
+    }
+    remove(rowIndex);
+    const length = incomes.length - 1;
+
+    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+
+    setTimeout(() => {
+      // CHACHA: remove is async. Ensure that changeCode is executed after remove.
+      changeCode();
+    }, 0);
+  };
+
+  const onSubmit = (data: FormValues) => {
+    console.log("Submitted incomes:", data.incomes);
+  };
+
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -472,7 +479,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
               수입
             </Typography>
             <Button type="default" onClick={addNewRow}>
-              추가
+              행 추가
             </Button>
           </TitleWithButtonWrapper>
           <FlexWrapper
@@ -529,6 +536,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
                     rowIndex={index}
                     deleteRow={() => deleteRow(index)}
                     isLast={index === incomes.length - 1}
+                    fieldsLength={fields.length}
                   />
                 ))}
               </TableContentWrapper>

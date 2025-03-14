@@ -3,27 +3,28 @@ import { MemberProps } from "@sparcs-students/web/features/project/components/Me
 import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
 import { ProjectProposalProps } from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export const mockProjectProposalData: ProjectProposalProps[] = [
   {
     id: "1",
     name: "집행위원회 운영",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
     id: "2",
     name: "기업체 탐방",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "ㅁㄴㅇㄹ",
   },
   {
     id: "3",
     name: "연구실 탐방",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "ㅁㄴㅇㄹ",
   },
 ];
@@ -33,19 +34,19 @@ export const mockViewerProjectProposalData: ViewerProjectProposalProps[] = [
     id: "1",
     name: "집행위원회 운영",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
   {
     id: "2",
     name: "기업체 탐방",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
   {
     id: "3",
     name: "연구실 탐방",
     projectPeriod: "2024.09.06 - 2024.12.06",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
 ];
 

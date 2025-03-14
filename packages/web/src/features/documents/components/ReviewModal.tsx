@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import styled, { useTheme } from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 interface ReviewModalProps {
   onConfirm: () => void;
   review: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   handleReviewChange: (detail: string) => void;
-  handleStatusChange: (status: string) => void;
+  handleStatusChange: (status: DocumentReviewStatusEnum) => void;
 }
 
 interface ReadOnlyReviewModalProps {
@@ -74,16 +75,18 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <Button
             onClick={() => {
               handleReviewChange(reviewText);
-              handleStatusChange("검토반려");
+              handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
               onConfirm();
             }}
             type={
-              status === "반려" || status === "검토반려"
+              status === DocumentReviewStatusEnum.Rejected ||
+              status === DocumentReviewStatusEnum.ReviewRejected
                 ? "disabled"
                 : "default"
             }
             style={
-              status === "반려" || status === "검토반려"
+              status === DocumentReviewStatusEnum.Rejected ||
+              status === DocumentReviewStatusEnum.ReviewRejected
                 ? {}
                 : {
                     border: `1px solid ${theme.colors.RED[700]}`,
@@ -97,12 +100,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <Button
             onClick={() => {
               handleReviewChange(reviewText);
-              handleStatusChange("수정 요청");
+              handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
               onConfirm();
             }}
-            type={status === "수정 요청" ? "disabled" : "default"}
+            type={
+              status === DocumentReviewStatusEnum.ReviseNeeded
+                ? "disabled"
+                : "default"
+            }
             style={
-              status === "수정 요청"
+              status === DocumentReviewStatusEnum.ReviseNeeded
                 ? {}
                 : {
                     border: `1px solid ${theme.colors.GREEN[600]}`,
@@ -115,11 +122,13 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           </Button>
           <Button
             onClick={() => {
-              handleStatusChange("검토승인");
+              handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
               onConfirm();
             }}
             type={
-              status === "승인" || status === "검토승인" || reviewText !== ""
+              status === DocumentReviewStatusEnum.Accepted ||
+              status === DocumentReviewStatusEnum.ReviewAccepted ||
+              reviewText !== ""
                 ? "disabled"
                 : "default"
             }

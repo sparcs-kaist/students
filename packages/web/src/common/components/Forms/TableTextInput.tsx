@@ -21,8 +21,8 @@ export const errorBorderStyle = css`
 `;
 
 export const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[50]};
-  border-color: ${({ theme }) => theme.colors.GRAY[100]};
+  //background-color: ${({ theme }) => theme.colors.GRAY[50]};
+  //border-color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const constantStyle = css`
@@ -102,7 +102,6 @@ const TableTextInput: React.FC<TextInputProps> = ({
     }
 
     handleChange(inputValue);
-    console.log(inputValue);
   };
 
   useEffect(() => {

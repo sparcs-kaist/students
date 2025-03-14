@@ -21,10 +21,9 @@ const getTagDetail = <T extends number>(
 const getDarkTagDetail = <T extends number>(
   status: T,
   enumDictionary: {
-    [key in T]: DarkStatusDetail;
+    [key in T]: DarkStatusDetail | StatusDetail;
   },
-): DarkStatusDetail =>
-  enumDictionary[status] || { text: "None", color: "GRAY" };
+) => enumDictionary[status] || { text: "None", color: "GRAY" };
 
 export { getTagDetail, getDarkTagDetail };
 export type { StatusDetail, DarkStatusDetail };

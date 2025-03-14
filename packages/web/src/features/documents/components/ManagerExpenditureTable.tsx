@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
-  useForm,
-  useFieldArray,
-  FormProvider,
   Controller,
-  UseFormSetValue,
+  FormProvider,
+  useFieldArray,
+  useForm,
   UseFormGetValues,
+  UseFormSetValue,
 } from "react-hook-form";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -21,50 +21,61 @@ import { ReadOnlyReviewButton } from "@sparcs-students/web/features/documents/co
 import TagSelect from "@sparcs-students/web/common/components/TagSelect";
 
 import {
-  budgetDivisionIncomeTagList,
+  budgetClassExpenseTagList,
+  budgetDivisionExpenseTagList,
   budgetDomainTagList,
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
 } from "@sparcs-students/web/features/documents/utils/tableTagList";
 import {
-  BudgetDivisionIncomeEnum,
+  BudgetClassExpenseEnum,
+  BudgetDivisionExpenseEnum,
   BudgetDomainEnum,
-  BudgetDivisionIncomeItemEnumList,
-  // BudgetDivisionIncomeItemEnum,
-  // DomainItemSelectItem,
 } from "@sparcs-students/interface/common/enum/budget.enum";
 
 import styled from "styled-components";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
-import InputSelect, {
-  SelectItem,
-} from "@sparcs-students/web/common/components/InputSelect"; // SelectItem,
+import InputSelect from "@sparcs-students/web/common/components/InputSelect"; // SelectItem,
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 // import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
+import {
+  DarkStatusDetail,
+  StatusDetail,
+} from "@sparcs-students/web/utils/getTagDetail";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import colors from "@sparcs-students/web/styles/themes/colors";
 
 export interface ManagerExpenditureProps {
   code: number;
   budgetDomain: BudgetDomainEnum;
-  budgetDivisionIncome: BudgetDivisionIncomeEnum | undefined;
-  item: string;
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
+  projectName: string;
+  item: BudgetClassExpenseEnum;
   lastYear: number | string;
   thisYear: number | string;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
+export interface ManagerProjectNameCandidate {
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
+  projectNameCandidate: string[];
+}
+
 interface FormValues {
-  incomes: ManagerExpenditureProps[];
+  expenditures: ManagerExpenditureProps[];
 }
 
 interface ManagerExpenditureTableProps {
   initialData: ManagerExpenditureProps[];
+  projectNameCandidate: ManagerProjectNameCandidate[];
 }
 
 interface TableRowProps {
@@ -74,12 +85,14 @@ interface TableRowProps {
   changeCode: () => void;
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
+  projectNameCandidate: ManagerProjectNameCandidate[];
 }
 
 const TableWrapper = styled.table`
   position: relative;
   height: fit-content;
   overflow-y: visible;
+  border-collapse: collapse;
 `;
 
 const TableHeader = styled.thead``;
@@ -90,7 +103,7 @@ const TableHeaderWrapper = styled.tr`
   align-items: center;
   border-radius: 4px 4px 0px 0px;
   overflow: hidden;
-  width: 100%;
+  width: fit-content;
 `;
 
 const TableContentWrapper = styled.tbody`
@@ -103,7 +116,6 @@ const TableRowWrapper = styled.tr.withConfig({
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   border-radius: ${({ isLast }) => (isLast ? "0px 0px 4px 4px" : "0px")};
   border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
@@ -111,6 +123,7 @@ const TableRowWrapper = styled.tr.withConfig({
   background: ${({ theme }) => theme.colors.WHITE};
   cursor: pointer;
   overflow-y: visible;
+  width: fit-content;
 `;
 
 const TitleWithButtonWrapper = styled.div`
@@ -127,9 +140,8 @@ const TableRow: React.FC<TableRowProps> = ({
   changeCode,
   deleteRow,
   isLast,
+  projectNameCandidate,
 }) => {
-  const [itemList, setItemList] = useState<SelectItem[]>([]);
-
   const budgetDomainList = Object.entries(budgetDomainTagList).map(
     ([key, { text, color }]) => {
       const value = () => {
@@ -152,56 +164,59 @@ const TableRow: React.FC<TableRowProps> = ({
     },
   );
 
-  const divisionItemsList = Object.entries(budgetDivisionIncomeTagList).map(
-    ([_, { text, color }]) => ({
-      label: text,
-      value: text,
-      color,
-    }),
-  );
+  const divisionItemsList = (
+    Object.entries(budgetDivisionExpenseTagList) as unknown as [
+      BudgetDivisionExpenseEnum,
+      StatusDetail,
+    ][]
+  ).map(([key, { text, color }]) => ({
+    label: text,
+    value: Number(key) as BudgetDivisionExpenseEnum,
+    color,
+  }));
 
-  const getDivisionItemsList = (newValue: BudgetDomainEnum) => {
-    switch (newValue) {
-      case 1:
-        return divisionItemsList.slice(0, 4);
-      case 2:
-        return divisionItemsList.slice(4, 5);
-      case 3:
-        return divisionItemsList.slice(5, 11);
-      default:
-        return [];
-    }
+  const divisionItemsClassList = (
+    Object.entries(budgetClassExpenseTagList) as unknown as [
+      BudgetClassExpenseEnum,
+      DarkStatusDetail,
+    ][]
+  ).map(([key, { text, color }]) => ({
+    label: text,
+    value: Number(key) as BudgetClassExpenseEnum,
+    color,
+  }));
+
+  const setProjectNameListInputItem = (foundProjectNameCandidate: string[]) => {
+    const inputItem = foundProjectNameCandidate.map(e => ({
+      label: e,
+      value: e,
+    }));
+    return inputItem;
   };
 
-  const getBudgetDivisionIncomeItemsList = (division: string) => {
-    switch (division) {
-      case "기층기구회계":
-        return BudgetDivisionIncomeItemEnumList.slice(0, 2);
-      case "중앙회계":
-        return BudgetDivisionIncomeItemEnumList.slice(2, 4);
-      case "격려기금":
-        return BudgetDivisionIncomeItemEnumList.slice(4, 5);
-      case "학교지원금":
-        return BudgetDivisionIncomeItemEnumList.slice(5, 6);
-      case "이월금":
-        return BudgetDivisionIncomeItemEnumList.slice(6, 7);
-      case "과비":
-        return BudgetDivisionIncomeItemEnumList.slice(7, 8);
-      case "단비":
-        return BudgetDivisionIncomeItemEnumList.slice(8, 9);
-      case undefined:
-        return [];
-      default:
-        return [];
-    }
+  const getProjectNameCandidateList = () => {
+    if (!projectNameCandidate) return [];
+    const found = projectNameCandidate.find(
+      e =>
+        e.budgetDomain === getValues(`expenditures.${rowIndex}.budgetDomain`) &&
+        e.budgetDivisionExpenditure ===
+          parseInt(
+            getValues(
+              `expenditures.${rowIndex}.budgetDivisionExpenditure`,
+            ) as unknown as string,
+          ),
+    );
+
+    return found?.projectNameCandidate ?? [];
   };
 
   return (
     <TableRowWrapper isLast={isLast}>
       <Controller
-        name={`incomes.${rowIndex}.code`}
+        name={`expenditures.${rowIndex}.code`}
         render={({ field }) => {
           const { color, text } = getbudgetCodeTag(field.value);
+
           return (
             <TableCell type="Default" width="130px">
               <LightTag color={color as LightTagColor}>{text}</LightTag>
@@ -210,77 +225,100 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`incomes.${rowIndex}.budgetDomain`}
+        name={`expenditures.${rowIndex}.budgetDomain`}
         render={({ field }) => (
           <TableCell type="Default" width="120px">
             <TagSelect<BudgetDomainEnum>
               items={budgetDomainList.slice(0, 3)}
               value={field.value || "-"}
               onChange={newValue => {
-                setValue(`incomes.${rowIndex}.budgetDomain`, newValue);
-                setValue(
-                  `incomes.${rowIndex}.budgetDivisionIncome`,
-                  BudgetDivisionIncomeEnum.Undefined,
-                );
+                if (rowIndex === 0) return;
+                setValue(`expenditures.${rowIndex}.budgetDomain`, newValue);
                 field.onChange(newValue);
                 changeCode();
+                setValue(`expenditures.${rowIndex}.projectName`, "");
+                setProjectNameListInputItem(getProjectNameCandidateList());
               }}
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="65px"
+              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
       />
       <Controller
-        name={`incomes.${rowIndex}.budgetDivisionIncome`}
-        render={({ field }) => {
-          const divisionOptions = useMemo(
-            () =>
-              getDivisionItemsList(
-                getValues(`incomes.${rowIndex}.budgetDomain`),
-              ),
-            [getValues(`incomes.${rowIndex}.budgetDomain`)],
-          );
-
-          return (
-            <TableCell type="Default" width="150px">
-              <TagSelect
-                items={divisionOptions}
-                value={field.value || divisionOptions[0]}
-                onChange={newVal => {
-                  setItemList(getBudgetDivisionIncomeItemsList(newVal));
-                  setValue(`incomes.${rowIndex}.item`, "");
-                  field.onChange(newVal);
-                }}
-                placeholder="-"
-                errorMessage="필수 항목입니다."
-                width="90px"
-              />
-            </TableCell>
-          );
-        }}
+        name={`expenditures.${rowIndex}.budgetDivisionExpenditure`}
+        render={({ field }) => (
+          <TableCell type="Default" width="150px">
+            <TagSelect<BudgetDivisionExpenseEnum>
+              items={divisionItemsList.slice(0, 3)}
+              value={field.value || divisionItemsList[0].value}
+              onChange={newVal => {
+                if (rowIndex === 0) return;
+                setValue(
+                  `expenditures.${rowIndex}.item`,
+                  BudgetClassExpenseEnum.Undefined,
+                );
+                field.onChange(newVal);
+                setValue(`expenditures.${rowIndex}.projectName`, "");
+                setProjectNameListInputItem(getProjectNameCandidateList());
+              }}
+              placeholder="-"
+              errorMessage="필수 항목입니다."
+              width="90px"
+              disabled={rowIndex === 0}
+            />
+          </TableCell>
+        )}
       />
       <Controller
-        name={`incomes.${rowIndex}.item`}
+        name={`expenditures.${rowIndex}.projectName`}
         render={({ field }) => (
           <TableCell type="Default" width="400px">
             <InputSelect
-              items={itemList}
+              items={setProjectNameListInputItem(getProjectNameCandidateList())}
               value={field.value}
-              onChange={newVal => field.onChange(newVal)}
+              onChange={newVal => {
+                if (rowIndex === 0) return;
+                field.onChange(newVal);
+              }}
               errorMessage="필수 항목입니다."
+              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
       />
       <Controller
-        name={`incomes.${rowIndex}.lastYear`}
+        name={`expenditures.${rowIndex}.item`}
+        render={({ field }) => (
+          <TableCell type="Default" width="142px">
+            <TagSelect<BudgetClassExpenseEnum>
+              items={divisionItemsClassList.slice(0, 16)}
+              value={field.value || divisionItemsClassList[0]}
+              onChange={newVal => {
+                if (rowIndex === 0) return;
+                field.onChange(newVal);
+              }}
+              placeholder="-"
+              errorMessage="필수 항목입니다."
+              width="90px"
+              isLight={false} // DarkTag is used.
+              disabled={rowIndex === 0}
+            />
+          </TableCell>
+        )}
+      />
+      <Controller
+        name={`expenditures.${rowIndex}.lastYear`}
         render={({ field }) => (
           <TableCell type="Default" width="130px">
             <TableTextInput
               value={field.value}
-              handleChange={newVal => field.onChange(newVal)}
+              handleChange={newVal => {
+                if (rowIndex === 0) return;
+                field.onChange(newVal);
+              }}
               placeholder="금액 입력"
               prefix="₩"
             />
@@ -288,12 +326,15 @@ const TableRow: React.FC<TableRowProps> = ({
         )}
       />
       <Controller
-        name={`incomes.${rowIndex}.thisYear`}
+        name={`expenditures.${rowIndex}.thisYear`}
         render={({ field }) => (
           <TableCell type="Default" width="130px">
             <TableTextInput
               value={field.value}
-              handleChange={newVal => field.onChange(newVal)}
+              handleChange={newVal => {
+                if (rowIndex === 0) return;
+                field.onChange(newVal);
+              }}
               placeholder="금액 입력"
               prefix="₩"
             />
@@ -301,13 +342,13 @@ const TableRow: React.FC<TableRowProps> = ({
         )}
       />
       <Controller
-        name={`incomes.${rowIndex}.ratio`}
+        name={`expenditures.${rowIndex}.ratio`}
         render={() => {
           const lastYear = parseInt(
-            getValues(`incomes.${rowIndex}.lastYear`) as unknown as string,
+            getValues(`expenditures.${rowIndex}.lastYear`) as unknown as string,
           );
           const thisYear = parseInt(
-            getValues(`incomes.${rowIndex}.thisYear`) as unknown as string,
+            getValues(`expenditures.${rowIndex}.thisYear`) as unknown as string,
           );
           const ratio = useMemo(() => {
             if (lastYear <= 0) {
@@ -324,9 +365,9 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`incomes.${rowIndex}.reason`}
+        name={`expenditures.${rowIndex}.reason`}
         render={({ field }) => {
-          const projectItem = getValues(`incomes.${rowIndex}.item`);
+          const projectItem = getValues(`expenditures.${rowIndex}.projectName`);
           return (
             <TableCell type="Default" width="90px">
               <EditableDetailButton
@@ -339,7 +380,7 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`incomes.${rowIndex}.status`}
+        name={`expenditures.${rowIndex}.status`}
         render={({ field }) => {
           const { color, text } = getbudgetStatusTag(field.value);
           return (
@@ -354,7 +395,7 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`incomes.${rowIndex}.review`}
+        name={`expenditures.${rowIndex}.review`}
         render={({ field }) => (
           <TableCell type="Default" width="90px">
             <ReadOnlyReviewButton review={field.value} />
@@ -366,80 +407,48 @@ const TableRow: React.FC<TableRowProps> = ({
           type="delete"
           size={16}
           onClick={() => {
+            if (rowIndex === 0) return;
             deleteRow(rowIndex);
           }}
+          color={rowIndex === 0 ? colors.GRAY["50"] : colors.BLACK}
         />
       </TableCell>
     </TableRowWrapper>
   );
 };
 
-const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
+const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   initialData,
+  projectNameCandidate,
 }) => {
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     334, // TODO: magic number 36 + 48 + 250
   );
+
   const formMethods = useForm<FormValues>({
     defaultValues: {
-      incomes: initialData,
+      expenditures: initialData,
     },
   });
 
   const { handleSubmit, control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "incomes",
+    name: "expenditures",
   });
 
-  const incomes = formMethods.watch("incomes");
-
-  const defaultNewRow = [
-    {
-      code: 0,
-      budgetDomain: BudgetDomainEnum.Undefined,
-      budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
-      item: "",
-      lastYear: "",
-      thisYear: "",
-      ratio: 100.0,
-      reason: "",
-      status: "",
-      review: "",
-    },
-  ];
-
-  const addNewRow = () => {
-    const newRow = { ...defaultNewRow[0], id: fields.length };
-    append(newRow);
-
-    const length = incomes.length + 1;
-    setDynamicHeight(36 + length * 48 + 250);
-  };
-
-  const deleteRow = (rowIndex: number) => {
-    if (incomes.length === 1) {
-      return;
-    }
-    remove(rowIndex);
-    const length = incomes.length - 1;
-
-    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
-  };
-
-  const onSubmit = (data: FormValues) => {
-    console.log("Submitted incomes:", data.incomes);
-  };
+  const expenditures = formMethods.watch("expenditures");
 
   const changeCode = () => {
-    let studentsFeeCount = 100;
-    let schoolFeeCount = 200;
-    let autonomousFeeCount = 300;
+    let studentsFeeCount = 400;
+    let schoolFeeCount = 500;
+    let autonomousFeeCount = 600;
 
-    incomes.forEach((income, index) => {
-      let newCode = income.code;
+    const updatedExpenditures = getValues("expenditures");
+    updatedExpenditures.forEach((expenditure, index) => {
+      let newCode = expenditure.code;
 
-      switch (income.budgetDomain) {
+      switch (expenditure.budgetDomain) {
         case 1:
           studentsFeeCount += 1;
           newCode = studentsFeeCount;
@@ -457,10 +466,53 @@ const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
           break;
       }
 
-      setValue(`incomes.${index}.code`, newCode, {
+      setValue(`expenditures.${index}.code`, newCode, {
         shouldValidate: true,
       });
     });
+  };
+
+  const defaultNewRow = [
+    {
+      code: 0,
+      budgetDomain: BudgetDomainEnum.Undefined,
+      budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Undefined,
+      projectName: "",
+      item: BudgetClassExpenseEnum.Undefined,
+      lastYear: "",
+      thisYear: "",
+      ratio: 100.0,
+      reason: "",
+      status: DocumentReviewStatusEnum.Unsaved,
+      review: "",
+    },
+  ];
+
+  const addNewRow = () => {
+    const newRow = { ...defaultNewRow[0], id: fields.length };
+    append(newRow);
+
+    const length = expenditures.length + 1;
+    setDynamicHeight(36 + length * 48 + 250);
+  };
+
+  const deleteRow = (rowIndex: number) => {
+    if (expenditures.length === 1) {
+      return;
+    }
+    remove(rowIndex);
+    const length = expenditures.length - 1;
+
+    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+
+    setTimeout(() => {
+      // CHACHA: remove is async. Ensure that changeCode is executed after remove.
+      changeCode();
+    }, 0);
+  };
+
+  const onSubmit = (data: FormValues) => {
+    console.log("Submitted incomes:", data.expenditures);
   };
 
   return (
@@ -469,10 +521,10 @@ const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
         <FlexWrapper direction="column" gap={16}>
           <TitleWithButtonWrapper>
             <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-              수입
+              지출
             </Typography>
             <Button type="default" onClick={addNewRow}>
-              추가
+              행 추가
             </Button>
           </TitleWithButtonWrapper>
           <FlexWrapper
@@ -494,6 +546,9 @@ const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
                     예산 분류
                   </TableCell>
                   <TableCell type="Header" width="400px">
+                    사업명
+                  </TableCell>
+                  <TableCell type="Header" width="142px">
                     항목
                   </TableCell>
                   <TableCell type="Header" width="130px">
@@ -528,7 +583,8 @@ const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
                     key={field.id}
                     rowIndex={index}
                     deleteRow={() => deleteRow(index)}
-                    isLast={index === incomes.length - 1}
+                    isLast={index === expenditures.length - 1}
+                    projectNameCandidate={projectNameCandidate}
                   />
                 ))}
               </TableContentWrapper>
@@ -541,4 +597,4 @@ const ManagerIncomeTable: React.FC<ManagerExpenditureTableProps> = ({
   );
 };
 
-export default ManagerIncomeTable;
+export default ManagerExpenditureTable;

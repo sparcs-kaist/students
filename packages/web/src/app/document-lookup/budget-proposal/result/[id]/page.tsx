@@ -18,8 +18,11 @@ import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
-  mockExpenditureData,
   // mockExpenditureData,
+  // mockManagerExpenditureData,
+  // mockManagerIncomeData,
+  // mockManagerProjectNameCandidateList,
+  mockExpenditureData,
   // mockManagerIncomeData,
   // mockIncomeData,
   // mockIncomeManagerData,
@@ -42,7 +45,7 @@ import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
-// import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+// import ManagerExpenditureTable from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
 import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 
 interface DomainAccum {
@@ -239,6 +242,12 @@ const Proposal = () => {
         {userPermission === 2 && (
           <ReviewerExpenditureTable initialData={mockExpenditureData} />
         )}
+        {/* {userPermission === 3 && ( */}
+        {/*   <ManagerExpenditureTable */}
+        {/*     initialData={mockManagerExpenditureData} */}
+        {/*     projectNameCandidate={mockManagerProjectNameCandidateList} */}
+        {/*   /> */}
+        {/* )} */}
         <TotalTable
           data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
         />
