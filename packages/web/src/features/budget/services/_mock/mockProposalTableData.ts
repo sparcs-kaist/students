@@ -9,6 +9,8 @@ import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/
 import { ViewResultProps } from "@sparcs-students/web/features/documents/components/ViewResult";
 import { IncomeProps } from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 import { ExpenditureProps } from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
+import { ManagerExpenditureProps } from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export const mockViewResultData: ViewResultProps = {
   fileName: "전산학부 24년도 예산안",
@@ -34,7 +36,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -47,7 +49,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -60,7 +62,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     ratio: 120.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -73,7 +75,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
 ];
@@ -89,7 +91,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
   {
     code: 402,
@@ -101,7 +103,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
     thisYear: 125000,
     ratio: 1000.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
   {
     code: 403,
@@ -113,7 +115,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
   {
     code: 501,
@@ -125,7 +127,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
   },
 ];
 export const mockIncomeData: IncomeProps[] = [
@@ -139,7 +141,7 @@ export const mockIncomeData: IncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -152,7 +154,7 @@ export const mockIncomeData: IncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -165,7 +167,7 @@ export const mockIncomeData: IncomeProps[] = [
     ratio: 120.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -178,7 +180,7 @@ export const mockIncomeData: IncomeProps[] = [
     ratio: 100.0,
     reason:
       "대충 어쩌구저쩌구한 비고\n아무말이나 적자\nㅁㄴㅇㄹ\nㅁㄴㅇㄻㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
 ];
@@ -192,7 +194,7 @@ export interface ManagerIncomeProps {
   thisYear: number | string;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
@@ -206,10 +208,41 @@ export const mockManagerIncomeData: ManagerIncomeProps[] = [
     thisYear: "",
     ratio: 100.0,
     reason: "",
-    status: "",
+    status: DocumentReviewStatusEnum.Unsaved,
     review: "",
   },
 ];
+
+export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
+  {
+    code: 401,
+    budgetDomain: BudgetDomainEnum.Student,
+    budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Operating,
+    projectName: "격려금",
+    item: BudgetClassExpenseEnum.Product,
+    lastYear: "125000",
+    thisYear: "125000",
+    ratio: 100.0,
+    reason: "",
+    status: DocumentReviewStatusEnum.Unsaved,
+    review: "",
+  },
+];
+
+export interface ManagerProjectNameCandidate {
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
+  projectNameCandidate: string[];
+}
+
+export const mockManagerProjectNameCandidateList: ManagerProjectNameCandidate[] =
+  [
+    {
+      budgetDomain: BudgetDomainEnum.School,
+      budgetDivisionExpenditure: BudgetDivisionExpenseEnum.New,
+      projectNameCandidate: ["작년의 어떠한 사업", "작년의 저떠한 사업"],
+    },
+  ];
 
 export const mockExpenditureData: ExpenditureProps[] = [
   {
@@ -222,7 +255,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -235,7 +268,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
     thisYear: 125000,
     ratio: 1000.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "수정 요청",
+    status: DocumentReviewStatusEnum.ReviseNeeded,
     review: "",
   },
   {
@@ -248,7 +281,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "반려",
+    status: DocumentReviewStatusEnum.Rejected,
     review: "",
   },
   {
@@ -261,7 +294,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
     thisYear: 125000,
     ratio: 100.0,
     reason: "대충 어쩌구저쩌구한 근거\n아무말이나 적자\nㅁㄴㅇㄹ",
-    status: "승인",
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
 ];

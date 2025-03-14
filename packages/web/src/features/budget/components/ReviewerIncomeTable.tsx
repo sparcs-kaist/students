@@ -28,6 +28,7 @@ import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export interface IncomeProps {
   code: number;
@@ -38,7 +39,7 @@ export interface IncomeProps {
   thisYear: number;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
@@ -50,7 +51,10 @@ const columnHelper = createColumnHelper<IncomeProps>();
 
 const getColumns = (
   handleReviewChange: (code: number, newReview: string) => void,
-  handleStatusChange: (code: number, newStatus: string) => void,
+  handleStatusChange: (
+    code: number,
+    newStatus: DocumentReviewStatusEnum,
+  ) => void,
 ) => [
   columnHelper.accessor("code", {
     id: "code",
@@ -183,7 +187,10 @@ const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
     );
   };
 
-  const handleStatusChange = (code: number, newStatus: string) => {
+  const handleStatusChange = (
+    code: number,
+    newStatus: DocumentReviewStatusEnum,
+  ) => {
     setData(prevData =>
       prevData.map(item =>
         item.code === code ? { ...item, status: newStatus } : item,

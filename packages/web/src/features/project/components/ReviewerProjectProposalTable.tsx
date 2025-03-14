@@ -17,12 +17,13 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export interface ProjectProposalProps {
   id: string;
   name: string;
   projectPeriod: string;
-  status: string; // TODO: enum으로 변경
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
@@ -35,7 +36,7 @@ const columnHelper = createColumnHelper<ProjectProposalProps>();
 
 const getColumns = (
   handleReviewChange: (id: string, newReview: string) => void,
-  handleStatusChange: (id: string, newStatus: string) => void,
+  handleStatusChange: (id: string, newStatus: DocumentReviewStatusEnum) => void,
 ) => [
   columnHelper.accessor("id", {
     id: "id",
@@ -106,7 +107,10 @@ const ReviewerProjectProposalTable: React.FC<
     );
   };
 
-  const handleStatusChange = (id: string, newStatus: string) => {
+  const handleStatusChange = (
+    id: string,
+    newStatus: DocumentReviewStatusEnum,
+  ) => {
     setData(prevData =>
       prevData.map(item =>
         item.id === id ? { ...item, status: newStatus } : item,

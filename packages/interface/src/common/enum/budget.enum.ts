@@ -27,6 +27,7 @@ export enum BudgetDivisionExpenseEnum {
   Operating = 1, // 운영비
   Regular, // 정기사업비
   New, // 비정기사업비
+  Undefined, // Empty in Form
 }
 
 // 예산 클래스 E
@@ -47,6 +48,7 @@ export enum BudgetClassExpenseEnum {
   Extra, // 기타비
   Backup, // 예비비
   Incentive, // 격려금
+  Undefined, // CHACHA: for initial form
 }
 
 export enum BudgetDivisionIncomeItemEnum { // 예산 항목

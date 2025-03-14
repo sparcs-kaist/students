@@ -16,12 +16,13 @@ import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export interface ViewerProjectProposalProps {
   id: string;
   name: string;
   projectPeriod: string;
-  status: string; // TODO: enum으로 변경
+  status: DocumentReviewStatusEnum;
 }
 
 interface ProjectProposalTableProps {

@@ -18,8 +18,11 @@ import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
-  mockExpenditureData,
   // mockExpenditureData,
+  // mockManagerExpenditureData,
+  // mockManagerIncomeData,
+  // mockManagerProjectNameCandidateList,
+  mockExpenditureData,
   // mockManagerIncomeData,
   // mockIncomeData,
   // mockIncomeManagerData,
@@ -44,6 +47,7 @@ import CancellableModalContent from "@sparcs-students/web/common/components/Moda
 import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 // import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+// import ManagerExpenditureTable from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
 import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 
 interface DomainAccum {
@@ -241,13 +245,20 @@ const Proposal = () => {
           <ReviewerIncomeTable initialData={mockViewerIncomeData} />
         )}
         {/* {userPermission === 3 && ( */}
-        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} /> */}
+        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} isProposal /> */}
         {/* )} */}
 
         {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} type="proposal" pageId={id} />} */}
         {userPermission === 2 && (
           <ReviewerExpenditureTable initialData={mockExpenditureData} />
         )}
+        {/* {userPermission === 3 && ( */}
+        {/*   <ManagerExpenditureTable */}
+        {/*     initialData={mockManagerExpenditureData} */}
+        {/*     projectNameCandidate={mockManagerProjectNameCandidateList} */}
+        {/*     isProposal */}
+        {/*   /> */}
+        {/* )} */}
         <TotalTable
           data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
         />
