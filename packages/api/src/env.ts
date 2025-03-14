@@ -4,7 +4,7 @@ import { dotEnvOptions } from "@sparcs-students/root/env/dotenv-options";
 
 dotenv.config(dotEnvOptions);
 const schema = z.object({
-  NODE_ENV: z.enum(["development", "production", "test"]),
+  NODE_ENV: z.enum(["development", "production", "test", "dev"]),
   SERVER_PORT: z.coerce.number(),
   SECRET_KEY: z.string(),
   DATABASE_URL: z.string(),

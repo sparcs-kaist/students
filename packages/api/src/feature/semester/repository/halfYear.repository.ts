@@ -1,6 +1,6 @@
 import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
 import { HalfYear } from "@sparcs-students/api/drizzle/schema";
-import { isNotNull } from "drizzle-orm";
+import { isNotNull, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -46,8 +46,10 @@ export class HalfYearRepository {
     const halfYears = await db
       .select()
       .from(HalfYear)
-      .where(isNotNull(HalfYear.deletedAt))
+      .where(isNull(HalfYear.deletedAt))
       .orderBy(HalfYear.year);
+
+    console.log(halfYears);
 
     const semesterIds = [
       ...new Set([
