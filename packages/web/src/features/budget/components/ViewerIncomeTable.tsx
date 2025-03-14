@@ -68,7 +68,7 @@ const columns = [
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
-    size: 140,
+    size: 160,
   }),
   columnHelper.accessor("budgetDivisionIncome", {
     id: "budgetDivisionIncome",
@@ -86,7 +86,7 @@ const columns = [
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 420,
+    size: 400,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -119,7 +119,7 @@ const columns = [
       const { color, text } = getbudgetRatioTag(info.getValue());
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
-    size: 157.5,
+    size: 175,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
