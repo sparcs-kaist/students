@@ -235,7 +235,7 @@ const Proposal = () => {
           <ReviewerIncomeTable initialData={mockViewerIncomeData} />
         )}
         {/* {userPermission === 3 && ( */}
-        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} /> */}
+        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} isProposal /> */}
         {/* )} */}
 
         {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} />} */}
@@ -246,6 +246,7 @@ const Proposal = () => {
         {/*   <ManagerExpenditureTable */}
         {/*     initialData={mockManagerExpenditureData} */}
         {/*     projectNameCandidate={mockManagerProjectNameCandidateList} */}
+        {/*     isProposal */}
         {/*   /> */}
         {/* )} */}
         <TotalTable

@@ -76,6 +76,7 @@ interface FormValues {
 interface ManagerExpenditureTableProps {
   initialData: ManagerExpenditureProps[];
   projectNameCandidate: ManagerProjectNameCandidate[];
+  isProposal: boolean;
 }
 
 interface TableRowProps {
@@ -420,6 +421,7 @@ const TableRow: React.FC<TableRowProps> = ({
 const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   initialData,
   projectNameCandidate,
+  isProposal,
 }) => {
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     334, // TODO: magic number 36 + 48 + 250
@@ -552,10 +554,10 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
                     항목
                   </TableCell>
                   <TableCell type="Header" width="130px">
-                    작년 결산
+                    {isProposal ? "작년 결산" : "예산"}
                   </TableCell>
                   <TableCell type="Header" width="130px">
-                    올해 예산
+                    {isProposal ? "올해 예산" : "결산"}
                   </TableCell>
                   <TableCell type="Header" width="120px">
                     비율
