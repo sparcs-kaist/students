@@ -12,17 +12,22 @@ import {
   zName,
   zNameEng,
 } from "@sparcs-students/interface/common/stringLength";
+import { registry } from "@sparcs-students/interface/open-api";
 
 // Organization: 기구 엔티티
-export const zOrganization = z.object({
-  id: zId,
-  name: zName,
-  nameEng: zNameEng,
-  organizationTypeEnum: z.nativeEnum(OrganizationTypeEnum),
-  foundingYear: z.coerce.number(),
-  duration: zDuration,
-  organizationStateEnum: z.nativeEnum(OrganizationStateEnum), // 정규 or 비대위
-});
+export const zOrganization = z
+  .object({
+    id: zId,
+    name: zName,
+    nameEng: zNameEng,
+    organizationTypeEnum: z.nativeEnum(OrganizationTypeEnum),
+    foundingYear: z.coerce.number(),
+    duration: zDuration,
+    organizationStateEnum: z.nativeEnum(OrganizationStateEnum), // 정규 or 비대위
+  })
+  .openapi("Organization", {
+    description: "기구 엔티티",
+  });
 
 export const zOrganizationRequestCreate = zOrganization
   .omit({
@@ -45,9 +50,13 @@ export const zOperatingCommittee = z.object({
   duration: zDuration,
 });
 
-export const zOperatingCommitteeResponse = zOperatingCommittee.extend({
-  organization: zOrganization,
-});
+export const zOperatingCommitteeResponse = zOperatingCommittee
+  .extend({
+    organization: zOrganization,
+  })
+  .openapi("OperatingCommittee", {
+    description: "기구의 운영위원회 엔티티",
+  });
 
 export const zOperatingCommitteeRequestCreate = zOperatingCommittee
   .omit({
@@ -79,10 +88,18 @@ export const zTeamRequestCreate = zTeam
   })
   .extend({ duration: zDurationCreate });
 
-export const zTeamResponse = zTeam.extend({
-  organization: zOrganization,
-});
+export const zTeamResponse = zTeam
+  .extend({
+    organization: zOrganization,
+  })
+  .openapi("Team", {
+    description: "기구의 팀(하위 조직: 국, TF, 팀 등등...) 엔티티",
+  });
 
 export type ITeam = z.infer<typeof zTeam>;
 export type ITeamResponse = z.infer<typeof zTeamResponse>;
 export type ITeamRequestCreate = z.infer<typeof zTeamRequestCreate>;
+
+registry.register("Organization", zOrganization);
+registry.register("OperatingCommittee", zOperatingCommitteeResponse);
+registry.register("Team", zTeamResponse);

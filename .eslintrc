@@ -44,17 +44,19 @@
       }
     ],
     "import/named": "error",
-    "import/no-extraneous-dependencies": [
-      "warn", // TODO: change to error
-      {
-        "packageDir": [
-          "./packages/web/",
-          "./packages/api/",
-          "./packages/interface/",
-          "./"
-        ]
-      },
-    ],
+    "import/no-extraneous-dependencies": "off",
+    // zod to openapi 에서 자꾸 경고를 띄워서 끔
+    // [
+    //   "warn", // TODO: change to error
+    //   {
+    //     "packageDir": [
+    //       "./packages/web/",
+    //       "./packages/api/",
+    //       "./packages/interface/",
+    //       "./"
+    //     ]
+    //   },
+    // ],
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",
     "no-param-reassign": [

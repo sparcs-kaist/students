@@ -9,6 +9,9 @@ import {
   ApiOrg002RequestUrl,
   ApiOrg002ResponseCreated,
   apiOrg002,
+  ApiOrg003RequestUrl,
+  ApiOrg003ResponseOK,
+  apiOrg003,
 } from "@sparcs-students/interface/api/organization/index";
 
 import { OrganizationService } from "../service/organization.service";
@@ -36,5 +39,13 @@ export class OrganizationController {
       body.organization.duration,
       body.organization.organizationStateEnum,
     );
+  }
+
+  @Get(ApiOrg003RequestUrl)
+  @UsePipes(new ZodPipe(apiOrg003))
+  async getOrganizationPresidents(): Promise<ApiOrg003ResponseOK> {
+    return {
+      organizationLists: [],
+    };
   }
 }

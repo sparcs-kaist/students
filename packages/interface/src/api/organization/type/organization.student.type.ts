@@ -8,7 +8,11 @@ import { zPhoneNumber } from "@sparcs-students/interface/common/type/phoneNumber
 import { zStudent } from "@sparcs-students/interface/api/user/type/user.type";
 import { z } from "zod";
 import { zName } from "@sparcs-students/interface/common/stringLength";
+import { registry } from "@sparcs-students/interface/open-api";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { zOperatingCommittee, zOrganization, zTeam } from "./organization.type";
+
+extendZodWithOpenApi(z);
 
 // OrganizationPresident: 기구장 엔티티
 export const zOrganizationPresident = z.object({
@@ -28,10 +32,14 @@ export const zOrganizationPresidentRequestCreate = zOrganizationPresident
   })
   .extend({ duration: zDurationCreate });
 
-export const zOrganizationPresidentResponse = zOrganizationPresident.extend({
-  organization: zOrganization,
-  student: zStudent,
-});
+export const zOrganizationPresidentResponse = zOrganizationPresident
+  .extend({
+    organization: zOrganization,
+    student: zStudent,
+  })
+  .openapi("OrganizationPresident", {
+    description: "기구장 엔티티",
+  });
 
 export type IOrganizationPresident = z.infer<typeof zOrganizationPresident>;
 export type IOrganizationPresidentRequestCreate = z.infer<
@@ -57,10 +65,14 @@ export const zOrganizationMemberRequestCreate = zOrganizationMember
   })
   .extend({ duration: zDurationCreate });
 
-export const zOrganizationMemberResponse = zOrganizationMember.extend({
-  organization: zOrganization,
-  student: zStudent,
-});
+export const zOrganizationMemberResponse = zOrganizationMember
+  .extend({
+    organization: zOrganization,
+    student: zStudent,
+  })
+  .openapi("OrganizationMember", {
+    description: "기구원 엔티티",
+  });
 
 export type IOrganizationMember = z.infer<typeof zOrganizationMember>;
 export type IOrganizationMemberRequestCreate = z.infer<
@@ -85,10 +97,14 @@ export const zOrganizationManagerRequestCreate = zOrganizationManager
   })
   .extend({ duration: zDurationCreate });
 
-export const zOrganizationManagerResponse = zOrganizationManager.extend({
-  organization: zOrganization,
-  student: zStudent,
-});
+export const zOrganizationManagerResponse = zOrganizationManager
+  .extend({
+    organization: zOrganization,
+    student: zStudent,
+  })
+  .openapi("OrganizationManager", {
+    description: "기구 담당자 (4대 서류 작성 권한) 엔티티",
+  });
 
 export type IOrganizationManager = z.infer<typeof zOrganizationManager>;
 export type IOrganizationManagerRequestCreate = z.infer<
@@ -115,10 +131,13 @@ export const zOperatingCommitteeMemberRequestCreate = zOperatingCommitteeMember
   })
   .extend({ duration: zDurationCreate });
 
-export const zOperatingCommitteeMemberResponse =
-  zOperatingCommitteeMember.extend({
+export const zOperatingCommitteeMemberResponse = zOperatingCommitteeMember
+  .extend({
     operatingCommittee: zOperatingCommittee,
     student: zStudent,
+  })
+  .openapi("OperatingCommitteeMember", {
+    description: "운영위원 엔티티",
   });
 
 export type IOperatingCommitteeMember = z.infer<
@@ -145,10 +164,14 @@ export const zTeamMemberRequestCreate = zTeamMember
   })
   .extend({ duration: zDurationCreate });
 
-export const zTeamMemberResponse = zTeamMember.extend({
-  team: zTeam,
-  student: zStudent,
-});
+export const zTeamMemberResponse = zTeamMember
+  .extend({
+    team: zTeam,
+    student: zStudent,
+  })
+  .openapi("TeamMember", {
+    description: "팀 멤버 엔티티",
+  });
 
 export type ITeamMember = z.infer<typeof zTeamMember>;
 export type ITeamMemberRequestCreate = z.infer<typeof zTeamMemberRequestCreate>;
@@ -169,11 +192,25 @@ export const zTeamLeaderRequestCreate = zTeamLeader
   })
   .extend({ duration: zDurationCreate });
 
-export const zTeamLeaderResponse = zTeamLeader.extend({
-  team: zTeam,
-  student: zStudent,
-});
+export const zTeamLeaderResponse = zTeamLeader
+  .extend({
+    team: zTeam,
+    student: zStudent,
+  })
+  .openapi("TeamLeader", {
+    description: "팀장 엔티티",
+  });
 
 export type ITeamLeader = z.infer<typeof zTeamLeader>;
 export type ITeamLeaderRequestCreate = z.infer<typeof zTeamLeaderRequestCreate>;
 export type ITeamLeaderResponse = z.infer<typeof zTeamLeaderResponse>;
+
+registry.register("OrganizationPresident", zOrganizationPresidentResponse);
+registry.register("OrganizationMember", zOrganizationMemberResponse);
+registry.register("OrganizationManager", zOrganizationManagerResponse);
+registry.register(
+  "OperatingCommitteeMember",
+  zOperatingCommitteeMemberResponse,
+);
+registry.register("TeamMember", zTeamMemberResponse);
+registry.register("TeamLeader", zTeamLeaderResponse);

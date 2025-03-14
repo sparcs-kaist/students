@@ -1,10 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zHalfYearSummary } from "@sparcs-students/interface/api/semester/type/semester.type";
 import { registry, REST_API_METHOD } from "@sparcs-students/interface/open-api";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { zOrganization } from "../type/organization.type";
+import { zOrganizationPresidentResponse } from "../type/organization.student.type";
 
 extendZodWithOpenApi(z);
 
@@ -13,9 +12,9 @@ extendZodWithOpenApi(z);
  * @description
  */
 
-const url = () => `/organizations/lookup`;
+const url = () => `/organizations/organizationPresidents`;
 const method = "GET";
-export const ApiOrg001RequestUrl = "/organizations/lookup";
+export const ApiOrg003RequestUrl = "/organizations/organizationPresidents";
 
 const requestParam = z.object({});
 
@@ -25,23 +24,13 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    organizationLists: z.array(
-      z.object({
-        halfYear: zHalfYearSummary,
-        organizationTypes: z.array(
-          z.object({
-            organizationTypeEnum: zOrganization.shape.organizationTypeEnum,
-            organizations: z.array(zOrganization),
-          }),
-        ),
-      }),
-    ),
+    organizationLists: z.array(zOrganizationPresidentResponse),
   }),
 };
 
 const responseErrorMap = {};
 
-const apiOrg001 = {
+const apiOrg003 = {
   url,
   method,
   requestParam,
@@ -51,33 +40,33 @@ const apiOrg001 = {
   responseErrorMap,
 };
 
-type ApiOrg001RequestParam = z.infer<typeof apiOrg001.requestParam>;
-type ApiOrg001RequestQuery = z.infer<typeof apiOrg001.requestQuery>;
-type ApiOrg001RequestBody = z.infer<typeof apiOrg001.requestBody>;
-type ApiOrg001ResponseOK = z.infer<(typeof apiOrg001.responseBodyMap)[200]>;
+type ApiOrg003RequestParam = z.infer<typeof apiOrg003.requestParam>;
+type ApiOrg003RequestQuery = z.infer<typeof apiOrg003.requestQuery>;
+type ApiOrg003RequestBody = z.infer<typeof apiOrg003.requestBody>;
+type ApiOrg003ResponseOK = z.infer<(typeof apiOrg003.responseBodyMap)[200]>;
 
-export default apiOrg001;
+export default apiOrg003;
 
 export type {
-  ApiOrg001RequestParam,
-  ApiOrg001RequestQuery,
-  ApiOrg001RequestBody,
-  ApiOrg001ResponseOK,
+  ApiOrg003RequestParam,
+  ApiOrg003RequestQuery,
+  ApiOrg003RequestBody,
+  ApiOrg003ResponseOK,
 };
 
 registry.registerPath({
   method: REST_API_METHOD[method],
-  path: ApiOrg001RequestUrl,
+  path: ApiOrg003RequestUrl,
   summary: "반기별 단체목록 조회",
   description: "조회 가이드에 사용되는 반기별 단체목록을 가져옵니다.",
   tags: ["organization"],
   request: {
-    params: apiOrg001.requestParam,
-    query: apiOrg001.requestQuery,
+    params: apiOrg003.requestParam,
+    query: apiOrg003.requestQuery,
     body: {
       content: {
         "application/json": {
-          schema: apiOrg001.requestBody,
+          schema: apiOrg003.requestBody,
         },
       },
     },

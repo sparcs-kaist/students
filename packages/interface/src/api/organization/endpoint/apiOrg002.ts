@@ -1,10 +1,14 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { REST_API_METHOD, registry } from "@sparcs-students/interface/open-api";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import {
   zOrganization,
   zOrganizationRequestCreate,
 } from "../type/organization.type";
+
+extendZodWithOpenApi(z);
 
 /**
  * @version v0.1
@@ -56,3 +60,32 @@ export type {
   ApiOrg002RequestBody,
   ApiOrg002ResponseCreated,
 };
+
+registry.registerPath({
+  method: REST_API_METHOD[method],
+  path: ApiOrg002RequestUrl,
+  summary: "단체 생성",
+  description: "총학생회장 권한으로 새로운 단체를 생성합니다.",
+  tags: ["organization"],
+  request: {
+    params: apiOrg002.requestParam,
+    query: apiOrg002.requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: apiOrg002.requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "성공",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[201],
+        },
+      },
+    },
+  },
+});
