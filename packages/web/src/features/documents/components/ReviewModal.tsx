@@ -28,12 +28,14 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
 const ThreeButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
   gap: 8px;
 `;
 
