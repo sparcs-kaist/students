@@ -97,10 +97,14 @@ const ViewerProjectTable: React.FC<ProjectTableProps> = ({
           table={table}
           onClick={row =>
             router.push(
-              `/document-lookup/project-proposal/result/${pageId}/detail/${row.id}`,
+              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}`,
             )
           }
-          emptyMessage="사업계획서 정보가 없습니다."
+          emptyMessage={
+            isProposal
+              ? "사업계획서 정보가 없습니다."
+              : "사업보고서 정보가 없습니다."
+          }
         />
       )}
     </FlexWrapper>
