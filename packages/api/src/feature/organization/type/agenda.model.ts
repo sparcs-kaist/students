@@ -12,6 +12,10 @@ export class MAgenda implements IAgenda {
 
   accepted: IAgenda["accepted"];
 
+  submittedAt: IAgenda["submittedAt"];
+
+  postedAt: IAgenda["postedAt"];
+
   constructor(data: IAgenda) {
     Object.assign(this, data);
   }
@@ -23,6 +27,8 @@ export class MAgenda implements IAgenda {
         id: result.meetingId,
       },
       accepted: result.accepted,
+      submittedAt: result.submittedAt,
+      postedAt: result.postedAt,
     });
   }
 }
