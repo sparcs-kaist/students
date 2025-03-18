@@ -111,9 +111,9 @@ const Proposal = () => {
           handleDateChange={setDate}
         />
         {/* {userPermission === 1 && */}
-        {/*   <ViewerProjectProposalTable */}
+        {/*   <ViewerProjectTable */}
         {/*     pageId={id} */}
-        {/*     data={mockViewerProjectProposalData} */}
+        {/*     data={mockViewerProjectData} */}
         {/*   /> */}
         {/* } */}
         {userPermission === 2 && (

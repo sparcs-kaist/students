@@ -18,11 +18,11 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
-  mockViewerProjectProposalData,
+  mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import ViewerProjectProposalTable from "@sparcs-students/web/features/project/components/ViewerProjectProposalTable";
+import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
 import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
 
 const Proposal = () => {
@@ -77,9 +77,9 @@ const Proposal = () => {
           handleDateChange={setDate}
         />
         {userPermission === UserPermission.Viewer && (
-          <ViewerProjectProposalTable
+          <ViewerProjectTable
             pageId={id}
-            data={mockViewerProjectProposalData}
+            data={mockViewerProjectData}
             isProposal={false}
           />
         )}

@@ -17,20 +17,20 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
 
-export interface ViewerProjectProposalProps {
+export interface ViewerProjectProps {
   id: string;
   name: string;
   projectPeriod: string;
   status: string; // TODO: enum으로 변경
 }
 
-interface ProjectProposalTableProps {
+interface ProjectTableProps {
   pageId: string | string[];
-  data: ViewerProjectProposalProps[];
+  data: ViewerProjectProps[];
   isProposal?: boolean;
 }
 
-const columnHelper = createColumnHelper<ViewerProjectProposalProps>();
+const columnHelper = createColumnHelper<ViewerProjectProps>();
 
 const columns = [
   columnHelper.accessor("id", {
@@ -66,7 +66,7 @@ const columns = [
   }),
 ];
 
-const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
+const ViewerProjectTable: React.FC<ProjectTableProps> = ({
   pageId,
   data,
   isProposal = true,
@@ -107,4 +107,4 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
   );
 };
 
-export default ViewerProjectProposalTable;
+export default ViewerProjectTable;
