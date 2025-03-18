@@ -32,10 +32,12 @@ import { useFormatter } from "next-intl";
 import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
+  isDarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { budgetExpenseToString } from "@sparcs-students/web/features/documents/utils/enumToItem";
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
 import { useRouter } from "next/navigation";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export interface ViewerExpenditureProps {
   code: number;
@@ -47,7 +49,7 @@ export interface ViewerExpenditureProps {
   thisYear: number;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
 }
 
 interface ExpenditureTableProps {
@@ -106,7 +108,11 @@ const columns = [
         info.getValue(),
         budgetClassExpenseTagList,
       );
-      return <DarkTag color={color}>{text}</DarkTag>;
+      return isDarkTagColor(color) ? (
+        <DarkTag color={color}>{text}</DarkTag>
+      ) : (
+        <LightTag color={color}>{text}</LightTag>
+      );
     },
     size: 175,
   }),

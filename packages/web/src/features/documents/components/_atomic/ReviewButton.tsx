@@ -5,12 +5,13 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 import ReviewModal, {
   ReadOnlyReviewModal,
 } from "@sparcs-students/web/features/documents/components/ReviewModal";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 type ReviewButtonProps = {
   review: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   handleReviewChange: (detail: string) => void;
-  handleStatusChange: (status: string) => void;
+  handleStatusChange: (status: DocumentReviewStatusEnum) => void;
 };
 
 type ReadOnlyReviewButtonProps = {

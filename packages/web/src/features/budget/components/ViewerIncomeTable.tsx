@@ -27,6 +27,7 @@ import DetailButton from "@sparcs-students/web/features/documents/components/_at
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export interface ViewerIncomeProps {
   code: number;
@@ -37,7 +38,7 @@ export interface ViewerIncomeProps {
   thisYear: number;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
