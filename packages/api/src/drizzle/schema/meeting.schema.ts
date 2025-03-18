@@ -3,7 +3,6 @@ import {
   varchar,
   mysqlTable,
   timestamp,
-  date,
   text,
   boolean,
   foreignKey,
@@ -12,13 +11,13 @@ import {
 // Meeting 테이블
 export const Meeting = mysqlTable("meeting", {
   id: int("id").autoincrement().primaryKey().notNull(),
-  start_term: date("start_term").notNull(),
-  end_term: date("end_term").notNull(),
+  start_term: varchar("start_term", { length: 20 }).notNull(),
+  end_term: varchar("end_term", { length: 20 }).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deleted_at: timestamp("deleted_at"),
   name: varchar("name", { length: 30 }).notNull(),
-  description: text("description"),
+  detail: text("detail"),
 });
 
 // Agenda 테이블
