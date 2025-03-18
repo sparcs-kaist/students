@@ -20,7 +20,7 @@ export class MAgenda implements IAgenda {
     return new MAgenda({
       id: result.id,
       meeting: {
-        id: result.meeting_id,
+        id: result.meetingId,
       },
       accepted: result.accepted,
     });

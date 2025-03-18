@@ -20,8 +20,8 @@ export class MMeeting implements IMeeting {
     return new MMeeting({
       id: result.id,
       duration: {
-        startTerm: result.start_term,
-        endTerm: result.end_term,
+        startTerm: result.startTerm,
+        endTerm: result.endTerm,
       },
       name: result.name,
     });
