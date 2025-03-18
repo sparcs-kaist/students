@@ -1,14 +1,20 @@
 "use client";
 
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import BudgetReportTable from "@sparcs-students/web/features/documents/components/BudgetReportTable";
+import DocumentTimelineTable from "@sparcs-students/web/features/documents/components/DocumentTimelineTable";
+import mockBudgetReportData from "@sparcs-students/web/features/documents/services/_mock/mockBudgetReportTable";
+import { mockDocumentTimelineData } from "@sparcs-students/web/features/documents/services/_mock/mockDocumentTimelineTable";
 import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
 
 import { useParams } from "next/navigation";
-import React, { useRef } from "react";
-import styled from "styled-components";
+import React, { useRef, useState } from "react";
+import styled, { useTheme } from "styled-components";
 
 const headerHeight = 70;
 
@@ -28,6 +34,22 @@ const ContentsArea = styled.div`
   overflow-x: scroll;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+const BottomButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 30px;
+`;
+
 const DocumentViewerDetailPage: React.FC = () => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
@@ -37,8 +59,13 @@ const DocumentViewerDetailPage: React.FC = () => {
   const documentResult = useRef<HTMLDivElement>(null);
   const documentUnachieved = useRef<HTMLDivElement>(null);
   const suggestion = useRef<HTMLDivElement>(null);
+  const documentTimeline = useRef<HTMLDivElement>(null);
+  const budgetReport = useRef<HTMLDivElement>(null);
+  const projectReportReview = useRef<HTMLDivElement>(null);
 
   const { resultId } = useParams();
+  const theme = useTheme();
+  const [reviewText, setReviewText] = useState("");
 
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
@@ -61,6 +88,9 @@ const DocumentViewerDetailPage: React.FC = () => {
     { name: "사업 성과", reference: documentResult },
     { name: "미달 목표", reference: documentUnachieved },
     { name: "제언", reference: suggestion },
+    { name: "사업 진행 타임라인", reference: documentTimeline },
+    { name: "사업 결산안", reference: budgetReport },
+    { name: "사업보고서 검토", reference: projectReportReview },
   ];
 
   return (
@@ -108,7 +138,53 @@ const DocumentViewerDetailPage: React.FC = () => {
           <FlexWrapper direction="row" gap={60} ref={suggestion}>
             <TextAreaWithHeader header="제언" contents={["contents1"]} />
           </FlexWrapper>
+          <FlexWrapper direction="column" gap={12} ref={documentTimeline}>
+            <Typography fs={24} lh={30} fw="BOLD">
+              사업 진행 타임라인
+            </Typography>
+            <DocumentTimelineTable data={mockDocumentTimelineData} />
+          </FlexWrapper>
           {/* 여기에 사업 표 */}
+          <FlexWrapper direction="column" gap={12} ref={budgetReport}>
+            <Typography fs={24} lh={30} fw="BOLD">
+              사업 결산안
+            </Typography>
+            <BudgetReportTable initialData={mockBudgetReportData} />
+          </FlexWrapper>
+          <FlexWrapper direction="column" gap={12} ref={projectReportReview}>
+            <Typography fs={24} lh={30} fw="BOLD">
+              사업보고서 검토
+            </Typography>
+            <TextAreaInput
+              placeholder="검토에 대한 설명을 입력하세요."
+              handleChange={setReviewText}
+              value={reviewText}
+              height={100}
+            />
+            <ButtonWrapper>
+              <Button type="default">승인</Button>
+              <Button
+                type="default"
+                style={{
+                  border: `1px solid ${theme.colors.GREEN[600]}`,
+                  backgroundColor: theme.colors.GREEN[50],
+                  color: theme.colors.GREEN[600],
+                }}
+              >
+                수정 요청
+              </Button>
+              <Button
+                type="default"
+                style={{
+                  border: `1px solid ${theme.colors.RED[700]}`,
+                  backgroundColor: theme.colors.RED[50],
+                  color: theme.colors.RED[700],
+                }}
+              >
+                반려
+              </Button>
+            </ButtonWrapper>
+          </FlexWrapper>
         </ContentsArea>
         <Index
           title="목차"
@@ -116,6 +192,19 @@ const DocumentViewerDetailPage: React.FC = () => {
           headerHeight={headerHeight}
         />
       </ScrollAbleArea>
+      <BottomButtonWrapper>
+        <Button
+          type="default"
+          style={{
+            border: `1px solid ${theme.colors.GREEN[600]}`,
+            backgroundColor: theme.colors.WHITE,
+            color: theme.colors.GREEN[600],
+          }}
+        >
+          수정 요청
+        </Button>
+        <Button type="default">제출</Button>
+      </BottomButtonWrapper>
     </FlexWrapper>
   );
 };

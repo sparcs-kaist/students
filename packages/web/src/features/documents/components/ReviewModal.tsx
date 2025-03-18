@@ -28,7 +28,8 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 const ThreeButtonWrapper = styled.div`
