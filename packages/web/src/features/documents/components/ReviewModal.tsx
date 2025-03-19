@@ -3,13 +3,19 @@ import React, { useState } from "react";
 import styled, { useTheme } from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 interface ReviewModalProps {
   onConfirm: () => void;
   review: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   handleReviewChange: (detail: string) => void;
-  handleStatusChange: (status: string) => void;
+  handleStatusChange: (status: DocumentReviewStatusEnum) => void;
+}
+
+interface ReadOnlyReviewModalProps {
+  onConfirm: () => void;
+  review: string;
 }
 
 const ModalContentInner = styled.div`
@@ -22,13 +28,23 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
 `;
 
 const ThreeButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
+`;
+
+const ContentWrapper = styled.div`
+  padding: 20px 25px;
+  gap: 10px;
+  border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  font-size: 16px;
+  line-height: 20px;
+  white-space: pre;
 `;
 
 const ReviewModal: React.FC<ReviewModalProps> = ({
@@ -59,12 +75,18 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <Button
             onClick={() => {
               handleReviewChange(reviewText);
-              handleStatusChange("검토반려");
+              handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
               onConfirm();
             }}
-            type={status === "반려" ? "disabled" : "default"}
+            type={
+              status === DocumentReviewStatusEnum.Rejected ||
+              status === DocumentReviewStatusEnum.ReviewRejected
+                ? "disabled"
+                : "default"
+            }
             style={
-              status === "반려"
+              status === DocumentReviewStatusEnum.Rejected ||
+              status === DocumentReviewStatusEnum.ReviewRejected
                 ? {}
                 : {
                     border: `1px solid ${theme.colors.RED[700]}`,
@@ -78,12 +100,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           <Button
             onClick={() => {
               handleReviewChange(reviewText);
-              handleStatusChange("수정 요청");
+              handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
               onConfirm();
             }}
-            type={status === "수정 요청" ? "disabled" : "default"}
+            type={
+              status === DocumentReviewStatusEnum.ReviseNeeded
+                ? "disabled"
+                : "default"
+            }
             style={
-              status === "수정 요청"
+              status === DocumentReviewStatusEnum.ReviseNeeded
                 ? {}
                 : {
                     border: `1px solid ${theme.colors.GREEN[600]}`,
@@ -96,11 +122,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           </Button>
           <Button
             onClick={() => {
-              handleStatusChange("검토승인");
+              handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
               onConfirm();
             }}
             type={
-              status === "승인" || reviewText !== "" ? "disabled" : "default"
+              status === DocumentReviewStatusEnum.Accepted ||
+              status === DocumentReviewStatusEnum.ReviewAccepted ||
+              reviewText !== ""
+                ? "disabled"
+                : "default"
             }
           >
             승인
@@ -112,3 +142,20 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 };
 
 export default ReviewModal;
+
+export const ReadOnlyReviewModal: React.FC<ReadOnlyReviewModalProps> = ({
+  onConfirm,
+  review,
+}) => (
+  <ModalContentInner>
+    <Typography fs={20} lh={28} fw="MEDIUM">
+      검토 내용에 대한 설명
+    </Typography>
+    <ContentWrapper>{review}</ContentWrapper>
+    <ButtonWrapper>
+      <Button onClick={onConfirm} type="default">
+        닫기
+      </Button>
+    </ButtonWrapper>
+  </ModalContentInner>
+);

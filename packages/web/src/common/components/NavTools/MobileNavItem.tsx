@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Link from "next/link";
 
 import { useTranslations } from "next-intl";
+import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface MobileNavItemProps {
@@ -15,7 +16,9 @@ interface MobileNavItemProps {
   onClick?: VoidFunction;
 }
 
-const MobileNavItemInner = styled.div<{ highlight?: boolean }>`
+const MobileNavItemInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop) && prop !== "hasError",
+})<{ highlight?: boolean }>`
   display: flex;
   padding: 4px 12px;
   justify-content: space-between;

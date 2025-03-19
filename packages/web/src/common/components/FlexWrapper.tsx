@@ -6,6 +6,8 @@ interface FlexWrapperProps {
   gap: number;
   justify?: string;
   padding?: string;
+  height?: string;
+  xOverflow?: boolean;
 }
 
 const FlexWrapper = styled.div.withConfig({
@@ -13,10 +15,13 @@ const FlexWrapper = styled.div.withConfig({
 })<FlexWrapperProps>`
   display: flex;
   position: relative;
+  width: 100%;
   flex-direction: ${({ direction }) => direction};
   gap: ${({ gap }) => `${gap}px`};
   justify-content: ${({ justify }) => justify ?? "flex-start"};
   padding: ${({ padding }) => padding ?? 0};
+  height: ${({ height }) => height ?? "fit-content"};
+  ${({ xOverflow }) => (xOverflow ? "overflow-x: auto" : null)};
 `;
 
 export default FlexWrapper;

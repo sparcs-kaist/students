@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import FormError from "../FormError";
 import Label from "../FormLabel";
@@ -10,27 +10,27 @@ import NoOption from "./_atomic/NoOption";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
 import Icon from "../Icon";
+import TableTextInput from "../Forms/TableTextInput";
 
-export interface SelectItem<T> {
+export interface SelectItem {
   label: string;
-  value: T;
+  value: string;
   selectable?: boolean;
 }
 
-interface SelectProps<T> {
-  items: SelectItem<T>[];
+interface SelectProps {
+  items: SelectItem[];
   label?: string;
   errorMessage?: string;
   noOptionMessage?: string;
   disabled?: boolean;
-  value: T;
-  onChange?: (value: T) => void;
+  value: string;
+  onChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
-  placeholder?: string;
+  // placeholder?: string;
   isRequired?: boolean;
   onlyDropdown?: boolean;
   dropdownHeight?: number;
-  insideTable?: boolean;
 }
 
 const SelectInner = styled.div`
@@ -39,12 +39,12 @@ const SelectInner = styled.div`
   height: fit-content;
 `;
 
-const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
-  color: ${({ theme }) => theme.colors.GRAY[400]};
-  pointer-events: none;
-`;
+// const disabledStyle = css`
+//   background-color: ${({ theme }) => theme.colors.GRAY[100]};
+//   border-color: ${({ theme }) => theme.colors.GRAY[200]};
+//   color: ${({ theme }) => theme.colors.GRAY[400]};
+//   pointer-events: none;
+// `;
 
 const StyledSelect = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
@@ -54,22 +54,16 @@ const StyledSelect = styled.div.withConfig({
   isOpen?: boolean;
 }>`
   display: flex;
-  padding: 8px 16px;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
-  border: 1px solid
-    ${({ theme, hasError, isOpen }) => {
-      if (isOpen) return theme.colors.GREEN[300];
-      return hasError ? theme.colors.RED[700] : theme.colors.GRAY[200];
-    }};
   border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
 
@@ -78,8 +72,6 @@ const StyledSelect = styled.div.withConfig({
     border-color: ${({ theme, isOpen }) =>
       isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   }
-
-  ${({ disabled }) => disabled && disabledStyle}
 `;
 
 const IconWrapperDown = styled.div`
@@ -108,27 +100,7 @@ const SelectWrapper = styled.div`
   display: flex;
 `;
 
-const SelectValue = styled.span.withConfig({
-  shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean; disabled: boolean }>`
-  display: flex;
-  width: 81px;
-  height: 24px;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: ${({ theme, isSelected, disabled }) => {
-    if (disabled) {
-      return theme.colors.GRAY[400];
-    }
-    if (isSelected) {
-      return theme.colors.BLACK;
-    }
-    return theme.colors.GRAY[200];
-  }};
-`;
-
-const Select = <T,>({
+const Select = ({
   items,
   errorMessage = "",
   noOptionMessage = "항목이 존재하지 않습니다.",
@@ -137,12 +109,11 @@ const Select = <T,>({
   value,
   onChange = () => {},
   setErrorStatus = () => {},
-  placeholder = "항목을 선택해주세요",
+  // placeholder = "항목을 선택해주세요",
   isRequired = true,
   onlyDropdown = false,
   dropdownHeight = undefined,
-  insideTable = false,
-}: SelectProps<T>) => {
+}: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -177,15 +148,12 @@ const Select = <T,>({
     }
   };
 
-  const handleOptionClick = (item: SelectItem<T>) => {
+  const handleOptionClick = (item: SelectItem) => {
     if (item.selectable || item.selectable === undefined) {
       onChange(item.value);
       setIsOpen(false);
     }
   };
-
-  const selectedLabel =
-    items.find(item => item.value === value)?.label || placeholder;
 
   return (
     <SelectWrapper>
@@ -202,51 +170,81 @@ const Select = <T,>({
                 !isOpen
               }
               disabled={disabled}
-              onClick={handleSelectClick}
               isOpen={isOpen}
             >
-              <SelectValue
-                isSelected={value != null && value !== ""}
+              <TableTextInput
+                placeholder="사업명 선택 또는 입력"
                 disabled={disabled}
-              >
-                {selectedLabel}
-              </SelectValue>
-              {isOpen ? (
-                <IconWrapperUp>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperUp>
-              ) : (
-                <IconWrapperDown>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperDown>
-              )}
+                value={value}
+                handleChange={onChange}
+              />
+              {!disabled &&
+                (isOpen ? (
+                  <IconWrapperUp onClick={handleSelectClick}>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperUp>
+                ) : (
+                  <IconWrapperDown onClick={handleSelectClick}>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperDown>
+                ))}
             </StyledSelect>
           )}
-          {(onlyDropdown || isOpen) && (
-            <Dropdown
-              onlyDropdown={onlyDropdown}
-              insideTable={insideTable}
-              marginTop={4}
-              height={dropdownHeight}
-            >
-              {items.length > 0 ? (
-                items.map(item => (
-                  <SelectOption
-                    key={item.value as string}
-                    selectable={
-                      item.selectable || item.selectable === undefined
-                    }
-                    onClick={() => handleOptionClick(item)}
-                    selected={selectedLabel === item.label}
-                  >
-                    {item.label}
-                  </SelectOption>
-                ))
-              ) : (
-                <NoOption>{noOptionMessage}</NoOption>
+          {isRequired && hasOpenedOnce && !value && items.length > 0
+            ? (onlyDropdown || isOpen) && (
+                <Dropdown
+                  onlyDropdown={onlyDropdown}
+                  marginTop={28}
+                  height={dropdownHeight}
+                >
+                  {items.length > 0 ? (
+                    items.map(item => (
+                      <SelectOption
+                        key={item.value as string}
+                        selectable={
+                          item.selectable || item.selectable === undefined
+                        }
+                        onClick={() => {
+                          handleOptionClick(item);
+                          onChange(item.label);
+                        }}
+                        selected={value === item.label}
+                      >
+                        {item.label}
+                      </SelectOption>
+                    ))
+                  ) : (
+                    <NoOption>{noOptionMessage}</NoOption>
+                  )}
+                </Dropdown>
+              )
+            : (onlyDropdown || isOpen) && (
+                <Dropdown
+                  onlyDropdown={onlyDropdown}
+                  marginTop={14}
+                  height={dropdownHeight}
+                >
+                  {items.length > 0 ? (
+                    items.map(item => (
+                      <SelectOption
+                        key={item.value as string}
+                        selectable={
+                          item.selectable || item.selectable === undefined
+                        }
+                        onClick={() => {
+                          handleOptionClick(item);
+                          onChange(item.label);
+                        }}
+                        selected={value === item.label}
+                      >
+                        {item.label}
+                      </SelectOption>
+                    ))
+                  ) : (
+                    <NoOption>{noOptionMessage}</NoOption>
+                  )}
+                </Dropdown>
               )}
-            </Dropdown>
-          )}
         </SelectInner>
         {isRequired && hasOpenedOnce && !value && items.length > 0 && (
           <FormError>

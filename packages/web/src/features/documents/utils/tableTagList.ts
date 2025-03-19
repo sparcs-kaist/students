@@ -8,6 +8,7 @@ import {
   DarkStatusDetail,
   StatusDetail,
 } from "@sparcs-students/web/utils/getTagDetail";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export const budgetDomainTagList: {
   // 구분
@@ -24,6 +25,10 @@ export const budgetDomainTagList: {
   [BudgetDomainEnum.Autonomous]: {
     text: "자치",
     color: "PINK",
+  },
+  [BudgetDomainEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
   },
 };
 
@@ -75,6 +80,10 @@ export const budgetDivisionIncomeTagList: {
     text: "문화자치기금",
     color: "TEAL",
   },
+  [BudgetDivisionIncomeEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
+  },
 };
 
 export const budgetDivisionExpenseTagList: {
@@ -92,10 +101,14 @@ export const budgetDivisionExpenseTagList: {
     text: "비정기사업비",
     color: "LEMON",
   },
+  [BudgetDivisionExpenseEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
+  },
 };
 
 export const budgetClassExpenseTagList: {
-  [key in BudgetClassExpenseEnum]: DarkStatusDetail;
+  [key in BudgetClassExpenseEnum]: DarkStatusDetail | StatusDetail;
 } = {
   [BudgetClassExpenseEnum.Product]: {
     text: "상품비",
@@ -161,6 +174,10 @@ export const budgetClassExpenseTagList: {
     text: "격려금",
     color: "MAROON",
   },
+  [BudgetClassExpenseEnum.Undefined]: {
+    text: "-",
+    color: "GRAY",
+  },
 };
 
 export const getbudgetTypeTag = (type: string) => {
@@ -189,28 +206,30 @@ export const getbudgetRatioTag = (ratio: number | null) => {
   return { color: "GRAY", text: `-` };
 };
 
-export const getbudgetStatusTag = (type: string) => {
-  switch (type) {
-    case "승인":
-      return { color: "BLUE", text: type };
-    case "반려":
-      return { color: "RED700", text: type };
-    case "사후승인":
-      return { color: "TEAL", text: type };
-    case "검토승인":
-      return { color: "CYAN", text: type };
-    case "검토반려":
-      return { color: "RED500", text: type };
-    case "추가경정":
-      return { color: "CYAN", text: type };
-    case "검토중":
-      return { color: "MELON", text: type };
-    case "수정 요청":
-      return { color: "LEMON", text: type };
-    case "임시저장":
-      return { color: "ORCHID", text: type };
-    case "미저장":
-      return { color: "YELLOW", text: type };
+export const getbudgetStatusTag = (type: DocumentReviewStatusEnum) => {
+  switch (
+    type // TODO: enum
+  ) {
+    case DocumentReviewStatusEnum.Accepted:
+      return { color: "BLUE", text: "승인" };
+    case DocumentReviewStatusEnum.Rejected:
+      return { color: "RED700", text: "반려" };
+    case DocumentReviewStatusEnum.LateAccepted:
+      return { color: "TEAL", text: "사후승인" };
+    case DocumentReviewStatusEnum.ReviewAccepted:
+      return { color: "CYAN", text: "검토승인" };
+    case DocumentReviewStatusEnum.ReviewRejected:
+      return { color: "RED500", text: "검토반려" };
+    case DocumentReviewStatusEnum.Revised:
+      return { color: "CYAN", text: "추가경정" };
+    case DocumentReviewStatusEnum.Progress:
+      return { color: "MELON", text: "검토중" };
+    case DocumentReviewStatusEnum.ReviseNeeded:
+      return { color: "LEMON", text: "수정요청" };
+    case DocumentReviewStatusEnum.Draft:
+      return { color: "ORCHID", text: "임시저장" };
+    case DocumentReviewStatusEnum.Unsaved:
+      return { color: "YELLOW", text: "미저장" };
     default:
       return { color: "GRAY", text: type };
   }

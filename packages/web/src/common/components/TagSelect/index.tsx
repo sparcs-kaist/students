@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
+import DarkTag, {
+  DarkTagColor,
+} from "@sparcs-students/web/common/components/Tag/DarkTag";
 import FormError from "../FormError";
 import Label from "../FormLabel";
 
@@ -10,15 +13,17 @@ import NoOption from "./_atomic/NoOption";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
 import Icon from "../Icon";
+import LightTag, { LightTagColor } from "../Tag/LightTag";
 
-export interface SelectItem<T> {
+export interface TagSelectItem<T> {
   label: string;
   value: T;
   selectable?: boolean;
+  color: LightTagColor | DarkTagColor;
 }
 
-interface SelectProps<T> {
-  items: SelectItem<T>[];
+interface TagSelectProps<T> {
+  items: TagSelectItem<T>[];
   label?: string;
   errorMessage?: string;
   noOptionMessage?: string;
@@ -30,20 +35,15 @@ interface SelectProps<T> {
   isRequired?: boolean;
   onlyDropdown?: boolean;
   dropdownHeight?: number;
-  insideTable?: boolean;
+  width?: string;
+  isLight?: boolean;
 }
 
 const SelectInner = styled.div`
   gap: 4px;
   position: relative;
-  height: fit-content;
-`;
-
-const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
-  color: ${({ theme }) => theme.colors.GRAY[400]};
-  pointer-events: none;
+  height: 24px;
+  overflow-y: visible;
 `;
 
 const StyledSelect = styled.div.withConfig({
@@ -54,20 +54,14 @@ const StyledSelect = styled.div.withConfig({
   isOpen?: boolean;
 }>`
   display: flex;
-  padding: 8px 16px;
+  /* padding: 8px 16px; */
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
   width: 100%;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
-  border: 1px solid
-    ${({ theme, hasError, isOpen }) => {
-      if (isOpen) return theme.colors.GREEN[300];
-      return hasError ? theme.colors.RED[700] : theme.colors.GRAY[200];
-    }};
-  border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;
@@ -78,8 +72,6 @@ const StyledSelect = styled.div.withConfig({
     border-color: ${({ theme, isOpen }) =>
       isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   }
-
-  ${({ disabled }) => disabled && disabledStyle}
 `;
 
 const IconWrapperDown = styled.div`
@@ -106,13 +98,14 @@ const SelectWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   display: flex;
+  overflow-y: visible;
 `;
 
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean; disabled: boolean }>`
+})<{ isSelected: boolean; disabled: boolean; width?: string }>`
   display: flex;
-  width: 81px;
+  width: ${({ width }) => width ?? "81px"};
   height: 24px;
   flex-direction: column;
   justify-content: center;
@@ -128,7 +121,7 @@ const SelectValue = styled.span.withConfig({
   }};
 `;
 
-const Select = <T,>({
+const TagSelect = <T,>({
   items,
   errorMessage = "",
   noOptionMessage = "항목이 존재하지 않습니다.",
@@ -141,8 +134,9 @@ const Select = <T,>({
   isRequired = true,
   onlyDropdown = false,
   dropdownHeight = undefined,
-  insideTable = false,
-}: SelectProps<T>) => {
+  width = undefined,
+  isLight = true,
+}: TagSelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -177,7 +171,7 @@ const Select = <T,>({
     }
   };
 
-  const handleOptionClick = (item: SelectItem<T>) => {
+  const handleOptionClick = (item: TagSelectItem<T>) => {
     if (item.selectable || item.selectable === undefined) {
       onChange(item.value);
       setIsOpen(false);
@@ -186,6 +180,11 @@ const Select = <T,>({
 
   const selectedLabel =
     items.find(item => item.value === value)?.label || placeholder;
+
+  const selectedItem = useMemo(
+    () => items.find(item => item.value === value),
+    [value],
+  );
 
   return (
     <SelectWrapper>
@@ -205,28 +204,65 @@ const Select = <T,>({
               onClick={handleSelectClick}
               isOpen={isOpen}
             >
-              <SelectValue
-                isSelected={value != null && value !== ""}
-                disabled={disabled}
-              >
-                {selectedLabel}
-              </SelectValue>
-              {isOpen ? (
-                <IconWrapperUp>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperUp>
+              {isLight ? (
+                <SelectValue
+                  isSelected={value != null && value !== ""}
+                  disabled={disabled}
+                  width={width}
+                >
+                  {" "}
+                  {selectedItem ? (
+                    <LightTag
+                      width="100%"
+                      color={selectedItem?.color as LightTagColor}
+                    >
+                      {selectedItem?.label}
+                    </LightTag>
+                  ) : (
+                    <LightTag width="100%" color="GRAY">
+                      -
+                    </LightTag>
+                  )}
+                </SelectValue>
               ) : (
-                <IconWrapperDown>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperDown>
+                <SelectValue
+                  isSelected={value != null && value !== ""}
+                  disabled={disabled}
+                  width={width}
+                >
+                  {" "}
+                  {selectedItem ? (
+                    <DarkTag
+                      width="100%"
+                      color={selectedItem?.color as DarkTagColor}
+                    >
+                      {selectedItem?.label}
+                    </DarkTag>
+                  ) : (
+                    <LightTag width="100%" color="GRAY">
+                      -
+                    </LightTag>
+                  )}
+                </SelectValue>
               )}
+
+              {!disabled &&
+                (isOpen ? (
+                  <IconWrapperUp>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperUp>
+                ) : (
+                  <IconWrapperDown>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperDown>
+                ))}
             </StyledSelect>
           )}
           {(onlyDropdown || isOpen) && (
             <Dropdown
               onlyDropdown={onlyDropdown}
-              insideTable={insideTable}
-              marginTop={4}
+              insideTable
+              marginTop={12}
               height={dropdownHeight}
             >
               {items.length > 0 ? (
@@ -239,7 +275,18 @@ const Select = <T,>({
                     onClick={() => handleOptionClick(item)}
                     selected={selectedLabel === item.label}
                   >
-                    {item.label}
+                    {isLight ? (
+                      <LightTag
+                        width="100%"
+                        color={item.color as LightTagColor}
+                      >
+                        {item.label}
+                      </LightTag>
+                    ) : (
+                      <DarkTag width="100%" color={item.color as DarkTagColor}>
+                        {item.label}
+                      </DarkTag>
+                    )}
                   </SelectOption>
                 ))
               ) : (
@@ -258,4 +305,4 @@ const Select = <T,>({
   );
 };
 
-export default Select;
+export default TagSelect;
