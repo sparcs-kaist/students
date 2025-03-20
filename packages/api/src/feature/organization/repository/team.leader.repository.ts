@@ -55,7 +55,7 @@ export class TeamLeaderRepository {
     if (param.id) {
       whereClause.push(eq(TeamLeader.id, param.id));
     }
-    if (param.id) {
+    if (param.ids) {
       whereClause.push(inArray(TeamLeader.id, param.ids));
     }
     if (param.duration) {
