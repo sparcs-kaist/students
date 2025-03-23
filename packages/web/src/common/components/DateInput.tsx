@@ -23,17 +23,6 @@ interface DateInputProps {
   showTimeInput?: boolean;
 }
 
-// interface DateInputProps {
-//   label?: string;
-//   disabled?: boolean;
-//   errorMessage?: string;
-//   showIcon?: boolean;
-//   onChange: (
-//     dates: [Date | null, Date | null],
-//     event?: React.SyntheticEvent,
-//   ) => void;
-// }
-
 const DateInputWrapper = styled.div<{ disabled: boolean }>`
   width: 100%;
   display: flex;
@@ -47,11 +36,34 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
 
   .react-datepicker-wrapper {
     width: 100%;
+    background-color: ${({ theme }) => theme.colors.GRAY[50]};
+    font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  }
+
+  .react-datepicker {
+    display: flex;
+    align-items: flex-end;
+    width: 300px;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .react-datepicker-popper {
   }
 
   ::placeholder {
     opacity: 1;
     color: ${({ theme }) => theme.colors.GRAY[100]};
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  }
+
+  &:focus-within {
+    border-color: ${({ theme }) => theme.colors.PRIMARY};
   }
 
   input {

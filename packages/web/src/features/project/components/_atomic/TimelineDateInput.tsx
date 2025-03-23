@@ -51,6 +51,7 @@ const TimeLineDateInput = () => {
               : "선택하세요."
           }
           dateFormat="yyyy.MM.dd"
+          showIcon
         />
       </div>
     </FlexWrapper>
