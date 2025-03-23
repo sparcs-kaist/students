@@ -11,18 +11,39 @@ interface DateInputProps {
   disabled?: boolean;
   errorMessage?: string;
   showIcon?: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  onChange: (
+    dates: [Date | null, Date | null],
+    event?: React.SyntheticEvent,
+  ) => void;
+  minDate?: Date;
+  maxDate?: Date;
+  placeholderText?: string;
+  showTimeInput?: boolean;
 }
+
+// interface DateInputProps {
+//   label?: string;
+//   disabled?: boolean;
+//   errorMessage?: string;
+//   showIcon?: boolean;
+//   onChange: (
+//     dates: [Date | null, Date | null],
+//     event?: React.SyntheticEvent,
+//   ) => void;
+// }
 
 const DateInputWrapper = styled.div<{ disabled: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: row;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;
   padding: 8px 12px;
 
   background-color: ${({ theme, disabled }) =>
-    disabled ? theme.colors.GRAY[100] : theme.colors.WHITE};
+    disabled ? theme.colors.GRAY[50] : theme.colors.WHITE};
 
   .react-datepicker-wrapper {
     width: 100%;
@@ -30,20 +51,19 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
 
   ::placeholder {
     opacity: 1;
-    color: ${({ theme, disabled }) =>
-      disabled ? theme.colors.GRAY[400] : theme.colors.GRAY[200]};
+    color: ${({ theme }) => theme.colors.GRAY[100]};
   }
 
   input {
     color: ${({ theme, disabled }) =>
-      disabled ? theme.colors.GRAY[400] : theme.colors.BLACK};
+      disabled ? theme.colors.GRAY[100] : theme.colors.BLACK};
     background-color: ${({ theme, disabled }) =>
-      disabled ? theme.colors.GRAY[100] : theme.colors.WHITE};
+      disabled ? theme.colors.GRAY[50] : theme.colors.WHITE};
     font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
     font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
     font-size: 16px;
     line-height: 20px;
-    text-align: center;
+    text-align: left;
     border: none;
     outline: none;
     width: 100%;
@@ -58,7 +78,13 @@ const DateInput: React.FC<
   disabled = false,
   errorMessage = "",
   showIcon = false,
-  ...props
+  startDate,
+  endDate,
+  onChange,
+  minDate = undefined,
+  maxDate = undefined,
+  placeholderText = undefined,
+  showTimeInput = undefined,
 }) => {
   const datePickerRef = useRef<DatePicker | null>(null);
 
@@ -82,11 +108,14 @@ const DateInput: React.FC<
         <DatePicker
           ref={datePickerRef}
           disabled={disabled}
-          dateFormat={props.showTimeInput ? "yyyy.MM.dd HH:mm" : "yyyy.MM.dd"}
-          placeholderText={
-            props.showTimeInput ? "20XX.XX.XX XX:XX" : "20XX.XX.XX"
-          }
-          {...props}
+          dateFormat={showTimeInput ? "yyyy.MM.dd HH:mm" : "yyyy.MM.dd"}
+          placeholderText={placeholderText}
+          selectsRange
+          startDate={startDate}
+          endDate={endDate}
+          onChange={onChange}
+          minDate={minDate}
+          maxDate={maxDate}
         />
         {showIcon && (
           <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />

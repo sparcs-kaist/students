@@ -10,6 +10,8 @@ const TimeLineDateInput = () => {
   const [selectOption, setSelectOption] = useState<string | undefined>(
     undefined,
   );
+
+  console.log(selectOption);
   return (
     <FlexWrapper direction="row" gap={10}>
       <div style={{ width: "180px" }}>
@@ -21,7 +23,8 @@ const TimeLineDateInput = () => {
           ]}
           value={selectOption}
           onChange={option => setSelectOption(option)}
-          placeholder="유형을 선택하세요"
+          placeholder="유형을 선택하세요."
+          insideTimeline
         />
       </div>
       <div style={{ minWidth: "300px" }}>
@@ -42,7 +45,11 @@ const TimeLineDateInput = () => {
                 )
               : []
           }
-          placeholderText="선택하세요"
+          placeholderText={
+            selectOption !== "날짜" && selectOption !== undefined
+              ? "선택 완료"
+              : "선택하세요."
+          }
           dateFormat="yyyy.MM.dd"
         />
       </div>
