@@ -18,12 +18,14 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
+  mockProjectProposalData,
   mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
 import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
 
 const Proposal = () => {
   const { id } = useParams();
@@ -34,7 +36,7 @@ const Proposal = () => {
   const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = UserPermission.Viewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -81,6 +83,12 @@ const Proposal = () => {
             pageId={id}
             data={mockViewerProjectData}
             isProposal={false}
+          />
+        )}
+        {userPermission === UserPermission.Reviewer && (
+          <ReviewerProjectProposalTable
+            pageId={id}
+            initialData={mockProjectProposalData}
           />
         )}
         <OperationPlan {...mockOperationPlanData} isProposal={false} />

@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
-export interface ProjectProposalProps {
+export interface ReviewerProjectProps {
   id: string;
   name: string;
   projectPeriod: string;
@@ -27,12 +27,13 @@ export interface ProjectProposalProps {
   review: string;
 }
 
-interface ReviewerProjectProposalTableProps {
+interface ReviewerProjectTableProps {
   pageId: string | string[];
-  initialData: ProjectProposalProps[];
+  initialData: ReviewerProjectProps[];
+  isProposal?: boolean;
 }
 
-const columnHelper = createColumnHelper<ProjectProposalProps>();
+const columnHelper = createColumnHelper<ReviewerProjectProps>();
 
 const getColumns = (
   handleReviewChange: (id: string, newReview: string) => void,
@@ -88,10 +89,12 @@ const getColumns = (
   }),
 ];
 
-const ReviewerProjectProposalTable: React.FC<
-  ReviewerProjectProposalTableProps
-> = ({ pageId, initialData }) => {
-  const [data, setData] = useState<ProjectProposalProps[]>(initialData);
+const ReviewerProjectTable: React.FC<ReviewerProjectTableProps> = ({
+  pageId,
+  initialData,
+  isProposal = true,
+}) => {
+  const [data, setData] = useState<ReviewerProjectProps[]>(initialData);
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
 
@@ -130,7 +133,7 @@ const ReviewerProjectProposalTable: React.FC<
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12}>
         <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-          사업계획서
+          {isProposal ? "사업계획서" : "사업보고서"}
         </Typography>
       </FlexWrapper>
       {loaded && (
@@ -138,14 +141,18 @@ const ReviewerProjectProposalTable: React.FC<
           table={table}
           onClick={row =>
             router.push(
-              `/document-lookup/project-proposal/result/${pageId}/detail/${row.id}`,
+              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}`,
             )
           }
-          emptyMessage="사업계획서 정보가 없습니다."
+          emptyMessage={
+            isProposal
+              ? "사업계획서 정보가 없습니다."
+              : "사업보고서 정보가 없습니다."
+          }
         />
       )}
     </FlexWrapper>
   );
 };
 
-export default ReviewerProjectProposalTable;
+export default ReviewerProjectTable;
