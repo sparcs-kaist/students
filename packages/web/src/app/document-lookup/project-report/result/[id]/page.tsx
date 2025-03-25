@@ -25,13 +25,14 @@ import OperationPlan from "@sparcs-students/web/features/project/components/Oper
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
 import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
-import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { overlay } from "overlay-kit";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
+import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -49,7 +50,7 @@ const Proposal = () => {
   const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // TODO: api 연결
   const [review, setReview] = useState<string>("");
 
   const openSaveModal = () => {
@@ -125,9 +126,10 @@ const Proposal = () => {
           />
         )}
         {userPermission === UserPermission.Reviewer && (
-          <ReviewerProjectProposalTable
+          <ReviewerProjectTable
             pageId={id}
             initialData={mockProjectProposalData}
+            isProposal={false}
           />
         )}
         <OperationPlan {...mockOperationPlanData} isProposal={false} />
