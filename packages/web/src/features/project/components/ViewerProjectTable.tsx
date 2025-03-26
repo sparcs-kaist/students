@@ -18,19 +18,20 @@ import DarkTag, {
 import { useRouter } from "next/navigation";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
-export interface ViewerProjectProposalProps {
+export interface ViewerProjectProps {
   id: string;
   name: string;
   projectPeriod: string;
   status: DocumentReviewStatusEnum;
 }
 
-interface ProjectProposalTableProps {
+interface ProjectTableProps {
   pageId: string | string[];
-  data: ViewerProjectProposalProps[];
+  data: ViewerProjectProps[];
+  isProposal?: boolean;
 }
 
-const columnHelper = createColumnHelper<ViewerProjectProposalProps>();
+const columnHelper = createColumnHelper<ViewerProjectProps>();
 
 const columns = [
   columnHelper.accessor("id", {
@@ -66,9 +67,10 @@ const columns = [
   }),
 ];
 
-const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
+const ViewerProjectTable: React.FC<ProjectTableProps> = ({
   pageId,
   data,
+  isProposal = true,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
@@ -88,7 +90,7 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12}>
         <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-          사업계획서
+          {isProposal ? "사업계획서" : "사업보고서"}
         </Typography>
       </FlexWrapper>
       {loaded && (
@@ -96,14 +98,18 @@ const ViewerProjectProposalTable: React.FC<ProjectProposalTableProps> = ({
           table={table}
           onClick={row =>
             router.push(
-              `/document-lookup/project-proposal/result/${pageId}/detail/${row.id}`,
+              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}`,
             )
           }
-          emptyMessage="사업계획서 정보가 없습니다."
+          emptyMessage={
+            isProposal
+              ? "사업계획서 정보가 없습니다."
+              : "사업보고서 정보가 없습니다."
+          }
         />
       )}
     </FlexWrapper>
   );
 };
 
-export default ViewerProjectProposalTable;
+export default ViewerProjectTable;

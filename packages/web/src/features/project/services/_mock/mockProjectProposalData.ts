@@ -1,4 +1,4 @@
-import { ViewerProjectProposalProps } from "@sparcs-students/web/features/project/components/ViewerProjectProposalTable";
+import { ViewerProjectProps } from "@sparcs-students/web/features/project/components/ViewerProjectTable";
 import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
 import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
@@ -29,7 +29,7 @@ export const mockProjectProposalData: ProjectProposalProps[] = [
   },
 ];
 
-export const mockViewerProjectProposalData: ViewerProjectProposalProps[] = [
+export const mockViewerProjectData: ViewerProjectProps[] = [
   {
     id: "1",
     name: "집행위원회 운영",
