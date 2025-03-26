@@ -53,6 +53,20 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
   .react-datepicker-popper {
   }
 
+  .react-datepicker-triangle {
+    display: none;
+  }
+
+  .react-datepicker__current-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+    font-size: 24px;
+    font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  }
+
   ::placeholder {
     opacity: 1;
     color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -81,6 +95,21 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
     width: 100%;
     padding: 0px;
   }
+`;
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  height: 36px;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: stretch;
+`;
+
+const HeaderTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const DateInput: React.FC<
@@ -128,6 +157,25 @@ const DateInput: React.FC<
           onChange={onChange}
           minDate={minDate}
           maxDate={maxDate}
+          renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+
+            return (
+              <HeaderWrapper>
+                <Icon size={32} type="chevron_left" onClick={decreaseMonth} />
+                <HeaderTitleWrapper>
+                  <Typography fs={24} lh={24} fw="MEDIUM">
+                    {year}.
+                  </Typography>
+                  <Typography fs={24} lh={24} fw="MEDIUM">
+                    {month}.
+                  </Typography>
+                </HeaderTitleWrapper>
+                <Icon size={32} type="chevron_right" onClick={increaseMonth} />
+              </HeaderWrapper>
+            );
+          }}
         />
         {showIcon && (
           <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />
