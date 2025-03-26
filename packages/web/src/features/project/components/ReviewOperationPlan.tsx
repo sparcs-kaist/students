@@ -10,6 +10,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum
 interface ReviewOperationPlanProps {
   review?: string;
   reviewHandler: (text: string) => void;
+  isProposal?: boolean;
 }
 const ThreeButtonWrapper = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ const ThreeButtonWrapper = styled.div`
 const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
   review = "",
   reviewHandler,
+  isProposal = true,
 }) => {
   const theme = useTheme();
   const [reviewText, setReviewText] = useState(review);
@@ -31,7 +33,7 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
   return (
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-        운영계획 검토
+        운영{isProposal ? "계획" : "보고"} 검토
       </Typography>
       <TextAreaInput
         placeholder="검토에 대한 설명을 입력하세요."

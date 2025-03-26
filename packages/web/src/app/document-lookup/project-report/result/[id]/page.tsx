@@ -133,7 +133,11 @@ const Proposal = () => {
           />
         )}
         <OperationPlan {...mockOperationPlanData} isProposal={false} />
-        <ReviewOperationPlan review={review} reviewHandler={setReview} />
+        <ReviewOperationPlan
+          review={review}
+          reviewHandler={setReview}
+          isProposal={false}
+        />
 
         {userPermission === UserPermission.Reviewer && (
           <ButtonWrapper>
