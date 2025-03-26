@@ -25,6 +25,19 @@ export const mockViewResultData: ViewResultProps = {
   ],
 };
 
+export const mockViewProjectResultData: ViewResultProps = {
+  fileName: "전산학부 24년도 사업보고서",
+  organization: "전산학부",
+  period: "2024년도 하반기",
+  headPerson: "김스튜",
+  submitDate: new Date(),
+  dateList: [
+    new Date(2025, 0, 24),
+    new Date(2025, 0, 25),
+    new Date(2025, 0, 26),
+  ],
+};
+
 export const mockViewerIncomeData: ViewerIncomeProps[] = [
   {
     code: 101,

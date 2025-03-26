@@ -6,7 +6,10 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import {
+  mockViewProjectResultData,
+  mockViewResultData,
+} from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
@@ -15,60 +18,23 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
-  mockProjectProposalData,
+  mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import { overlay } from "overlay-kit";
-import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
-import styled from "styled-components";
-import Modal from "@sparcs-students/web/common/components/Modal";
-import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
-import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
+import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
 
-const ButtonWrapper = styled.div`
-  gap: 30px;
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-`;
 const Proposal = () => {
   const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
   const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
+  const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
-  const [review, setReview] = useState<string>("");
-
-  const openSaveModal = () => {
-    // TODO: add save logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <ConfirmModalContent onConfirm={() => close()}>
-          저장되었습니다.
-        </ConfirmModalContent>
-      </Modal>
-    ));
-  };
-
-  const openDiscardModal = () => {
-    // TODO: add discard logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <CancellableModalContent
-          onConfirm={() => close()}
-          onClose={() => close()}
-        >
-          임시저장 내역을{"\n"}모두 삭제하시겠습니까?
-        </CancellableModalContent>
-      </Modal>
-    ));
-  };
+  const userPermission = UserPermission.Viewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -77,7 +43,7 @@ const Proposal = () => {
         <BreadCrumb
           items={[
             { name: "예결산 조회", path: "/document-lookup" },
-            { name: "사업계획서", path: "/project-proposal" },
+            { name: "사업보고서", path: "/project-report" },
           ]}
         />
       </FlexWrapper>
@@ -106,42 +72,18 @@ const Proposal = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewProjectResultData}
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === 1 && */}
-        {/*   <ViewerProjectTable */}
-        {/*     pageId={id} */}
-        {/*     data={mockViewerProjectData} */}
-        {/*   /> */}
-        {/* } */}
-        {userPermission === 2 && (
-          <ReviewerProjectProposalTable
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectTable
             pageId={id}
-            initialData={mockProjectProposalData}
+            data={mockViewerProjectData}
+            isProposal={false}
           />
         )}
-        <OperationPlan {...mockOperationPlanData} />
-        <ReviewOperationPlan review={review} reviewHandler={setReview} />
-
-        {userPermission === 2 && (
-          <ButtonWrapper>
-            <Button
-              type="reverse"
-              onClick={openDiscardModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              삭제
-            </Button>
-            <Button
-              onClick={openSaveModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              제출
-            </Button>
-          </ButtonWrapper>
-        )}
+        <OperationPlan {...mockOperationPlanData} isProposal={false} />
       </FlexWrapper>
     </FlexWrapper>
   );
