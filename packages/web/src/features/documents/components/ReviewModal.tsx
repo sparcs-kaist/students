@@ -63,7 +63,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         검토 내용에 대한 설명
       </Typography>
       <TextAreaInput
-        placeholder={review === "" ? "내용을 입력하세요." : review}
+        placeholder="내용을 입력하세요."
         handleChange={setReviewText}
         value={reviewText}
       />
