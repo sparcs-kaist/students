@@ -39,7 +39,7 @@ const TableInner = styled.table.withConfig({
   border-spacing: 0;
   /* height: ${({ height }) => (height ? `${height}px` : "fit-content")}; */
   table-layout: fixed;
-  width: 100%;
+  width: fit-content;
 `;
 const Header = styled.thead`
   display: flex;

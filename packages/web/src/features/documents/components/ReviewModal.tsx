@@ -28,12 +28,14 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
 const ThreeButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
   gap: 8px;
 `;
 
@@ -63,7 +65,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         검토 내용에 대한 설명
       </Typography>
       <TextAreaInput
-        placeholder={review === "" ? "내용을 입력하세요." : review}
+        placeholder="내용을 입력하세요."
         handleChange={setReviewText}
         value={reviewText}
       />
