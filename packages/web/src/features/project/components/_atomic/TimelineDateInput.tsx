@@ -11,7 +11,6 @@ const TimeLineDateInput = () => {
     undefined,
   );
 
-  console.log(selectOption);
   return (
     <FlexWrapper direction="row" gap={10}>
       <div style={{ width: "180px" }}>
