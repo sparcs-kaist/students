@@ -18,12 +18,28 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
+  mockProjectProposalData,
   mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
 import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import styled from "styled-components";
+import Modal from "@sparcs-students/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import { overlay } from "overlay-kit";
+import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
+import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
+import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
+
+const ButtonWrapper = styled.div`
+  gap: 30px;
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+`;
 
 const Proposal = () => {
   const { id } = useParams();
@@ -34,7 +50,33 @@ const Proposal = () => {
   const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = UserPermission.Viewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // TODO: api 연결
+  const [review, setReview] = useState<string>("");
+
+  const openSaveModal = () => {
+    // TODO: add save logic
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <ConfirmModalContent onConfirm={() => close()}>
+          저장되었습니다.
+        </ConfirmModalContent>
+      </Modal>
+    ));
+  };
+
+  const openDiscardModal = () => {
+    // TODO: add discard logic
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <CancellableModalContent
+          onConfirm={() => close()}
+          onClose={() => close()}
+        >
+          임시저장 내역을{"\n"}모두 삭제하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -83,7 +125,37 @@ const Proposal = () => {
             isProposal={false}
           />
         )}
+        {userPermission === UserPermission.Reviewer && (
+          <ReviewerProjectTable
+            pageId={id}
+            initialData={mockProjectProposalData}
+            isProposal={false}
+          />
+        )}
         <OperationPlan {...mockOperationPlanData} isProposal={false} />
+        <ReviewOperationPlan
+          review={review}
+          reviewHandler={setReview}
+          isProposal={false}
+        />
+
+        {userPermission === UserPermission.Reviewer && (
+          <ButtonWrapper>
+            <Button
+              type="reverse"
+              onClick={openDiscardModal}
+              style={{ width: "100px", padding: "8px 16px" }}
+            >
+              삭제
+            </Button>
+            <Button
+              onClick={openSaveModal}
+              style={{ width: "100px", padding: "8px 16px" }}
+            >
+              제출
+            </Button>
+          </ButtonWrapper>
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );

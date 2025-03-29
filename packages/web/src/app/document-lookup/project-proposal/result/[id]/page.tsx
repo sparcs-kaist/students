@@ -21,7 +21,7 @@ import OperationPlan from "@sparcs-students/web/features/project/components/Oper
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { overlay } from "overlay-kit";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
+import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
@@ -117,7 +117,7 @@ const Proposal = () => {
         {/*   /> */}
         {/* } */}
         {userPermission === 2 && (
-          <ReviewerProjectProposalTable
+          <ReviewerProjectTable
             pageId={id}
             initialData={mockProjectProposalData}
           />
