@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Table from "@sparcs-students/web/common/components/Table/Table";
-import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
+import GroupsTag from "@sparcs-students/web/common/components/Tag/GroupsTag";
 
 export interface MemberProps {
   id: string;
@@ -39,12 +39,25 @@ const columns = [
     id: "groups",
     header: "소속 부서",
     cell: info => (
-      <div style={{ display: "flex", gap: "8px" }}>
-        {info.getValue().map((group, index) => (
-          <LightTag key={index} color="GREEN100">
-            {group}
-          </LightTag>
-        ))}
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
+        {info.getValue().length === 0 ? (
+          <GroupsTag color="GRAY" isDropdown={false}>
+            미소속
+          </GroupsTag>
+        ) : (
+          info.getValue().map((group, index) => (
+            <GroupsTag key={index} color="GREEN100" isDropdown={false}>
+              {group}
+            </GroupsTag>
+          ))
+        )}
       </div>
     ),
     size: 975,
