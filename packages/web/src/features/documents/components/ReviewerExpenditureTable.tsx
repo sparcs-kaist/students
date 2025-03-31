@@ -31,10 +31,12 @@ import { useFormatter } from "next-intl";
 import DetailButton from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
+  isDarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { budgetExpenseToString } from "@sparcs-students/web/features/documents/utils/enumToItem";
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 // ExpenditureProps 인터페이스는 위에 정의된 대로 사용
 
@@ -48,7 +50,7 @@ export interface ExpenditureProps {
   thisYear: number;
   ratio: number | null;
   reason: string;
-  status: string;
+  status: DocumentReviewStatusEnum;
   review: string;
 }
 
@@ -60,7 +62,10 @@ const columnHelper = createColumnHelper<ExpenditureProps>();
 
 const getColumns = (
   handleReviewChange: (code: number, newReview: string) => void,
-  handleStatusChange: (code: number, newStatus: string) => void,
+  handleStatusChange: (
+    code: number,
+    newStatus: DocumentReviewStatusEnum,
+  ) => void,
 ) => [
   columnHelper.accessor("code", {
     id: "code",
@@ -109,7 +114,11 @@ const getColumns = (
         info.getValue(),
         budgetClassExpenseTagList,
       );
-      return <DarkTag color={color}>{text}</DarkTag>;
+      return isDarkTagColor(color) ? (
+        <DarkTag color={color}>{text}</DarkTag>
+      ) : (
+        <LightTag color={color}>{text}</LightTag>
+      );
     },
     size: 180,
   }),
@@ -209,7 +218,10 @@ const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
     );
   };
 
-  const handleStatusChange = (code: number, newStatus: string) => {
+  const handleStatusChange = (
+    code: number,
+    newStatus: DocumentReviewStatusEnum,
+  ) => {
     setData(prevData =>
       prevData.map(item =>
         item.code === code ? { ...item, status: newStatus } : item,
@@ -228,7 +240,7 @@ const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
 
   return (
     <FlexWrapper direction="column" gap={16}>
-      <FlexWrapper direction="row" gap={12}>
+      <FlexWrapper direction="row" gap={12} style={{ whiteSpace: "nowrap" }}>
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
           지출
         </Typography>

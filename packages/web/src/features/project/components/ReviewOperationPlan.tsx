@@ -5,10 +5,12 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import styled, { useTheme } from "styled-components";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 interface ReviewOperationPlanProps {
   review?: string;
   reviewHandler: (text: string) => void;
+  isProposal?: boolean;
 }
 const ThreeButtonWrapper = styled.div`
   display: flex;
@@ -20,15 +22,18 @@ const ThreeButtonWrapper = styled.div`
 const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
   review = "",
   reviewHandler,
+  isProposal = true,
 }) => {
   const theme = useTheme();
   const [reviewText, setReviewText] = useState(review);
-  const [status, setStatus] = useState<string>("");
+  const [status, setStatus] = useState<DocumentReviewStatusEnum>(
+    DocumentReviewStatusEnum.Progress,
+  );
 
   return (
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-        운영계획 검토
+        운영{isProposal ? "계획" : "보고"} 검토
       </Typography>
       <TextAreaInput
         placeholder="검토에 대한 설명을 입력하세요."
@@ -40,13 +45,17 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
         <Button
           onClick={() => {
             reviewHandler(reviewText);
-            setStatus("검토반려");
+            setStatus(DocumentReviewStatusEnum.ReviewRejected);
           }}
           type={
-            status === "반려" || status === "검토반려" ? "disabled" : "default"
+            status === DocumentReviewStatusEnum.Rejected ||
+            status === DocumentReviewStatusEnum.ReviewRejected
+              ? "disabled"
+              : "default"
           }
           style={
-            status === "반려" || status === "검토반려"
+            status === DocumentReviewStatusEnum.Rejected ||
+            status === DocumentReviewStatusEnum.ReviewRejected
               ? {
                   width: "fit-content",
                   height: "36px",
@@ -69,11 +78,15 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
         <Button
           onClick={() => {
             reviewHandler(reviewText);
-            setStatus("수정 요청");
+            setStatus(DocumentReviewStatusEnum.ReviseNeeded);
           }}
-          type={status === "수정 요청" ? "disabled" : "default"}
+          type={
+            status === DocumentReviewStatusEnum.ReviseNeeded
+              ? "disabled"
+              : "default"
+          }
           style={
-            status === "수정 요청"
+            status === DocumentReviewStatusEnum.ReviseNeeded
               ? {
                   width: "fit-content",
                   height: "36px",
@@ -96,10 +109,12 @@ const ReviewOperationPlan: React.FC<ReviewOperationPlanProps> = ({
         <Button
           onClick={() => {
             reviewHandler(reviewText);
-            setStatus("검토승인");
+            setStatus(DocumentReviewStatusEnum.ReviewAccepted);
           }}
           type={
-            status === "승인" || status === "검토승인" || reviewText !== ""
+            status === DocumentReviewStatusEnum.Accepted ||
+            status === DocumentReviewStatusEnum.ReviewAccepted ||
+            reviewText !== ""
               ? "disabled"
               : "default"
           }

@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
+import DarkTag, {
+  DarkTagColor,
+} from "@sparcs-students/web/common/components/Tag/DarkTag";
 import FormError from "../FormError";
 import Label from "../FormLabel";
 
@@ -16,7 +19,7 @@ export interface TagSelectItem<T> {
   label: string;
   value: T;
   selectable?: boolean;
-  color: LightTagColor;
+  color: LightTagColor | DarkTagColor;
 }
 
 interface TagSelectProps<T> {
@@ -33,6 +36,7 @@ interface TagSelectProps<T> {
   onlyDropdown?: boolean;
   dropdownHeight?: number;
   width?: string;
+  isLight?: boolean;
 }
 
 const SelectInner = styled.div`
@@ -40,13 +44,6 @@ const SelectInner = styled.div`
   position: relative;
   height: 24px;
   overflow-y: visible;
-`;
-
-const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
-  color: ${({ theme }) => theme.colors.GRAY[400]};
-  pointer-events: none;
 `;
 
 const StyledSelect = styled.div.withConfig({
@@ -75,8 +72,6 @@ const StyledSelect = styled.div.withConfig({
     border-color: ${({ theme, isOpen }) =>
       isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   }
-
-  ${({ disabled }) => disabled && disabledStyle}
 `;
 
 const IconWrapperDown = styled.div`
@@ -140,6 +135,7 @@ const TagSelect = <T,>({
   onlyDropdown = false,
   dropdownHeight = undefined,
   width = undefined,
+  isLight = true,
 }: TagSelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -208,31 +204,58 @@ const TagSelect = <T,>({
               onClick={handleSelectClick}
               isOpen={isOpen}
             >
-              <SelectValue
-                isSelected={value != null && value !== ""}
-                disabled={disabled}
-                width={width}
-              >
-                {" "}
-                {selectedItem ? (
-                  <LightTag width="100%" color={selectedItem?.color}>
-                    {selectedItem?.label}
-                  </LightTag>
-                ) : (
-                  <LightTag width="100%" color="GRAY">
-                    -
-                  </LightTag>
-                )}
-              </SelectValue>
-              {isOpen ? (
-                <IconWrapperUp>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperUp>
+              {isLight ? (
+                <SelectValue
+                  isSelected={value != null && value !== ""}
+                  disabled={disabled}
+                  width={width}
+                >
+                  {" "}
+                  {selectedItem ? (
+                    <LightTag
+                      width="100%"
+                      color={selectedItem?.color as LightTagColor}
+                    >
+                      {selectedItem?.label}
+                    </LightTag>
+                  ) : (
+                    <LightTag width="100%" color="GRAY">
+                      -
+                    </LightTag>
+                  )}
+                </SelectValue>
               ) : (
-                <IconWrapperDown>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperDown>
+                <SelectValue
+                  isSelected={value != null && value !== ""}
+                  disabled={disabled}
+                  width={width}
+                >
+                  {" "}
+                  {selectedItem ? (
+                    <DarkTag
+                      width="100%"
+                      color={selectedItem?.color as DarkTagColor}
+                    >
+                      {selectedItem?.label}
+                    </DarkTag>
+                  ) : (
+                    <LightTag width="100%" color="GRAY">
+                      -
+                    </LightTag>
+                  )}
+                </SelectValue>
               )}
+
+              {!disabled &&
+                (isOpen ? (
+                  <IconWrapperUp>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperUp>
+                ) : (
+                  <IconWrapperDown>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperDown>
+                ))}
             </StyledSelect>
           )}
           {(onlyDropdown || isOpen) && (
@@ -252,9 +275,18 @@ const TagSelect = <T,>({
                     onClick={() => handleOptionClick(item)}
                     selected={selectedLabel === item.label}
                   >
-                    <LightTag width="100%" color={item.color}>
-                      {item.label}
-                    </LightTag>
+                    {isLight ? (
+                      <LightTag
+                        width="100%"
+                        color={item.color as LightTagColor}
+                      >
+                        {item.label}
+                      </LightTag>
+                    ) : (
+                      <DarkTag width="100%" color={item.color as DarkTagColor}>
+                        {item.label}
+                      </DarkTag>
+                    )}
                   </SelectOption>
                 ))
               ) : (

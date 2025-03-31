@@ -6,26 +6,17 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import {
-  // ViewerIncomeTable,
-  ViewerIncomeProps,
-} from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-import {
-  // ViewerExpenditureTable,
-  ViewerExpenditureProps,
-} from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
+// import ViewerIncomeTable, {
+//   ViewerIncomeProps,
+// } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
+// import ViewerExpenditureTable, {
+//   ViewerExpenditureProps,
+// } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
 import TotalTable, {
   TotalProps,
 } from "@sparcs-students/web/features/documents/components/TotalTable";
 import {
-  // mockExpenditureData,
-  // mockManagerExpenditureData,
-  // mockManagerIncomeData,
-  // mockManagerProjectNameCandidateList,
   mockExpenditureData,
-  // mockManagerIncomeData,
-  // mockIncomeData,
-  // mockIncomeManagerData,
   mockViewerExpenditureData,
   mockViewerIncomeData,
   mockViewResultData,
@@ -36,19 +27,18 @@ import { mockData } from "@sparcs-students/web/features/documents/components/Thr
 import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
-
-// import ManagerIncomeTable from "@sparcs-students/web/features/budget/components/ManagerIncomeTable";
+import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
+// import { useParams } from "next/navigation";
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-import styled from "styled-components";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
-import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-// import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
-// import ManagerExpenditureTable from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
-import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+import styled from "styled-components";
+import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
+import { ViewerIncomeProps } from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
 
 interface DomainAccum {
   incomeLastYear: number;
@@ -164,7 +154,7 @@ const dataToTotal = (
   return resultArray;
 };
 
-const Proposal = () => {
+const Report = () => {
   // const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
@@ -207,10 +197,11 @@ const Proposal = () => {
         <BreadCrumb
           items={[
             { name: "예결산 조회", path: "/document-lookup" },
-            { name: "예산안", path: "/budget-proposal" },
+            { name: "결산안", path: "/budget-report" },
           ]}
         />
       </FlexWrapper>
+
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
         <FlexWrapper direction="column" gap={32}>
           <FlexWrapper direction="column" gap={16}>
@@ -244,21 +235,17 @@ const Proposal = () => {
         {userPermission === 2 && (
           <ReviewerIncomeTable initialData={mockViewerIncomeData} />
         )}
-        {/* {userPermission === 3 && ( */}
-        {/*   <ManagerIncomeTable initialData={mockManagerIncomeData} isProposal /> */}
-        {/* )} */}
-
-        {/* {userPermission === 1 && <ViewerExpenditureTable data={mockViewerExpenditureData} type="proposal" pageId={id} />} */}
+        {/* {userPermission === 1 && */}
+        {/*   <ViewerExpenditureTable */}
+        {/*     data={mockViewerExpenditureData} */}
+        {/*     type="report" */}
+        {/*     pageId={id} */}
+        {/*   /> */}
+        {/* } */}
         {userPermission === 2 && (
           <ReviewerExpenditureTable initialData={mockExpenditureData} />
         )}
-        {/* {userPermission === 3 && ( */}
-        {/*   <ManagerExpenditureTable */}
-        {/*     initialData={mockManagerExpenditureData} */}
-        {/*     projectNameCandidate={mockManagerProjectNameCandidateList} */}
-        {/*     isProposal */}
-        {/*   /> */}
-        {/* )} */}
+
         <TotalTable
           data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
         />
@@ -283,4 +270,4 @@ const Proposal = () => {
     </FlexWrapper>
   );
 };
-export default Proposal;
+export default Report;

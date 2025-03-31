@@ -6,7 +6,10 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import {
+  mockViewProjectResultData,
+  mockViewResultData,
+} from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
@@ -16,16 +19,20 @@ import ThreeInput, {
 import {
   mockOperationPlanData,
   mockProjectProposalData,
+  mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import { overlay } from "overlay-kit";
-import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
+import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
+import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import { overlay } from "overlay-kit";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
+import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -33,16 +40,17 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const Proposal = () => {
   const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
   const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
+  const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
   const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // TODO: api 연결
   const [review, setReview] = useState<string>("");
 
   const openSaveModal = () => {
@@ -77,7 +85,7 @@ const Proposal = () => {
         <BreadCrumb
           items={[
             { name: "예결산 조회", path: "/document-lookup" },
-            { name: "사업계획서", path: "/project-proposal" },
+            { name: "사업보고서", path: "/project-report" },
           ]}
         />
       </FlexWrapper>
@@ -106,26 +114,32 @@ const Proposal = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewProjectResultData}
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === 1 && */}
-        {/*   <ViewerProjectTable */}
-        {/*     pageId={id} */}
-        {/*     data={mockViewerProjectData} */}
-        {/*   /> */}
-        {/* } */}
-        {userPermission === 2 && (
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectTable
+            pageId={id}
+            data={mockViewerProjectData}
+            isProposal={false}
+          />
+        )}
+        {userPermission === UserPermission.Reviewer && (
           <ReviewerProjectTable
             pageId={id}
             initialData={mockProjectProposalData}
+            isProposal={false}
           />
         )}
-        <OperationPlan {...mockOperationPlanData} />
-        <ReviewOperationPlan review={review} reviewHandler={setReview} />
+        <OperationPlan {...mockOperationPlanData} isProposal={false} />
+        <ReviewOperationPlan
+          review={review}
+          reviewHandler={setReview}
+          isProposal={false}
+        />
 
-        {userPermission === 2 && (
+        {userPermission === UserPermission.Reviewer && (
           <ButtonWrapper>
             <Button
               type="reverse"

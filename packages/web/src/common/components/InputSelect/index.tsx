@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import FormError from "../FormError";
 import Label from "../FormLabel";
@@ -39,12 +39,12 @@ const SelectInner = styled.div`
   height: fit-content;
 `;
 
-const disabledStyle = css`
-  background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
-  color: ${({ theme }) => theme.colors.GRAY[400]};
-  pointer-events: none;
-`;
+// const disabledStyle = css`
+//   background-color: ${({ theme }) => theme.colors.GRAY[100]};
+//   border-color: ${({ theme }) => theme.colors.GRAY[200]};
+//   color: ${({ theme }) => theme.colors.GRAY[400]};
+//   pointer-events: none;
+// `;
 
 const StyledSelect = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
@@ -72,8 +72,6 @@ const StyledSelect = styled.div.withConfig({
     border-color: ${({ theme, isOpen }) =>
       isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   }
-
-  ${({ disabled }) => disabled && disabledStyle}
 `;
 
 const IconWrapperDown = styled.div`
@@ -180,44 +178,73 @@ const Select = ({
                 value={value}
                 handleChange={onChange}
               />
-              {isOpen ? (
-                <IconWrapperUp onClick={handleSelectClick}>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperUp>
-              ) : (
-                <IconWrapperDown onClick={handleSelectClick}>
-                  <Icon type="arrow_back_ios_new" size={18} />
-                </IconWrapperDown>
-              )}
+              {!disabled &&
+                (isOpen ? (
+                  <IconWrapperUp onClick={handleSelectClick}>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperUp>
+                ) : (
+                  <IconWrapperDown onClick={handleSelectClick}>
+                    <Icon type="arrow_back_ios_new" size={18} />
+                  </IconWrapperDown>
+                ))}
             </StyledSelect>
           )}
-          {(onlyDropdown || isOpen) && (
-            <Dropdown
-              onlyDropdown={onlyDropdown}
-              marginTop={15}
-              height={dropdownHeight}
-            >
-              {items.length > 0 ? (
-                items.map(item => (
-                  <SelectOption
-                    key={item.value as string}
-                    selectable={
-                      item.selectable || item.selectable === undefined
-                    }
-                    onClick={() => {
-                      handleOptionClick(item);
-                      onChange(item.label);
-                    }}
-                    selected={value === item.label}
-                  >
-                    {item.label}
-                  </SelectOption>
-                ))
-              ) : (
-                <NoOption>{noOptionMessage}</NoOption>
+          {isRequired && hasOpenedOnce && !value && items.length > 0
+            ? (onlyDropdown || isOpen) && (
+                <Dropdown
+                  onlyDropdown={onlyDropdown}
+                  marginTop={28}
+                  height={dropdownHeight}
+                >
+                  {items.length > 0 ? (
+                    items.map(item => (
+                      <SelectOption
+                        key={item.value as string}
+                        selectable={
+                          item.selectable || item.selectable === undefined
+                        }
+                        onClick={() => {
+                          handleOptionClick(item);
+                          onChange(item.label);
+                        }}
+                        selected={value === item.label}
+                      >
+                        {item.label}
+                      </SelectOption>
+                    ))
+                  ) : (
+                    <NoOption>{noOptionMessage}</NoOption>
+                  )}
+                </Dropdown>
+              )
+            : (onlyDropdown || isOpen) && (
+                <Dropdown
+                  onlyDropdown={onlyDropdown}
+                  marginTop={14}
+                  height={dropdownHeight}
+                >
+                  {items.length > 0 ? (
+                    items.map(item => (
+                      <SelectOption
+                        key={item.value as string}
+                        selectable={
+                          item.selectable || item.selectable === undefined
+                        }
+                        onClick={() => {
+                          handleOptionClick(item);
+                          onChange(item.label);
+                        }}
+                        selected={value === item.label}
+                      >
+                        {item.label}
+                      </SelectOption>
+                    ))
+                  ) : (
+                    <NoOption>{noOptionMessage}</NoOption>
+                  )}
+                </Dropdown>
               )}
-            </Dropdown>
-          )}
         </SelectInner>
         {isRequired && hasOpenedOnce && !value && items.length > 0 && (
           <FormError>
