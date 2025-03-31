@@ -83,7 +83,7 @@ export class OperatingCommitteeMemberRepository {
       );
     }
 
-    whereClause.push(isNotNull(OperatingCommitteeMember.deletedAt));
+    whereClause.push(isNull(OperatingCommitteeMember.deletedAt));
 
     const result = await tx
       .select()
