@@ -5,10 +5,11 @@ import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface TableCellProps {
-  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort";
+  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort" | "Icon";
   children: ReactNode;
   width?: string | number;
   minWidth?: number;
+  icon?: ReactNode;
 }
 
 const CommonCellHeaderWrapper = styled.th.withConfig({
@@ -77,11 +78,33 @@ const SortWrapper = styled.div`
   padding-left: 20px;
 `;
 
+const IconCellWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  position: relative;
+`;
+
+const IconCell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TableCell: React.FC<TableCellProps> = ({
   type,
   children,
   width = "150px",
   minWidth = 60,
+  icon = null,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
   let content;
@@ -109,6 +132,14 @@ const TableCell: React.FC<TableCellProps> = ({
           <HeaderInner>{children}</HeaderInner>
           <Icon type="arrow_drop_down" size={24} color={colors.WHITE} />
         </SortWrapper>
+      );
+      break;
+    case "Icon":
+      content = (
+        <IconCellWrapper>
+          <IconCell>{children}</IconCell>
+          {icon && <IconWrapper>{icon}</IconWrapper>}
+        </IconCellWrapper>
       );
       break;
     default:
