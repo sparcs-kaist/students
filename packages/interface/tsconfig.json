@@ -9,5 +9,5 @@
       "@sparcs-students/interface/*": ["./*"]
     }
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "../api/src/common/model/field-operations.ts"]
 }

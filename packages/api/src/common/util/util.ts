@@ -9,7 +9,7 @@ export const takeOne = <T>(values: T[]): T | null => {
 
 type IdType = number;
 
-export function validateSole<T>(name?: string): (array: T[]) => void {
+export function validateOnlyOne<T>(name?: string): (array: T[]) => void {
   return (array: T[]) => {
     // 배열의 요소가 하나만 나왔는 지를 검증하는 함수
     // 배열의 요소가 하나가 아니면 예외 던짐
@@ -20,11 +20,11 @@ export function validateSole<T>(name?: string): (array: T[]) => void {
   };
 }
 
-export function takeSole<T>(name?: string): (array: T[]) => T {
+export function takeOnlyOne<T>(name?: string): (array: T[]) => T {
   return (array: T[]) => {
     // 배열의 요소가 하나만 나왔는 지를 검증하는 함수
     // 배열의 요소가 하나가 아니면 예외 던짐
-    validateSole(name)(array);
+    validateOnlyOne(name)(array);
     return array[0];
   };
 }
@@ -51,7 +51,7 @@ export function validateContainAllId<T, K extends IdType>(
   }
 }
 
-export function takeEvery<T extends { id: K }, K extends IdType>(
+export function takeAll<T extends { id: K }, K extends IdType>(
   ids: K[],
   name?: string,
 ): (array: T[]) => T[] {
@@ -74,3 +74,19 @@ export function takeExist<T>(name?: string): (array: T[]) => T[] {
 }
 
 // 그 외에도 쓸 만한 함수들이 있다면 제안해주세요!
+
+export function getKSTDate(input?: string | Date): Date {
+  let date: Date;
+
+  if (input === undefined || typeof input === "string") {
+    date = input ? new Date(input) : new Date();
+
+    // 현재 로컬 시간대의 오프셋을 구합니다 (분 단위).
+    const timezoneOffset = date.getTimezoneOffset() * 60000; // 분을 밀리초로 그럼변환
+
+    // 오프셋을 적용하여 시간을 보정
+    date.setTime(date.getTime() - timezoneOffset);
+    return date;
+  }
+  return new Date(input);
+}
