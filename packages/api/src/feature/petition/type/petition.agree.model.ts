@@ -18,8 +18,8 @@ export class MPetitionAgree implements IPetitionAgree {
   static fromDBResult(result: PetitionAgreeDBResult) {
     return new MPetitionAgree({
       ...result,
-      petition: { id: result.petition_id },
-      user: { id: result.user_id },
+      petition: { id: result.petitionId },
+      user: { id: result.userId },
     });
   }
 }

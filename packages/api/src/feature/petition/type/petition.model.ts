@@ -29,7 +29,7 @@ export class MPetition implements IPetition {
         startTerm: result.startTerm,
         endTerm: result.endTerm,
       },
-      user: { id: result.user_id },
+      user: { id: result.userId },
       petitionStatusEnumId: result.petitionStatusEnumId as PetitionStatusEnum,
     });
   }

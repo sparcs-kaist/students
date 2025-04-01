@@ -22,9 +22,9 @@ export class MPetitionAnswer implements IPetitionAnswer {
   static fromDBResult(result: PetitionAnswerDBResult) {
     return new MPetitionAnswer({
       ...result,
-      petition: { id: result.petition_id },
-      user: { id: result.user_id },
-      team: { id: result.team_id },
+      petition: { id: result.petitionId },
+      user: { id: result.userId },
+      team: { id: result.teamId },
     });
   }
 }
