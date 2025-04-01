@@ -72,7 +72,7 @@ export class PetitionRepository {
       );
     }
 
-    whereClause.push(isNotNull(Petition.deletedAt));
+    whereClause.push(isNull(Petition.deletedAt));
 
     const result = await tx
       .select()
@@ -95,7 +95,7 @@ export class PetitionRepository {
     const [result] = await tx.insert(Petition).values({
       ...param,
       title: param.title,
-      user_id: param.user.id,
+      userId: param.user.id,
       startTerm: param.duration.startTerm,
       endTerm: param.duration.endTerm,
     });
@@ -117,7 +117,9 @@ export class PetitionRepository {
       .update(Petition)
       .set({
         title: param.title,
-        user_id: param.user.id,
+        userId: param.user.id,
+        detail: param.detail,
+        petitionStatusEnumId: param.petitionStatusEnumId,
         startTerm: param.duration.startTerm,
         endTerm: param.duration.endTerm,
       })

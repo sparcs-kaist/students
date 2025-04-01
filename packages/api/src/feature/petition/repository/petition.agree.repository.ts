@@ -1,6 +1,6 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, inArray, isNotNull, eq, SQL, isNull } from "drizzle-orm";
+import { and, inArray, eq, SQL, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -37,7 +37,7 @@ export class PetitionAgreeRepository {
   async findTx(
     tx: DrizzleTransaction,
     param: IPetitionAgreeQuery,
-  ): Promise<MPetitionAgree[] | null> {
+  ): Promise<MPetitionAgree[]> {
     const whereClause: SQL[] = [];
 
     if (param.id) {
@@ -47,10 +47,10 @@ export class PetitionAgreeRepository {
       whereClause.push(inArray(PetitionAgree.id, param.ids));
     }
     if (param.petitionId) {
-      whereClause.push(eq(PetitionAgree.petition_id, param.petitionId));
+      whereClause.push(eq(PetitionAgree.petitionId, param.petitionId));
     }
 
-    whereClause.push(isNotNull(PetitionAgree.deletedAt));
+    whereClause.push(isNull(PetitionAgree.deletedAt));
 
     const result = await tx
       .select()
@@ -61,7 +61,7 @@ export class PetitionAgreeRepository {
     return result.map(row => MPetitionAgree.fromDBResult(row));
   }
 
-  async find(param: IPetitionAgreeQuery): Promise<MPetitionAgree[] | null> {
+  async find(param: IPetitionAgreeQuery): Promise<MPetitionAgree[]> {
     return this.withTransaction(async tx => this.findTx(tx, param));
   }
 
@@ -72,8 +72,8 @@ export class PetitionAgreeRepository {
   ): Promise<void> {
     const [result] = await tx.insert(PetitionAgree).values({
       ...param,
-      petition_id: param.petition.id,
-      user_id: param.user.id,
+      petitionId: param.petition.id,
+      userId: param.user.id,
     });
     if (result.insertId === undefined) {
       throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);
@@ -92,8 +92,8 @@ export class PetitionAgreeRepository {
     const [result] = await tx
       .update(PetitionAgree)
       .set({
-        petition_id: param.petition.id,
-        user_id: param.user.id,
+        petitionId: param.petition.id,
+        userId: param.user.id,
       })
       .where(
         and(eq(PetitionAgree.id, param.id), isNull(PetitionAgree.deletedAt)),

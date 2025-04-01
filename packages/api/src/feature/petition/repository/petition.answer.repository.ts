@@ -1,6 +1,6 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, inArray, isNotNull, eq, SQL, isNull } from "drizzle-orm";
+import { and, inArray, eq, SQL, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -47,10 +47,10 @@ export class PetitionAnswerRepository {
       whereClause.push(inArray(PetitionAnswer.id, param.ids));
     }
     if (param.petitionId) {
-      whereClause.push(eq(PetitionAnswer.petition_id, param.petitionId));
+      whereClause.push(eq(PetitionAnswer.petitionId, param.petitionId));
     }
 
-    whereClause.push(isNotNull(PetitionAnswer.deletedAt));
+    whereClause.push(isNull(PetitionAnswer.deletedAt));
 
     const result = await tx
       .select()
@@ -72,9 +72,9 @@ export class PetitionAnswerRepository {
   ): Promise<void> {
     const [result] = await tx.insert(PetitionAnswer).values({
       ...param,
-      petition_id: param.petition.id,
-      user_id: param.user.id,
-      team_id: param.team.id,
+      petitionId: param.petition.id,
+      userId: param.user.id,
+      teamId: param.team.id,
     });
     if (result.insertId === undefined) {
       throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);
@@ -93,8 +93,8 @@ export class PetitionAnswerRepository {
     const [result] = await tx
       .update(PetitionAnswer)
       .set({
-        petition_id: param.petition.id,
-        user_id: param.user.id,
+        petitionId: param.petition.id,
+        userId: param.user.id,
       })
       .where(
         and(eq(PetitionAnswer.id, param.id), isNull(PetitionAnswer.deletedAt)),
