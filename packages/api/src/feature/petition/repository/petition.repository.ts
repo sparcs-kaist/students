@@ -24,7 +24,7 @@ import {
   IPetitionRequestCreate,
   IPetitionRequestUpdate,
 } from "@sparcs-students/interface/api/petition/type/petition.type";
-import { MPetition } from "../type/Petition.model";
+import { MPetition } from "../type/petition.model";
 
 type IPetitionQuery = {
   id?: number;
