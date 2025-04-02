@@ -111,6 +111,7 @@ export abstract class BaseRepository<
    * find와 count에서 사용
    * 상속할 떄 super.makeWhereClause(param, specialKeys) 로 기본적인 쿼리 생성 (id 등)
    * 추가적인 조건을 추가할 거면 specialKeys에 추가 (ex) duration ... )
+   * 주의: date 객체는 생각대로 작동하지 않을 확률이 높으니 special keys 에 넣고 오버라이드 해서 사용하기
    */
   protected makeWhereClause(
     param: BaseRepositoryQuery<Query>,
@@ -135,47 +136,55 @@ export abstract class BaseRepository<
     }
 
     Object.keys(param)
-      .filter(key => !defaultKeys.includes(key)) // 기본 키는 제외
+      .filter(key => !defaultKeys.includes(key)) // 기본 키 및 specialKeys는 제외
       .forEach(key => {
-        if (key in nestedQueryWrapper) {
+        // 중첩 쿼리 (and, or, not)
+        if (nestedQueryWrapper.includes(key as NestedQueryWrapper)) {
           whereClause.push(
             this.processNestedQuery(param[key], key as NestedQueryWrapper),
           );
-        }
-        // 파라미터 값이 존재하는 경우
-        const value = param[key];
-        if (value !== undefined) {
-          // Query 필드를 테이블 필드로 변환
-          const tableField = this.getTableField(key as keyof Query);
-          if (!tableField) {
-            throw new Error(`Invalid query field: ${key}`);
-          }
+        } else {
+          // 파라미터 값이 존재하는 경우
+          const value = param[key];
+          if (value !== undefined) {
+            // Query 필드를 테이블 필드로 변환
+            const tableField = this.getTableField(key as keyof Query);
+            if (!tableField) {
+              throw new Error(`Invalid query field: ${key}`);
+            }
 
-          // 배열인 경우 IN 연산자 사용
-          if (Array.isArray(value)) {
-            whereClause.push(inArray(tableField, value));
-          }
-          // 복합 조건 객체인 경우 복합 조건 처리 (gt, lt, gte, lte 등)
-          // 예시: { between: [10, 20] }, { gt: 10 }
-          else if (
-            typeof value === "object" &&
-            Object.keys(value).every(k =>
-              mysqlQueryConditionOperators.includes(
-                k as MysqlQueryConditionOperators,
-              ),
-            )
-          ) {
-            whereClause.push(
-              this.processAdvancedOperators(key as keyof Query, value),
-            );
-          }
-          // null 인 경우 isNull 연산자 사용
-          else if (value === null) {
-            whereClause.push(isNull(tableField));
-          }
-          // 단일 값인 경우 eq 연산자 사용
-          else {
-            whereClause.push(eq(tableField, value));
+            // 배열인 경우 IN 연산자 사용
+            if (Array.isArray(value)) {
+              whereClause.push(inArray(tableField, value));
+            }
+            // 복합 조건 객체인 경우 복합 조건 처리 (gt, lt, gte, lte 등)
+            // 예시: { between: [10, 20] }, { gt: 10 }
+            else if (
+              typeof value === "object" &&
+              Object.keys(value).every(k =>
+                mysqlQueryConditionOperators.includes(
+                  k as MysqlQueryConditionOperators,
+                ),
+              )
+            ) {
+              whereClause.push(
+                this.processAdvancedOperators(key as keyof Query, value),
+              );
+            }
+            // null 인 경우 isNull 연산자 사용
+            else if (value === null) {
+              whereClause.push(isNull(tableField));
+            }
+            // 단일 값인 경우 eq 연산자 사용
+            else if (
+              typeof value === "string" ||
+              typeof value === "number" ||
+              typeof value === "boolean"
+            ) {
+              whereClause.push(eq(tableField, value));
+            } else {
+              throw new Error(`Invalid key value: ${key} ${value}`);
+            }
           }
         }
       });
@@ -289,6 +298,7 @@ export abstract class BaseRepository<
 
   // /////////////////////////////////////////////////////////////////////////////
   // 이 아래는 바꿀 필요 없음
+
   // 뭐 이럴꺼면 중첩 쿼리도 처리할 수 있게 만들어 주죠?
   // ㅋㅋ 왠만하면 쓰지 마세요 (gb)
   protected processNestedQuery(
