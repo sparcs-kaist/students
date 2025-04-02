@@ -34,6 +34,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
 const CommonCellBodyWrapper = styled.td.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{
+  isIcon: boolean;
   isHeader: boolean;
   width: string | number;
   minWidth: number;
@@ -47,6 +48,7 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
+  position: ${({ isIcon }) => (isIcon ? "relative" : "static")};
 `;
 
 const CellText = styled.div.withConfig({
@@ -83,7 +85,6 @@ const IconCellWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
-  position: relative;
 `;
 
 const IconCell = styled.div`
@@ -107,6 +108,7 @@ const TableCell: React.FC<TableCellProps> = ({
   icon = null,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
+  const isIcon = type === "Icon";
   let content;
   const CommonCellWrapper = useMemo(
     () => (isHeader ? CommonCellHeaderWrapper : CommonCellBodyWrapper),
@@ -147,7 +149,12 @@ const TableCell: React.FC<TableCellProps> = ({
   }
 
   return (
-    <CommonCellWrapper width={width} minWidth={minWidth} isHeader={isHeader}>
+    <CommonCellWrapper
+      width={width}
+      minWidth={minWidth}
+      isHeader={isHeader}
+      isIcon={isIcon}
+    >
       {content}
     </CommonCellWrapper>
   );

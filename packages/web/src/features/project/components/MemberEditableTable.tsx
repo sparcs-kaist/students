@@ -100,7 +100,7 @@ const Dropdown = styled.div`
   position: absolute;
   top: 100%;
   right: 0;
-  width: 400px;
+  width: 100%;
   padding: 12px;
   gap: 10px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
@@ -110,7 +110,6 @@ const Dropdown = styled.div`
   border-top-right-radius: 0;
   background-color: ${({ theme }) => theme.colors.WHITE};
   z-index: 5;
-  transform: translateX(20px) translateY(12px);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
