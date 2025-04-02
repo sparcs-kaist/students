@@ -199,6 +199,8 @@ const Select = <T,>({
   const selectedLabel =
     items.find(item => item.value === value)?.label || placeholder;
 
+  const selectedValue = items.find(item => item.value === value)?.value;
+
   return (
     <SelectWrapper>
       {label && <Label>{label}</Label>}
@@ -251,7 +253,7 @@ const Select = <T,>({
                       item.selectable || item.selectable === undefined
                     }
                     onClick={() => handleOptionClick(item)}
-                    selected={selectedLabel === item.label}
+                    selected={selectedValue === item.value}
                   >
                     {item.label}
                   </SelectOption>

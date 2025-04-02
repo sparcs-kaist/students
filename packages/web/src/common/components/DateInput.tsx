@@ -1,5 +1,5 @@
 import "react-datepicker/dist/react-datepicker.css";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import DatePicker, { DatePickerProps } from "react-datepicker";
 import styled from "styled-components";
 import FlexWrapper from "./FlexWrapper";
@@ -254,7 +254,7 @@ const DateInput: React.FC<
   placeholderText = undefined,
   showTimeInput = undefined,
 }) => {
-  const [currentMonthDate, setCurrentMonthDate] = useState<Date>(new Date());
+  const currentMonthRef = useRef<Date>(new Date());
   const datePickerRef = useRef<DatePicker | null>(null);
 
   const handleIconClick = () => {
@@ -287,29 +287,48 @@ const DateInput: React.FC<
           minDate={minDate}
           maxDate={maxDate}
           filterDate={date => {
-            const currentMonth = (currentMonthDate ?? new Date()).getMonth();
+            const currentMonth = currentMonthRef.current.getMonth();
             return date.getMonth() === currentMonth;
           }}
+          // dayClassName={date => {
+          //   const day = date.getDay();
+          //
+          //   if (day === 6) {
+          //     if (date.getMonth() !== currentMonthDate.getMonth()) {
+          //       return "react-datepicker__sunday-outside-month";
+          //     }
+          //     return "react-datepicker__sunday";
+          //   }
+          //   if (day === 5) {
+          //     if (date.getMonth() !== currentMonthDate.getMonth()) {
+          //       return "react-datepicker__saturday-outside-month";
+          //     }
+          //     return "react-datepicker__saturday";
+          //   }
+          //   // CHACHA: react datepicker and students design is different.
+          //   return "react-datepicker__day";
+          // }}
           dayClassName={date => {
             const day = date.getDay();
+            const currentMonth = currentMonthRef.current.getMonth();
 
             if (day === 6) {
-              if (date.getMonth() !== currentMonthDate.getMonth()) {
+              if (date.getMonth() !== currentMonth) {
                 return "react-datepicker__sunday-outside-month";
               }
               return "react-datepicker__sunday";
             }
             if (day === 5) {
-              if (date.getMonth() !== currentMonthDate.getMonth()) {
+              if (date.getMonth() !== currentMonth) {
                 return "react-datepicker__saturday-outside-month";
               }
               return "react-datepicker__saturday";
             }
-            // CHACHA: react datepicker and students design is different.
+
             return "react-datepicker__day";
           }}
           renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => {
-            setCurrentMonthDate(date);
+            currentMonthRef.current = date;
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, "0");
 
