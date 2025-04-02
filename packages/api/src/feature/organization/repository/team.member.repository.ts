@@ -58,6 +58,9 @@ export class TeamMemberRepository {
     if (param.ids) {
       whereClause.push(inArray(TeamMember.id, param.ids));
     }
+    if (param.teamId) {
+      whereClause.push(eq(TeamMember.teamId, param.teamId));
+    }
     if (param.duration) {
       whereClause.push(
         not(
@@ -91,7 +94,7 @@ export class TeamMemberRepository {
   async insertTx(
     tx: DrizzleTransaction,
     param: ITeamMemberRequestCreate,
-  ): Promise<void> {
+  ): Promise<MTeamMember> {
     const [result] = await tx.insert(TeamMember).values({
       ...param,
       studentId: param.student.id,
@@ -99,12 +102,19 @@ export class TeamMemberRepository {
       startTerm: param.duration.startTerm,
       endTerm: param.duration.endTerm,
     });
-    if (result.insertId === undefined) {
-      throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);
+    const insertedId = result[0].insertId;
+    const teamMember = await this.findTx(tx, insertedId);
+    if (!teamMember) {
+      throw new HttpException(
+        "Failed to create teamMember",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+
+    return teamMember[0];
   }
 
-  async insert(param: ITeamMemberRequestCreate): Promise<void> {
+  async insert(param: ITeamMemberRequestCreate): Promise<MTeamMember> {
     return this.db.transaction(async tx => this.insertTx(tx, param));
   }
 

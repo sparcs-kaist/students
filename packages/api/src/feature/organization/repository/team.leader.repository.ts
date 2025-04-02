@@ -28,7 +28,7 @@ import { MTeamLeader } from "../type/team.leader.model";
 type ITeamLeaderQuery = {
   id?: number;
   ids?: number[];
-  team?: number;
+  teamId?: number;
   duration?: DurationFull;
 };
 
@@ -58,6 +58,9 @@ export class TeamLeaderRepository {
     if (param.ids) {
       whereClause.push(inArray(TeamLeader.id, param.ids));
     }
+    if (param.teamId) {
+      whereClause.push(eq(TeamLeader.teamId, param.teamId));
+    }
     if (param.duration) {
       whereClause.push(
         not(
@@ -72,7 +75,7 @@ export class TeamLeaderRepository {
       );
     }
 
-    whereClause.push(isNotNull(TeamLeader.deletedAt));
+    whereClause.push(isNull(TeamLeader.deletedAt));
 
     const result = await tx
       .select()
@@ -91,7 +94,7 @@ export class TeamLeaderRepository {
   async insertTx(
     tx: DrizzleTransaction,
     param: ITeamLeaderRequestCreate,
-  ): Promise<void> {
+  ): Promise<MTeamLeader> {
     const [result] = await tx.insert(TeamLeader).values({
       ...param,
       title: param.title,
@@ -100,12 +103,19 @@ export class TeamLeaderRepository {
       startTerm: param.duration.startTerm,
       endTerm: param.duration.endTerm,
     });
-    if (result.insertId === undefined) {
-      throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);
+    const insertedId = result[0].insertId;
+    const teamLeader = await this.findTx(tx, insertedId);
+    if (!teamLeader) {
+      throw new HttpException(
+        "Failed to create team",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+
+    return teamLeader[0];
   }
 
-  async insert(param: ITeamLeaderRequestCreate): Promise<void> {
+  async insert(param: ITeamLeaderRequestCreate): Promise<MTeamLeader> {
     return this.db.transaction(async tx => this.insertTx(tx, param));
   }
 
