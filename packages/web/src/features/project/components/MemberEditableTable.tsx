@@ -30,7 +30,7 @@ const TableWrapper = styled.div`
   padding: 0;
   //width: calc(100% + (100vw - 100%));
   //padding: 0 calc((100vw - 100%) / 2);
-  overflow-x: auto;
+  /* overflow-x: auto; */
 `;
 
 const TableInner = styled.table.withConfig({
@@ -42,7 +42,7 @@ const TableInner = styled.table.withConfig({
   min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-spacing: 0;
   /* height: ${({ height }) => (height ? `${height}px` : "fit-content")}; */
   table-layout: fixed;
