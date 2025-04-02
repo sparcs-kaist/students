@@ -10,10 +10,17 @@ import {
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey().notNull(),
   email: varchar("email", { length: 255 }).notNull(),
+  sid: varchar("sid", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
+});
+
+export const Department = mysqlTable("department", {
+  id: int("id").primaryKey().notNull(),
+  name: varchar("name", { length: 60 }).notNull(),
+  nameEn: varchar("name_en", { length: 100 }),
 });
 
 // Student 테이블
@@ -21,8 +28,9 @@ export const Student = mysqlTable(
   "student",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    studentNumber: varchar("student_number", { length: 20 }).notNull(),
+    studentNumber: int("number").unique(),
     userId: int("user_id").notNull(),
+    departmentId: int("department_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -32,6 +40,11 @@ export const Student = mysqlTable(
       columns: [table.userId],
       foreignColumns: [User.id],
       name: "student_user_id_fk",
+    }),
+    departmentFk: foreignKey({
+      columns: [table.departmentId],
+      foreignColumns: [Department.id],
+      name: "student_department_id_fk",
     }),
   }),
 );

@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { env } from "@sparcs-students/api/env";
 import { HttpException } from "@nestjs/common";
 import { ZodError } from "zod";
+import { SwaggerModule } from "@nestjs/swagger";
+import settings from "@sparcs-students/api/settings";
 import { AppModule } from "./app.module";
 import {
   HttpExceptionFilter,
@@ -13,6 +15,12 @@ async function bootstrap() {
   console.log(`NODE_ENV environment: ${process.env.NODE_ENV}`);
 
   const app = await NestFactory.create(AppModule);
+  const document = SwaggerModule.createDocument(
+    app,
+    settings().getSwaggerConfig(),
+  );
+  SwaggerModule.setup("api/docs", app, document);
+
   app.useGlobalFilters(
     new UnexpectedExceptionFilter(),
     new ZodErrorFilter<ZodError>(),

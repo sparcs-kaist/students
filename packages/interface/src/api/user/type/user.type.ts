@@ -4,6 +4,13 @@ import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { z } from "zod";
 import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 
+export const zDepartment = z.object({
+  id: zId,
+  name: z.string().max(100),
+});
+
+export type IDepartment = z.infer<typeof zDepartment>;
+
 export const zUser = z.object({
   id: zId,
   // sid: z.string().max(100),
@@ -17,7 +24,7 @@ export const zStudent = z.object({
   id: zId,
   studentNumber: z.string().max(20),
   user: zUser,
-  // department: zDepartment,
+  department: zDepartment,
 });
 
 export type IStudent = z.infer<typeof zStudent>;
@@ -30,5 +37,7 @@ export const zMember = z.object({
   studentNumber: zStudent.shape.studentNumber,
   name: zStudent.shape.user.shape.name,
   duration: zDuration,
-  // department: zDepartment,
+  department: zDepartment,
 });
+
+export type IMember = z.infer<typeof zMember>;
