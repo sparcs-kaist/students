@@ -142,7 +142,6 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
   const groupClick = (selectedGroup: string) => {
     setEditData(prev =>
       prev.map(member => {
-        console.log(member.id, row.original.id);
         if (member.id !== row.original.id) return member;
         if (selectedGroup === "미소속") {
           return {
