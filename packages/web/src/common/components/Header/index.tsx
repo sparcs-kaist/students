@@ -58,6 +58,8 @@ const HeaderInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 11px;
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const Menu = styled.div`
