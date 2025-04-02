@@ -53,7 +53,6 @@ const HeaderInner = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(10px);
   display: flex;
   padding-bottom: 12px;
   flex-direction: column;
