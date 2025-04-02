@@ -235,3 +235,28 @@ export const TeamLeader = mysqlTable(
     }),
   }),
 );
+
+// OrganizationMemberApplication 테이블
+export const OrganizationMemberApplication = mysqlTable(
+  "organization_member_application",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    organizationId: int("organization_id").notNull(),
+    studentId: int("student_id").notNull(),
+    status: varchar("status", { length: 20 }).notNull(), // PENDING, APPROVED, REJECTED
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  table => ({
+    organizationFk: foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [Organization.id],
+      name: "organization_member_application_organization_id_fk",
+    }),
+    studentFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "organization_member_application_student_id_fk",
+    }),
+  }),
+);

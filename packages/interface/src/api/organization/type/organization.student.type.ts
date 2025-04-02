@@ -177,3 +177,53 @@ export const zTeamLeaderResponse = zTeamLeader.extend({
 export type ITeamLeader = z.infer<typeof zTeamLeader>;
 export type ITeamLeaderRequestCreate = z.infer<typeof zTeamLeaderRequestCreate>;
 export type ITeamLeaderResponse = z.infer<typeof zTeamLeaderResponse>;
+
+// OrganizationMemberApplication: 기구원 신청 엔티티
+export const zOrganizationMemberApplication = z.object({
+  id: zId,
+  organization: zOrganization.pick({ id: true }),
+  student: zStudent.pick({ id: true }), // Student.id
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]), // 신청 상태
+  createdAt: z.string(), // 신청 생성 시간
+  updatedAt: z.string(), // 신청 업데이트 시간 -> 이거 필요한 가..? 수정이 되여..?
+});
+
+export const zOrganizationMemberApplicationRequestCreate =
+  zOrganizationMemberApplication.omit({
+    id: true,
+    status: true,
+    createdAt: true,
+    updatedAt: true,
+    // 신청을 취소하는 기능이 추가될까요? 그럼 앞에서 했던 것처럼 deletedAt으로 삭제가 아니라 취소 기록을 남겨야 할까여여?
+  });
+
+export const zOrganizationMemberApplicationResponse =
+  zOrganizationMemberApplication;
+
+export type IOrganizationMemberApplication = z.infer<
+  typeof zOrganizationMemberApplication
+>;
+export type IOrganizationMemberApplicationRequestCreate = z.infer<
+  typeof zOrganizationMemberApplicationRequestCreate
+>;
+export type IOrganizationMemberApplicationResponse = z.infer<
+  typeof zOrganizationMemberApplicationResponse
+>;
+
+// OrganizationApplicationRequest: 조직 가입 신청 요청
+export const zOrganizationApplicationRequest = z.object({
+  organizationId: zId,
+  studentId: zId, // 필요한가?
+});
+
+export const zOrganizationApplicationResponse = z.object({
+  success: z.boolean(),
+  message: z.string().optional(),
+});
+
+export type IOrganizationApplicationRequest = z.infer<
+  typeof zOrganizationApplicationRequest
+>;
+export type IOrganizationApplicationResponse = z.infer<
+  typeof zOrganizationApplicationResponse
+>;
