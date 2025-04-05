@@ -29,9 +29,9 @@ const enumToString = (docType: DocumentType): string => {
 };
 
 interface DocumentTypeSelectCardProps {
-  documentTypes: DocumentType[];
-  type: DocumentType;
-  setType: (value: DocumentType) => void;
+  type: DocumentType | null;
+  setType: (value: DocumentType | null) => void;
+  disabled: boolean;
 }
 
 const CardWrapper = styled.div`
@@ -42,14 +42,15 @@ const CardWrapper = styled.div`
   align-items: flex-start;
 `;
 
-const CardHeaderWrapper = styled.div`
+const CardHeaderWrapper = styled.div<{ disabled: boolean }>`
   display: flex;
   padding: 12px 20px;
   align-items: center;
   gap: 20px;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
-  background-color: ${({ theme }) => theme.colors.GREEN[700]};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.GRAY[400] : theme.colors.GREEN[700]};
 `;
 
 const CardContent = styled.div`
@@ -68,15 +69,17 @@ const CardContent = styled.div`
 `;
 
 const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
-  documentTypes,
   type,
   setType,
+  disabled,
 }) => {
+  const documentTypes = Object.values(DocumentType);
   const rows = Math.round(documentTypes.length / 2);
   const columns = documentTypes.length / rows;
+
   return (
     <CardWrapper>
-      <CardHeaderWrapper>
+      <CardHeaderWrapper disabled={disabled}>
         <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
           문서 유형 선택
         </Typography>
@@ -87,11 +90,17 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
           cg="32px"
           rows={rows}
           columns={columns}
-          value={type}
-          onChange={(val: DocumentType) => setType(val)}
+          value={type ?? DocumentType.ProjectProposal}
+          onChange={() => {}}
         >
           {documentTypes.map(e => (
-            <RadioOption key={e} value={e}>
+            <RadioOption
+              key={e}
+              value={e}
+              disabled={disabled}
+              checked={disabled ? false : type === e}
+              onClick={() => setType(e)}
+            >
               <Typography fs={16} lh={20} fw="REGULAR">
                 {enumToString(e)}
               </Typography>

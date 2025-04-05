@@ -26,32 +26,39 @@ export interface ThreeInputItem {
 
 interface ThreeInputProps {
   itemList: ThreeInputItem[];
-  year: number;
-  setYear: (year: number) => void;
-  isSpring: boolean;
-  setIsSpring: (isSpring: boolean) => void;
-  type: DocumentType;
-  setType: (docType: DocumentType) => void;
-  selectedKey: string;
-  setSelectedKey: (key: string) => void;
-  selectedValue: string;
-  setSelectedValue: (value: string) => void;
+  year: number | null;
+  setYear: (year: number | null) => void;
+  isSpring: boolean | null;
+  setIsSpring: (isSpring: boolean | null) => void;
+  type: DocumentType | null;
+  setType: (docType: DocumentType | null) => void;
+  selectedKey: string | null;
+  setSelectedKey: (key: string | null) => void;
+  selectedValue: string | null;
+  setSelectedValue: (value: string | null) => void;
 }
 
-const ThreeCardsWrapper = styled.div`
+const OuterWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
   width: 100%;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
-const VerticalWrapper = styled.div`
+const InnerWrapper = styled.div`
   display: flex;
   width: 30%;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 100%;
+    flex-direction: row;
+  }
 `;
 
 const ThreeInput: React.FC<ThreeInputProps> = ({
@@ -108,30 +115,31 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
   }, [isSpring, documentTypes, setType]);
 
   return (
-    <ThreeCardsWrapper>
-      <VerticalWrapper>
+    <OuterWrapper>
+      <InnerWrapper>
         <SemesterCard
-          year={year}
+          year={year ?? 0}
           setYear={setYear}
           selectItems={selectItems}
           isSpring={isSpring}
           setIsSpring={setIsSpring}
         />
         <DocumentCard
-          documentTypes={documentTypes}
           type={type}
           setType={setType}
+          disabled={year === null || isSpring === null}
         />
-      </VerticalWrapper>
+      </InnerWrapper>
       <OrganizationSelectCard
         totalList={totalList}
         keyList={keyList}
-        selectedKey={selectedKey}
+        selectedKey={selectedKey ?? ""}
         setSelectedKey={setSelectedKey}
-        selectedValue={selectedValue}
+        selectedValue={selectedValue ?? ""}
         setSelectedValue={setSelectedValue}
+        // disabled={year === null || isSpring === null || type === null}
       />
-    </ThreeCardsWrapper>
+    </OuterWrapper>
   );
 };
 export default ThreeInput;

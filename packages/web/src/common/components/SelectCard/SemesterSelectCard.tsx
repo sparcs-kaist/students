@@ -13,8 +13,8 @@ interface SemesterSelectCardProps {
   year: number;
   setYear: (value: number) => void;
   selectItems: SelectItem<number>[];
-  isSpring: boolean;
-  setIsSpring: (value: boolean) => void;
+  isSpring: boolean | null;
+  setIsSpring: (value: boolean | null) => void;
 }
 
 const CardWrapper = styled.div`

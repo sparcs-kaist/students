@@ -16,11 +16,11 @@ import { useRouter } from "next/navigation";
 
 const documentLookUp = () => {
   const items: ThreeInputItem[] = mockData;
-  const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
+  const [year, setYear] = useState<number | null>(null);
+  const [isSpring, setIsSpring] = useState<boolean | null>(null);
+  const [type, setType] = useState<DocumentType | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
 
   const router = useRouter();
 
