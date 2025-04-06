@@ -122,7 +122,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
         setSelectedKey={setSelectedKey}
         selectedValue={selectedValue ?? ""}
         setSelectedValue={setSelectedValue}
-        // disabled={year === null || isSpring === null || type === null}
+        disabled={year === null || isSpring === null || type === null}
       />
     </OuterWrapper>
   );
