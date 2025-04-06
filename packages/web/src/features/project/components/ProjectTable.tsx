@@ -17,12 +17,21 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
 
 export interface ViewerProjectProps {
   id: string;
   name: string;
   projectPeriod: string;
   status: DocumentReviewStatusEnum;
+}
+
+export interface ReviewerProjectProps {
+  id: string;
+  name: string;
+  projectPeriod: string;
+  status: DocumentReviewStatusEnum;
+  review: string;
 }
 
 interface ProjectTableProps {
@@ -43,7 +52,7 @@ const columns = [
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
-    cell: info => info.getValue(),
+    cell: info => <HoverClickText text={info.getValue()} />,
     size: 861,
   }),
   columnHelper.accessor("projectPeriod", {
@@ -67,7 +76,7 @@ const columns = [
   }),
 ];
 
-const ViewerProjectTable: React.FC<ProjectTableProps> = ({
+const ProjectTable: React.FC<ProjectTableProps> = ({
   pageId,
   data,
   isProposal = true,
@@ -112,4 +121,4 @@ const ViewerProjectTable: React.FC<ProjectTableProps> = ({
   );
 };
 
-export default ViewerProjectTable;
+export default ProjectTable;

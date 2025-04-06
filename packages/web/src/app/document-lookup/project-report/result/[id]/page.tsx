@@ -18,12 +18,11 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
-  mockProjectProposalData,
   mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
+import ProjectTable from "@sparcs-students/web/features/project/components/ProjectTable";
 import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
@@ -31,7 +30,6 @@ import CancellableModalContent from "@sparcs-students/web/common/components/Moda
 import { overlay } from "overlay-kit";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
-import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
 import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
 
 const ButtonWrapper = styled.div`
@@ -118,17 +116,11 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {userPermission === UserPermission.Viewer && (
-          <ViewerProjectTable
+        {(userPermission === UserPermission.Viewer ||
+          userPermission === UserPermission.Reviewer) && (
+          <ProjectTable
             pageId={id}
             data={mockViewerProjectData}
-            isProposal={false}
-          />
-        )}
-        {userPermission === UserPermission.Reviewer && (
-          <ReviewerProjectTable
-            pageId={id}
-            initialData={mockProjectProposalData}
             isProposal={false}
           />
         )}
