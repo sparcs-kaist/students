@@ -26,8 +26,8 @@ export interface ThreeInputItem {
 
 interface ThreeInputProps {
   itemList: ThreeInputItem[];
-  year: number | null;
-  setYear: (year: number | null) => void;
+  year: number;
+  setYear: (year: number) => void;
   isSpring: boolean | null;
   setIsSpring: (isSpring: boolean | null) => void;
   type: DocumentType | null;
@@ -82,15 +82,6 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
     return Array.from(stringSet).map(str => JSON.parse(str));
   }, [itemList]);
 
-  const documentTypes = useMemo(() => {
-    const matched = itemList.find(
-      e => e.year === year && e.value.isSpring === isSpring,
-    );
-    return matched
-      ? matched.value.documentType.types
-      : [DocumentType.BudgetProposal];
-  }, [itemList, year, isSpring]);
-
   const totalList = useMemo(() => {
     const matched = itemList.find(
       e =>
@@ -108,17 +99,11 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
     setSelectedValue("");
   }, [type, setSelectedKey, setSelectedValue]);
 
-  useEffect(() => {
-    if (documentTypes.length > 0) {
-      setType(documentTypes[0]);
-    }
-  }, [isSpring, documentTypes, setType]);
-
   return (
     <OuterWrapper>
       <InnerWrapper>
         <SemesterCard
-          year={year ?? 0}
+          year={year}
           setYear={setYear}
           selectItems={selectItems}
           isSpring={isSpring}

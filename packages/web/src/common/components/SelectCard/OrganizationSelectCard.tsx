@@ -29,7 +29,7 @@ const CardWrapper = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   justify-self: stretch;
-  height: 100%;
+  height: 276px;
 `;
 
 const CardHeaderWrapper = styled.div`

@@ -11,6 +11,7 @@ export enum DocumentType {
   BudgetReport = "결산안",
   ProjectProposal = "사업 계획서",
   ProjectReport = "사업 보고서",
+  None = "", // 문서 유형 선택 안함
 }
 
 const enumToString = (docType: DocumentType): string => {
@@ -37,7 +38,7 @@ interface DocumentTypeSelectCardProps {
 const CardWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 138px;
+  min-width: 274px;
   flex-direction: column;
   align-items: flex-start;
 `;
@@ -56,10 +57,10 @@ const CardHeaderWrapper = styled.div<{ disabled: boolean }>`
 const CardContent = styled.div`
   display: flex;
   flex-direction: column;
+  height: 86px;
   padding: 16px 20px;
   justify-content: center;
   align-items: center;
-  height: 80px;
   align-self: stretch;
   border-radius: 0px 0px 4px 4px;
   border-right: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
@@ -74,8 +75,6 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
   disabled,
 }) => {
   const documentTypes = Object.values(DocumentType);
-  const rows = Math.round(documentTypes.length / 2);
-  const columns = documentTypes.length / rows;
 
   return (
     <CardWrapper>
@@ -88,18 +87,17 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
         <Radio
           rg="8px"
           cg="32px"
-          rows={rows}
-          columns={columns}
-          value={type ?? DocumentType.ProjectProposal}
-          onChange={() => {}}
+          rows={2}
+          columns={2}
+          value={type ?? DocumentType.None}
+          onChange={(val: DocumentType) => setType(val)}
         >
-          {documentTypes.map(e => (
+          {documentTypes.slice(0, 4).map(e => (
             <RadioOption
               key={e}
               value={e}
               disabled={disabled}
               checked={disabled ? false : type === e}
-              onClick={() => setType(e)}
             >
               <Typography fs={16} lh={20} fw="REGULAR">
                 {enumToString(e)}
