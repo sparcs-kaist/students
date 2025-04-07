@@ -61,6 +61,7 @@ const InnerWrapper = styled.div`
   }
 `;
 
+// /document-lookup 페이지를 제외한 다른 페이지에서는 year, isSpring, type, selectedKey, selectedValue가 null이 아닌 값으로 채워져 있어야 함
 const ThreeInput: React.FC<ThreeInputProps> = ({
   itemList,
   year,
