@@ -244,6 +244,7 @@ const Select = <T,>({
               insideTable={insideTable}
               marginTop={4}
               height={dropdownHeight}
+              disabled={disabled}
             >
               {items.length > 0 ? (
                 items.map(item => (

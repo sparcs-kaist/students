@@ -6,6 +6,8 @@ import Select, {
   SelectItem,
 } from "@sparcs-students/web/common/components/Select";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import colors from "@sparcs-students/web/styles/themes/colors";
+
 import Icon from "../Icon";
 
 export interface OrganizationItem {
@@ -20,6 +22,7 @@ interface OrganizationSelectCardProps {
   setSelectedKey: (value: string) => void;
   selectedValue: string;
   setSelectedValue: (value: string) => void;
+  disabled?: boolean;
 }
 
 const CardWrapper = styled.div`
@@ -29,16 +32,17 @@ const CardWrapper = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   justify-self: stretch;
-  height: 100%;
+  height: 276px;
 `;
 
-const CardHeaderWrapper = styled.div`
+const CardHeaderWrapper = styled.div<{ disabled: boolean }>`
   display: flex;
   padding: 12px 20px;
   align-items: center;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
-  background-color: ${({ theme }) => theme.colors.GREEN[700]};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.GRAY[400] : theme.colors.GREEN[700]};
 `;
 
 const CardContent = styled.div`
@@ -92,6 +96,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
   setSelectedKey,
   selectedValue,
   setSelectedValue,
+  disabled = false,
 }) => {
   const valueList = useMemo(() => {
     const selectedItem = totalList.find(item => item.key.value === selectedKey);
@@ -111,7 +116,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
 
   return (
     <CardWrapper>
-      <CardHeaderWrapper>
+      <CardHeaderWrapper disabled={disabled}>
         <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
           단체 선택
         </Typography>
@@ -128,11 +133,16 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
               noOptionMessage="항목을 선택하세요."
               onlyDropdown
               dropdownHeight={200}
+              disabled={disabled}
             />
           </SelectWrapper>
           <ArrowWrapper>
             <IconWrapper>
-              <Icon type="arrow_forward_ios" size={24} color="GREEN.300" />
+              <Icon
+                type="arrow_forward_ios"
+                size={24}
+                color={disabled ? colors.GRAY[400] : colors.GREEN[300]}
+              />
             </IconWrapper>
           </ArrowWrapper>
           <SelectWrapper>
@@ -145,6 +155,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
               noOptionMessage="항목을 선택하세요."
               onlyDropdown
               dropdownHeight={200}
+              disabled={disabled}
             />
           </SelectWrapper>
         </CardContentInner>

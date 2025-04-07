@@ -28,32 +28,40 @@ interface ThreeInputProps {
   itemList: ThreeInputItem[];
   year: number;
   setYear: (year: number) => void;
-  isSpring: boolean;
-  setIsSpring: (isSpring: boolean) => void;
-  type: DocumentType;
-  setType: (docType: DocumentType) => void;
-  selectedKey: string;
-  setSelectedKey: (key: string) => void;
-  selectedValue: string;
-  setSelectedValue: (value: string) => void;
+  isSpring: boolean | null;
+  setIsSpring: (isSpring: boolean | null) => void;
+  type: DocumentType | null;
+  setType: (docType: DocumentType | null) => void;
+  selectedKey: string | null;
+  setSelectedKey: (key: string | null) => void;
+  selectedValue: string | null;
+  setSelectedValue: (value: string | null) => void;
 }
 
-const ThreeCardsWrapper = styled.div`
+const OuterWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
   width: 100%;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
-const VerticalWrapper = styled.div`
+const InnerWrapper = styled.div`
   display: flex;
   width: 30%;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 100%;
+    flex-direction: row;
+  }
 `;
 
+// /document-lookup 페이지를 제외한 다른 페이지에서는 year, isSpring, type, selectedKey, selectedValue가 null이 아닌 값으로 채워져 있어야 함
 const ThreeInput: React.FC<ThreeInputProps> = ({
   itemList,
   year,
@@ -75,15 +83,6 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
     return Array.from(stringSet).map(str => JSON.parse(str));
   }, [itemList]);
 
-  const documentTypes = useMemo(() => {
-    const matched = itemList.find(
-      e => e.year === year && e.value.isSpring === isSpring,
-    );
-    return matched
-      ? matched.value.documentType.types
-      : [DocumentType.BudgetProposal];
-  }, [itemList, year, isSpring]);
-
   const totalList = useMemo(() => {
     const matched = itemList.find(
       e =>
@@ -101,15 +100,9 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
     setSelectedValue("");
   }, [type, setSelectedKey, setSelectedValue]);
 
-  useEffect(() => {
-    if (documentTypes.length > 0) {
-      setType(documentTypes[0]);
-    }
-  }, [isSpring, documentTypes, setType]);
-
   return (
-    <ThreeCardsWrapper>
-      <VerticalWrapper>
+    <OuterWrapper>
+      <InnerWrapper>
         <SemesterCard
           year={year}
           setYear={setYear}
@@ -118,20 +111,21 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
           setIsSpring={setIsSpring}
         />
         <DocumentCard
-          documentTypes={documentTypes}
           type={type}
           setType={setType}
+          disabled={year === null || isSpring === null}
         />
-      </VerticalWrapper>
+      </InnerWrapper>
       <OrganizationSelectCard
         totalList={totalList}
         keyList={keyList}
-        selectedKey={selectedKey}
+        selectedKey={selectedKey ?? ""}
         setSelectedKey={setSelectedKey}
-        selectedValue={selectedValue}
+        selectedValue={selectedValue ?? ""}
         setSelectedValue={setSelectedValue}
+        disabled={year === null || isSpring === null || type === null}
       />
-    </ThreeCardsWrapper>
+    </OuterWrapper>
   );
 };
 export default ThreeInput;
