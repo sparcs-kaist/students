@@ -26,6 +26,7 @@ export class OrganizationService {
     const halfYears = await this.semesterPublicService.fetchHalfYearAll();
     const result = await Promise.all(
       halfYears.map(async halfYear => {
+        console.log(halfYear);
         const organizations = await this.organizationRepository.fetchAll(
           halfYear.duration,
         );
