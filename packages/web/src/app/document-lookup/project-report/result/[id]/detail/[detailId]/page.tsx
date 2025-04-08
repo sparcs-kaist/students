@@ -1,5 +1,6 @@
 "use client";
 
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -15,6 +16,11 @@ import TextAreaWithHeader from "@sparcs-students/web/features/report/components/
 import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
+
+interface DocumentViewerDetailPageProps {
+  review: string;
+  status: DocumentReviewStatusEnum;
+}
 
 const headerHeight = 70;
 
@@ -50,7 +56,15 @@ const BottomButtonWrapper = styled.div`
   gap: 30px;
 `;
 
-const DocumentViewerDetailPage: React.FC = () => {
+const DocumentViewerDetailPage: React.FC<DocumentViewerDetailPageProps> = ({
+  review,
+  status,
+}) => {
+  // 임시로 넣어둠. 나중에 백엔드와 연결될 수 있게 바꾸기
+  const onConfirm = () => {};
+  const handleReviewChange = (_detail: string) => {};
+  const handleStatusChange = (_status: DocumentReviewStatusEnum) => {};
+
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
   const manager = useRef<HTMLDivElement>(null);
@@ -65,7 +79,7 @@ const DocumentViewerDetailPage: React.FC = () => {
 
   const { resultId } = useParams();
   const theme = useTheme();
-  const [reviewText, setReviewText] = useState("");
+  const [reviewText, setReviewText] = useState(review);
 
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
@@ -144,7 +158,6 @@ const DocumentViewerDetailPage: React.FC = () => {
             </Typography>
             <DocumentTimelineTable data={mockDocumentTimelineData} />
           </FlexWrapper>
-          {/* 여기에 사업 표 */}
           <FlexWrapper direction="column" gap={12} ref={budgetReport}>
             <Typography fs={24} lh={30} fw="BOLD">
               사업 결산안
@@ -162,26 +175,68 @@ const DocumentViewerDetailPage: React.FC = () => {
               height={100}
             />
             <ButtonWrapper>
-              <Button type="default">승인</Button>
               <Button
-                type="default"
-                style={{
-                  border: `1px solid ${theme.colors.GREEN[600]}`,
-                  backgroundColor: theme.colors.GREEN[50],
-                  color: theme.colors.GREEN[600],
+                onClick={() => {
+                  handleReviewChange(reviewText);
+                  handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
+                  onConfirm();
                 }}
+                type={
+                  status === DocumentReviewStatusEnum.Rejected ||
+                  status === DocumentReviewStatusEnum.ReviewRejected
+                    ? "disabled"
+                    : "default"
+                }
+                style={
+                  status === DocumentReviewStatusEnum.Rejected ||
+                  status === DocumentReviewStatusEnum.ReviewRejected
+                    ? {}
+                    : {
+                        border: `1px solid ${theme.colors.RED[700]}`,
+                        backgroundColor: theme.colors.RED[50],
+                        color: theme.colors.RED[700],
+                      }
+                }
+              >
+                반려
+              </Button>
+              <Button
+                onClick={() => {
+                  handleReviewChange(reviewText);
+                  handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
+                  onConfirm();
+                }}
+                type={
+                  status === DocumentReviewStatusEnum.ReviseNeeded
+                    ? "disabled"
+                    : "default"
+                }
+                style={
+                  status === DocumentReviewStatusEnum.ReviseNeeded
+                    ? {}
+                    : {
+                        border: `1px solid ${theme.colors.GREEN[600]}`,
+                        backgroundColor: theme.colors.GREEN[50],
+                        color: theme.colors.GREEN[600],
+                      }
+                }
               >
                 수정 요청
               </Button>
               <Button
-                type="default"
-                style={{
-                  border: `1px solid ${theme.colors.RED[700]}`,
-                  backgroundColor: theme.colors.RED[50],
-                  color: theme.colors.RED[700],
+                onClick={() => {
+                  handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
+                  onConfirm();
                 }}
+                type={
+                  status === DocumentReviewStatusEnum.Accepted ||
+                  status === DocumentReviewStatusEnum.ReviewAccepted ||
+                  reviewText !== ""
+                    ? "disabled"
+                    : "default"
+                }
               >
-                반려
+                승인
               </Button>
             </ButtonWrapper>
           </FlexWrapper>
@@ -201,7 +256,7 @@ const DocumentViewerDetailPage: React.FC = () => {
             color: theme.colors.GREEN[600],
           }}
         >
-          수정 요청
+          삭제
         </Button>
         <Button type="default">제출</Button>
       </BottomButtonWrapper>

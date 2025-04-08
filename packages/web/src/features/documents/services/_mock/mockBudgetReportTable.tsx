@@ -35,7 +35,7 @@ const mockBudgetReportData: BudgetReportProps[] = [
     review: "",
   },
   {
-    code: 403,
+    code: 501,
     budgetDomain: BudgetDomainEnum.School,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Regular,
     name: "광고 및 홍보",
@@ -48,7 +48,7 @@ const mockBudgetReportData: BudgetReportProps[] = [
     review: "",
   },
   {
-    code: 404,
+    code: 601,
     budgetDomain: BudgetDomainEnum.Autonomous,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "시설 유지보수",
@@ -61,7 +61,7 @@ const mockBudgetReportData: BudgetReportProps[] = [
     review: "",
   },
   {
-    code: 405,
+    code: 602,
     budgetDomain: BudgetDomainEnum.Autonomous,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Regular,
     name: "직원 교육",
