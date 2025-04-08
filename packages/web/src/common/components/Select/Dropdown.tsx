@@ -9,6 +9,7 @@ const Dropdown = styled.div.withConfig({
   onlyDropdown?: boolean;
   insideTable?: boolean;
   height?: number;
+  disabled?: boolean;
 }>`
   /* TODO: marginTop magic number인데 좀 더 깔끔하게 바꾸는 방법 */
   position: ${({ onlyDropdown, insideTable }) =>
@@ -22,7 +23,9 @@ const Dropdown = styled.div.withConfig({
   margin-top: ${({ marginTop, onlyDropdown }) =>
     onlyDropdown ? 0 : marginTop || 0}px;
   padding: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GREEN[300]};
+  border: 1px solid
+    ${({ theme, disabled }) =>
+      disabled ? theme.colors.GRAY[200] : theme.colors.GREEN[300]};
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
   gap: 8px;

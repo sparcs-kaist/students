@@ -10,6 +10,8 @@ import {
 } from "./common/util/exception.filter";
 
 async function bootstrap() {
+  console.log(`NODE_ENV environment: ${process.env.NODE_ENV}`);
+
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(
     new UnexpectedExceptionFilter(),

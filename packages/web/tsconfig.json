@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -18,6 +19,7 @@
       }
     ],
     "paths": {
+      "@sparcs-students/root/*": ["../../*"],
       "@sparcs-students/web/*": ["./src/*"]
     }
   },
