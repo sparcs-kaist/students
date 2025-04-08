@@ -17,11 +17,6 @@ import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
 
-interface DocumentViewerDetailPageProps {
-  review: string;
-  status: DocumentReviewStatusEnum;
-}
-
 const headerHeight = 70;
 
 const ScrollAbleArea = styled.div`
@@ -56,15 +51,7 @@ const BottomButtonWrapper = styled.div`
   gap: 30px;
 `;
 
-const DocumentViewerDetailPage: React.FC<DocumentViewerDetailPageProps> = ({
-  review,
-  status,
-}) => {
-  // 임시로 넣어둠. 나중에 백엔드와 연결될 수 있게 바꾸기
-  const onConfirm = () => {};
-  const handleReviewChange = (_detail: string) => {};
-  const handleStatusChange = (_status: DocumentReviewStatusEnum) => {};
-
+const DocumentViewerDetailPage: React.FC = () => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
   const manager = useRef<HTMLDivElement>(null);
@@ -76,10 +63,20 @@ const DocumentViewerDetailPage: React.FC<DocumentViewerDetailPageProps> = ({
   const documentTimeline = useRef<HTMLDivElement>(null);
   const budgetReport = useRef<HTMLDivElement>(null);
   const projectReportReview = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<DocumentReviewStatusEnum>(
+    DocumentReviewStatusEnum.Accepted,
+  );
 
   const { resultId } = useParams();
   const theme = useTheme();
-  const [reviewText, setReviewText] = useState(review);
+  const [reviewText, setReviewText] = useState("");
+
+  // 임시로 넣어둠. 나중에 백엔드와 연결될 수 있게 바꾸기
+  const onConfirm = () => {};
+  const handleReviewChange = (_detail: string) => {};
+  const handleStatusChange = (newStatus: DocumentReviewStatusEnum) => {
+    setStatus(newStatus);
+  };
 
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
