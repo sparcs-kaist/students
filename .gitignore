@@ -1,5 +1,8 @@
 *.pub
-.env
+env/.env.dev
+env/.env.prod
+env/.env.local
+env/.env
 .env.prod
 **/node_modules
 *.log

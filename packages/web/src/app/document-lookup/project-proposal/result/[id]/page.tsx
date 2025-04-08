@@ -15,17 +15,19 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/documents/components/ThreeInput";
 import {
   mockOperationPlanData,
-  mockProjectProposalData,
+  mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { overlay } from "overlay-kit";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
+import ProjectTable from "@sparcs-students/web/features/project/components/ProjectTable";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -38,11 +40,11 @@ const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const [isSpring, setIsSpring] = useState<boolean | null>(null);
+  const [type, setType] = useState<DocumentType | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
+  const userPermission = getMockUserPermission(); // TODO: api 연결
   const [review, setReview] = useState<string>("");
 
   const openSaveModal = () => {
@@ -110,22 +112,14 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === 1 && */}
-        {/*   <ViewerProjectProposalTable */}
-        {/*     pageId={id} */}
-        {/*     data={mockViewerProjectProposalData} */}
-        {/*   /> */}
-        {/* } */}
-        {userPermission === 2 && (
-          <ReviewerProjectProposalTable
-            pageId={id}
-            initialData={mockProjectProposalData}
-          />
+        {(userPermission === UserPermission.Viewer ||
+          userPermission === UserPermission.Reviewer) && (
+          <ProjectTable pageId={id} data={mockViewerProjectData} isProposal />
         )}
         <OperationPlan {...mockOperationPlanData} />
         <ReviewOperationPlan review={review} reviewHandler={setReview} />
 
-        {userPermission === 2 && (
+        {userPermission === UserPermission.Reviewer && (
           <ButtonWrapper>
             <Button
               type="reverse"

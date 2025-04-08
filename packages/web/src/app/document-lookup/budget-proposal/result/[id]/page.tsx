@@ -169,10 +169,10 @@ const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
+  const [isSpring, setIsSpring] = useState<boolean | null>(null);
+  const [type, setType] = useState<DocumentType | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
   const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   const openSaveModal = () => {

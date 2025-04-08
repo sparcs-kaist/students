@@ -14,6 +14,7 @@ export interface OperationPlanProps {
   note: string;
   groupList: GroupProps[];
   imagePath: string;
+  isProposal?: boolean;
 }
 
 const StyledImage = styled(Image)`
@@ -26,11 +27,12 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
   note,
   groupList,
   imagePath,
+  isProposal = true,
 }) => (
   <FlexWrapper direction="column" gap={60}>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-        운영계획
+        {isProposal ? "운영계획" : "운영보고"}
       </Typography>
       <MemberTable data={memberData} />
     </FlexWrapper>
