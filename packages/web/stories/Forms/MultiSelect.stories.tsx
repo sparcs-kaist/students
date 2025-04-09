@@ -3,11 +3,13 @@ import React from "react";
 
 import { useArgs } from "@storybook/client-api";
 import { fn } from "@storybook/test";
-import Select from "@sparcs-students/web/common/components/Select";
+import MultiSelect, {
+  SelectItem,
+} from "@sparcs-students/web/common/components/MultiSelect";
 
-const meta: Meta<typeof Select> = {
+const meta: Meta<typeof MultiSelect> = {
   title: "components/Forms/Select",
-  component: Select,
+  component: MultiSelect,
   parameters: {
     layout: "centered",
   },
@@ -15,7 +17,6 @@ const meta: Meta<typeof Select> = {
   argTypes: {
     items: { control: false },
     errorMessage: { control: false },
-    label: { control: "text" },
     disabled: { control: "boolean" },
     selectedValue: { control: "select", options: ["1", "2"] },
     onSelect: { control: false },
@@ -32,7 +33,6 @@ const meta: Meta<typeof Select> = {
       { label: "non-selectable", value: "0", selectable: false },
     ],
     errorMessage: "",
-    label: "Label",
     disabled: false,
     selectedValue: "",
     onSelect: fn(),
@@ -48,14 +48,19 @@ export const example: Story = {
   render: function Render(args) {
     const [{ selectedValue }, updateArgs] = useArgs();
 
-    const onSelect = (e: string) => {
+    const onSelect = (e: string | string[]) => {
       updateArgs({
         selectedValue: e,
       });
     };
 
     return (
-      <Select {...args} selectedValue={selectedValue} onSelect={onSelect} />
+      <MultiSelect
+        {...args}
+        items={args.items as SelectItem<string>[]}
+        selectedValue={selectedValue}
+        onSelect={onSelect}
+      />
     );
   },
 };

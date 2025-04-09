@@ -125,7 +125,7 @@ const SelectValue = styled.span<{ isSelected: boolean }>`
     isSelected ? theme.colors.BLACK : theme.colors.GRAY[200]};
 `;
 
-const Select = <T,>({
+const MultiSelect = <T,>({
   items,
   errorMessage = "",
   disabled = false,
@@ -273,4 +273,4 @@ const Select = <T,>({
     </SelectWrapper>
   );
 };
-export default Select;
+export default MultiSelect;
