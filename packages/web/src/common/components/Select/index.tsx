@@ -29,7 +29,7 @@ interface SelectProps<T> {
   selectedValue?: T | T[];
   multi?: boolean;
   onSelect?: (value: T | T[]) => void;
-  value: T;
+  value?: T;
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
   isRequired?: boolean;
@@ -147,7 +147,7 @@ const Select = <T,>({
   noOptionMessage = "항목이 존재하지 않습니다.",
   label = "",
   disabled = false,
-  value,
+  value = undefined,
   // onChange = () => {},
   selectedValue = undefined,
   multi = false, // 기본값을 false로 설정
