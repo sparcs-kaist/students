@@ -124,7 +124,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
       <CardContent>
         <CardContentInner>
           <SelectWrapper>
-            <Select
+            <Select<string>
               items={keyList}
               value={selectedKey}
               onChange={handleKeyChange}
