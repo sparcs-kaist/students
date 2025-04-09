@@ -16,6 +16,7 @@ import TextAreaWithHeader from "@sparcs-students/web/features/report/components/
 import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
+import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
 
 const headerHeight = 70;
 
@@ -66,6 +67,8 @@ const DocumentViewerDetailPage: React.FC = () => {
   const [status, setStatus] = useState<DocumentReviewStatusEnum>(
     DocumentReviewStatusEnum.Accepted,
   );
+
+  const userPermission = UserPermission.Reviewer; // TODO: auth logic
 
   const { resultId } = useParams();
   const theme = useTheme();
@@ -161,82 +164,84 @@ const DocumentViewerDetailPage: React.FC = () => {
             </Typography>
             <BudgetReportTable initialData={mockBudgetReportData} />
           </FlexWrapper>
-          <FlexWrapper direction="column" gap={12} ref={projectReportReview}>
-            <Typography fs={24} lh={30} fw="BOLD">
-              사업보고서 검토
-            </Typography>
-            <TextAreaInput
-              placeholder="검토에 대한 설명을 입력하세요."
-              handleChange={setReviewText}
-              value={reviewText}
-              height={100}
-            />
-            <ButtonWrapper>
-              <Button
-                onClick={() => {
-                  handleReviewChange(reviewText);
-                  handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
-                  onConfirm();
-                }}
-                type={
-                  status === DocumentReviewStatusEnum.Rejected ||
-                  status === DocumentReviewStatusEnum.ReviewRejected
-                    ? "disabled"
-                    : "default"
-                }
-                style={
-                  status === DocumentReviewStatusEnum.Rejected ||
-                  status === DocumentReviewStatusEnum.ReviewRejected
-                    ? {}
-                    : {
-                        border: `1px solid ${theme.colors.RED[700]}`,
-                        backgroundColor: theme.colors.RED[50],
-                        color: theme.colors.RED[700],
-                      }
-                }
-              >
-                반려
-              </Button>
-              <Button
-                onClick={() => {
-                  handleReviewChange(reviewText);
-                  handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
-                  onConfirm();
-                }}
-                type={
-                  status === DocumentReviewStatusEnum.ReviseNeeded
-                    ? "disabled"
-                    : "default"
-                }
-                style={
-                  status === DocumentReviewStatusEnum.ReviseNeeded
-                    ? {}
-                    : {
-                        border: `1px solid ${theme.colors.GREEN[600]}`,
-                        backgroundColor: theme.colors.GREEN[50],
-                        color: theme.colors.GREEN[600],
-                      }
-                }
-              >
-                수정 요청
-              </Button>
-              <Button
-                onClick={() => {
-                  handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
-                  onConfirm();
-                }}
-                type={
-                  status === DocumentReviewStatusEnum.Accepted ||
-                  status === DocumentReviewStatusEnum.ReviewAccepted ||
-                  reviewText !== ""
-                    ? "disabled"
-                    : "default"
-                }
-              >
-                승인
-              </Button>
-            </ButtonWrapper>
-          </FlexWrapper>
+          {userPermission === UserPermission.Reviewer && (
+            <FlexWrapper direction="column" gap={12} ref={projectReportReview}>
+              <Typography fs={24} lh={30} fw="BOLD">
+                사업보고서 검토
+              </Typography>
+              <TextAreaInput
+                placeholder="검토에 대한 설명을 입력하세요."
+                handleChange={setReviewText}
+                value={reviewText}
+                height={100}
+              />
+              <ButtonWrapper>
+                <Button
+                  onClick={() => {
+                    handleReviewChange(reviewText);
+                    handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
+                    onConfirm();
+                  }}
+                  type={
+                    status === DocumentReviewStatusEnum.Rejected ||
+                    status === DocumentReviewStatusEnum.ReviewRejected
+                      ? "disabled"
+                      : "default"
+                  }
+                  style={
+                    status === DocumentReviewStatusEnum.Rejected ||
+                    status === DocumentReviewStatusEnum.ReviewRejected
+                      ? {}
+                      : {
+                          border: `1px solid ${theme.colors.RED[700]}`,
+                          backgroundColor: theme.colors.RED[50],
+                          color: theme.colors.RED[700],
+                        }
+                  }
+                >
+                  반려
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleReviewChange(reviewText);
+                    handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
+                    onConfirm();
+                  }}
+                  type={
+                    status === DocumentReviewStatusEnum.ReviseNeeded
+                      ? "disabled"
+                      : "default"
+                  }
+                  style={
+                    status === DocumentReviewStatusEnum.ReviseNeeded
+                      ? {}
+                      : {
+                          border: `1px solid ${theme.colors.GREEN[600]}`,
+                          backgroundColor: theme.colors.GREEN[50],
+                          color: theme.colors.GREEN[600],
+                        }
+                  }
+                >
+                  수정 요청
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
+                    onConfirm();
+                  }}
+                  type={
+                    status === DocumentReviewStatusEnum.Accepted ||
+                    status === DocumentReviewStatusEnum.ReviewAccepted ||
+                    reviewText !== ""
+                      ? "disabled"
+                      : "default"
+                  }
+                >
+                  승인
+                </Button>
+              </ButtonWrapper>
+            </FlexWrapper>
+          )}
         </ContentsArea>
         <Index
           title="목차"
@@ -244,19 +249,21 @@ const DocumentViewerDetailPage: React.FC = () => {
           headerHeight={headerHeight}
         />
       </ScrollAbleArea>
-      <BottomButtonWrapper>
-        <Button
-          type="default"
-          style={{
-            border: `1px solid ${theme.colors.GREEN[600]}`,
-            backgroundColor: theme.colors.WHITE,
-            color: theme.colors.GREEN[600],
-          }}
-        >
-          삭제
-        </Button>
-        <Button type="default">제출</Button>
-      </BottomButtonWrapper>
+      {userPermission === UserPermission.Reviewer && (
+        <BottomButtonWrapper>
+          <Button
+            type="default"
+            style={{
+              border: `1px solid ${theme.colors.GREEN[600]}`,
+              backgroundColor: theme.colors.WHITE,
+              color: theme.colors.GREEN[600],
+            }}
+          >
+            삭제
+          </Button>
+          <Button type="default">제출</Button>
+        </BottomButtonWrapper>
+      )}
     </FlexWrapper>
   );
 };
