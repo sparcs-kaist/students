@@ -29,6 +29,7 @@ interface SelectProps<T> {
   selectedValue?: T | T[];
   multi?: boolean;
   onSelect?: (value: T | T[]) => void;
+  onChange?: (value: T) => void;
   value?: T;
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
@@ -148,7 +149,7 @@ const Select = <T,>({
   label = "",
   disabled = false,
   value = undefined,
-  // onChange = () => {},
+  onChange = () => {},
   selectedValue = undefined,
   multi = false, // 기본값을 false로 설정
   onSelect = () => {},
@@ -163,16 +164,6 @@ const Select = <T,>({
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  console.log(
-    multi,
-    Array.isArray(selectedValue),
-    selectedValue,
-    isRequired,
-    hasOpenedOnce,
-    items.length,
-    isOpen,
-  );
 
   const hasError = useMemo(
     () =>
@@ -252,6 +243,7 @@ const Select = <T,>({
         onSelect(newSelectedValue);
       } else {
         onSelect(item.value);
+        onChange(item.value);
       }
     }
     if (!multi) {
