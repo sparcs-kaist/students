@@ -35,11 +35,15 @@ const ButtonInner = styled.div`
 
 const ButtonDefaultInner = styled(ButtonInner)`
   color: ${({ theme }) => theme.colors.WHITE};
-  background: ${({ theme }) => theme.colors.PRIMARY};
+  background: ${({ theme }) => theme.colors.GREEN[700]};
   cursor: pointer;
-  &:hover {
-    background: ${({ theme }) => theme.colors.GREEN[800]};
-  }
+`;
+
+const ButtonReverseInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.GREEN[700]};
+  background: ${({ theme }) => theme.colors.WHITE};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[700]};
+  cursor: pointer;
 `;
 
 const ButtonOutlinedInner = styled(ButtonInner)`
@@ -54,14 +58,21 @@ const ButtonOutlinedInner = styled(ButtonInner)`
 const ButtonDisabledInner = styled(ButtonInner)`
   color: ${({ theme }) => theme.colors.GRAY[100]};
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
-  background: ${({ theme }) => theme.colors.GRAY[100]};
+  background: ${({ theme }) => theme.colors.GRAY[50]};
   cursor: not-allowed;
+`;
+
+const ButtonIconInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.BLACK};
+  cursor: pointer;
 `;
 
 const ButtonTypeInner = {
   default: ButtonDefaultInner,
+  reverse: ButtonReverseInner,
   outlined: ButtonOutlinedInner,
   disabled: ButtonDisabledInner,
+  icon: ButtonIconInner,
 };
 
 const ButtonWithTextInner = styled.div`
@@ -72,6 +83,10 @@ const ButtonWithTextInner = styled.div`
   gap: 4px;
   display: inline-flex;
 `;
+
+const IconButton = (iconType: string) => (
+  <Icon type={iconType} size={18} color="black" />
+);
 
 const ButtonWithIconAndText = (iconType: string, buttonText: string) => (
   <ButtonWithTextInner>
@@ -100,6 +115,7 @@ const Button = ({
   const ButtonChosenInner = ButtonTypeInner[type];
 
   const ButtonContent = () => {
+    if (type === "icon") return IconButton(iconType);
     if (iconType !== "") return ButtonWithIconAndText(iconType, buttonText);
     if (buttonText !== "") return ButtonWithText(buttonText);
     return ButtonWithChildren(children);

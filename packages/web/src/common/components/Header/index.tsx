@@ -33,6 +33,7 @@ const NavLeftInner = styled.div`
   display: flex;
   height: 27px;
   align-items: center;
+  width: fit-content;
   gap: 5px;
 `;
 
@@ -41,14 +42,8 @@ const StyledNavList = styled(NavList)`
   padding: 0px 30px;
   align-items: center;
   gap: 24px;
-  width: ${({ theme }) => theme.responsive.CONTENT.xxl};
+  width: fit-content;
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    width: ${({ theme }) => theme.responsive.CONTENT.xl};
-  }
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    width: ${({ theme }) => theme.responsive.CONTENT.lg};
-  }
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     display: none;
   }
@@ -58,12 +53,13 @@ const HeaderInner = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(10px);
   display: flex;
   padding-bottom: 12px;
   flex-direction: column;
   align-items: flex-start;
   gap: 11px;
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const Menu = styled.div`

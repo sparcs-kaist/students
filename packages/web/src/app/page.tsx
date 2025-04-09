@@ -1,4 +1,6 @@
 "use client";
 
-const Home = () => <div>Welcome to SPARCS Students!</div>;
+import MainPageMainFrame from "../features/landing/frames/MainPageFrame";
+
+const Home = () => <MainPageMainFrame />;
 export default Home;

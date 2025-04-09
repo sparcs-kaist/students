@@ -18,6 +18,7 @@ const ModalContentInner = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 `;
 
 const ConfirmModalContent: React.FC<ConfirmModalContentProps> = ({
@@ -26,11 +27,21 @@ const ConfirmModalContent: React.FC<ConfirmModalContentProps> = ({
   confirmButtonText = "확인",
 }) => (
   <ModalContentInner>
-    <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
+    <Typography
+      fs={20}
+      lh={28}
+      fw="MEDIUM"
+      style={{ textAlign: "center", padding: "16px" }}
+    >
       {children}
     </Typography>
     <ButtonWrapper>
-      <Button onClick={onConfirm}>{confirmButtonText}</Button>
+      <Button
+        onClick={onConfirm}
+        style={{ fontSize: "14px", lineHeight: "12px" }}
+      >
+        {confirmButtonText}
+      </Button>
     </ButtonWrapper>
   </ModalContentInner>
 );

@@ -1,22 +1,19 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  zOrgName,
-  zOrgNameEng,
-} from "@sparcs-students/interface/common/stringLength";
+import { zHalfYearSummary } from "@sparcs-students/interface/api/semester/type/semester.type";
+import { zOrganization } from "../type/organization.type";
 
 /**
  * @version v0.1
- * @description 해당 학기에 존재했던 기구 목록을 가져옵니다.
+ * @description 조회 가이드에 사용되는 반기별 단체목록을 가져옵니다.
  */
 
-const url = (semesterId: number) => `/organizations/semester/${semesterId}`;
+const url = () => `/organizations/lookup`;
 const method = "GET";
+export const ApiOrg001RequestUrl = "/organizations/lookup";
 
-const requestParam = z.object({
-  semesterId: z.coerce.number().int().min(1),
-});
+const requestParam = z.object({});
 
 const requestQuery = z.object({});
 
@@ -24,19 +21,17 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    organizationTypes: z // 기구 타입
-      .object({
-        id: z.coerce.number().int().min(1),
-        name: z.coerce.string().max(30),
-        organizations: z // 동아리
-          .object({
-            id: z.coerce.number().int().min(1),
-            name: zOrgName,
-            name_eng: zOrgNameEng,
-          })
-          .array(),
-      })
-      .array(),
+    organizationLists: z.array(
+      z.object({
+        halfYear: zHalfYearSummary,
+        organizationTypes: z.array(
+          z.object({
+            organizationTypeEnum: zOrganization.shape.organizationTypeEnum,
+            organizations: z.array(zOrganization),
+          }),
+        ),
+      }),
+    ),
   }),
 };
 
@@ -58,8 +53,6 @@ type ApiOrg001RequestBody = z.infer<typeof apiOrg001.requestBody>;
 type ApiOrg001ResponseOK = z.infer<(typeof apiOrg001.responseBodyMap)[200]>;
 
 export default apiOrg001;
-
-export const ApiOrg001RequestUrl = "/organizations/semester/:semesterId";
 
 export type {
   ApiOrg001RequestParam,

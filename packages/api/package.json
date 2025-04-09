@@ -7,8 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "pnpm db up -d && pnpm start:dev",
+    "dev:dev": "cross-env NODE_ENV=dev pnpm start:dev",
+    "dev:local": "pnpm db up -d && cross-env NODE_ENV=local pnpm start:dev",
     "prod": "pnpm migrate:prod && pnpm start:prod",
-    "db": "docker compose -f ../../.docker/docker-compose.dev.yml -p ar-007-students",
+    "db": "docker compose -f ../../.docker/docker-compose.dev.yml --env-file ../../env/.env -p ar-007-students",
     "env": "echo $NODE_ENV",
     "clean": "rm -rf dist",
     "generate": "pnpm db up --wait && pnpm drizzle-kit push:mysql --config ./src/drizzle/drizzle.config.ts",
@@ -32,6 +34,8 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.30.9",
     "mysql2": "^3.9.7",
     "reflect-metadata": "^0.2.0",
@@ -82,5 +86,5 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "packageManager": "pnpm@8.15.8"
+  "packageManager": "pnpm@9.14.4"
 }

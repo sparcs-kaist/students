@@ -1,8 +1,9 @@
 version: "3"
 
 services:
-  db:
-    image: mysql:8.0
+  students_db:
+    image: mysql:8.0.36-debian
+    platform: linux/amd64
     container_name: sparcs-students-dev-db
     ports:
       - "${DB_PORT:?err}:3306"
@@ -17,6 +18,5 @@ services:
       start_period: 0s
       interval: 1s
       retries: 30
-
 volumes:
   db:

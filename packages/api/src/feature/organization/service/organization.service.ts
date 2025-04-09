@@ -1,59 +1,89 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
+
+import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import {
-  ApiOrg001RequestParam,
   ApiOrg001ResponseOK,
+  ApiOrg002ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 
-import SemesterPublicService from "src/feature/semester/semester.public.service";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
+import { OrganizationTypeEnum } from "@sparcs-students/interface/common/enum/organization.enum";
 
+import { IOrganizationRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { OrganizationRepository } from "../repository/organization.repository";
 
 @Injectable()
 export class OrganizationService {
   constructor(
+    @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
     private readonly organizationRepository: OrganizationRepository,
     private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
-  async getOrganizationsBySemesterId(
-    param: ApiOrg001RequestParam,
-  ): Promise<ApiOrg001ResponseOK> {
-    const { startTerm, endTerm } =
-      await this.semesterPublicService.getSemesterById(param.semesterId);
-    const organizations =
-      await this.organizationRepository.getOrganizationsByTerms(
-        startTerm,
-        endTerm,
-      );
+  async getOrganizationsLookUp(): Promise<ApiOrg001ResponseOK> {
+    const halfYears = await this.semesterPublicService.fetchHalfYearAll();
+    const result = await Promise.all(
+      halfYears.map(async halfYear => {
+        console.log(halfYear);
+        const organizations = await this.organizationRepository.fetchAll(
+          halfYear.duration,
+        );
 
-    // 변환 작업: OriginalResponse -> ApiOrg001ResponseOK
-    const organizationTypesMap = organizations.reduce((acc, curr) => {
-      const { organization, organizationTypeEnum } = curr;
-      // organization type이 이미 존재하는지 확인
-      let organizationType = acc.get(organizationTypeEnum.id);
-      if (!organizationType) {
-        organizationType = {
-          id: organizationTypeEnum.id,
-          name: organizationTypeEnum.name,
-          organizations: [],
+        // OrganizationType별로 그룹화
+        const organizationTypeMap = new Map<
+          OrganizationTypeEnum,
+          { organizations: typeof organizations }
+        >();
+
+        organizations.forEach(org => {
+          if (!organizationTypeMap.has(org.organizationTypeEnum)) {
+            organizationTypeMap.set(org.organizationTypeEnum, {
+              organizations: [],
+            });
+          }
+          organizationTypeMap
+            .get(org.organizationTypeEnum)
+            ?.organizations.push(org);
+        });
+
+        // organizationTypeMap을 배열로 변환
+        const organizationTypes = Array.from(organizationTypeMap.entries()).map(
+          ([type, data]) => ({
+            organizationTypeEnum: type, // OrganizationTypeEnum의 int 값
+            organizations: data.organizations,
+          }),
+        );
+
+        return {
+          halfYear,
+          organizationTypes,
         };
-        acc.set(organizationTypeEnum.id, organizationType);
-      }
+      }),
+    );
+    return { organizationLists: result };
+  }
 
-      // organization 추가
-      organizationType.organizations.push({
-        id: organization.id,
-        name: organization.name,
-        name_eng: organization.nameEng,
-      });
+  async postUAPresidentOrganization(
+    name: IOrganizationRequestCreate["name"],
+    nameEng: IOrganizationRequestCreate["nameEng"],
+    organizationTypeEnum: IOrganizationRequestCreate["organizationTypeEnum"],
+    foundingYear: IOrganizationRequestCreate["foundingYear"],
+    duration: IOrganizationRequestCreate["duration"],
+    organizationStateEnum: IOrganizationRequestCreate["organizationStateEnum"],
+  ): Promise<ApiOrg002ResponseCreated> {
+    // TODO: 총학생회장 권한 검증
 
-      return acc;
-    }, new Map<number, ApiOrg001ResponseOK["organizationTypes"][number]>());
+    const organization = await this.organizationRepository.insert({
+      name,
+      nameEng,
+      organizationTypeEnum,
+      foundingYear,
+      duration,
+      organizationStateEnum,
+    });
 
-    // Map을 배열로 변환
-    const organizationTypes = Array.from(organizationTypesMap.values());
-
-    return { organizationTypes };
+    return { organization };
   }
 }
