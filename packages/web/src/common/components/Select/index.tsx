@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
@@ -7,9 +7,6 @@ import FormError from "../FormError";
 import Label from "../FormLabel";
 
 import NoOption from "./_atomic/NoOption";
-// import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-// import Label from "../Forms/_atomic/Label";
-// import ErrorMessage from "../Forms/_atomic/ErrorMessage";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
 import Icon from "../Icon";
@@ -26,11 +23,8 @@ interface SelectProps<T> {
   errorMessage?: string;
   noOptionMessage?: string;
   disabled?: boolean;
-  selectedValue?: T | T[];
-  multi?: boolean;
-  onSelect?: (value: T | T[]) => void;
+  value: T;
   onChange?: (value: T) => void;
-  value?: T;
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
   isRequired?: boolean;
@@ -39,6 +33,12 @@ interface SelectProps<T> {
   insideTable?: boolean;
   insideTimeline?: boolean;
 }
+
+const SelectInner = styled.div`
+  gap: 4px;
+  position: relative;
+  height: fit-content;
+`;
 
 const disabledStyle = css`
   background-color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -57,11 +57,10 @@ const StyledSelect = styled.div.withConfig({
 }>`
   display: flex;
   padding: 8px 16px;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 20px;
   width: 100%;
-  height: 36px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -79,22 +78,12 @@ const StyledSelect = styled.div.withConfig({
   ${({ insideTimeline }) => insideTimeline && "padding: 8px 12px; gap: 8px;"}
 
   &:focus,
-    &:hover:not(:focus) {
+  &:hover:not(:focus) {
     border-color: ${({ theme, isOpen }) =>
       isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[400]};
   }
 
   ${({ disabled }) => disabled && disabledStyle}
-`;
-
-const IconWrapperUp = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  transform: rotate(90deg);
 `;
 
 const IconWrapperDown = styled.div`
@@ -107,23 +96,32 @@ const IconWrapperDown = styled.div`
   transform: rotate(-90deg);
 `;
 
+const IconWrapperUp = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  transform: rotate(90deg);
+`;
+
 const SelectWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   display: flex;
-  gap: 4px;
 `;
 
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ disabled: boolean; insideTimeline?: boolean; isSelected: boolean }>`
+})<{ isSelected: boolean; disabled: boolean; insideTimeline?: boolean }>`
   display: flex;
-  width: fit-content;
+  width: 81px;
   height: ${({ insideTimeline }) => (insideTimeline ? "20px" : "24px")};
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
-  color: ${({ theme, disabled, isSelected }) => {
+  color: ${({ theme, isSelected, disabled }) => {
     if (disabled) {
       return theme.colors.GRAY[400];
     }
@@ -136,25 +134,16 @@ const SelectValue = styled.span.withConfig({
   ${({ insideTimeline }) => insideTimeline && "flex: 1 0 0;"};
 `;
 
-const SelectInner = styled.div`
-  gap: 4px;
-  position: relative;
-  height: fit-content;
-`;
-
 const Select = <T,>({
   items,
   errorMessage = "",
   noOptionMessage = "항목이 존재하지 않습니다.",
   label = "",
   disabled = false,
-  value = undefined,
+  value,
   onChange = () => {},
-  selectedValue = undefined,
-  multi = false, // 기본값을 false로 설정
-  onSelect = () => {},
   setErrorStatus = () => {},
-  placeholder = "항목을 선택해주세요.",
+  placeholder = "항목을 선택해주세요",
   isRequired = true,
   onlyDropdown = false,
   dropdownHeight = undefined,
@@ -164,31 +153,6 @@ const Select = <T,>({
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const hasError = useMemo(
-    () =>
-      isRequired &&
-      hasOpenedOnce &&
-      ((multi && Array.isArray(selectedValue) && selectedValue.length === 0) ||
-        (!multi &&
-          (selectedValue === null ||
-            selectedValue === undefined ||
-            selectedValue === ""))) &&
-      items.length > 0 &&
-      !isOpen,
-    [selectedValue, items.length, multi, setErrorStatus, isOpen],
-  );
-
-  useEffect(() => {
-    setErrorStatus(!!errorMessage || hasError);
-  }, [
-    errorMessage,
-    selectedValue,
-    items.length,
-    multi,
-    setErrorStatus,
-    hasError,
-  ]);
 
   useEffect(() => {
     setErrorStatus(!!errorMessage || (value == null && items.length > 0));
@@ -202,11 +166,7 @@ const Select = <T,>({
       ) {
         if (isOpen) {
           setIsOpen(false);
-          if (
-            items.length > 0 &&
-            (!selectedValue ||
-              (Array.isArray(selectedValue) && selectedValue.length === 0))
-          ) {
+          if (items.length > 0 && value == null) {
             setHasOpenedOnce(true);
           }
         }
@@ -215,7 +175,7 @@ const Select = <T,>({
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [containerRef, isOpen, items.length, selectedValue, value]);
+  }, [containerRef, isOpen, items.length, value]);
 
   const handleSelectClick = () => {
     if (!disabled) {
@@ -230,47 +190,16 @@ const Select = <T,>({
   };
 
   const handleOptionClick = (item: SelectItem<T>) => {
-    if (item.selectable) {
-      if (multi) {
-        let newSelectedValue = Array.isArray(selectedValue)
-          ? [...selectedValue]
-          : [];
-        if (newSelectedValue.includes(item.value)) {
-          newSelectedValue = newSelectedValue.filter(val => val !== item.value);
-        } else {
-          newSelectedValue.push(item.value);
-        }
-        onSelect(newSelectedValue);
-      } else {
-        onSelect(item.value);
-        onChange(item.value);
-      }
-    }
-    if (!multi) {
+    if (item.selectable || item.selectable === undefined) {
+      onChange(item.value);
       setIsOpen(false);
     }
   };
 
-  let selectedLabel: string;
+  const selectedLabel =
+    items.find(item => item.value === value)?.label || placeholder;
 
-  if (multi) {
-    if (Array.isArray(selectedValue) && selectedValue.length > 0) {
-      selectedLabel = items
-        .filter(item => selectedValue.includes(item.value))
-        .map(item => item.label)
-        .join(", ");
-    } else {
-      selectedLabel = placeholder;
-    }
-  } else {
-    const foundItem = items.find(item => item.value === selectedValue);
-    selectedLabel = foundItem ? foundItem.label : placeholder;
-  }
-
-  const isSelected = useMemo(
-    () => hasOpenedOnce && !hasError,
-    [selectedValue, isOpen, hasError],
-  );
+  const selectedValue = items.find(item => item.value === value)?.value;
 
   return (
     <SelectWrapper>
@@ -279,16 +208,22 @@ const Select = <T,>({
         <SelectInner ref={containerRef}>
           {!onlyDropdown && (
             <StyledSelect
-              hasError={hasError}
+              hasError={
+                isRequired &&
+                hasOpenedOnce &&
+                !value &&
+                items.length > 0 &&
+                !isOpen
+              }
               disabled={disabled}
               onClick={handleSelectClick}
               isOpen={isOpen}
               insideTimeline={insideTimeline}
             >
               <SelectValue
+                isSelected={value != null && value !== ""}
                 disabled={disabled}
                 insideTimeline={insideTimeline}
-                isSelected={isSelected}
               >
                 {selectedLabel}
               </SelectValue>
@@ -318,13 +253,8 @@ const Select = <T,>({
                     selectable={
                       item.selectable || item.selectable === undefined
                     }
-                    selected={
-                      multi
-                        ? Array.isArray(selectedValue) &&
-                          selectedValue.includes(item.value)
-                        : selectedValue === item.value
-                    }
                     onClick={() => handleOptionClick(item)}
+                    selected={selectedValue === item.value}
                   >
                     {item.label}
                   </SelectOption>
@@ -335,11 +265,15 @@ const Select = <T,>({
             </Dropdown>
           )}
         </SelectInner>
-        {hasError && (
-          <FormError>
-            {errorMessage || "필수로 선택해야 하는 항목입니다."}
-          </FormError>
-        )}
+        {!isOpen &&
+          isRequired &&
+          hasOpenedOnce &&
+          !value &&
+          items.length > 0 && (
+            <FormError>
+              {errorMessage || "필수로 선택해야 하는 항목입니다"}
+            </FormError>
+          )}
       </SelectWrapper>
     </SelectWrapper>
   );
