@@ -4,18 +4,18 @@ import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+import { mockViewBudgetReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 import ThreeInput, {
   ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 // import ManagerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetReportFrame";
-import ReviewerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ReviewerBudgetReportFrame";
+import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetReportFrame";
 // import ViewerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetReportFrame";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -30,7 +30,7 @@ const Report = () => {
   const queryValue = searchParams.get("value");
   const queryId = parseInt(searchParams.get("id") || "");
 
-  const [date, setDate] = useState(mockViewResultData.submitDate);
+  const [date, setDate] = useState(mockViewBudgetReportResultData.submitDate);
   const [year, setYear] = useState<number>(queryYear);
   const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
   const [type, setType] = useState<DocumentType | null>(queryType);
@@ -111,7 +111,7 @@ const Report = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewBudgetReportResultData}
           submitDate={date}
           handleDateChange={setDate}
         />

@@ -1,6 +1,6 @@
 import DateInput from "@sparcs-students/web/common/components/DateInput";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import Select from "@sparcs-students/web/common/components/Select";
+import Select from "@sparcs-students/web/common/components/Selects/Select";
 import React, { useEffect, useState } from "react";
 import { TimelineDateTypeEnum } from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
 

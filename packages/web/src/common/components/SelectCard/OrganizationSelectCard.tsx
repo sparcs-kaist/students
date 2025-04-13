@@ -2,11 +2,9 @@
 
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import Select, {
-  SelectItem,
-} from "@sparcs-students/web/common/components/Select";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import Select, { SelectItem } from "../Selects/Select";
 
 import Icon from "../Icon";
 

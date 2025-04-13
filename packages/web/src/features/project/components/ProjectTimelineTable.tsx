@@ -10,7 +10,7 @@ import {
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import { EditableDetailButton } from "@sparcs-students/web/features/documents/components/_atomic/DetailButton";
+import { EditableDetailButton } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/DetailButton";
 
 import styled from "styled-components";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
