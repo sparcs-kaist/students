@@ -22,6 +22,7 @@ interface OrganizationSelectCardProps {
   setSelectedKey: (value: string) => void;
   selectedValue: string;
   setSelectedValue: (value: string) => void;
+  setSelectedId: (value: number | null) => void;
   disabled?: boolean;
 }
 
@@ -96,6 +97,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
   setSelectedKey,
   selectedValue,
   setSelectedValue,
+  setSelectedId,
   disabled = false,
 }) => {
   const valueList = useMemo(() => {
@@ -109,8 +111,25 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
     const selectedItem = totalList.find(item => item.key.value === newKey);
     if (selectedItem && selectedItem.values.length > 0) {
       setSelectedValue(selectedItem.values[0].value);
+      setSelectedId(selectedItem.values[0].id as number);
     } else {
       setSelectedValue("");
+      setSelectedId(null);
+    }
+  };
+
+  const handleValueChange = (newValue: string) => {
+    setSelectedValue(newValue);
+
+    const selectedItem = totalList.find(item => item.key.value === selectedKey);
+    const selectedValueItem = selectedItem?.values.find(
+      val => val.value === newValue,
+    );
+
+    if (selectedValueItem) {
+      setSelectedId(selectedValueItem.id as number);
+    } else {
+      setSelectedId(null);
     }
   };
 
@@ -149,7 +168,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
             <Select
               items={valueList}
               value={selectedValue}
-              onChange={setSelectedValue}
+              onChange={handleValueChange}
               placeholder="선택하세요."
               errorMessage="필수 항목입니다."
               noOptionMessage="항목을 선택하세요."

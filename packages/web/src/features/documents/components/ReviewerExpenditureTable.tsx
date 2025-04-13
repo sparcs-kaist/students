@@ -37,11 +37,15 @@ import { budgetExpenseToString } from "@sparcs-students/web/features/documents/u
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
 import ReviewButton from "@sparcs-students/web/features/documents/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import { useRouter } from "next/navigation";
+import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // ExpenditureProps 인터페이스는 위에 정의된 대로 사용
 
 export interface ExpenditureProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionExpense: BudgetDivisionExpenseEnum;
   name: string;
@@ -56,6 +60,13 @@ export interface ExpenditureProps {
 
 interface ExpenditureTableProps {
   initialData: ExpenditureProps[];
+  pageId: string | string[];
+  type: string; // "proposal" || "report"
+  onReviewUpdate: (data: {
+    code: number;
+    reviewText: string;
+    reviewStatus: DocumentReviewStatusEnum;
+  }) => void;
 }
 
 const columnHelper = createColumnHelper<ExpenditureProps>();
@@ -66,6 +77,9 @@ const getColumns = (
     code: number,
     newStatus: DocumentReviewStatusEnum,
   ) => void,
+  type: string,
+  pageId: string | string[],
+  router: AppRouterInstance,
 ) => [
   columnHelper.accessor("code", {
     id: "code",
@@ -103,7 +117,17 @@ const getColumns = (
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
-    cell: info => info.getValue(),
+    cell: info => (
+      <HoverClickText
+        text={info.getValue()}
+        onClick={() =>
+          router.push(
+            `/document-lookup/project-${type}/result/${pageId}/detail/${info.row.id}`,
+            // CHACHA: 만약 n개의 row가 같은 상세 페이지 내의 항목이라면? row.id가 not unique...?
+          )
+        }
+      />
+    ),
     size: 210,
   }),
   columnHelper.accessor("item", {
@@ -120,7 +144,8 @@ const getColumns = (
         <LightTag color={color}>{text}</LightTag>
       );
     },
-    size: 180,
+    size: 0,
+    minSize: 180,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -202,34 +227,65 @@ const getColumns = (
 
 const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
   initialData,
+  pageId,
+  type,
+  onReviewUpdate,
 }) => {
   const [data, setData] = useState<ExpenditureProps[]>(initialData);
   const [loaded, setLoaded] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     setLoaded(true);
   }, []);
 
   const handleReviewChange = (code: number, newReview: string) => {
-    setData(prevData =>
-      prevData.map(item =>
+    setData(prevData => {
+      const newData = prevData.map(item =>
         item.code === code ? { ...item, review: newReview } : item,
-      ),
-    );
+      );
+
+      const matched = newData.find(d => d.code === code);
+      if (matched) {
+        onReviewUpdate({
+          code: matched.code,
+          reviewText: matched.review,
+          reviewStatus: matched.status,
+        });
+      }
+
+      return newData;
+    });
   };
 
   const handleStatusChange = (
     code: number,
     newStatus: DocumentReviewStatusEnum,
   ) => {
-    setData(prevData =>
-      prevData.map(item =>
+    setData(prevData => {
+      const newData = prevData.map(item =>
         item.code === code ? { ...item, status: newStatus } : item,
-      ),
-    );
+      );
+
+      const matched = newData.find(d => d.code === code);
+      if (matched) {
+        onReviewUpdate({
+          code: matched.code,
+          reviewText: matched.review,
+          reviewStatus: matched.status,
+        });
+      }
+
+      return newData;
+    });
   };
 
-  const columns = getColumns(handleReviewChange, handleStatusChange);
+  const columns = getColumns(
+    handleReviewChange,
+    handleStatusChange,
+    type,
+    pageId,
+    router,
+  );
 
   const table = useReactTable({
     columns,

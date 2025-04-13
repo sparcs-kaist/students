@@ -32,6 +32,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum
 
 export interface IncomeProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionIncome: BudgetDivisionIncomeEnum;
   item: string;
@@ -45,6 +46,11 @@ export interface IncomeProps {
 
 interface IncomeTableProps {
   initialData: IncomeProps[];
+  onReviewUpdate: (data: {
+    code: number;
+    reviewText: string;
+    reviewStatus: DocumentReviewStatusEnum;
+  }) => void;
 }
 
 const columnHelper = createColumnHelper<IncomeProps>();
@@ -93,7 +99,8 @@ const getColumns = (
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 275,
+    size: 0,
+    minSize: 275,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -171,7 +178,10 @@ const getColumns = (
   }),
 ];
 
-const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
+const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({
+  initialData,
+  onReviewUpdate,
+}) => {
   const [data, setData] = useState(initialData);
   const [loaded, setLoaded] = useState(false);
 
@@ -180,22 +190,44 @@ const ReviewerIncomeTable: React.FC<IncomeTableProps> = ({ initialData }) => {
   }, []);
 
   const handleReviewChange = (code: number, newReview: string) => {
-    setData(prevData =>
-      prevData.map(item =>
+    setData(prevData => {
+      const newData = prevData.map(item =>
         item.code === code ? { ...item, review: newReview } : item,
-      ),
-    );
+      );
+
+      const matched = newData.find(d => d.code === code);
+      if (matched) {
+        onReviewUpdate({
+          code,
+          reviewText: matched.review,
+          reviewStatus: matched.status,
+        });
+      }
+
+      return newData;
+    });
   };
 
   const handleStatusChange = (
     code: number,
     newStatus: DocumentReviewStatusEnum,
   ) => {
-    setData(prevData =>
-      prevData.map(item =>
+    setData(prevData => {
+      const newData = prevData.map(item =>
         item.code === code ? { ...item, status: newStatus } : item,
-      ),
-    );
+      );
+
+      const matched = newData.find(d => d.code === code);
+      if (matched) {
+        onReviewUpdate({
+          code,
+          reviewText: matched.review,
+          reviewStatus: matched.status,
+        });
+      }
+
+      return newData;
+    });
   };
 
   const columns = getColumns(handleReviewChange, handleStatusChange);

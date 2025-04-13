@@ -38,9 +38,12 @@ import { budgetExpenseToString } from "@sparcs-students/web/features/documents/u
 import ExpenditureHelpButton from "@sparcs-students/web/features/documents/components/_atomic/ExpenditureHelpButton";
 import { useRouter } from "next/navigation";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export interface ViewerExpenditureProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionExpense: BudgetDivisionExpenseEnum;
   name: string;
@@ -60,7 +63,11 @@ interface ExpenditureTableProps {
 
 const columnHelper = createColumnHelper<ViewerExpenditureProps>();
 
-const columns = [
+const getColumns = (
+  type: string,
+  pageId: string | string[],
+  router: AppRouterInstance,
+) => [
   columnHelper.accessor("code", {
     id: "code",
     header: "코드",
@@ -97,7 +104,17 @@ const columns = [
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
-    cell: info => info.getValue(),
+    cell: info => (
+      <HoverClickText
+        text={info.getValue()}
+        onClick={() =>
+          router.push(
+            `/document-lookup/project-${type}/result/${pageId}/detail/${info.row.id}`,
+            // CHACHA: 만약 n개의 row가 같은 상세 페이지 내의 항목이라면? row.id가 not unique...?
+          )
+        }
+      />
+    ),
     size: 140,
   }),
   columnHelper.accessor("item", {
@@ -114,7 +131,8 @@ const columns = [
         <LightTag color={color}>{text}</LightTag>
       );
     },
-    size: 175,
+    size: 0,
+    minSize: 175,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
@@ -186,6 +204,8 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
     setLoaded(true);
   }, []);
 
+  const columns = getColumns(type, pageId, router);
+
   const table = useReactTable({
     columns,
     data,
@@ -201,17 +221,7 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
         </Typography>
         <ExpenditureHelpButton />
       </FlexWrapper>
-      {loaded && (
-        <Table
-          table={table}
-          emptyMessage="테이블 정보가 없습니다."
-          onClick={row =>
-            router.push(
-              `/document-lookup/project-${type}/result/${pageId}/detail/${row.code}`, // TODO: change when api connect
-            )
-          }
-        />
-      )}
+      {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>
   );
 };

@@ -9,7 +9,7 @@ import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/
 import { ViewResultProps } from "@sparcs-students/web/features/documents/components/ViewResult";
 import { IncomeProps } from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 import { ExpenditureProps } from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-import { ManagerExpenditureProps } from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
+// import { ManagerExpenditureProps } from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export const mockViewResultData: ViewResultProps = {
@@ -41,6 +41,7 @@ export const mockViewProjectResultData: ViewResultProps = {
 export const mockViewerIncomeData: ViewerIncomeProps[] = [
   {
     code: 101,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -54,6 +55,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 102,
+    id: 1,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -67,6 +69,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 103,
+    id: 2,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -80,6 +83,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
   },
   {
     code: 201,
+    id: 3,
     budgetDomain: BudgetDomainEnum.School,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.School,
     item: "기층기구회계 지원금",
@@ -96,6 +100,7 @@ export const mockViewerIncomeData: ViewerIncomeProps[] = [
 export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   {
     code: 401,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -108,6 +113,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 402,
+    id: 1,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -120,6 +126,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 403,
+    id: 2,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -132,6 +139,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
   },
   {
     code: 501,
+    id: 3,
     budgetDomain: BudgetDomainEnum.School,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -146,6 +154,7 @@ export const mockViewerExpenditureData: ViewerExpenditureProps[] = [
 export const mockIncomeData: IncomeProps[] = [
   {
     code: 101,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -159,6 +168,7 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 102,
+    id: 1,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -172,6 +182,7 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 103,
+    id: 2,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Substratum,
     item: "기층기구회계 지원금",
@@ -185,6 +196,7 @@ export const mockIncomeData: IncomeProps[] = [
   },
   {
     code: 201,
+    id: 3,
     budgetDomain: BudgetDomainEnum.School,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.School,
     item: "기층기구회계 지원금",
@@ -200,6 +212,7 @@ export const mockIncomeData: IncomeProps[] = [
 
 export interface ManagerIncomeProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionIncome: BudgetDivisionIncomeEnum;
   item: string;
@@ -214,6 +227,7 @@ export interface ManagerIncomeProps {
 export const mockManagerIncomeData: ManagerIncomeProps[] = [
   {
     code: 0,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Undefined,
     budgetDivisionIncome: BudgetDivisionIncomeEnum.Undefined,
     item: "",
@@ -226,9 +240,25 @@ export const mockManagerIncomeData: ManagerIncomeProps[] = [
   },
 ];
 
+export interface ManagerExpenditureProps {
+  code: number;
+  id: number;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
+  projectName: string;
+  item: BudgetClassExpenseEnum;
+  lastYear: number | string;
+  thisYear: number | string;
+  ratio: number | null;
+  reason: string;
+  status: DocumentReviewStatusEnum;
+  review: string;
+}
+
 export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
   {
     code: 401,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Operating,
     projectName: "격려금",
@@ -260,6 +290,7 @@ export const mockManagerProjectNameCandidateList: ManagerProjectNameCandidate[] 
 export const mockExpenditureData: ExpenditureProps[] = [
   {
     code: 401,
+    id: 0,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -273,6 +304,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 402,
+    id: 1,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -286,6 +318,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 403,
+    id: 2,
     budgetDomain: BudgetDomainEnum.Student,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",
@@ -299,6 +332,7 @@ export const mockExpenditureData: ExpenditureProps[] = [
   },
   {
     code: 501,
+    id: 3,
     budgetDomain: BudgetDomainEnum.School,
     budgetDivisionExpense: BudgetDivisionExpenseEnum.Operating,
     name: "격려금",

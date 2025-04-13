@@ -15,6 +15,7 @@ export interface SelectItem<T> {
   label: string;
   value: T;
   selectable?: boolean;
+  id?: number;
 }
 
 interface SelectProps<T> {

@@ -44,6 +44,7 @@ const SelectInner = styled.div`
   position: relative;
   height: 24px;
   overflow-y: visible;
+  width: fit-content;
 `;
 
 const StyledSelect = styled.div.withConfig({

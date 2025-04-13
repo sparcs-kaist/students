@@ -38,7 +38,6 @@ import styled from "styled-components";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import InputSelect from "@sparcs-students/web/common/components/InputSelect"; // SelectItem,
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
-// import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
@@ -48,20 +47,7 @@ import {
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-
-export interface ManagerExpenditureProps {
-  code: number;
-  budgetDomain: BudgetDomainEnum;
-  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
-  projectName: string;
-  item: BudgetClassExpenseEnum;
-  lastYear: number | string;
-  thisYear: number | string;
-  ratio: number | null;
-  reason: string;
-  status: DocumentReviewStatusEnum;
-  review: string;
-}
+import { FormValues } from "@sparcs-students/web/features/budget/type/managerFormValues";
 
 export interface ManagerProjectNameCandidate {
   budgetDomain: BudgetDomainEnum;
@@ -69,12 +55,8 @@ export interface ManagerProjectNameCandidate {
   projectNameCandidate: string[];
 }
 
-interface FormValues {
-  expenditures: ManagerExpenditureProps[];
-}
-
 interface ManagerExpenditureTableProps {
-  initialData: ManagerExpenditureProps[];
+  formMethods: ReturnType<typeof useForm<FormValues>>;
   projectNameCandidate: ManagerProjectNameCandidate[];
   isProposal: boolean;
 }
@@ -104,7 +86,6 @@ const TableHeaderWrapper = styled.tr`
   align-items: center;
   border-radius: 4px 4px 0px 0px;
   overflow: hidden;
-  width: fit-content;
 `;
 
 const TableContentWrapper = styled.tbody`
@@ -124,7 +105,6 @@ const TableRowWrapper = styled.tr.withConfig({
   background: ${({ theme }) => theme.colors.WHITE};
   cursor: pointer;
   overflow-y: visible;
-  width: fit-content;
 `;
 
 const TitleWithButtonWrapper = styled.div`
@@ -276,7 +256,7 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`expenditures.${rowIndex}.projectName`}
         render={({ field }) => (
-          <TableCell type="Default" width="400px">
+          <TableCell type="Default" width={0}>
             <InputSelect
               items={setProjectNameListInputItem(getProjectNameCandidateList())}
               value={field.value}
@@ -419,19 +399,13 @@ const TableRow: React.FC<TableRowProps> = ({
 };
 
 const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
-  initialData,
+  formMethods,
   projectNameCandidate,
   isProposal,
 }) => {
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     334, // TODO: magic number 36 + 48 + 250
   );
-
-  const formMethods = useForm<FormValues>({
-    defaultValues: {
-      expenditures: initialData,
-    },
-  });
 
   const { handleSubmit, control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
@@ -547,7 +521,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
                   <TableCell type="Header" width="150px">
                     예산 분류
                   </TableCell>
-                  <TableCell type="Header" width="400px">
+                  <TableCell type="Header" width={0}>
                     사업명
                   </TableCell>
                   <TableCell type="Header" width="142px">

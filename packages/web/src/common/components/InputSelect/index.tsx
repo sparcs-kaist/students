@@ -58,6 +58,7 @@ const StyledSelect = styled.div.withConfig({
   align-items: center;
   gap: 10px;
   width: 100%;
+  flex: 1;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -98,6 +99,7 @@ const SelectWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   display: flex;
+  flex: 1;
 `;
 
 const Select = ({

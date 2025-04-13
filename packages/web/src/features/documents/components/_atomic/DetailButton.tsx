@@ -29,6 +29,9 @@ export const EditableDetailButton = ({
           onConfirm={() => {
             close();
           }}
+          onClose={() => {
+            close();
+          }}
           title={`${projectItem}에 대한 비고`}
           value={value}
           onChange={onChange}

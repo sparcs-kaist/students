@@ -36,6 +36,8 @@ interface ThreeInputProps {
   setSelectedKey: (key: string | null) => void;
   selectedValue: string | null;
   setSelectedValue: (value: string | null) => void;
+  // selectedId: number | null;
+  setSelectedId?: (value: number | null) => void;
 }
 
 const OuterWrapper = styled.div`
@@ -74,6 +76,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
   setSelectedKey,
   selectedValue,
   setSelectedValue,
+  setSelectedId = () => {},
 }: ThreeInputProps) => {
   // CHACHA: 학기 선택에 쓰임
   const selectItems = useMemo(() => {
@@ -96,9 +99,14 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
   const keyList = useMemo(() => totalList.map(e => e.key), [totalList]);
 
   useEffect(() => {
+    if (selectedKey && selectedValue) return;
+
     setSelectedKey("");
     setSelectedValue("");
-  }, [type, setSelectedKey, setSelectedValue]);
+    if (setSelectedId) {
+      setSelectedId(null);
+    }
+  }, [type, setSelectedKey, setSelectedValue, selectedKey, selectedValue]);
 
   return (
     <OuterWrapper>
@@ -123,6 +131,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
         setSelectedKey={setSelectedKey}
         selectedValue={selectedValue ?? ""}
         setSelectedValue={setSelectedValue}
+        setSelectedId={setSelectedId}
         disabled={year === null || isSpring === null || type === null}
       />
     </OuterWrapper>
