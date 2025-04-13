@@ -11,8 +11,14 @@ const StyledText = styled(Typography)`
   }
 `;
 
-const HoverClickText = ({ text = "" }: { text: string }) => (
-  <StyledText>{text}</StyledText>
-);
+interface HoverClickTextProps {
+  text: string;
+  onClick?: () => void;
+}
+
+const HoverClickText = ({
+  text = "",
+  onClick = () => {},
+}: HoverClickTextProps) => <StyledText onClick={onClick}>{text}</StyledText>;
 
 export default HoverClickText;

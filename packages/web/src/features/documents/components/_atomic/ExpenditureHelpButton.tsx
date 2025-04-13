@@ -13,7 +13,7 @@ const ToolTipWrapper = styled.div`
   line-height: 20px;
   text-align: center;
 
-  width: 340px;
+  width: fit-content;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   position: absolute;
@@ -38,7 +38,7 @@ const ExpenditureHelpButton = () => {
       />
       {showTooltip && (
         <ToolTipWrapper>
-          지출 항목을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다.
+          사업명을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다.
         </ToolTipWrapper>
       )}
     </FlexWrapper>

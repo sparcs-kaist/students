@@ -54,6 +54,7 @@ const CommonCellBodyWrapper = styled.td.withConfig({
 const CellText = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isGray: boolean; isSelect?: boolean }>`
+  display: flex;
   font-size: 14px;
   line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -61,6 +62,8 @@ const CellText = styled.div.withConfig({
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  justify-content: center;
 `;
 
 const HeaderInner = styled.div`

@@ -9,7 +9,7 @@ import { ViewerExpenditureProps } from "@sparcs-students/web/features/documents/
 import { ViewResultProps } from "@sparcs-students/web/features/documents/components/ViewResult";
 import { IncomeProps } from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
 import { ExpenditureProps } from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-import { ManagerExpenditureProps } from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
+// import { ManagerExpenditureProps } from "@sparcs-students/web/features/documents/components/ManagerExpenditureTable";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
 export const mockViewResultData: ViewResultProps = {
@@ -225,6 +225,20 @@ export const mockManagerIncomeData: ManagerIncomeProps[] = [
     review: "",
   },
 ];
+
+export interface ManagerExpenditureProps {
+  code: number;
+  budgetDomain: BudgetDomainEnum;
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
+  projectName: string;
+  item: BudgetClassExpenseEnum;
+  lastYear: number | string;
+  thisYear: number | string;
+  ratio: number | null;
+  reason: string;
+  status: DocumentReviewStatusEnum;
+  review: string;
+}
 
 export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
   {

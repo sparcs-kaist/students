@@ -41,19 +41,16 @@ import InputSelect, {
   SelectItem,
 } from "@sparcs-students/web/common/components/InputSelect"; // SelectItem,
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
-import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+// import { ManagerIncomeProps } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-
-interface FormValues {
-  incomes: ManagerIncomeProps[];
-}
+import { FormValues } from "@sparcs-students/web/features/budget/type/managerFormValues";
 
 interface ManagerIncomeTableProps {
-  initialData: ManagerIncomeProps[];
+  formMethods: ReturnType<typeof useForm<FormValues>>;
   isProposal: boolean;
 }
 
@@ -82,7 +79,6 @@ const TableHeaderWrapper = styled.tr`
   align-items: center;
   border-radius: 4px 4px 0px 0px;
   overflow: hidden;
-  width: fit-content;
 `;
 
 const TableContentWrapper = styled.tbody`
@@ -103,7 +99,7 @@ const TableRowWrapper = styled.tr.withConfig({
   background: ${({ theme }) => theme.colors.WHITE};
   cursor: pointer;
   overflow-y: visible;
-  width: fit-content;
+  //width: fit-content;
 `;
 
 const TitleWithButtonWrapper = styled.div`
@@ -260,7 +256,7 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`incomes.${rowIndex}.item`}
         render={({ field }) => (
-          <TableCell type="Default" width="400px">
+          <TableCell type="Default" width={0}>
             <InputSelect
               items={itemList}
               value={field.value}
@@ -376,19 +372,13 @@ const TableRow: React.FC<TableRowProps> = ({
 };
 
 const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
-  initialData,
+  formMethods,
   isProposal,
 }) => {
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     334, // TODO: magic number 36 + 48 + 250
   );
-  const formMethods = useForm<FormValues>({
-    defaultValues: {
-      incomes: initialData,
-    },
-  });
-
-  const { handleSubmit, control, setValue, getValues } = formMethods;
+  const { control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "incomes",
@@ -468,13 +458,9 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
     }, 0);
   };
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Submitted incomes:", data.incomes);
-  };
-
   return (
     <FormProvider {...formMethods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <FlexWrapper direction="column" gap={16}>
           <TitleWithButtonWrapper>
             <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
@@ -502,7 +488,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
                   <TableCell type="Header" width="150px">
                     예산 분류
                   </TableCell>
-                  <TableCell type="Header" width="400px">
+                  <TableCell type="Header" width={0}>
                     항목
                   </TableCell>
                   <TableCell type="Header" width="130px">

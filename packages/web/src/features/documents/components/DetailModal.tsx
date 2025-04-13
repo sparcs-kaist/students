@@ -15,6 +15,7 @@ interface EditableDetailModalProps {
   title: string;
   value: string;
   onChange: (value: string) => void;
+  onClose: () => void;
 }
 
 const ModalContentInner = styled.div`
@@ -36,7 +37,7 @@ const DetailWrapper = styled.div`
 
 const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 const DetailModal: React.FC<DetailModalProps> = ({
@@ -62,6 +63,7 @@ export const EditableDetailModal: React.FC<EditableDetailModalProps> = ({
   title,
   value,
   onChange,
+  onClose,
 }) => {
   const [localText, setLocalText] = useState<string>(value);
 
@@ -80,13 +82,21 @@ export const EditableDetailModal: React.FC<EditableDetailModalProps> = ({
         handleChange={setLocalText}
       />
       <ButtonWrapper>
+        <Button // CHACHA: 디자인에는 없으나 필요할 것 같아서 넣음
+          onClick={() => {
+            onClose();
+          }}
+          type="reverse"
+        >
+          닫기
+        </Button>
         <Button
           onClick={() => {
             onChange(localText);
             onConfirm();
           }}
         >
-          닫기
+          저장
         </Button>
       </ButtonWrapper>
     </ModalContentInner>

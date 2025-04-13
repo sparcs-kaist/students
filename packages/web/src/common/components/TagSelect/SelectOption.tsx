@@ -6,6 +6,7 @@ const SelectOption = styled.div.withConfig({
 })<{ selectable?: boolean; selected?: boolean }>`
   display: flex;
   align-items: center;
+  justify-content: center;
   align-self: stretch;
   width: 100%;
   gap: 8px;

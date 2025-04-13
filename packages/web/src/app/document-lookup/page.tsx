@@ -21,27 +21,55 @@ const documentLookUp = () => {
   const [type, setType] = useState<DocumentType | null>(null);
   const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
+  const [selectedId, setSelectedId] = useState<number | null>(null); // 단체마다 고유 id임
 
   const router = useRouter();
 
-  const lookUp = () => {
+  const lookUp = ({
+    id,
+    year: yearParam,
+    isSpring: isSpringParam,
+    type: typeParam,
+    key,
+    value,
+  }: {
+    id: number;
+    year: number;
+    isSpring: boolean;
+    type: DocumentType;
+    key: string;
+    value: string;
+  }) => {
     // TODO: api 연결하면 URL의 id값 적절하게 수정
+    // TODO: 여기서 id는 어떤 반기, 어떤 단체의 고유한 id
+    const query = new URLSearchParams({
+      id: id.toString(),
+      year: yearParam.toString(),
+      isSpring: isSpringParam.toString(),
+      type: typeParam,
+      key,
+      value,
+    });
+    let path = "";
+
     switch (type) {
       case "사업 계획서":
-        router.push("/document-lookup/project-proposal/result/1");
+        path = `/document-lookup/project-proposal/result/${id}`;
         break;
       case "사업 보고서":
-        router.push("/document-lookup/project-report/result/1");
+        path = `/document-lookup/project-report/result/${id}`;
         break;
       case "예산안":
-        router.push("/document-lookup/budget-proposal/result/1");
+        path = `/document-lookup/budget-proposal/result/${id}`;
         break;
       case "결산안":
-        router.push("/document-lookup/budget-report/result/1");
+        path = `/document-lookup/budget-report/result/${id}`;
         break;
-      default: // 있으면 안 되는 오류 케이스
+      default:
         throw new Error(`잘못된 문서 유형: ${type}`);
     }
+
+    router.push(`${path}?${query.toString()}`);
   };
 
   return (
@@ -70,13 +98,32 @@ const documentLookUp = () => {
               setSelectedKey={setSelectedKey}
               selectedValue={selectedValue}
               setSelectedValue={setSelectedValue}
+              setSelectedId={setSelectedId}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
             <Button
               buttonText="조회"
               style={{ marginLeft: "auto" }}
-              onClick={lookUp}
+              onClick={() => {
+                if (
+                  selectedId != null &&
+                  year != null &&
+                  isSpring != null &&
+                  type != null &&
+                  selectedKey != null &&
+                  selectedValue != null
+                ) {
+                  lookUp({
+                    id: selectedId,
+                    year,
+                    isSpring,
+                    type,
+                    key: selectedKey,
+                    value: selectedValue,
+                  });
+                }
+              }}
             />
           </FlexWrapper>
         </FlexWrapper>

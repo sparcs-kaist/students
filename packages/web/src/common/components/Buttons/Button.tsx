@@ -19,6 +19,7 @@ type ButtonProps = {
   children?: React.ReactNode;
   iconType?: string;
   buttonText?: string;
+  onClick?: (() => void) | ((e: React.MouseEvent<HTMLDivElement>) => void);
 } & HTMLAttributes<HTMLDivElement>;
 
 const ButtonInner = styled.div`
@@ -110,6 +111,7 @@ const Button = ({
   children = undefined,
   iconType = "",
   buttonText = "",
+
   ...divProps
 }: ButtonProps) => {
   const ButtonChosenInner = ButtonTypeInner[type];

@@ -67,7 +67,8 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 522,
+    size: 0,
+    minSize: 400,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -79,7 +80,8 @@ const columns = [
         currency: "KRW",
       });
     },
-    size: 522,
+    size: 0,
+    minSize: 400,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",

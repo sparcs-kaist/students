@@ -86,7 +86,8 @@ const columns = [
     id: "item",
     header: "항목",
     cell: info => info.getValue(),
-    size: 400,
+    size: 0,
+    minSize: 400,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
