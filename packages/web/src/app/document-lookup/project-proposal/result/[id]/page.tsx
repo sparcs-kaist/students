@@ -5,14 +5,11 @@ import { useParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
-import ThreeInput, {
-  ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 import {
   mockOperationPlanData,
   mockViewerProjectData,
@@ -25,8 +22,11 @@ import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
-import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
-import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ThreeInput, {
+  ThreeInputItem,
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import ProjectTable from "@sparcs-students/web/features/project/components/ProjectTable";
 
 const ButtonWrapper = styled.div`
@@ -38,7 +38,9 @@ const ButtonWrapper = styled.div`
 const Proposal = () => {
   const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
-  const [date, setDate] = useState(mockViewResultData.submitDate);
+  const [date, setDate] = useState(
+    mockViewProjectProposalResultData.submitDate,
+  );
   const [year, setYear] = useState<number>(items[0].year);
   const [isSpring, setIsSpring] = useState<boolean | null>(null);
   const [type, setType] = useState<DocumentType | null>(null);
@@ -108,7 +110,7 @@ const Proposal = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewProjectProposalResultData}
           submitDate={date}
           handleDateChange={setDate}
         />

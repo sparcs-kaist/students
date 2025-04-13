@@ -4,23 +4,23 @@ import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
 
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import { mockViewBudgetProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
-import ThreeInput, {
-  ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 
 // import ViewerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetProposalFrame";
-import ReviewerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ReviewerBudgetProposalFrame";
+import ReviewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetProposalFrame";
 // import ManagerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetProposalFrame";
 import { useRouter, useSearchParams } from "next/navigation";
+import ThreeInput, {
+  ThreeInputItem,
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 
 const BudgetProposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -32,7 +32,7 @@ const BudgetProposal = () => {
   const queryValue = searchParams.get("value");
   const queryId = parseInt(searchParams.get("id") || "");
 
-  const [date, setDate] = useState(mockViewResultData.submitDate);
+  const [date, setDate] = useState(mockViewBudgetProposalResultData.submitDate);
   const [year, setYear] = useState<number>(queryYear);
   const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
   const [type, setType] = useState<DocumentType | null>(queryType);
@@ -112,7 +112,7 @@ const BudgetProposal = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewBudgetProposalResultData}
           submitDate={date}
           handleDateChange={setDate}
         />

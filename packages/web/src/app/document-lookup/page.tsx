@@ -6,13 +6,13 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
-import ThreeInput, {
-  ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { useRouter } from "next/navigation";
+import ThreeInput, {
+  ThreeInputItem,
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 
 const documentLookUp = () => {
   const items: ThreeInputItem[] = mockData;

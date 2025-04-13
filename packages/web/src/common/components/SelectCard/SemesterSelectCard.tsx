@@ -5,9 +5,7 @@ import styled from "styled-components";
 import Radio from "@sparcs-students/web/common/components/Radio/index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import RadioOption from "@sparcs-students/web/common/components/Radio/RadioOption";
-import Select, {
-  SelectItem,
-} from "@sparcs-students/web/common/components/Select";
+import Select, { SelectItem } from "../Selects/Select";
 
 interface SemesterSelectCardProps {
   year: number;

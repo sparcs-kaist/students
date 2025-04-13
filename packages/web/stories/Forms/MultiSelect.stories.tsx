@@ -5,7 +5,7 @@ import { useArgs } from "@storybook/client-api";
 import { fn } from "@storybook/test";
 import MultiSelect, {
   SelectItem,
-} from "@sparcs-students/web/common/components/MultiSelect";
+} from "@sparcs-students/web/common/components/Selects/MultiSelect";
 
 const meta: Meta<typeof MultiSelect> = {
   title: "components/Forms/Select",
