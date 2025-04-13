@@ -15,7 +15,7 @@ import {
 
 import { dataToTotal } from "@sparcs-students/web/features/budget/util/dataToTotal";
 
-const ViewerBudgetProposal = () => {
+const ViewerBudgetProposalFrame = () => {
   const { id } = useParams();
 
   return (
@@ -32,4 +32,4 @@ const ViewerBudgetProposal = () => {
     </FlexWrapper>
   );
 };
-export default ViewerBudgetProposal;
+export default ViewerBudgetProposalFrame;

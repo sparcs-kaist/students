@@ -30,7 +30,7 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const ManagerBudgetProposalFrame = () => {
+const ManagerBudgetReportFrame = () => {
   const formMethods = useForm<FormValues>({
     defaultValues: {
       incomes: mockManagerIncomeData,
@@ -93,11 +93,11 @@ const ManagerBudgetProposalFrame = () => {
   return (
     <FlexWrapper direction="column" gap={48}>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-        <ManagerIncomeTable formMethods={formMethods} isProposal />
+        <ManagerIncomeTable formMethods={formMethods} isProposal={false} />
         <ManagerExpenditureTable
           formMethods={formMethods}
           projectNameCandidate={mockManagerProjectNameCandidateList}
-          isProposal
+          isProposal={false}
         />
         <TotalTable
           data={dataToTotal(
@@ -124,4 +124,4 @@ const ManagerBudgetProposalFrame = () => {
     </FlexWrapper>
   );
 };
-export default ManagerBudgetProposalFrame;
+export default ManagerBudgetReportFrame;

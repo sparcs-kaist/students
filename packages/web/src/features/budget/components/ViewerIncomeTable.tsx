@@ -31,6 +31,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum
 
 export interface ViewerIncomeProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionIncome: BudgetDivisionIncomeEnum;
   item: string;

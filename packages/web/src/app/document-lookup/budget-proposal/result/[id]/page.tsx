@@ -31,14 +31,6 @@ const BudgetProposal = () => {
   const queryKey = searchParams.get("key");
   const queryValue = searchParams.get("value");
   const queryId = parseInt(searchParams.get("id") || "");
-  console.log(
-    queryYear,
-    queryIsSpring,
-    queryType,
-    queryKey,
-    queryValue,
-    queryId,
-  );
 
   const [date, setDate] = useState(mockViewResultData.submitDate);
   const [year, setYear] = useState<number>(queryYear);

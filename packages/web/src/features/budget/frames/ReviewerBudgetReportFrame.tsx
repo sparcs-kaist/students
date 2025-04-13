@@ -11,15 +11,13 @@ import {
   mockIncomeData,
   mockViewResultData,
 } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
-
-import styled from "styled-components";
+import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
+import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerIncomeTable from "@sparcs-students/web/features/budget/components/ReviewerIncomeTable";
-import ReviewerExpenditureTable from "@sparcs-students/web/features/documents/components/ReviewerExpenditureTable";
-
+import styled from "styled-components";
 import { dataToTotal } from "@sparcs-students/web/features/budget/util/dataToTotal";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 
@@ -30,7 +28,7 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const ReviewerBudgetProposalFrame = () => {
+const ReviewerBudgetReportFrame = () => {
   const { id } = useParams();
   const [resetKey, setResetKey] = useState(0);
 
@@ -203,4 +201,4 @@ const ReviewerBudgetProposalFrame = () => {
     </FlexWrapper>
   );
 };
-export default ReviewerBudgetProposalFrame;
+export default ReviewerBudgetReportFrame;

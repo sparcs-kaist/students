@@ -45,6 +45,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 export interface ExpenditureProps {
   code: number;
+  id: number;
   budgetDomain: BudgetDomainEnum;
   budgetDivisionExpense: BudgetDivisionExpenseEnum;
   name: string;
