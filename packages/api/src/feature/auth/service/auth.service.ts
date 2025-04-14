@@ -9,6 +9,10 @@ import { ApiAut004RequestQuery } from "@sparcs-students/root/packages/interface/
 import { ApiAut002ResponseCreated } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut003";
 import { AuthRepository } from "@sparcs-students/api/feature/auth/repository/auth.repository";
+import {
+  MMember,
+  RemoveOptional,
+} from "@sparcs-students/api/feature/auth/type/member.model";
 import { SSOClient } from "../util/sparcs-sso";
 import { Request } from "../dto/auth.dto";
 
@@ -61,10 +65,11 @@ export class AuthService {
     let email =
       ssoProfile.kaist_info.mail?.replace("mailto:", "") ||
       "unknown@kaist.ac.kr";
+    const uid = ssoProfile.uid || "00000000";
     let sid = ssoProfile.sid || "00000000";
     let name = ssoProfile.kaist_info.ku_kname || "unknown";
     let type = ssoProfile.kaist_info.ku_person_type || "Student";
-    let department = ssoProfile.kaist_info.ku_kaist_org_id || "4421";
+    let department = ssoProfile.kaist_info.ku_kaist_org_id || "0000";
 
     if (process.env.NODE_ENV === "local") {
       studentNumber = process.env.USER_KU_STD_NO;
@@ -75,16 +80,22 @@ export class AuthService {
       department = process.env.USER_KU_KAIST_ORG_ID;
     }
 
-    const user = await this.authRepository.findOrCreateUser(
+    const memberDbResult = await this.authRepository.findOrCreateUser(
       email,
       studentNumber,
+      uid,
       sid,
       name,
       type,
       department,
     );
-    const accessToken = this.getAccessToken(user);
-    const refreshToken = this.getRefreshToken(user);
+    const member = MMember.fromDBResult(memberDbResult);
+    const accessToken = this.getAccessToken(member);
+    delete member.department;
+    delete member.studentNumber;
+    delete member.organization;
+    delete member.duration;
+    const refreshToken = this.getRefreshToken(member);
     const current = new Date(); // todo 시간 변경 필요.
     const accessTokenTokenExpiresAt = new Date(
       current.getTime() + parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN),
@@ -102,7 +113,7 @@ export class AuthService {
     };
 
     return (await this.authRepository.createRefreshTokenRecord(
-      user.id,
+      memberDbResult.user.id,
       refreshToken,
       refreshTokenExpiresAt,
     ))
@@ -115,14 +126,21 @@ export class AuthService {
         })();
   }
 
+  /**
+   * @description Refresh Token을 통해 Access Token을 재발급합니다.
+   * 새로운 새로운 organization으로 진입하는 경우 새로운 access token을 발급해야합니다.
+   * @param _user
+   */
   async postAuthRefresh(_user: {
     id: number;
-    sid: string;
-    name: string;
-    email: string;
+    organizationId?: number;
   }): Promise<ApiAut002ResponseCreated> {
-    const user = await this.authRepository.findUserById(_user.id);
-    const accessToken = this.getAccessToken(user);
+    const memberDbResult = await this.authRepository.findMemberById(
+      _user.id,
+      _user.organizationId,
+    );
+    const member = MMember.fromDBResult(memberDbResult);
+    const accessToken = this.getAccessToken(member);
 
     return {
       accessToken,
@@ -149,168 +167,25 @@ export class AuthService {
         })();
   }
 
-  getAccessToken(user: {
-    id: number;
-    sid: string;
-    name: string;
-    email: string;
-    undergraduate?: {
-      id: number;
-      number: number;
-    };
-    master?: {
-      id: number;
-      number: number;
-    };
-    doctor?: {
-      id: number;
-      number: number;
-    };
-    executive?: {
-      id: number;
-      studentId: number;
-    };
-    professor?: {
-      id: number;
-    };
-    employee?: {
-      id: number;
-    };
-  }) {
-    const accessToken: {
-      undergraduate?: string;
-      master?: string;
-      doctor?: string;
-      executive?: string;
-      professor?: string;
-      employee?: string;
-    } = {};
-
-    if (user.undergraduate) {
-      accessToken.undergraduate = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "undergraduate",
-          studentId: user.undergraduate.id,
-          studentNumber: user.undergraduate.number,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
-    if (user.master) {
-      accessToken.master = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "master",
-          studentId: user.master.id,
-          studentNumber: user.master.number,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
-    if (user.doctor) {
-      accessToken.doctor = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "doctor",
-          studentId: user.doctor.id,
-          studentNumber: user.doctor.number,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
-    if (user.executive) {
-      accessToken.executive = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "executive",
-          executiveId: user.executive.id,
-          studentId: user.executive.studentId,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
-    if (user.professor) {
-      accessToken.professor = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "professor",
-          professorId: user.professor.id,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
-    if (user.employee) {
-      accessToken.employee = this.jwtService.sign(
-        {
-          id: user.id,
-          sid: user.sid,
-          name: user.name,
-          email: user.email,
-          type: "employee",
-          employeeId: user.employee.id,
-        },
-        {
-          secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-        },
-      );
-    }
-
+  getAccessToken(user: MMember) {
+    const accessToken = this.jwtService.sign(user, {
+      secret: process.env.ACCESS_TOKEN_SECRET_KEY,
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+    });
     return accessToken;
   }
 
-  getRefreshToken(user: {
-    id: number;
-    sid: string;
-    name: string;
-    email: string;
-  }) {
+  getRefreshToken(user: RemoveOptional<MMember>) {
     const refreshToken = this.jwtService.sign(
       {
-        email: user.email,
         id: user.id,
         sid: user.sid,
         name: user.name,
+        email: user.email,
       },
       {
-        secret: process.env.REFRESH_TOKEN_SECRET_KEY,
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+        secret: process.env.ACCESS_TOKEN_SECRET_KEY,
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
       },
     );
     return refreshToken;

@@ -1,21 +1,15 @@
 import { Request as _Request } from "express";
-
-interface User {
-  id: number;
-  sid: string;
-  name: string;
-  email: string;
-  studentId?: number;
-  studentNumber?: number;
-  executiveId?: number;
-}
+import {
+  MMember,
+  RemoveOptional,
+} from "@sparcs-students/api/feature/auth/type/member.model";
 
 export interface UserRefreshTokenPayload {
-  user: Pick<User, "id" | "sid" | "name" | "email">;
+  user: RemoveOptional<MMember> & { organizationId?: number };
 }
 
 export interface UserAccessTokenPayload {
-  user: User;
+  user: RemoveOptional<MMember> & { organizationId?: number };
 }
 
 export type Request = _Request & RequestExtra;

@@ -26,7 +26,6 @@ import apiAut002, {
 import apiAut003, {
   ApiAut003ResponseOk,
 } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut003";
-import { GetStudent } from "@sparcs-students/api/common/decorators/get-user.decorator";
 import { AuthService } from "../service/auth.service";
 import { Request, UserRefreshTokenPayload } from "../dto/auth.dto";
 
@@ -107,16 +106,16 @@ export class AuthController {
   }
 
   // test용 API, 실제 사용하지 않음
-  @Get("/auth/test")
-  test(@GetStudent() user: GetStudent) {
-    function printObjectPropertyTypes<T>(obj: T): void {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const key in obj) {
-        logger.debug(`Property ${key} is of type ${typeof obj[key]}`);
-      }
-    }
-
-    printObjectPropertyTypes(user);
-    logger.debug(user.studentId + user.studentNumber);
-  }
+  // @Get("/auth/test")
+  // test(@GetStudent() user: GetStudent) {
+  //   function printObjectPropertyTypes<T>(obj: T): void {
+  //     // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  //     for (const key in obj) {
+  //       logger.debug(`Property ${key} is of type ${typeof obj[key]}`);
+  //     }
+  //   }
+  //
+  //   printObjectPropertyTypes(user);
+  //   logger.debug(user.studentId + user.studentNumber);
+  // }
 }

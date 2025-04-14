@@ -17,14 +17,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    accessToken: z.object({
-      undergraduate: z.coerce.string().optional(),
-      master: z.coerce.string().optional(),
-      doctor: z.coerce.string().optional(),
-      executive: z.coerce.string().optional(),
-      professor: z.coerce.string().optional(),
-      employee: z.coerce.string().optional(),
-    }),
+    accessToken: z.coerce.string().optional(),
   }),
 };
 

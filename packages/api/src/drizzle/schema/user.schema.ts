@@ -10,6 +10,7 @@ import {
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey().notNull(),
   email: varchar("email", { length: 255 }).notNull(),
+  uid: varchar("sid", { length: 30 }).unique(),
   sid: varchar("sid", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

@@ -1,40 +1,77 @@
 import { InferSelectModel } from "drizzle-orm";
-import { User } from "@sparcs-students/api/drizzle/schema";
-import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
+import {
+  Department,
+  Organization,
+  OrganizationMember,
+  Student,
+  User,
+} from "@sparcs-students/api/drizzle/schema";
+// import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 // import { MOrganization } from "@sparcs-students/api/feature/organization/type/organization.model";
 import { IMember } from "@sparcs-students/interface/api/user/type/user.type";
 
-export type UserDBResult = InferSelectModel<typeof User>;
+export type RemoveOptional<T> = {
+  [K in keyof T as Partial<Record<never, never>> extends Pick<T, K>
+    ? never
+    : K]: T[K];
+};
+
+export type MemberDbResult = {
+  user: InferSelectModel<typeof User>;
+  organization?: InferSelectModel<typeof Organization>;
+  student?: InferSelectModel<typeof Student>;
+  department?: InferSelectModel<typeof Department>;
+  organizationMember?: InferSelectModel<typeof OrganizationMember>;
+};
 
 export class MMember implements IMember {
   id: IMember["id"];
 
-  organization: IMember["organization"];
+  organization?: IMember["organization"];
 
   user: IMember["user"];
 
-  studentNumber: IMember["studentNumber"];
+  studentNumber?: IMember["studentNumber"];
 
   name: IMember["name"];
 
-  duration: IMember["duration"];
+  email: IMember["email"];
 
-  department: IMember["department"];
+  sid: IMember["sid"];
 
-  constructor(data: IOrganization) {
+  uid: IMember["uid"];
+
+  duration?: IMember["duration"];
+
+  department?: IMember["department"];
+
+  constructor(data: IMember) {
     Object.assign(this, data);
   }
 
-  // static fromDBResult(result: UserDBResult) {
-  //   return new MOrganization({
-  //     // ...result,
-  //     // duration: {
-  //     //   startTerm: result.startTerm,
-  //     //   endTerm: result.endTerm,
-  //     // },
-  //     // organizationTypeEnum: result.organizationTypeEnum as OrganizationTypeEnum,
-  //     // organizationStateEnum:
-  //     //   result.organizationStateEnum as OrganizationStateEnum,
-  //   });
-  // }
+  static fromDBResult(dbResult: MemberDbResult) {
+    return new MMember({
+      id: dbResult.user.id,
+      organization: dbResult.organization
+        ? { id: dbResult.organization.id }
+        : undefined,
+      user: {
+        id: dbResult.user.id,
+      },
+      email: dbResult.user.email,
+      sid: dbResult.user.sid,
+      uid: dbResult.user.uid,
+      studentNumber: dbResult.student?.studentNumber,
+      name: dbResult.user.name,
+      duration: dbResult.organizationMember
+        ? {
+            startTerm: dbResult.organizationMember.startTerm,
+            endTerm: dbResult.organizationMember.endTerm,
+          }
+        : undefined,
+      department: dbResult.department
+        ? { id: dbResult.department.id }
+        : undefined,
+    });
+  }
 }

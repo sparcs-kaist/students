@@ -2,20 +2,17 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { Student, User } from "@sparcs-students/api/drizzle/schema";
+import {
+  Department,
+  Organization,
+  OrganizationMember,
+  Student,
+  User,
+} from "@sparcs-students/api/drizzle/schema";
 import { takeOne } from "@sparcs-students/api/common/util/util";
-
-interface FindOrCreateUserReturn {
-  id: number;
-  sid: string;
-  name: string;
-  email: string;
-  student?: {
-    id: number;
-    studentNumber: number;
-    departmentId: number;
-  };
-}
+import { getKSTDate } from "@sparcs-students/root/packages/interface/src/common/util";
+import { AuthActivatedRefreshTokens } from "@sparcs-students/api/drizzle/schema/refresh-token.schema";
+import { MemberDbResult } from "@sparcs-students/api/feature/auth/type/member.model";
 
 @Injectable()
 export class AuthRepository {
@@ -24,15 +21,16 @@ export class AuthRepository {
   async findOrCreateUser(
     email: string,
     studentNumber: string,
+    uid: string,
     sid: string,
     name: string,
     type: string,
     department: string,
-  ): Promise<FindOrCreateUserReturn> {
+  ): Promise<MemberDbResult> {
     // User table에 해당 email이 있는지 확인 후 upsert
     await this.db
       .insert(User)
-      .values({ sid, name, email })
+      .values({ uid, sid, name, email })
       .onDuplicateKeyUpdate({
         set: { name, email },
       });
@@ -43,11 +41,8 @@ export class AuthRepository {
       .where(eq(User.email, email))
       .then(takeOne);
 
-    let result: FindOrCreateUserReturn = {
-      id: user.id,
-      sid: user.sid,
-      name: user.name,
-      email: user.email,
+    let result: MemberDbResult = {
+      user,
     };
 
     // type이 "Student"인 경우 student table에서 해당 studentNumber이 있는지 확인 후 upsert
@@ -62,19 +57,7 @@ export class AuthRepository {
           departmentId: parseInt(department),
         })
         .onDuplicateKeyUpdate({ set: { userId: user.id } });
-      const student = await this.db
-        .select()
-        .from(Student)
-        .where(eq(Student.studentNumber, parseInt(studentNumber)))
-        .then(takeOne);
-      result = {
-        ...result,
-        student: {
-          id: student.id,
-          studentNumber: student.studentNumber,
-          departmentId: student.departmentId,
-        },
-      };
+      result = await this.findMemberById(user.id);
 
       // studentNumber의 뒤 네자리가 2000 미만일 경우 studentEnum을 1, 5000미만일 경우 2, 6000미만일 경우 1, 나머지는 3으로 설정
       // let studentEnum = 3;
@@ -141,109 +124,86 @@ export class AuthRepository {
     return result;
   }
 
-  async findUserById(id: number): Promise<FindOrCreateUserReturn> {
+  async findMemberById(
+    userId: number,
+    organizationId?: number,
+  ): Promise<MemberDbResult> {
+    const user = await this.db
+      .select()
+      .from(User)
+      .where(eq(User.id, userId))
+      .then(takeOne);
+
+    const student = await this.db
+      .select()
+      .from(Student)
+      .where(eq(Student.userId, userId))
+      .then(takeOne);
+
+    const [organizationMember, department] = await Promise.all([
+      student?.id
+        ? this.db
+            .select()
+            .from(OrganizationMember)
+            .where(
+              and(
+                eq(OrganizationMember.studentId, student.id),
+                eq(OrganizationMember.organizationId, organizationId),
+              ),
+            )
+            .then(takeOne)
+        : Promise.resolve(undefined),
+
+      student?.departmentId
+        ? this.db
+            .select()
+            .from(Department)
+            .where(eq(Department.id, student.departmentId))
+            .then(takeOne)
+        : Promise.resolve(undefined),
+    ]);
+
+    const organization = organizationMember
+      ? await this.db
+          .select()
+          .from(Organization)
+          .where(eq(Organization.id, organizationId))
+          .then(takeOne)
+      : undefined;
+
+    return {
+      user,
+      student,
+      department,
+      organizationMember,
+      organization,
+    };
+  }
+
+  async findUserById(id: number): Promise<MemberDbResult> {
     const user = await this.db
       .select()
       .from(User)
       .where(eq(User.id, id))
       .then(takeOne);
 
-    const result: {
-      id: number;
-      sid: string;
-      name: string;
-      email: string;
-      undergraduate?: {
-        id: number;
-        number: number;
-      };
-      master?: {
-        id: number;
-        number: number;
-      };
-      doctor?: {
-        id: number;
-        number: number;
-      };
-      executive?: {
-        id: number;
-        studentId: number;
-      };
-      professor?: {
-        id: number;
-        email: string;
-      };
-      employee?: {
-        id: number;
-        email: string;
-      };
-    } = {
-      id: user.id,
-      sid: user.sid,
-      name: user.name,
-      email: user.email,
-    };
-
-    const students = this.db
+    const student = await this.db
       .select()
       .from(Student)
-      .where(eq(Student.userId, id));
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const student of await students) {
-      let studentEnum = 3;
-      if (student.number % 10000 < 2000) studentEnum = 1;
-      else if (student.number % 10000 < 6000) studentEnum = 2;
-      else if (student.number % 10000 < 7000) studentEnum = 1;
-
-      if (studentEnum === 1) {
-        result.undergraduate = { id: student.id, number: student.number };
-      } else if (studentEnum === 2) {
-        result.master = { id: student.id, number: student.number };
-      } else if (studentEnum === 3) {
-        result.doctor = { id: student.id, number: student.number };
-      }
-    }
-
-    const executive = await this.db
-      .select()
-      .from(Executive)
-      .where(eq(Executive.userId, id))
+      .where(eq(Student.userId, id))
       .then(takeOne);
 
-    if (executive) {
-      result.executive = {
-        id: executive.id,
-        studentId: executive.studentId,
-      };
-    }
-
-    const professor = await this.db
-      .select()
-      .from(Professor)
-      .where(eq(Professor.userId, id))
-      .then(takeOne);
-
-    if (professor) {
-      result.professor = {
-        id: professor.id,
-        email: professor.email,
-      };
-    }
-
-    const employee = await this.db
-      .select()
-      .from(Employee)
-      .where(eq(Employee.userId, id))
-      .then(takeOne);
-
-    if (employee) {
-      result.employee = {
-        id: employee.id,
-        email: employee.email,
-      };
-    }
-
+    const result: MemberDbResult = {
+      user,
+      student,
+      department: student
+        ? await this.db
+            .select()
+            .from(Department)
+            .where(eq(Department.id, student.departmentId))
+            .then(takeOne)
+        : undefined,
+    };
     return result;
   }
 
