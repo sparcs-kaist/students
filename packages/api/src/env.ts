@@ -11,5 +11,6 @@ const schema = z.object({
 });
 
 const env = schema.parse(process.env);
+// console.log(`NODE_ENV environment: ${process.env.NODE_ENV}`);
 
 export { env };
