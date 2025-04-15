@@ -10,7 +10,7 @@ import {
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey().notNull(),
   email: varchar("email", { length: 255 }).notNull(),
-  uid: varchar("sid", { length: 30 }).unique(),
+  uid: varchar("uid", { length: 30 }).unique(),
   sid: varchar("sid", { length: 30 }).unique(),
   name: varchar("name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -29,7 +29,7 @@ export const Student = mysqlTable(
   "student",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    studentNumber: int("number").unique(),
+    studentNumber: int("student_number").unique(),
     userId: int("user_id").notNull(),
     departmentId: int("department_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),

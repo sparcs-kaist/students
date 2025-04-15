@@ -9,7 +9,7 @@ import { z } from "zod";
 const url = () => `/auth/sign-in`;
 const method = "GET";
 
-const requestParam = z.object({});
+const requestParam = z.any();
 
 const requestQuery = z.object({
   next: z.string().optional(),

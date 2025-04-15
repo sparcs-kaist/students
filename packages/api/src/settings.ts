@@ -46,6 +46,9 @@ const getJwtConfig = () => ({
     expiresIn: process.env.EXPIRES_IN,
     refreshExpiresIn: process.env.REFRESH_EXPIRES_IN,
   },
+  bcrypt: {
+    saltRounds: process.env.SALT_ROUNDS,
+  },
 });
 
 const getSsoConfig = () => ({

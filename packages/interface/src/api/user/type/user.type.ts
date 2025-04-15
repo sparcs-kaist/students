@@ -1,7 +1,8 @@
+import { z } from "zod";
+
 import { zUserName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import { zDuration } from "@sparcs-students/interface/common/type/time.type";
-import { z } from "zod";
 import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 
 export const zDepartment = z.object({

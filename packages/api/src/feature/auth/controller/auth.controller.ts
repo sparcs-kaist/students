@@ -9,9 +9,6 @@ import {
   UsePipes,
 } from "@nestjs/common";
 import { Response } from "express";
-
-import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
-import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import apiAut001, {
   ApiAut001RequestQuery,
   ApiAut001ResponseOk,
@@ -19,22 +16,30 @@ import apiAut001, {
 import apiAut004, {
   ApiAut004RequestQuery,
 } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut004";
-import logger from "@sparcs-students/api/common/util/logger";
 import apiAut002, {
   ApiAut002ResponseCreated,
 } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut002";
 import apiAut003, {
   ApiAut003ResponseOk,
 } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut003";
+
+import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
+import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
+import logger from "@sparcs-students/api/common/util/logger";
+import {
+  GetStudent,
+  StudentProfile,
+} from "@sparcs-students/api/common/decorators/get-user.decorator";
+
 import { AuthService } from "../service/auth.service";
 import { Request, UserRefreshTokenPayload } from "../dto/auth.dto";
 
-@Controller()
+@Controller("/auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Get("/auth/sign-in")
+  @Get("/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
   async getAuthSignIn(
     @Req() req: Request,
@@ -45,7 +50,7 @@ export class AuthController {
   }
 
   @Public()
-  @Get("/auth/sign-in/callback")
+  @Get("/sign-in/callback")
   @UsePipes(new ZodPipe(apiAut004))
   async postAuthSigninCallback(
     @Res() res: Response,
@@ -60,23 +65,19 @@ export class AuthController {
     res.cookie("refreshToken", token.refreshToken, {
       expires: token.refreshTokenExpiresAt,
       httpOnly: true,
-      path: "/auth/refresh",
-    });
-    res.cookie("refreshToken", token.refreshToken, {
-      expires: token.refreshTokenExpiresAt,
-      httpOnly: true,
-      path: "/auth/sign-out",
+      path: "/",
     });
     res.cookie("accessToken", token.accessToken, {
-      expires: token.accessTokenTokenExpiresAt,
+      expires: token.accessTokenExpiresAt,
       httpOnly: false,
+      path: "/",
     });
     logger.debug(`Redirecting to ${next}`);
     return res.redirect(next);
   }
 
   @Public()
-  @Post("/auth/refresh")
+  @Post("/refresh")
   @UsePipes(new ZodPipe(apiAut002))
   async postAuthRefresh(
     @Req() req: Request & UserRefreshTokenPayload,
@@ -85,7 +86,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post("/auth/sign-out")
+  @Post("/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
     @Res({ passthrough: true }) res: Response,
@@ -106,16 +107,17 @@ export class AuthController {
   }
 
   // test용 API, 실제 사용하지 않음
-  // @Get("/auth/test")
-  // test(@GetStudent() user: GetStudent) {
-  //   function printObjectPropertyTypes<T>(obj: T): void {
-  //     // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  //     for (const key in obj) {
-  //       logger.debug(`Property ${key} is of type ${typeof obj[key]}`);
-  //     }
-  //   }
-  //
-  //   printObjectPropertyTypes(user);
-  //   logger.debug(user.studentId + user.studentNumber);
-  // }
+  @Get("/test")
+  test(@GetStudent() user: StudentProfile) {
+    function printObjectPropertyTypes<T>(obj: T): void {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const key in obj) {
+        logger.debug(`Property ${key} is of type ${typeof obj[key]}`);
+      }
+    }
+
+    printObjectPropertyTypes(user);
+    logger.debug(user.studentId + user.studentNumber);
+    return user;
+  }
 }

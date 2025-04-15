@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { getKSTDate } from "@sparcs-students/root/packages/interface/src/common/util";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Department,
@@ -10,7 +12,6 @@ import {
   User,
 } from "@sparcs-students/api/drizzle/schema";
 import { takeOne } from "@sparcs-students/api/common/util/util";
-import { getKSTDate } from "@sparcs-students/root/packages/interface/src/common/util";
 import { AuthActivatedRefreshTokens } from "@sparcs-students/api/drizzle/schema/refresh-token.schema";
 import { MemberDbResult } from "@sparcs-students/api/feature/auth/type/member.model";
 
@@ -180,6 +181,33 @@ export class AuthRepository {
     };
   }
 
+  async findUserByUid(uid: string): Promise<MemberDbResult> {
+    const user = await this.db
+      .select()
+      .from(User)
+      .where(eq(User.uid, uid))
+      .then(takeOne);
+
+    const student = await this.db
+      .select()
+      .from(Student)
+      .where(eq(Student.userId, user.id))
+      .then(takeOne);
+
+    const result: MemberDbResult = {
+      user,
+      student,
+      department: student
+        ? await this.db
+            .select()
+            .from(Department)
+            .where(eq(Department.id, student.departmentId))
+            .then(takeOne)
+        : undefined,
+    };
+    return result;
+  }
+
   async findUserById(id: number): Promise<MemberDbResult> {
     const user = await this.db
       .select()
@@ -207,24 +235,19 @@ export class AuthRepository {
     return result;
   }
 
-  async findUserAndRefreshToken(
-    userId: number,
-    refreshToken: string,
-  ): Promise<boolean> {
+  async findUserAndRefreshToken(userId: number, refreshToken: string) {
     const cur = getKSTDate();
-    const result = await this.db
+    return this.db
       .select()
-      .from(User)
-      .innerJoin(
-        AuthActivatedRefreshTokens,
+      .from(AuthActivatedRefreshTokens)
+      .where(
         and(
-          eq(User.id, AuthActivatedRefreshTokens.userId),
+          eq(AuthActivatedRefreshTokens.userId, userId),
           eq(AuthActivatedRefreshTokens.refreshToken, refreshToken),
           gte(AuthActivatedRefreshTokens.expiresAt, cur),
         ),
       )
-      .where(eq(User.id, userId));
-    return result.length > 0;
+      .then(takeOne);
   }
 
   async createRefreshTokenRecord(

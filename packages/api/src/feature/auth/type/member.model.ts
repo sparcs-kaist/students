@@ -1,4 +1,6 @@
 import { InferSelectModel } from "drizzle-orm";
+import { IMember } from "@sparcs-students/interface/api/user/type/user.type";
+
 import {
   Department,
   Organization,
@@ -8,7 +10,6 @@ import {
 } from "@sparcs-students/api/drizzle/schema";
 // import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 // import { MOrganization } from "@sparcs-students/api/feature/organization/type/organization.model";
-import { IMember } from "@sparcs-students/interface/api/user/type/user.type";
 
 export type RemoveOptional<T> = {
   [K in keyof T as Partial<Record<never, never>> extends Pick<T, K>
