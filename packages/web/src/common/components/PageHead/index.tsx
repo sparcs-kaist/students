@@ -3,12 +3,12 @@ import React from "react";
 import styled from "styled-components";
 
 import PageTitle from "./_atomic/PageTitle";
+import BreadCrumb from "../BreadCrumb";
 
-// 주석 처리된 부분은 BreadCrumb 컴포넌트를 쓰게 된다면 다시 추가
 interface PageHeadProps {
-  // items: { name: string; path: string }[];
+  items: { name: string; path: string }[];
   title: string;
-  // enableLast?: boolean;
+  enableLast?: boolean;
   action?: React.ReactNode;
 }
 
@@ -36,17 +36,17 @@ const TitleWrapper = styled.div`
 `;
 
 const PageHead: React.FC<PageHeadProps> = ({
-  // items,
+  items,
   title,
-  // enableLast = false,
+  enableLast = false,
   action = null,
 }) => (
   <PageHeadWrapper>
-    {/* <BreadCrumb items={items} enableLast={enableLast} /> */}
     <TitleWrapper>
       <PageTitle>{title}</PageTitle>
       {action && <div>{action}</div>}
     </TitleWrapper>
+    <BreadCrumb items={items} enableLast={enableLast} />
   </PageHeadWrapper>
 );
 
