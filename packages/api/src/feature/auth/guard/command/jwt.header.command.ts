@@ -82,7 +82,7 @@ export class JwtHeaderCommand implements AuthCommand {
 
   private async handleRefreshToken(
     refreshToken: string,
-    request: Request,
+    request,
     response: Response,
     result: AuthResult,
   ): Promise<AuthResult> {

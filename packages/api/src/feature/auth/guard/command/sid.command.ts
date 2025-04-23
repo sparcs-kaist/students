@@ -19,9 +19,9 @@ export class SidCommand implements AuthCommand {
   ): Promise<AuthResult> {
     const request = context.switchToHttp().getRequest();
     context.switchToHttp().getResponse<Response>();
-    const { sid } = request.cookies;
-    if (sid) {
-      const memberDbResult = await this.authService.findUserByUid(sid);
+    const { uid } = request.cookies;
+    if (uid) {
+      const memberDbResult = await this.authService.findUserByUid(uid);
       const member = MMember.fromDBResult(memberDbResult);
       if (!member) {
         return Promise.resolve(prevResult);

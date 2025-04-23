@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { getKSTDate } from "@sparcs-students/root/packages/interface/src/common/util";
@@ -187,7 +187,10 @@ export class AuthRepository {
       .from(User)
       .where(eq(User.uid, uid))
       .then(takeOne);
-
+    if (!user) {
+      // @todo: custom exception으로 변경
+      throw new NotFoundException(`User with uid ${uid} not found`);
+    }
     const student = await this.db
       .select()
       .from(Student)

@@ -85,7 +85,6 @@ export class AuthController {
     return this.authService.postAuthRefresh(req.user);
   }
 
-  @Public()
   @Post("/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
@@ -93,15 +92,20 @@ export class AuthController {
     @Req() req: Request & UserRefreshTokenPayload,
   ): Promise<ApiAut003ResponseOk> {
     const { refreshToken } = req?.cookies || {};
-    res.cookie("refreshToken", null, {
+    // res.cookie("refreshToken", null, {
+    //   maxAge: -1,
+    //   httpOnly: true,
+    //   path: "/auth/refresh",
+    // });
+    res.cookie("accessToken", null, {
       maxAge: -1,
       httpOnly: true,
-      path: "/auth/refresh",
+      path: "/",
     });
     res.cookie("refreshToken", null, {
       maxAge: -1,
       httpOnly: true,
-      path: "/auth/sign-out",
+      path: "/",
     });
     return this.authService.postAuthSignout(req.user, refreshToken);
   }
