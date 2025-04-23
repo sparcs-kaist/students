@@ -11,11 +11,12 @@ export interface RadioOptionProps<T extends string> {
   children: React.ReactNode;
   onClick?: (value: T) => void;
   width?: string;
+  disabled?: boolean;
 }
 
 const RadioOptionInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ width?: string }>`
+})<{ width?: string; disabled?: boolean }>`
   display: flex;
   padding-left: 2px;
   align-items: center;
@@ -27,7 +28,7 @@ const RadioOptionInner = styled.div.withConfig({
   line-height: 20px;
   font-style: normal;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 
   & > * {
     pointer-events: none;
@@ -40,9 +41,14 @@ const RadioOption = <T extends string>({
   children,
   onClick = () => {},
   width = "",
+  disabled = false,
 }: RadioOptionProps<T>) => (
-  <RadioOptionInner onClick={() => onClick(value)} width={width}>
-    <RadioButton checked={checked} />
+  <RadioOptionInner
+    onClick={() => (disabled ? null : onClick(value))}
+    width={width}
+    disabled={disabled}
+  >
+    <RadioButton checked={checked} disabled={disabled} />
     {children}
   </RadioOptionInner>
 );

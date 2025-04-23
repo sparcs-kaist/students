@@ -1,11 +1,13 @@
-import { ViewerProjectProps } from "@sparcs-students/web/features/project/components/ViewerProjectTable";
+import {
+  ViewerProjectProps,
+  ReviewerProjectProps,
+} from "@sparcs-students/web/features/project/components/ProjectTable";
 import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
 import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
-import { ProjectProposalProps } from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 
-export const mockProjectProposalData: ProjectProposalProps[] = [
+export const mockProjectProposalData: ReviewerProjectProps[] = [
   {
     id: "1",
     name: "집행위원회 운영",
