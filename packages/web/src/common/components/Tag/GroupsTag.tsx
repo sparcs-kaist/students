@@ -15,6 +15,7 @@ const TagInner = styled.div<{
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   isDropdown: boolean;
   isInGroup?: boolean;
+  isNotAssigned: boolean;
 }>`
   position: relative;
   width: ${({ width }) => width};
@@ -70,6 +71,7 @@ interface GroupsTagProps extends React.PropsWithChildren {
   rowId?: string;
   editData?: MemberProps[];
   isDropdown: boolean;
+  isNotAssigned?: boolean;
 }
 
 const GroupsTag: React.FC<GroupsTagProps> = ({
@@ -80,12 +82,15 @@ const GroupsTag: React.FC<GroupsTagProps> = ({
   rowId = "",
   editData = [],
   isDropdown = false,
+  isNotAssigned = false,
 }) => {
-  const isInGroup = editData.some(
-    member =>
-      member.id === rowId &&
-      member.groups.includes(children ? children.toString() : ""),
-  );
+  const selectedEditdData = editData.filter(member => member.id === rowId);
+  const isInGroup =
+    selectedEditdData[0]?.groups.length === 0
+      ? isNotAssigned
+      : selectedEditdData.some(member =>
+          member.groups.includes(children ? children.toString() : ""),
+        );
 
   return (
     <TagInner
@@ -94,6 +99,7 @@ const GroupsTag: React.FC<GroupsTagProps> = ({
       onClick={onClick}
       isDropdown={isDropdown}
       isInGroup={isInGroup}
+      isNotAssigned={isNotAssigned}
     >
       {children}
     </TagInner>

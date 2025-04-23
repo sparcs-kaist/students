@@ -191,7 +191,10 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
             onClick={() => {
               groupClick("미소속");
             }}
+            rowId={row.original.id}
+            editData={editData}
             isDropdown
+            isNotAssigned
           >
             미소속
           </GroupsTag>
