@@ -72,13 +72,9 @@ export const mockMemberListData: MemberProps[] = [
     id: "20220XX3",
     name: "김스튜",
     groups: [
-      "부서 1",
-      "부서 2",
+      "어쩌구 부서 1",
+      "어쩌구 부서 2",
       "이름이 굉장히 긴 어떤 부서 예시",
-      "부서 3",
-      "부서 4",
-      "부서 5",
-      "부서 6",
     ],
   },
   {
