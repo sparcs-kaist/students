@@ -108,7 +108,7 @@ const Dropdown = styled.div`
   border-radius: 4px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.colors.WHITE};
+  background-color: ${({ theme }) => theme.colors.GRAY[50]};
   z-index: 5;
   display: flex;
   flex-direction: row;
