@@ -3,11 +3,18 @@ import styled from "styled-components";
 
 export type LightTagColor = "GREEN100" | "GRAY";
 
+export interface MemberProps {
+  id: string;
+  name: string;
+  groups: string[];
+}
+
 const TagInner = styled.div<{
   color: LightTagColor;
   width: string;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   isDropdown?: boolean;
+  isInGroup?: boolean;
 }>`
   position: relative;
   width: ${({ width }) => width};
@@ -52,18 +59,17 @@ const TagInner = styled.div<{
   }};
   border-radius: ${({ theme }) => theme.round.sm};
   text-align: center;
-  // TODO-JM: isDropdown일 떄만 작동하도록 수정. 호버일 때만 패딩 값 늘리고 다시 감싸서 배경 색 주자...ㅋㅋ 디테일 따져야될까? 그냥 4px로 통일하고, 나중에 수정하는 편이 나을듯...ㅋㅋㅋ
-  &:hover {
-    ${({ isDropdown, theme }) =>
-      isDropdown && `box-shadow: 0px 0 0 4px ${theme.colors.GRAY[200]}`};
-  }
+  ${({ isInGroup, theme }) =>
+    isInGroup && `box-shadow: 0px 0 0 4px ${theme.colors.GRAY[200]}`};
 `;
 
 interface GroupsTagProps extends React.PropsWithChildren {
   color?: LightTagColor;
   width?: string;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
-  isDropdown?: boolean; // TODO-JM: 필수로 바꿔야 됨.
+  rowId?: string;
+  editData?: MemberProps[];
+  isDropdown: boolean;
 }
 
 const GroupsTag: React.FC<GroupsTagProps> = ({
@@ -71,16 +77,27 @@ const GroupsTag: React.FC<GroupsTagProps> = ({
   color = "GREEN100",
   width = "fit-content",
   onClick = undefined,
+  rowId = "",
+  editData = [],
   isDropdown = false,
-}) => (
-  <TagInner
-    color={color}
-    width={width}
-    onClick={onClick}
-    isDropdown={isDropdown}
-  >
-    {children}
-  </TagInner>
-);
+}) => {
+  const isInGroup = editData.some(
+    member =>
+      member.id === rowId &&
+      member.groups.includes(children ? children.toString() : ""),
+  );
+
+  return (
+    <TagInner
+      color={color}
+      width={width}
+      onClick={onClick}
+      isDropdown={isDropdown}
+      isInGroup={isInGroup}
+    >
+      {children}
+    </TagInner>
+  );
+};
 
 export default GroupsTag;

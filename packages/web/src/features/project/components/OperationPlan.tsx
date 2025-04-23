@@ -7,10 +7,9 @@ import GroupList from "@sparcs-students/web/features/project/components/GroupLis
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
-// import MemberTable, { MemberProps } from "@sparcs-students/web/features/project/components/ManageProjectReportTable";
-import ManageProjectReportTable, {
-  MemberProps,
-} from "@sparcs-students/web/features/project/components/ManageProjectReportTable";
+// import MemberTable, { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
+import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
+import ManageProjectReportTable from "@sparcs-students/web/features/project/components/ManageProjectReportTable";
 
 export interface OperationPlanProps {
   memberData: MemberProps[];

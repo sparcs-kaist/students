@@ -8,13 +8,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import MemberEditableTable from "@sparcs-students/web/features/project/components/MemberEditableTable";
-import GroupsTag from "@sparcs-students/web/common/components/Tag/GroupsTag";
-
-export interface MemberProps {
-  id: string;
-  name: string;
-  groups: string[];
-}
+import GroupsTag, {
+  MemberProps,
+} from "@sparcs-students/web/common/components/Tag/GroupsTag";
 
 interface ManagerProjectReportTableProps {
   data: MemberProps[];
@@ -94,6 +90,7 @@ const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
         <MemberEditableTable
           table={table}
           emptyMessage="운영위원 정보가 없습니다."
+          editData={editData}
           setEditData={setEditData}
         />
       )}

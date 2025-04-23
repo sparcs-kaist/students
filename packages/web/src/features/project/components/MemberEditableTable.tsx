@@ -9,8 +9,9 @@ import {
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Icon from "@sparcs-students/web/common/components/Icon";
-
-import GroupsTag from "@sparcs-students/web/common/components/Tag/GroupsTag";
+import GroupsTag, {
+  MemberProps,
+} from "@sparcs-students/web/common/components/Tag/GroupsTag";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import Typography from "@sparcs-students/web/common/components/Typography";
 
@@ -23,6 +24,7 @@ interface TableProps<T> {
   rowLink?: (row: T) => string | { pathname: string };
   onClick?: (row: T) => void;
   rowStyleResolver?: (row: T) => React.CSSProperties;
+  editData?: MemberProps[];
   setEditData?: React.Dispatch<React.SetStateAction<T[]>>;
 }
 const TableWrapper = styled.div`
@@ -117,9 +119,11 @@ const Dropdown = styled.div`
 
 const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
   row,
+  editData,
   setEditData,
 }: {
   row: Row<T>;
+  editData: MemberProps[];
   setEditData: React.Dispatch<React.SetStateAction<T[]>>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -172,6 +176,8 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
             <GroupsTag
               key={index}
               color="GREEN100"
+              rowId={row.original.id}
+              editData={editData}
               onClick={() => {
                 groupClick(group);
               }}
@@ -204,6 +210,7 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
   rowLink = undefined,
   onClick = undefined,
   rowStyleResolver = undefined,
+  editData = [],
   setEditData = undefined,
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
@@ -296,6 +303,7 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
                         icon={
                           <GroupDropdownCell
                             row={row}
+                            editData={editData}
                             setEditData={setEditData!}
                           />
                         }
