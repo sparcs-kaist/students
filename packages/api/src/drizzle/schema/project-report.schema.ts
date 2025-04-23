@@ -21,7 +21,6 @@ export const ProjectReport = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     projectId: int("project_id").notNull(),
-    revisionId: int("revision_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
@@ -63,6 +62,7 @@ export const ProjectReportRevision = mysqlTable(
     result: text("result"),
     unmet: text("unmet"),
     note: text("note"),
+    submittedAt: timestamp("submitted_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
@@ -96,7 +96,7 @@ export const ProjectReportTimeline = mysqlTable(
   "project_report_timeline",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    projectId: int("project_id").notNull(),
+    projectReportRevisionId: int("project_report_revision_id").notNull(),
     startTerm: timestamp("start_term").notNull(),
     endTerm: timestamp("end_term").notNull(),
     detail: text("detail").notNull(),
@@ -106,10 +106,10 @@ export const ProjectReportTimeline = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectReportTimelineProjectIdFk: foreignKey({
-      columns: [table.projectId],
-      foreignColumns: [ProjectReport.id],
-      name: "project_report_timeline_project_id_fk",
+    projectReportTimelineProjectReportRevisionIdFk: foreignKey({
+      columns: [table.projectReportRevisionId],
+      foreignColumns: [ProjectReportRevision.id],
+      name: "project_report_timeline_project_report_id_fk",
     }),
   }),
 );
@@ -118,16 +118,16 @@ export const ProjectDetailFile = mysqlTable(
   "project_detail_file",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    projectId: int("project_id").notNull(),
+    projectReportRevisionId: int("project_report_revision_id").notNull(),
     fileId: int("file_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectDetailFileProjectIdFk: foreignKey({
-      columns: [table.projectId],
-      foreignColumns: [ProjectReport.id],
-      name: "project_detail_file_project_id_fk",
+    projectDetailFileProjectReportRevisionIdFk: foreignKey({
+      columns: [table.projectReportRevisionId],
+      foreignColumns: [ProjectReportRevision.id],
+      name: "project_detail_file_project_report_id_fk",
     }),
     projectDetailFileFileIdFk: foreignKey({
       columns: [table.fileId],
@@ -137,7 +137,7 @@ export const ProjectDetailFile = mysqlTable(
   }),
 );
 
-export const OperationReport = mysqlTable(
+export const OperationReportRevision = mysqlTable(
   "operation_report",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
@@ -145,6 +145,7 @@ export const OperationReport = mysqlTable(
     semesterId: int("semester_id").notNull(),
     organizationDiagramId: int("organization_diagram_id").notNull(),
     note: text("note"),
+    submittedAt: timestamp("submitted_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -168,7 +169,7 @@ export const OperationReport = mysqlTable(
   }),
 );
 
-export const Recruit = mysqlTable(
+export const RecruitRevision = mysqlTable(
   "recruit",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
@@ -199,16 +200,16 @@ export const RecruitEvidenceFile = mysqlTable(
   "recruit_evidence_file",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    recruitId: int("recruit_id").notNull(),
+    recruitRevisionId: int("recruit_revision_id").notNull(),
     fileId: int("file_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    recruitEvidenceFileRecruitIdFk: foreignKey({
-      columns: [table.recruitId],
-      foreignColumns: [Recruit.id],
-      name: "recruit_evidence_file_recruit_id_fk",
+    recruitEvidenceFileRecruitRevisionIdFk: foreignKey({
+      columns: [table.recruitRevisionId],
+      foreignColumns: [RecruitRevision.id],
+      name: "recruit_evidence_file_recruit_revision_id_fk",
     }),
     recruitEvidenceFileFileIdFk: foreignKey({
       columns: [table.fileId],
@@ -222,16 +223,16 @@ export const RecruitMember = mysqlTable(
   "recruit_member",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    recruitId: int("recruit_id").notNull(),
+    recruitRevisionId: int("recruit_revision_id").notNull(),
     userId: int("user_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
     recruitMemberRecruitIdFk: foreignKey({
-      columns: [table.recruitId],
-      foreignColumns: [Recruit.id],
-      name: "recruit_member_recruit_id_fk",
+      columns: [table.recruitRevisionId],
+      foreignColumns: [RecruitRevision.id],
+      name: "recruit_member_recruit_revision_id_fk",
     }),
     recruitMemberUserIdFk: foreignKey({
       columns: [table.userId],
@@ -241,7 +242,7 @@ export const RecruitMember = mysqlTable(
   }),
 );
 
-export const OperatingCommitteeReport = mysqlTable(
+export const OperatingCommitteeReportRevision = mysqlTable(
   "operating_committee_report",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
