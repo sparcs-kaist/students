@@ -39,7 +39,7 @@ export class AuthRepository {
     const user = await this.db
       .select()
       .from(User)
-      .where(eq(User.email, email))
+      .where(eq(User.email, uid))
       .then(takeOne);
 
     let result: MemberDbResult = {
