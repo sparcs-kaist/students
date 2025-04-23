@@ -7,9 +7,10 @@ import GroupList from "@sparcs-students/web/features/project/components/GroupLis
 import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
-// JM: import랑 정리하기
-// import MemberTable, { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
-import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+import MemberTable, {
+  MemberProps,
+} from "@sparcs-students/web/features/project/components/MemberTable";
 import ManageProjectReportTable from "@sparcs-students/web/features/project/components/ManageProjectReportTable";
 
 export interface OperationPlanProps {
@@ -18,6 +19,7 @@ export interface OperationPlanProps {
   groupList: GroupProps[];
   imagePath: string;
   isProposal?: boolean;
+  userPermission?: UserPermission;
 }
 
 const StyledImage = styled(Image)`
@@ -31,14 +33,19 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
   groupList,
   imagePath,
   isProposal = true,
+  userPermission = UserPermission.Viewer,
 }) => (
   <FlexWrapper direction="column" gap={60}>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         {isProposal ? "운영계획" : "운영보고"}
       </Typography>
-      <ManageProjectReportTable data={memberData} />
-      {/* <MemberTable data={memberData} /> */}
+      {userPermission === UserPermission.Manager && (
+        <ManageProjectReportTable data={memberData} />
+      )}
+      {userPermission === UserPermission.Viewer && (
+        <MemberTable data={memberData} />
+      )}
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">

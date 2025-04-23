@@ -121,7 +121,11 @@ const Proposal = () => {
             isProposal={false}
           />
         )}
-        <OperationPlan {...mockOperationPlanData} isProposal={false} />
+        <OperationPlan
+          {...mockOperationPlanData}
+          isProposal={false}
+          userPermission={userPermission}
+        />
         <ReviewOperationPlan
           review={review}
           reviewHandler={setReview}
