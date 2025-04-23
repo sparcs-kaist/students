@@ -16,7 +16,7 @@ export interface MemberProps {
   groups: string[];
 }
 
-interface MemberEditTableProps {
+interface ManagerProjectReportTableProps {
   data: MemberProps[];
 }
 
@@ -64,7 +64,9 @@ const columns = [
   }),
 ];
 
-const MemberEditTable: React.FC<MemberEditTableProps> = ({ data }) => {
+const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
+  data,
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -99,4 +101,4 @@ const MemberEditTable: React.FC<MemberEditTableProps> = ({ data }) => {
   );
 };
 
-export default MemberEditTable;
+export default ManagerProjectReportTable;
