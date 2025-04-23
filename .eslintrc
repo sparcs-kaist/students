@@ -19,24 +19,6 @@
       "parserOptions": {
         "sourceType": "script"
       }
-    },
-    {
-      "files": ["packages/web/**/*.{ts,tsx}"],
-      "parserOptions": {
-        "project": "./packages/web/tsconfig.json"
-      }
-    },
-    {
-      "files": ["packages/api/**/*.{ts,tsx}"],
-      "parserOptions": {
-        "project": "./packages/api/tsconfig.json"
-      }
-    },
-    {
-      "files": ["packages/interface/**/*.{ts,tsx}"],
-      "parserOptions": {
-        "project": "./packages/interface/tsconfig.json"
-      }
     }
   ],
   "parser": "@typescript-eslint/parser",
