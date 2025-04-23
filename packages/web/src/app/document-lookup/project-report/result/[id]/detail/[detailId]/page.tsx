@@ -9,7 +9,7 @@ import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import BudgetReportTable from "@sparcs-students/web/features/document-lookup/project/components/BudgetReportTable";
 import DocumentTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/DocumentTimelineTable";
-import mockBudgetReportData from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockBudgetReportTable";
+import mockBudgetReportData from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockBudgetReportTable";
 import { mockDocumentTimelineData } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockDocumentTimelineTable";
 import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
 
