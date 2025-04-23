@@ -13,7 +13,7 @@ const TagInner = styled.div<{
   color: LightTagColor;
   width: string;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
-  isDropdown?: boolean;
+  isDropdown: boolean;
   isInGroup?: boolean;
 }>`
   position: relative;
