@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
 import {
@@ -130,6 +130,8 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
   const dropdownOpen = () => {
     setIsOpen(prev => !prev);
   };
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   // 임시 부서 이름 목록
   const testGroups = [
     "이름이 긴 부서 1",
@@ -138,6 +140,23 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
     "어쩌구 부서 3",
     "이름이 굉장히 긴 어떤 부서 예시",
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isOpen &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // TODO: 임시로 부서 이름 스트링을 기준으로 구현했는데, 추후 백엔드 구현 방식에 따라 id 이용해서 구현하는 게 나을 듯. 그때 되면 타입도 수정.
   const groupClick = (selectedGroup: string) => {
@@ -169,7 +188,7 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
         />
       </DropdownHeader>
       {isOpen && (
-        <Dropdown>
+        <Dropdown ref={dropdownRef}>
           {testGroups.map((group, index) => (
             <GroupsTag
               key={index}
