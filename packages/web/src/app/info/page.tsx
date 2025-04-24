@@ -17,7 +17,7 @@ const Info = () => {
     if (!content) return mockInfo[0];
 
     // content 파라미터에 해당하는 항목 찾기
-    const mainItem = mockInfo.find(item => item.title === content);
+    const mainItem = mockInfo.find(item => item.category === content);
 
     // content에 해당하는 항목이 없으면 첫 번째 항목 반환
     if (!mainItem) return mockInfo[0];
@@ -25,7 +25,9 @@ const Info = () => {
     // subContent 파라미터가 있고, 메인 항목에 subContent 배열이 있는 경우
     if (subContent && mainItem.subContent) {
       // subContent 파라미터와 일치하는 하위 항목 찾기
-      const subItem = mainItem.subContent.find(sub => sub.title === subContent);
+      const subItem = mainItem.subContent.find(
+        sub => sub.category === subContent,
+      );
 
       // 일치하는 하위 항목이 있으면 그 항목을 반환, 없으면 메인 항목 반환
       return subItem || mainItem;
