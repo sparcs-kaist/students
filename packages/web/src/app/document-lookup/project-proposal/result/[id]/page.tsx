@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
@@ -36,18 +36,28 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 const Proposal = () => {
-  const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
+  const searchParams = useSearchParams();
+  const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
+  const queryIsSpring = searchParams.get("isSpring") === "true";
+  const queryType = searchParams.get("type") as DocumentType | null;
+  const queryKey = searchParams.get("key");
+  const queryValue = searchParams.get("value");
+  const queryId = parseInt(searchParams.get("id") || "");
+
   const [date, setDate] = useState(
     mockViewProjectProposalResultData.submitDate,
   );
-  const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean | null>(null);
-  const [type, setType] = useState<DocumentType | null>(null);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
+  const [year, setYear] = useState<number>(queryYear);
+  const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
+  const [type, setType] = useState<DocumentType | null>(queryType);
+  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
+  const [selectedId, setSelectedId] = useState<number>(queryId);
   const userPermission = getMockUserPermission(); // TODO: api 연결
   const [review, setReview] = useState<string>("");
+
+  const router = useRouter();
 
   const openSaveModal = () => {
     // TODO: add save logic
@@ -72,6 +82,40 @@ const Proposal = () => {
         </CancellableModalContent>
       </Modal>
     ));
+  };
+
+  const lookUp = (pageId: number) => {
+    const query = new URLSearchParams({
+      year: String(year),
+      isSpring: String(isSpring),
+      type: String(type),
+      key: selectedKey ?? "",
+      value: selectedValue ?? "",
+      id: String(pageId),
+    }).toString();
+
+    switch (type) {
+      case "사업 계획서":
+        router.push(
+          `/document-lookup/project-proposal/result/${pageId}?${query}`,
+        );
+        break;
+      case "사업 보고서":
+        router.push(
+          `/document-lookup/project-report/result/${pageId}?${query}`,
+        );
+        break;
+      case "예산안":
+        router.push(
+          `/document-lookup/budget-proposal/result/${pageId}?${query}`,
+        );
+        break;
+      case "결산안":
+        router.push(`/document-lookup/budget-report/result/${pageId}?${query}`);
+        break;
+      default:
+        throw new Error(`잘못된 문서 유형: ${type}`);
+    }
   };
 
   return (
@@ -103,10 +147,15 @@ const Proposal = () => {
               setSelectedKey={setSelectedKey}
               selectedValue={selectedValue}
               setSelectedValue={setSelectedValue}
+              setSelectedId={setSelectedId}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button buttonText="조회" style={{ marginLeft: "auto" }} />
+            <Button
+              buttonText="조회"
+              style={{ marginLeft: "auto" }}
+              onClick={() => lookUp(selectedId as number)}
+            />
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
@@ -116,7 +165,18 @@ const Proposal = () => {
         />
         {(userPermission === UserPermission.Viewer ||
           userPermission === UserPermission.Reviewer) && (
-          <ProjectTable pageId={id} data={mockViewerProjectData} isProposal />
+          <ProjectTable
+            pageId={selectedId}
+            data={mockViewerProjectData}
+            isProposal
+          />
+        )}
+        {userPermission === UserPermission.Manager && (
+          <ProjectTable
+            pageId={selectedId}
+            data={mockViewerProjectData}
+            isProposal
+          />
         )}
         <OperationPlan {...mockOperationPlanData} />
         <ReviewOperationPlan review={review} reviewHandler={setReview} />

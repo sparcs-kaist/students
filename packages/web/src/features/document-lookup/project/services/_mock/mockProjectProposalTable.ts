@@ -123,4 +123,31 @@ export const ProjectProposalTimelines: ProjectTimelineProps[] = [
     content: "학우들을 위한 구체적인 이벤트 시행",
     reason: "어떠한 비고",
   },
+  {
+    id: 2,
+    date: {
+      value: [new Date(2025, 4, 9), new Date(2025, 4, 16)],
+      type: TimelineDateTypeEnum.Date,
+    },
+    content: "학우들을 위한 구체적인 이벤트 시행",
+    reason: "어떠한 비고",
+  },
+  {
+    id: 3,
+    date: {
+      value: [new Date(2025, 4, 9), new Date(2025, 4, 16)],
+      type: TimelineDateTypeEnum.Date,
+    },
+    content: "학우들을 위한 구체적인 이벤트 시행",
+    reason: "어떠한 비고",
+  },
+  {
+    id: 4,
+    date: {
+      value: [new Date(2025, 4, 9), new Date(2025, 4, 16)],
+      type: TimelineDateTypeEnum.Date,
+    },
+    content: "학우들을 위한 구체적인 이벤트 시행",
+    reason: "어떠한 비고",
+  },
 ];

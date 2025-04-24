@@ -35,7 +35,7 @@ export interface ReviewerProjectProps {
 }
 
 interface ProjectTableProps {
-  pageId: string | string[];
+  pageId: number;
   data: ViewerProjectProps[];
   isProposal?: boolean;
 }
@@ -46,14 +46,15 @@ const columns = [
   columnHelper.accessor("id", {
     id: "id",
     header: "번호",
-    cell: info => info.getValue(),
+    cell: info => parseInt(info.getValue()) + 1, // CHACHA: 1부터 시작하게 하자
     size: 90,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
     cell: info => <HoverClickText text={info.getValue()} />,
-    size: 861,
+    minSize: 861,
+    size: 0,
   }),
   columnHelper.accessor("projectPeriod", {
     id: "projectPeriod",

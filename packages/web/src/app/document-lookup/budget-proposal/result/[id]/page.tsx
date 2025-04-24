@@ -21,6 +21,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetProposalFrame";
+import ManagerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ManagerBudgetProposalFrame";
 
 const BudgetProposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -39,7 +42,7 @@ const BudgetProposal = () => {
   const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   const router = useRouter();
 
@@ -116,15 +119,15 @@ const BudgetProposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === UserPermission.Viewer && ( */}
-        {/*   <ViewerBudgetProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Viewer && (
+          <ViewerBudgetProposalFrame />
+        )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerBudgetProposalFrame />
         )}
-        {/* {userPermission === UserPermission.Manager && ( */}
-        {/*   <ManagerBudgetProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Manager && (
+          <ManagerBudgetProposalFrame />
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );

@@ -11,6 +11,8 @@ import {
   ManagerProjectNameCandidate,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
+import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+
 export const mockManagerIncomeData: ManagerIncomeProps[] = [
   {
     code: 0,
@@ -196,20 +198,22 @@ export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
 ];
 
 export const mockManagerProjectNameCandidateList: ManagerProjectNameCandidate[] =
-  [
-    {
-      budgetDomain: BudgetDomainEnum.School,
-      budgetDivisionExpenditure: BudgetDivisionExpenseEnum.New,
-      projectNameCandidate: ["작년의 어떠한 사업", "작년의 저떠한 사업"],
-    },
-    {
-      budgetDomain: BudgetDomainEnum.Student,
-      budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Operating,
-      projectNameCandidate: ["작년의 어떠한 사업", "작년의 저떠한 사업"],
-    },
-    {
-      budgetDomain: BudgetDomainEnum.Autonomous,
-      budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Operating,
-      projectNameCandidate: ["작년의 어떠한 사업", "작년의 저떠한 사업"],
-    },
-  ];
+  // 사업 계획서에서 작성된
+  Object.values(BudgetDomainEnum).flatMap(domain =>
+    Object.values(BudgetDivisionExpenseEnum).map(division => {
+      const matchedTitles = ProjectProposalSingleContent.filter(content =>
+        mockManagerExpenditureData.some(
+          exp =>
+            exp.projectName === content.title &&
+            exp.budgetDomain === domain &&
+            exp.budgetDivisionExpenditure === division,
+        ),
+      ).map(content => content.title);
+
+      return {
+        budgetDomain: domain as BudgetDomainEnum,
+        budgetDivisionExpenditure: division as BudgetDivisionExpenseEnum,
+        projectNameCandidate: matchedTitles,
+      };
+    }),
+  );

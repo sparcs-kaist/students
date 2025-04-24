@@ -37,7 +37,7 @@ interface ThreeInputProps {
   selectedValue: string | null;
   setSelectedValue: (value: string | null) => void;
   // selectedId: number | null;
-  setSelectedId?: (value: number | null) => void;
+  setSelectedId?: (value: number) => void;
 }
 
 const OuterWrapper = styled.div`

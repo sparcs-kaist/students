@@ -5,10 +5,17 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
+import {
+  ProjectProposalSingleContent,
+  ProjectProposalTimelines,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable"; // TODO: API 호출로 받아오는 데이터
 
 import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { ProjectProposalContent } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
+import DocumentTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/DocumentTimelineTable";
 
 const headerHeight = 70;
 
@@ -37,7 +44,14 @@ const DocumentViewerDetailPage: React.FC = () => {
   const documentDetail = useRef<HTMLDivElement>(null);
   const documentTimeline = useRef<HTMLDivElement>(null);
 
-  const { resultId } = useParams();
+  const { id: resultId, detailId } = useParams();
+  const proposal = ProjectProposalSingleContent.find(
+    item => item.contentId === Number(detailId),
+  ) as ProjectProposalContent;
+
+  const timelines = ProjectProposalTimelines.filter(t =>
+    proposal?.timelineIds.includes(t.id),
+  );
 
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
@@ -47,7 +61,7 @@ const DocumentViewerDetailPage: React.FC = () => {
     },
     {
       name: "사업명",
-      path: `/document-lookup/project-proposal/result/${resultId}`,
+      path: `/document-lookup/project-proposal/result/${resultId}/detail/${detailId}`,
     },
   ];
 
@@ -72,38 +86,52 @@ const DocumentViewerDetailPage: React.FC = () => {
       <ScrollAbleArea>
         <ContentsArea>
           <FlexWrapper direction="row" gap={60} ref={documentTitle}>
-            <TextAreaWithHeader header="사업명" contents={["contents1"]} />
-            <TextAreaWithHeader header="사업 개요" contents={["contents1"]} />
+            <TextAreaWithHeader header="사업명" contents={[proposal?.title]} />
+            <TextAreaWithHeader
+              header="사업 개요"
+              contents={[proposal?.brief]}
+            />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentPeriod}>
             <TextAreaWithHeader
               header="사업 준비 기간"
-              contents={["contents1"]}
+              contents={[
+                proposal.preparationPeriod.value
+                  .map(d => (d ? formatDotDate(d) : "미정"))
+                  .join(" - "),
+              ]}
             />
-            <TextAreaWithHeader header="사업 일시" contents={["contents1"]} />
+            <TextAreaWithHeader
+              header="사업 일시"
+              contents={[
+                proposal.executionPeriod.value
+                  .map(d => (d ? formatDotDate(d) : "미정"))
+                  .join(" - "),
+              ]}
+            />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={manager}>
             <TextAreaWithHeader
               header="담당부서 / 담당자"
-              contents={["contents1", "contents2"]}
+              contents={[`${proposal.teamId}`, `${proposal.manager}`]}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentPurpose}>
             <TextAreaWithHeader
               header="사업 추진 목적"
-              contents={["contents1"]}
+              contents={[proposal.purpose]}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentTarget}>
             <TextAreaWithHeader
               header="사업 수혜 대상자"
-              contents={["contents1"]}
+              contents={[proposal.beneficiary]}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentDetail}>
             <TextAreaWithHeader
               header="세부 사업 내용"
-              contents={["contents1"]}
+              contents={[proposal.detail]}
             />
           </FlexWrapper>
           <FlexWrapper
@@ -115,6 +143,7 @@ const DocumentViewerDetailPage: React.FC = () => {
             <Typography fs={24} lh={30} fw="BOLD">
               사업 진행 타임라인
             </Typography>
+            <DocumentTimelineTable data={timelines} />
           </FlexWrapper>
           {/* 여기에 사업 표 */}
         </ContentsArea>

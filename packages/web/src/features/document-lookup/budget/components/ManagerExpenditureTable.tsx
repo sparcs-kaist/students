@@ -68,13 +68,13 @@ interface TableRowProps {
   changeCode: () => void;
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
-  projectNameCandidate: ManagerProjectNameCandidate[];
+  projectNameCandidate: ManagerProjectNameCandidate[]; // CHACHA: 같은 구분, 예산 분류에 해당하는 사업명을 불러오는 것. 작년 것 아님!
 }
 
 const TableWrapper = styled.table`
   position: relative;
   height: fit-content;
-  overflow-y: visible;
+  overflow: visible;
   border-collapse: collapse;
 `;
 
@@ -403,10 +403,6 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   projectNameCandidate,
   isProposal,
 }) => {
-  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
-    334, // TODO: magic number 36 + 48 + 250
-  );
-
   const { handleSubmit, control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -414,6 +410,10 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   });
 
   const expenditures = formMethods.watch("expenditures");
+
+  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
+    36 + (expenditures.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
+  );
 
   const changeCode = () => {
     let studentsFeeCount = 400;
