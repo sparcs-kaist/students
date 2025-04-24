@@ -21,18 +21,19 @@ export interface ManagerIncomeProps {
 }
 
 export interface ManagerExpenditureProps {
-  code: number;
   id: number;
-  budgetDomain: BudgetDomainEnum;
-  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
-  projectName: string;
-  item: BudgetClassExpenseEnum;
-  lastYear: number | string;
-  thisYear: number | string;
-  ratio: number | null;
-  reason: string;
-  status: DocumentReviewStatusEnum;
-  review: string;
+  code: number; // 코드
+  rowId: number; // row index 필요한지 의문. 프론트 로직 상 필요했던 것 같기도
+  budgetDomain: BudgetDomainEnum; // 구분
+  budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined; // 예산 분류
+  projectName: string; // 사업명
+  item: BudgetClassExpenseEnum; // 항목
+  lastYear: number | string; // 작년 결산
+  thisYear: number | string; // 올해 예산
+  ratio: number | null; // 비율
+  reason: string; // 근거
+  status: DocumentReviewStatusEnum; // 검토 현황
+  review: string; // 검토 내용
 }
 
 export interface FormValues {

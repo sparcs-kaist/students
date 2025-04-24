@@ -465,7 +465,11 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   ];
 
   const addNewRow = () => {
-    const newRow = { ...defaultNewRow[0], id: fields.length };
+    const newRow = {
+      ...defaultNewRow[0],
+      id: fields.length, // TODO: this id is DB unique id, so this should be DB length.
+      rowId: fields.length,
+    };
     append(newRow);
 
     const length = expenditures.length + 1;
