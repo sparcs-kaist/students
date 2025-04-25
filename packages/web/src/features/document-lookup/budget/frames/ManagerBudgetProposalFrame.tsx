@@ -7,8 +7,8 @@ import Button from "@sparcs-students/web/common/components/Buttons/Button";
 
 import TotalTable from "@sparcs-students/web/features/document-lookup/budget/components/TotalTable";
 import {
-  mockManagerExpenditureData,
-  mockManagerIncomeData,
+  mockDBExpenditureData,
+  mockDBIncomeData,
   mockManagerProjectNameCandidateList,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
 import { mockViewBudgetProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
@@ -21,8 +21,8 @@ import ManagerIncomeTable from "@sparcs-students/web/features/document-lookup/bu
 import ManagerExpenditureTable from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTable";
 import {
   FormValues,
-  ManagerExpenditureProps,
-  ManagerIncomeProps,
+  DBExpenditureProps,
+  DBIncomeProps,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
@@ -37,21 +37,21 @@ const ButtonWrapper = styled.div`
 const ManagerBudgetProposalFrame = () => {
   const formMethods = useForm<FormValues>({
     defaultValues: {
-      incomes: mockManagerIncomeData,
-      expenditures: mockManagerExpenditureData,
+      incomes: mockDBIncomeData,
+      expenditures: mockDBExpenditureData,
     },
   });
 
   const [dirtyExpenditures, setDirtyExpenditures] = useState<{
-    updatedRows: ManagerExpenditureProps[];
-    createdRows: ManagerExpenditureProps[];
-    deletedRows: ManagerExpenditureProps[];
+    updatedRows: DBExpenditureProps[];
+    createdRows: DBExpenditureProps[];
+    deletedRows: DBExpenditureProps[];
   }>({ updatedRows: [], createdRows: [], deletedRows: [] });
 
   const [dirtyIncomes, setDirtyIncomes] = useState<{
-    updatedRows: ManagerIncomeProps[];
-    createdRows: ManagerIncomeProps[];
-    deletedRows: ManagerIncomeProps[];
+    updatedRows: DBIncomeProps[];
+    createdRows: DBIncomeProps[];
+    deletedRows: DBIncomeProps[];
   }>({ updatedRows: [], createdRows: [], deletedRows: [] });
 
   const handleSubmitAll = () => {
@@ -68,8 +68,8 @@ const ManagerBudgetProposalFrame = () => {
 
   const handleResetAll = () => {
     formMethods.reset({
-      incomes: mockManagerIncomeData,
-      expenditures: mockManagerExpenditureData,
+      incomes: mockDBIncomeData,
+      expenditures: mockDBExpenditureData,
     });
   };
 
@@ -112,14 +112,14 @@ const ManagerBudgetProposalFrame = () => {
         <ManagerIncomeTable
           formMethods={formMethods}
           isProposal
-          initialData={mockManagerIncomeData}
+          initialData={mockDBIncomeData}
           onDiffExtract={setDirtyIncomes}
         />
         <ManagerExpenditureTable
           formMethods={formMethods}
           projectNameCandidate={mockManagerProjectNameCandidateList}
           isProposal
-          initialData={mockManagerExpenditureData}
+          initialData={mockDBExpenditureData}
           onDiffExtract={setDirtyExpenditures}
         />
         <TotalTable

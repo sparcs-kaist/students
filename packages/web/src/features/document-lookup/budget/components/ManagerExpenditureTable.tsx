@@ -50,7 +50,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import colors from "@sparcs-students/web/styles/themes/colors";
 import {
   FormValues,
-  ManagerExpenditureProps,
+  DBExpenditureProps,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import isEqual from "lodash/isEqual"; // CHACHA: array끼리 비교하는 데 필요함. lodash 통으로 import 하면 번들 너무 커짐
 
@@ -64,11 +64,11 @@ interface ManagerExpenditureTableProps {
   formMethods: ReturnType<typeof useForm<FormValues>>;
   projectNameCandidate: ManagerProjectNameCandidate[];
   isProposal: boolean;
-  initialData: ManagerExpenditureProps[];
+  initialData: DBExpenditureProps[];
   onDiffExtract?: (diff: {
-    updatedRows: ManagerExpenditureProps[];
-    createdRows: ManagerExpenditureProps[];
-    deletedRows: ManagerExpenditureProps[];
+    updatedRows: DBExpenditureProps[];
+    createdRows: DBExpenditureProps[];
+    deletedRows: DBExpenditureProps[];
   }) => void;
 }
 
@@ -427,7 +427,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
     control,
     name: "expenditures",
   });
-  const initialDataRef = useRef<ManagerExpenditureProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
+  const initialDataRef = useRef<DBExpenditureProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
   const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
 
   // const isRowDirty = (index: number) =>

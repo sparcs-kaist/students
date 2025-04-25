@@ -19,35 +19,17 @@ import {
   getbudgetRatioTag,
   getbudgetStatusTag,
 } from "@sparcs-students/web/features/document-lookup/util/tableTagList";
-import {
-  BudgetDivisionIncomeEnum,
-  BudgetDomainEnum,
-} from "@sparcs-students/root/packages/interface/src/common/enum/budget.enum";
 import DetailButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
-import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
-
-export interface ViewerIncomeProps {
-  code: number;
-  id: number;
-  budgetDomain: BudgetDomainEnum;
-  budgetDivisionIncome: BudgetDivisionIncomeEnum;
-  item: string;
-  lastYear: number;
-  thisYear: number;
-  ratio: number | null;
-  reason: string;
-  status: DocumentReviewStatusEnum;
-  review: string;
-}
+import { DBIncomeProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 interface IncomeTableProps {
-  data: ViewerIncomeProps[];
+  data: DBIncomeProps[];
 }
 
-const columnHelper = createColumnHelper<ViewerIncomeProps>();
+const columnHelper = createColumnHelper<DBIncomeProps>();
 
 const columns = [
   columnHelper.accessor("code", {
@@ -98,7 +80,7 @@ const columns = [
         style: "currency",
         currency: "KRW",
       });
-      return formatter.format(info.getValue());
+      return formatter.format(parseInt(info.getValue() as string));
     },
     size: 210,
   }),
@@ -110,7 +92,7 @@ const columns = [
         style: "currency",
         currency: "KRW",
       });
-      return formatter.format(info.getValue());
+      return formatter.format(parseInt(info.getValue() as string));
     },
     size: 210,
   }),

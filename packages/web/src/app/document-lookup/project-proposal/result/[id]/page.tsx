@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
@@ -37,13 +37,16 @@ const ButtonWrapper = styled.div`
 `;
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
+  const { id: resultId } = useParams();
   const searchParams = useSearchParams();
+
+  // const detailId = parseInt(searchParams.get("detailId") || "");
   const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
   const queryIsSpring = searchParams.get("isSpring") === "true";
   const queryType = searchParams.get("type") as DocumentType | null;
   const queryKey = searchParams.get("key");
   const queryValue = searchParams.get("value");
-  const queryId = parseInt(searchParams.get("id") || "");
+  const queryId = parseInt(resultId as string);
 
   const [date, setDate] = useState(
     mockViewProjectProposalResultData.submitDate,
@@ -84,16 +87,15 @@ const Proposal = () => {
     ));
   };
 
-  const lookUp = (pageId: number) => {
-    const query = new URLSearchParams({
-      year: String(year),
-      isSpring: String(isSpring),
-      type: String(type),
-      key: selectedKey ?? "",
-      value: selectedValue ?? "",
-      id: String(pageId),
-    }).toString();
+  const query = new URLSearchParams({
+    year: String(year),
+    isSpring: String(isSpring),
+    type: String(type),
+    key: selectedKey ?? "",
+    value: selectedValue ?? "",
+  }).toString();
 
+  const lookUp = (pageId: number) => {
     switch (type) {
       case "사업 계획서":
         router.push(
@@ -169,6 +171,7 @@ const Proposal = () => {
             pageId={selectedId}
             data={mockViewerProjectData}
             isProposal
+            query={query}
           />
         )}
         {userPermission === UserPermission.Manager && (

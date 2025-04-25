@@ -19,11 +19,11 @@ interface DocumentTimelineTableProps {
 
 const columnHelper = createColumnHelper<ProjectTimelineProps>();
 
-const columns = [
+const getColumns = (dataLength: number) => [
   columnHelper.accessor("id", {
     id: "id",
     header: "번호",
-    cell: info => info.getValue(),
+    cell: info => dataLength - info.row.index, // CHACHA:
     size: 60,
   }),
   columnHelper.display({
@@ -68,6 +68,8 @@ const TableWrapper = styled.table`
 const DocumentTimelineTable: React.FC<DocumentTimelineTableProps> = ({
   data,
 }) => {
+  const columns = getColumns(data.length);
+
   const table = useReactTable({
     columns,
     data,

@@ -38,6 +38,7 @@ interface ProjectTableProps {
   pageId: number;
   data: ViewerProjectProps[];
   isProposal?: boolean;
+  query?: string;
 }
 
 const columnHelper = createColumnHelper<ViewerProjectProps>();
@@ -52,7 +53,16 @@ const columns = [
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
-    cell: info => <HoverClickText text={info.getValue()} />,
+    cell: info => (
+      <HoverClickText
+        text={info.getValue()}
+        // onClick={() =>
+        //   router.push(
+        //     `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/${query}/detail/${row.id}`,
+        //   )
+        // }
+      />
+    ),
     minSize: 861,
     size: 0,
   }),
@@ -81,6 +91,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   pageId,
   data,
   isProposal = true,
+  query = "",
 }) => {
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
@@ -108,7 +119,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
           table={table}
           onClick={row =>
             router.push(
-              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}`,
+              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}?${query}`,
             )
           }
           emptyMessage={

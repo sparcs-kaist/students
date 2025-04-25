@@ -50,18 +50,18 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import colors from "@sparcs-students/web/styles/themes/colors";
 import {
   FormValues,
-  ManagerIncomeProps,
+  DBIncomeProps,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import isEqual from "lodash/isEqual";
 
 interface ManagerIncomeTableProps {
   formMethods: ReturnType<typeof useForm<FormValues>>;
   isProposal: boolean;
-  initialData: ManagerIncomeProps[];
+  initialData: DBIncomeProps[];
   onDiffExtract?: (diff: {
-    updatedRows: ManagerIncomeProps[];
-    createdRows: ManagerIncomeProps[];
-    deletedRows: ManagerIncomeProps[];
+    updatedRows: DBIncomeProps[];
+    createdRows: DBIncomeProps[];
+    deletedRows: DBIncomeProps[];
   }) => void;
 }
 
@@ -402,7 +402,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     36 + (incomes.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
   );
-  const initialDataRef = useRef<ManagerIncomeProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
+  const initialDataRef = useRef<DBIncomeProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
   const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
 
   useEffect(() => {

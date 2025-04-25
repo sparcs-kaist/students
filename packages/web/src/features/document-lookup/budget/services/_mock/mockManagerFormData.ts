@@ -6,14 +6,14 @@ import {
 } from "@sparcs-students/root/packages/interface/src/common/enum/budget.enum";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import {
-  ManagerExpenditureProps,
-  ManagerIncomeProps,
-  ManagerProjectNameCandidate,
+  DBExpenditureProps,
+  DBIncomeProps,
+  ProjectNameCandidate,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
 
-export const mockManagerIncomeData: ManagerIncomeProps[] = [
+export const mockDBIncomeData: DBIncomeProps[] = [
   {
     id: 0,
     code: 101,
@@ -94,7 +94,7 @@ export const mockManagerIncomeData: ManagerIncomeProps[] = [
   },
 ];
 
-export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
+export const mockDBExpenditureData: DBExpenditureProps[] = [
   {
     code: 401,
     id: 0,
@@ -262,12 +262,12 @@ export const mockManagerExpenditureData: ManagerExpenditureProps[] = [
   },
 ];
 
-export const mockManagerProjectNameCandidateList: ManagerProjectNameCandidate[] =
+export const mockManagerProjectNameCandidateList: ProjectNameCandidate[] =
   // 사업 계획서에서 작성된
   Object.values(BudgetDomainEnum).flatMap(domain =>
     Object.values(BudgetDivisionExpenseEnum).map(division => {
       const matchedTitles = ProjectProposalSingleContent.filter(content =>
-        mockManagerExpenditureData.some(
+        mockDBExpenditureData.some(
           exp =>
             exp.projectName === content.title &&
             exp.budgetDomain === domain &&
