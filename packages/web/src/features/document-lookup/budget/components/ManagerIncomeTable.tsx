@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   useForm,
   useFieldArray,
@@ -6,6 +6,7 @@ import {
   Controller,
   UseFormSetValue,
   UseFormGetValues,
+  useWatch,
 } from "react-hook-form";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -47,11 +48,21 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import { FormValues } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import {
+  FormValues,
+  ManagerIncomeProps,
+} from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import isEqual from "lodash/isEqual";
 
 interface ManagerIncomeTableProps {
   formMethods: ReturnType<typeof useForm<FormValues>>;
   isProposal: boolean;
+  initialData: ManagerIncomeProps[];
+  onDiffExtract?: (diff: {
+    updatedRows: ManagerIncomeProps[];
+    createdRows: ManagerIncomeProps[];
+    deletedRows: ManagerIncomeProps[];
+  }) => void;
 }
 
 interface TableRowProps {
@@ -256,7 +267,7 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`incomes.${rowIndex}.item`}
         render={({ field }) => (
-          <TableCell type="Default" width={0}>
+          <TableCell type="Default" width={0} minWidth={240}>
             <InputSelect
               items={itemList}
               value={field.value}
@@ -374,17 +385,68 @@ const TableRow: React.FC<TableRowProps> = ({
 const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   formMethods,
   isProposal,
+  initialData,
+  onDiffExtract = () => {},
 }) => {
-  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
-    334, // TODO: magic number 36 + 48 + 250
-  );
   const { control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "incomes",
   });
 
-  const incomes = formMethods.watch("incomes");
+  const incomes = useWatch({
+    control,
+    name: "incomes",
+  });
+
+  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
+    36 + (incomes.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
+  );
+  const initialDataRef = useRef<ManagerIncomeProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
+  const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
+
+  useEffect(() => {
+    const initialMap = new Map(
+      initialDataRef.current.map(row => [row.id, row]),
+    );
+
+    incomes.forEach((row, index) => {
+      const original = initialMap.get(row.id);
+      if (original && !isEqual(row, original)) {
+        console.log(original, row);
+        if (row.status !== DocumentReviewStatusEnum.Unsaved) {
+          setValue(
+            `incomes.${index}.status`,
+            DocumentReviewStatusEnum.Unsaved,
+            {
+              shouldDirty: false,
+              shouldTouch: false,
+              shouldValidate: false,
+            },
+          );
+        }
+      }
+    });
+  }, [incomes, setValue]);
+
+  useEffect(() => {
+    const initialMap = new Map(
+      initialDataRef.current.map(row => [row.id, row]),
+    );
+
+    const updatedRows = incomes.filter(row => {
+      const original = initialMap.get(row.id);
+      return original && !isEqual(row, original);
+    });
+
+    const createdRows = incomes.filter(row => !initialMap.has(row.id));
+
+    const deletedRows = initialDataRef.current.filter(
+      row => !incomes.find(r => r.id === row.id),
+    );
+
+    onDiffExtract({ updatedRows, createdRows, deletedRows });
+  }, [incomes, onDiffExtract]);
 
   const changeCode = () => {
     let studentsFeeCount = 100;
@@ -436,8 +498,13 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
   ];
 
   const addNewRow = () => {
-    const newRow = { ...defaultNewRow[0], id: fields.length };
+    const newRow = {
+      ...defaultNewRow[0],
+      id: nextIdRef.current, // TODO: this id is DB unique id, so this should be DB length.
+      rowId: nextIdRef.current,
+    };
     append(newRow);
+    nextIdRef.current += 1;
 
     const length = incomes.length + 1;
     setDynamicHeight(36 + length * 48 + 250);

@@ -1,9 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   Controller,
   FormProvider,
   useFieldArray,
   useForm,
+  useWatch,
   UseFormGetValues,
   UseFormSetValue,
 } from "react-hook-form";
@@ -47,7 +48,11 @@ import {
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import { FormValues } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import {
+  FormValues,
+  ManagerExpenditureProps,
+} from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import isEqual from "lodash/isEqual"; // CHACHA: array끼리 비교하는 데 필요함. lodash 통으로 import 하면 번들 너무 커짐
 
 export interface ManagerProjectNameCandidate {
   budgetDomain: BudgetDomainEnum;
@@ -59,6 +64,12 @@ interface ManagerExpenditureTableProps {
   formMethods: ReturnType<typeof useForm<FormValues>>;
   projectNameCandidate: ManagerProjectNameCandidate[];
   isProposal: boolean;
+  initialData: ManagerExpenditureProps[];
+  onDiffExtract?: (diff: {
+    updatedRows: ManagerExpenditureProps[];
+    createdRows: ManagerExpenditureProps[];
+    deletedRows: ManagerExpenditureProps[];
+  }) => void;
 }
 
 interface TableRowProps {
@@ -69,6 +80,7 @@ interface TableRowProps {
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
   projectNameCandidate: ManagerProjectNameCandidate[]; // CHACHA: 같은 구분, 예산 분류에 해당하는 사업명을 불러오는 것. 작년 것 아님!
+  // isDirty: boolean; // CHACHA: row가 수정되었는지
 }
 
 const TableWrapper = styled.table`
@@ -256,7 +268,7 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`expenditures.${rowIndex}.projectName`}
         render={({ field }) => (
-          <TableCell type="Default" width={0}>
+          <TableCell type="Default" width={0} minWidth={216}>
             <InputSelect
               items={setProjectNameListInputItem(getProjectNameCandidateList())}
               value={field.value}
@@ -402,6 +414,8 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   formMethods,
   projectNameCandidate,
   isProposal,
+  initialData,
+  onDiffExtract = () => {},
 }) => {
   const { handleSubmit, control, setValue, getValues } = formMethods;
   const { fields, append, remove } = useFieldArray({
@@ -409,7 +423,58 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
     name: "expenditures",
   });
 
-  const expenditures = formMethods.watch("expenditures");
+  const expenditures = useWatch({
+    control,
+    name: "expenditures",
+  });
+  const initialDataRef = useRef<ManagerExpenditureProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
+  const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
+
+  // const isRowDirty = (index: number) =>
+  //   !isEqual(expenditures[index], initialDataRef.current[index]);
+
+  useEffect(() => {
+    const initialMap = new Map(
+      initialDataRef.current.map(row => [row.id, row]),
+    );
+
+    expenditures.forEach((row, index) => {
+      const original = initialMap.get(row.id);
+      if (original && !isEqual(row, original)) {
+        console.log(original, row);
+        if (row.status !== DocumentReviewStatusEnum.Unsaved) {
+          setValue(
+            `expenditures.${index}.status`,
+            DocumentReviewStatusEnum.Unsaved,
+            {
+              shouldDirty: false,
+              shouldTouch: false,
+              shouldValidate: false,
+            },
+          );
+        }
+      }
+    });
+  }, [expenditures, setValue]);
+
+  useEffect(() => {
+    const initialMap = new Map(
+      initialDataRef.current.map(row => [row.id, row]),
+    );
+
+    const updatedRows = expenditures.filter(row => {
+      const original = initialMap.get(row.id);
+      return original && !isEqual(row, original);
+    });
+
+    const createdRows = expenditures.filter(row => !initialMap.has(row.id));
+
+    const deletedRows = initialDataRef.current.filter(
+      row => !expenditures.find(r => r.id === row.id),
+    );
+
+    onDiffExtract({ updatedRows, createdRows, deletedRows });
+  }, [expenditures, onDiffExtract]);
 
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     36 + (expenditures.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
@@ -467,10 +532,11 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   const addNewRow = () => {
     const newRow = {
       ...defaultNewRow[0],
-      id: fields.length, // TODO: this id is DB unique id, so this should be DB length.
-      rowId: fields.length,
+      id: nextIdRef.current, // TODO: this id is DB unique id, so this should be DB length.
+      rowId: nextIdRef.current,
     };
     append(newRow);
+    nextIdRef.current += 1;
 
     const length = expenditures.length + 1;
     setDynamicHeight(36 + length * 48 + 250);
@@ -492,7 +558,10 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log("Submitted incomes:", data.expenditures);
+    const dirtyRows = data.expenditures.filter(
+      (row, index) => !isEqual(row, initialDataRef.current[index]),
+    );
+    console.log("수정된 row만 제출:", dirtyRows);
   };
 
   return (
@@ -565,6 +634,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
                     deleteRow={() => deleteRow(index)}
                     isLast={index === expenditures.length - 1}
                     projectNameCandidate={projectNameCandidate}
+                    // isDirty={isRowDirty(index)}
                   />
                 ))}
               </TableContentWrapper>

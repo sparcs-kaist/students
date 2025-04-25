@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
@@ -19,7 +19,11 @@ import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/Co
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import ManagerIncomeTable from "@sparcs-students/web/features/document-lookup/budget/components/ManagerIncomeTable";
 import ManagerExpenditureTable from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTable";
-import { FormValues } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import {
+  FormValues,
+  ManagerExpenditureProps,
+  ManagerIncomeProps,
+} from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
 
@@ -38,16 +42,28 @@ const ManagerBudgetProposalFrame = () => {
     },
   });
 
+  const [dirtyExpenditures, setDirtyExpenditures] = useState<{
+    updatedRows: ManagerExpenditureProps[];
+    createdRows: ManagerExpenditureProps[];
+    deletedRows: ManagerExpenditureProps[];
+  }>({ updatedRows: [], createdRows: [], deletedRows: [] });
+
+  const [dirtyIncomes, setDirtyIncomes] = useState<{
+    updatedRows: ManagerIncomeProps[];
+    createdRows: ManagerIncomeProps[];
+    deletedRows: ManagerIncomeProps[];
+  }>({ updatedRows: [], createdRows: [], deletedRows: [] });
+
   const handleSubmitAll = () => {
-    // CHACHA: 백에 넘어가야 할 데이터들?
-    const incomeData = formMethods.getValues("incomes");
-    const expenditureData = formMethods.getValues("expenditures");
+    // CHACHA: 백에 넘어가야 할 데이터들
     const submissionDate = mockViewBudgetProposalResultData.submitDate;
 
-    console.log("제출할 income 데이터:", incomeData);
-    console.log("제출할 expenditure 데이터:", expenditureData);
     console.log("제출 날짜:", submissionDate);
     console.log("제출하는 문서의 정보:", mockViewBudgetProposalResultData);
+    console.log("제출 시 diff income 데이터:", dirtyIncomes);
+    console.log("제출 시 diff expenditure 데이터:", dirtyExpenditures);
+    // CHACHA: 여기서 추가된 row들에 부여된 id와 rowId는 현재 작업 중인 매니저의 프론트를 기준으로 할 뿐이지, db 기준이 아닙니다.
+    // 따라서 createdRows의 rowId는 DB에 들어가는대로 쓰여야 합니다.
   };
 
   const handleResetAll = () => {
@@ -93,11 +109,18 @@ const ManagerBudgetProposalFrame = () => {
   return (
     <FlexWrapper direction="column" gap={48}>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-        <ManagerIncomeTable formMethods={formMethods} isProposal />
+        <ManagerIncomeTable
+          formMethods={formMethods}
+          isProposal
+          initialData={mockManagerIncomeData}
+          onDiffExtract={setDirtyIncomes}
+        />
         <ManagerExpenditureTable
           formMethods={formMethods}
           projectNameCandidate={mockManagerProjectNameCandidateList}
           isProposal
+          initialData={mockManagerExpenditureData}
+          onDiffExtract={setDirtyExpenditures}
         />
         <TotalTable
           data={dataToTotal(
