@@ -14,7 +14,7 @@ import {
   zDocumentItemName,
   zMoney,
 } from "@sparcs-students/interface/common/stringLength";
-import { zProjectProposal } from "./projectProposal.type";
+import { zProjectProposal } from "./project-proposal.type";
 
 // BudgetProposalIncome: 예산안 수입 각 행 엔티티
 export const zBudgetProposalIncome = z.object({
