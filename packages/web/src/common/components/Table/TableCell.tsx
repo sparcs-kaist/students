@@ -18,6 +18,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
   width: string | number;
   minWidth: number;
 }>`
+  display: flex;
   width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
@@ -28,6 +29,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
+  ${({ width }) => (width === 0 ? "flex: 1;" : "")}
 `;
 
 const CommonCellBodyWrapper = styled.td.withConfig({
@@ -37,7 +39,7 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  ${({ width }) => (width === 0 ? "" : `${width}px`)}
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
@@ -46,11 +48,13 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
+  ${({ width }) => (width === 0 ? "flex: 1;" : "")}
 `;
 
 const CellText = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isGray: boolean; isSelect?: boolean }>`
+  display: flex;
   font-size: 14px;
   line-height: 14px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -58,6 +62,8 @@ const CellText = styled.div.withConfig({
     isGray ? theme.colors.GRAY[100] : theme.colors.BLACK};
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  justify-content: center;
 `;
 
 const HeaderInner = styled.div`

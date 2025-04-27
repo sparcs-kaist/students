@@ -1,6 +1,6 @@
 import React from "react";
 
-import Dropdown from "@sparcs-students/web/common/components/Select/Dropdown";
+import Dropdown from "@sparcs-students/web/common/components/Selects/Select/Dropdown";
 import SelectedItem from "@sparcs-students/web/common/components/SelectedItem";
 
 export interface FilterProps {

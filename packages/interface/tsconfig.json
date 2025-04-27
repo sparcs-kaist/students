@@ -5,9 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "baseUrl": "./src",
-    "paths": {
-      "@sparcs-students/interface/*": ["./*"]
-    }
+    "paths": { "@sparcs-students/interface/*": ["./*"] }
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "../api/src/common/base/field-operations.ts"]
 }
