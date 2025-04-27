@@ -22,7 +22,7 @@ import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
 import {
   IMeetingRequestCreate,
   IMeetingRequestUpdate,
-} from "@sparcs-students/interface/api/organization/type/meeting.type";
+} from "@sparcs-students/interface/api/meeting/type/meeting.type";
 import { MMeeting } from "../type/meeting.model";
 
 type IMeetingQuery = {

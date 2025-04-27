@@ -1,4 +1,4 @@
-import { IAgenda } from "@sparcs-students/interface/api/organization/type/meeting.type";
+import { IAgenda } from "@sparcs-students/interface/api/meeting/type/meeting.type";
 import { InferSelectModel } from "drizzle-orm";
 
 import { Agenda } from "@sparcs-students/api/drizzle/schema/meeting.schema";

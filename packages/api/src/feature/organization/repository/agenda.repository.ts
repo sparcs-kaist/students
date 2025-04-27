@@ -10,7 +10,7 @@ import { Agenda } from "src/drizzle/schema";
 import {
   IAgendaRequestCreate,
   IAgendaRequestUpdate,
-} from "@sparcs-students/interface/api/organization/type/meeting.type";
+} from "@sparcs-students/interface/api/meeting/type/meeting.type";
 import { MAgenda } from "../type/agenda.model";
 
 type IAgendaQuery = {

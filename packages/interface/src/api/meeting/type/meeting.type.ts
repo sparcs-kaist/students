@@ -14,13 +14,11 @@ export const zMeeting = z.object({
   id: zId,
   duration: zDuration,
   name: zName,
+  detail: z.string(),
 });
 
 export const zMeetingRequestCreate = zMeeting
-  .omit({
-    id: true,
-    duration: true,
-  })
+  .omit({ id: true, duration: true })
   .extend({ duration: zDurationCreate });
 
 export const zMeetingRequestUpdate = zMeeting;
@@ -45,9 +43,7 @@ export const zAgenda = z.object({
   postedAt: z.date(),
 });
 
-export const zAgendaRequestCreate = zAgenda.omit({
-  id: true,
-});
+export const zAgendaRequestCreate = zAgenda.omit({ id: true });
 
 export const zAgendaRequestUpdate = zAgenda;
 
