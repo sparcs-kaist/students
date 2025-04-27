@@ -35,6 +35,7 @@ const InputWrapper = styled.div`
   flex-direction: column;
   display: flex;
   gap: 4px;
+  flex: 1;
 `;
 
 const InputContainer = styled.div`
@@ -70,6 +71,7 @@ const Input = styled.input
   font-size: 14px;
   line-height: 14px;
   border: none;
+    text-align: center;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -123,6 +125,7 @@ const TableTextInput: React.FC<TextInputProps> = ({
           hasPrefix={!!prefix}
           value={prefix ? value.toString().replace(prefix, "") : value}
           onChange={handleValueChange}
+          style={{ flex: 1, width: "100%" }}
           {...props}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

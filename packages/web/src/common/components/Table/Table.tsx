@@ -145,6 +145,7 @@ const Table = <T,>({
                   <TableCell
                     key={header.id}
                     width={header.column.getSize()}
+                    minWidth={header.column.columnDef.minSize}
                     type="Header"
                   >
                     {flexRender(

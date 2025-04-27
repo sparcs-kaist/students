@@ -5,34 +5,29 @@ import { useParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import {
-  mockViewProjectResultData,
-  mockViewResultData,
-} from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+import { mockViewProjectReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 import ThreeInput, {
   ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import {
   mockOperationPlanData,
-  mockProjectProposalData,
   mockViewerProjectData,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import ViewerProjectTable from "@sparcs-students/web/features/project/components/ViewerProjectTable";
-import { UserPermission } from "@sparcs-students/web/features/documents/constants/userPermission";
+import ProjectTable from "@sparcs-students/web/features/project/components/ProjectTable";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import { overlay } from "overlay-kit";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
-import ReviewerProjectTable from "@sparcs-students/web/features/project/components/ReviewerProjectTable";
-import getMockUserPermission from "@sparcs-students/web/features/documents/services/getMockUserPermission";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -44,12 +39,12 @@ const ButtonWrapper = styled.div`
 const Proposal = () => {
   const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
-  const [date, setDate] = useState(mockViewResultData.submitDate);
+  const [date, setDate] = useState(mockViewProjectReportResultData.submitDate);
   const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.ProjectReport);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
+  const [isSpring, setIsSpring] = useState<boolean | null>(null);
+  const [type, setType] = useState<DocumentType | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(null); // TODO: enum으로 변경
   const userPermission = getMockUserPermission(); // TODO: api 연결
   const [review, setReview] = useState<string>("");
 
@@ -114,21 +109,15 @@ const Proposal = () => {
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewProjectResultData}
+          {...mockViewProjectReportResultData}
           submitDate={date}
           handleDateChange={setDate}
         />
-        {userPermission === UserPermission.Viewer && (
-          <ViewerProjectTable
+        {(userPermission === UserPermission.Viewer ||
+          userPermission === UserPermission.Reviewer) && (
+          <ProjectTable
             pageId={id}
             data={mockViewerProjectData}
-            isProposal={false}
-          />
-        )}
-        {userPermission === UserPermission.Reviewer && (
-          <ReviewerProjectTable
-            pageId={id}
-            initialData={mockProjectProposalData}
             isProposal={false}
           />
         )}
