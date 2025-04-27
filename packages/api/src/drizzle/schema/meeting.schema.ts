@@ -4,20 +4,20 @@ import {
   mysqlTable,
   timestamp,
   text,
-  boolean,
   foreignKey,
+  datetime,
 } from "drizzle-orm/mysql-core";
 
 // Meeting 테이블
 export const Meeting = mysqlTable("meeting", {
   id: int("id").autoincrement().primaryKey().notNull(),
-  startTerm: varchar("start_term", { length: 20 }).notNull(),
-  endTerm: varchar("end_term", { length: 20 }).notNull(),
+  name: varchar("name", { length: 30 }).notNull(),
+  detail: text("detail"),
+  startTerm: datetime("start_term").notNull(),
+  endTerm: datetime("end_term"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   deletedAt: timestamp("deleted_at"),
-  name: varchar("name", { length: 30 }).notNull(),
-  detail: text("detail"),
 });
 
 // Agenda 테이블
@@ -26,10 +26,11 @@ export const Agenda = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     meetingId: int("meeting_id").notNull(),
-    accepted: boolean("accepted"),
+    name: varchar("name", { length: 30 }).notNull(),
+    detail: text("detail"),
+    agendaStatusEnum: int("agenda_status_enum").notNull(),
+    submittedAt: datetime("submitted_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    submittedAt: timestamp("submitted_at"),
-    postedAt: timestamp("posted_at"),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },

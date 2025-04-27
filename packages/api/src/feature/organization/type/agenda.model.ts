@@ -1,34 +1,33 @@
-import { IAgenda } from "@sparcs-students/interface/api/meeting/type/meeting.type";
-import { InferSelectModel } from "drizzle-orm";
+import {
+  AgendaStatusEnum,
+  IAgenda,
+} from "@sparcs-students/interface/api/meeting/type/agenda.type";
 
-import { Agenda } from "@sparcs-students/api/drizzle/schema/meeting.schema";
+import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 
-export type AgendaDBResult = InferSelectModel<typeof Agenda>;
+export interface IAgendaCreate {
+  name: string;
+  detail: string;
+  agendaStatusEnum: AgendaStatusEnum;
+  meetingId: number;
+  submittedAt: Date;
+}
 
-export class MAgenda implements IAgenda {
-  id: IAgenda["id"];
+export class MAgenda extends MEntity implements IAgenda {
+  static modelName = "Agenda";
+
+  name: IAgenda["name"];
+
+  detail: IAgenda["detail"];
+
+  agendaStatusEnum: IAgenda["agendaStatusEnum"];
 
   meeting: IAgenda["meeting"];
 
-  accepted: IAgenda["accepted"];
-
   submittedAt: IAgenda["submittedAt"];
 
-  postedAt: IAgenda["postedAt"];
-
   constructor(data: IAgenda) {
+    super();
     Object.assign(this, data);
-  }
-
-  static fromDBResult(result: AgendaDBResult) {
-    return new MAgenda({
-      id: result.id,
-      meeting: {
-        id: result.meetingId,
-      },
-      accepted: result.accepted,
-      submittedAt: result.submittedAt,
-      postedAt: result.postedAt,
-    });
   }
 }
