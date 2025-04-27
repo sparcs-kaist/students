@@ -6,7 +6,10 @@ import {
   TableWithID,
 } from "@sparcs-students/api/common/base/base.repository";
 import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
-import { AgendaStatusEnum } from "@sparcs-students/interface/api/meeting/type/agenda.type";
+import {
+  AgendaStatusEnum,
+  AgendaTypeEnum,
+} from "@sparcs-students/interface/api/meeting/type/agenda.type";
 import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 import { Agenda } from "src/drizzle/schema";
 
@@ -16,9 +19,10 @@ export type AgendaQuery = {
   name: string;
   meetingId: number;
   agendaStatusEnum: AgendaStatusEnum;
+  agendaTypeEnum: AgendaTypeEnum;
 };
 
-type AgendaOrderByKeys = "id" | "agendaStatusEnum";
+type AgendaOrderByKeys = "id" | "agendaStatusEnum" | "agendaTypeEnum";
 type AgendaQuerySupport = EmptyObject;
 
 type AgendaTable = typeof Agenda;
