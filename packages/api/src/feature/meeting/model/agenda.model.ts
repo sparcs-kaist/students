@@ -1,16 +1,13 @@
-import {
-  AgendaStatusEnum,
-  IAgenda,
-} from "@sparcs-students/interface/api/meeting/type/agenda.type";
+import { IAgenda } from "@sparcs-students/interface/api/meeting/type/agenda.type";
 
 import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 
 export interface IAgendaCreate {
-  name: string;
-  detail: string;
-  agendaStatusEnum: AgendaStatusEnum;
-  meetingId: number;
-  submittedAt: Date;
+  name: IAgenda["name"];
+  detail: IAgenda["detail"];
+  agendaStatusEnum: IAgenda["agendaStatusEnum"];
+  agendaTypeEnum: IAgenda["agendaTypeEnum"];
+  meeting: IAgenda["meeting"];
 }
 
 export class MAgenda extends MEntity implements IAgenda {
@@ -21,6 +18,8 @@ export class MAgenda extends MEntity implements IAgenda {
   detail: IAgenda["detail"];
 
   agendaStatusEnum: IAgenda["agendaStatusEnum"];
+
+  agendaTypeEnum: IAgenda["agendaTypeEnum"];
 
   meeting: IAgenda["meeting"];
 

@@ -3,7 +3,8 @@ import { IMeeting } from "@sparcs-students/interface/api/meeting/type/meeting.ty
 import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 
 export interface IMeetingCreate {
-  duration: IMeeting["duration"];
+  semester: IMeeting["semester"];
+  meetingTypeEnum: IMeeting["meetingTypeEnum"];
   name: IMeeting["name"];
   detail: IMeeting["detail"];
 }
@@ -11,7 +12,9 @@ export interface IMeetingCreate {
 export class MMeeting extends MEntity implements IMeeting {
   static modelName = "Meeting";
 
-  duration: IMeeting["duration"];
+  semester: IMeeting["semester"];
+
+  meetingTypeEnum: IMeeting["meetingTypeEnum"];
 
   name: IMeeting["name"];
 

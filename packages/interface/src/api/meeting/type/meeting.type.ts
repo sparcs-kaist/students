@@ -1,7 +1,7 @@
-import { zId } from "@sparcs-students/interface/common/type/ids";
-import { zDuration } from "@sparcs-students/interface/common/type/time.type";
+import { zExtractId, zId } from "@sparcs-students/interface/common/type/ids";
 import { z } from "zod";
 import { zName } from "@sparcs-students/interface/common/stringLength";
+import { zSemester } from "@sparcs-students/interface/api/semester/type/semester.type";
 
 export enum MeetingTypeEnum {
   CentralOperativeCommittee = 1, // 중앙운영위원회
@@ -11,7 +11,8 @@ export enum MeetingTypeEnum {
 // meeting: 회의 엔티티
 export const zMeeting = z.object({
   id: zId,
-  duration: zDuration,
+  semester: zExtractId(zSemester), // TODO: 단위가 연도 / 학기 / 반기 인지 확인 필요
+  meetingTypeEnum: z.nativeEnum(MeetingTypeEnum),
   name: zName,
   detail: z.string(),
   startTerm: z.date().nullable(),
