@@ -13,7 +13,7 @@ export const Meeting = mysqlTable("meeting", {
   id: int("id").autoincrement().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
   detail: text("detail"),
-  startTerm: datetime("start_term").notNull(),
+  startTerm: datetime("start_term"),
   endTerm: datetime("end_term"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
