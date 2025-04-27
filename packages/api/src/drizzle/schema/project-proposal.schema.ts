@@ -161,6 +161,29 @@ export const OperatingCommitteeProposal = mysqlTable(
   }),
 );
 
+export const OperatingCommitteeProposalRevision = mysqlTable(
+  "operating_committee_proposal_revision",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    operatingCommitteeProposalId: int(
+      "operating_committee_proposal_id",
+    ).notNull(),
+    note: text("note"),
+    submittedAt: timestamp("submitted_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    operatingCommitteeProposalRevisionOperatingCommitteeProposalIdFk:
+      foreignKey({
+        columns: [table.operatingCommitteeProposalId],
+        foreignColumns: [OperatingCommitteeProposal.id],
+        name: "operating_committee_proposal_revision_original_id_fk",
+      }),
+  }),
+);
+
 export const ProjectProposalDocumentReview = mysqlTable(
   "project_proposal_document_review",
   {
