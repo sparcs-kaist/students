@@ -14,6 +14,8 @@ export const zMeeting = z.object({
   duration: zDuration,
   name: zName,
   detail: z.string(),
+  startTerm: z.date().nullable(),
+  endTerm: z.date().nullable(),
   // TODO: 참석자라던지... 안건지라던지... 추가적인 것들
 });
 

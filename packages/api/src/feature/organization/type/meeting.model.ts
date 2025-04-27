@@ -17,6 +17,10 @@ export class MMeeting extends MEntity implements IMeeting {
 
   detail: IMeeting["detail"];
 
+  startTerm: IMeeting["startTerm"];
+
+  endTerm: IMeeting["endTerm"];
+
   constructor(data: IMeeting) {
     super();
     Object.assign(this, data);
