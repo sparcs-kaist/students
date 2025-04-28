@@ -1,4 +1,4 @@
-import { TimelineDateTypeEnum } from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+import { TimelineDateTypeEnum } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 
 export enum DocumentTypeEnum {
   BudgetProposal = 1,

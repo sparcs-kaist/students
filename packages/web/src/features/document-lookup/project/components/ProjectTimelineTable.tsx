@@ -19,11 +19,11 @@ import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import TimeLineDateInput from "@sparcs-students/web/features/project/components/_atomic/TimelineDateInput";
+import TimeLineDateInput from "@sparcs-students/web/features/document-lookup/project/components/_atomic/TimelineDateInput";
 import {
   ProjectTimelineProps,
   TimelineDateTypeEnum,
-} from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 
 interface FormValues {
   timelines: ProjectTimelineProps[];

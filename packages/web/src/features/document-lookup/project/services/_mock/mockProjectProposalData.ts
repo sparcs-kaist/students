@@ -1,11 +1,11 @@
 import {
   ViewerProjectProps,
   ReviewerProjectProps,
-} from "@sparcs-students/web/features/project/components/ProjectTable";
-import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
-import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
-import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
-import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+} from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
+import { MemberProps } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
+import { OperationPlanProps } from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
+import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 
 export const mockProjectProposalData: ReviewerProjectProps[] = [
   {

@@ -16,7 +16,7 @@ import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { useRouter } from "next/navigation";
-import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
 
 export interface ViewerProjectProps {

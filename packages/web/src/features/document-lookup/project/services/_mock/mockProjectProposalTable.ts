@@ -6,7 +6,7 @@ import {
 import {
   ProjectTimelineProps,
   TimelineDateTypeEnum,
-} from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 
 export const ProjectProposalList: ProjectProposal[] = [
   {
