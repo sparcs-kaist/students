@@ -116,7 +116,7 @@ const ManagerBudgetProposalFrame = () => {
           onDiffExtract={setDirtyIncomes}
         />
         <ManagerExpenditureTable
-          formMethods={formMethods}
+          formMethods={formMethods} // CHACHA: 예산안 쪽이랑 사계 상세 쪽이랑 받는 formValues 형태가 달라서 문제
           projectNameCandidate={mockManagerProjectNameCandidateList}
           isProposal
           initialData={mockDBExpenditureData}

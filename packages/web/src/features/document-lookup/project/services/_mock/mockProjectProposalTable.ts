@@ -2,11 +2,13 @@ import {
   DocumentTypeEnum,
   ProjectProposal,
   ProjectProposalContent,
+  ProjectProposalDetailTotalReview,
 } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import {
   ProjectTimelineProps,
   TimelineDateTypeEnum,
 } from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 
 export const ProjectProposalList: ProjectProposal[] = [
   {
@@ -30,8 +32,10 @@ export const ProjectProposalSingleContent: ProjectProposalContent[] = [
       value: [new Date(2025, 4, 9), new Date(2025, 4, 16)],
       type: TimelineDateTypeEnum.Date,
     },
-    teamId: 0,
-    manager: 10,
+    manager: {
+      teamId: 0,
+      member: 10,
+    },
     purpose: "학생들의 시험 기간 응원 및 간식 제공을 위하여 본 사업을 진행함.",
     beneficiary: "KAIST 전체 학우",
     detail:
@@ -52,8 +56,10 @@ export const ProjectProposalSingleContent: ProjectProposalContent[] = [
       value: [new Date(2025, 2, 29), new Date(2025, 2, 29)],
       type: TimelineDateTypeEnum.Date,
     },
-    teamId: 1,
-    manager: 11,
+    manager: {
+      teamId: 1,
+      member: 11,
+    },
     purpose: "신입생들의 학과 및 학교 생활 적응 지원",
     beneficiary: "신입생 전체",
     detail: "기념품 제작 및 행사 기획, 장소 섭외 등",
@@ -73,8 +79,10 @@ export const ProjectProposalSingleContent: ProjectProposalContent[] = [
       value: [new Date(2025, 3, 15), new Date(2025, 3, 22)],
       type: TimelineDateTypeEnum.Date,
     },
-    teamId: 2,
-    manager: 12,
+    manager: {
+      teamId: 2,
+      member: 12,
+    },
     purpose: "중간고사 기간 학습 환경 개선을 통한 성적 향상 도모",
     beneficiary: "전체 학부생",
     detail: "조명 개선, 스터디존 확보, 간식 제공",
@@ -94,8 +102,10 @@ export const ProjectProposalSingleContent: ProjectProposalContent[] = [
       value: [new Date(2025, 5, 8), new Date(2025, 5, 9)],
       type: TimelineDateTypeEnum.Date,
     },
-    teamId: 3,
-    manager: 13,
+    manager: {
+      teamId: 3,
+      member: 13,
+    },
     purpose: "학생 간의 소통 및 공동체 의식 고취",
     beneficiary: "KAIST 재학생",
     detail: "버스킹, 푸드트럭, 전시회 운영",
@@ -151,3 +161,31 @@ export const ProjectProposalTimelines: ProjectTimelineProps[] = [
     reason: "어떠한 비고",
   },
 ];
+
+export const mockProjectProposalDetailTotalReview: ProjectProposalDetailTotalReview[] =
+  [
+    {
+      id: 0,
+      projectProposalContentId: 0,
+      reviewText: "세부 사업 내용을 더 구체적으로 적어주시기 바랍니다.",
+      reviewStatus: DocumentReviewStatusEnum.ReviseNeeded,
+    },
+    {
+      id: 1,
+      projectProposalContentId: 1,
+      reviewText: "",
+      reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
+    },
+    {
+      id: 2,
+      projectProposalContentId: 2,
+      reviewText: "다시 써 오세요.",
+      reviewStatus: DocumentReviewStatusEnum.ReviewRejected,
+    },
+    {
+      id: 3,
+      projectProposalContentId: 3,
+      reviewText: "",
+      reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
+    },
+  ];

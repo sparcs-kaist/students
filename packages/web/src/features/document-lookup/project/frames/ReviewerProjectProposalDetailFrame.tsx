@@ -57,7 +57,7 @@ const ReviewButtonWrapper = styled.div`
   gap: 8px;
 `;
 
-const ViewerProjectProposalDetailFrame: React.FC = () => {
+const ReviewerProjectProposalDetailFrame: React.FC = () => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
   const manager = useRef<HTMLDivElement>(null);
@@ -66,11 +66,12 @@ const ViewerProjectProposalDetailFrame: React.FC = () => {
   const documentDetail = useRef<HTMLDivElement>(null);
   const documentTimeline = useRef<HTMLDivElement>(null);
   const documentExpenditure = useRef<HTMLDivElement>(null);
+  const documentReview = useRef<HTMLDivElement>(null);
 
   const { resultId, detailId } = useParams();
   const theme = useTheme();
-  const [totalReviewText, setTotalReviewText] = useState("");
-  const [status, setStatus] = useState<DocumentReviewStatusEnum>(
+  const [totalReviewText, setTotalReviewText] = useState(""); // 사업계획서 검토 text
+  const [status, setStatus] = useState<DocumentReviewStatusEnum>( // 사업계획서 검토 text 아래의 반려 / 수정요청 / 승인
     DocumentReviewStatusEnum.Accepted,
   );
   const proposal = ProjectProposalSingleContent.find(
@@ -90,6 +91,7 @@ const ViewerProjectProposalDetailFrame: React.FC = () => {
     { name: "사업 세부 내용", reference: documentDetail },
     { name: "사업 진행 타임라인", reference: documentTimeline },
     { name: "사업 예산안", reference: documentExpenditure },
+    { name: "사업계획서 검토", reference: documentReview },
   ];
 
   const [resetKey, setResetKey] = useState(0);
@@ -117,7 +119,9 @@ const ViewerProjectProposalDetailFrame: React.FC = () => {
   const handleSubmitAll = () => {
     // CHACHA: 백에 넘어가야 할 데이터들
     const review = reviewData;
-    console.log("제출된 리뷰:", review);
+    console.log("제출된 예산안 리뷰:", review);
+    console.log("제출된 사업계획서 전체 검토:", totalReviewText);
+    console.log("제출된 사업계획서 전체 검토 상태:", status);
   };
 
   const handleResetAll = () => {
@@ -254,7 +258,7 @@ const ViewerProjectProposalDetailFrame: React.FC = () => {
             }}
           />
         </FlexWrapper>
-        <FlexWrapper direction="column" gap={12}>
+        <FlexWrapper direction="column" gap={12} ref={documentReview}>
           <Typography fs={24} lh={30} fw="BOLD">
             사업계획서 검토
           </Typography>
@@ -355,4 +359,4 @@ const ViewerProjectProposalDetailFrame: React.FC = () => {
   );
 };
 
-export default ViewerProjectProposalDetailFrame;
+export default ReviewerProjectProposalDetailFrame;

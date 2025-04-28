@@ -11,6 +11,7 @@ import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import ReviewerProjectProposalDetailFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectProposalDetailFrame";
+import ManagerProjectProposalDetailFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalDetailFrame";
 
 const DocumentDetailPage: React.FC = () => {
   const userPermission = getMockUserPermission();
@@ -57,6 +58,9 @@ const DocumentDetailPage: React.FC = () => {
       )}
       {userPermission === UserPermission.Reviewer && (
         <ReviewerProjectProposalDetailFrame />
+      )}
+      {userPermission === UserPermission.Manager && (
+        <ManagerProjectProposalDetailFrame />
       )}
     </FlexWrapper>
   );
