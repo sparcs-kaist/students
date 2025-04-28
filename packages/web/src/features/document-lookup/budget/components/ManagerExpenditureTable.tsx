@@ -430,9 +430,6 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   const initialDataRef = useRef<DBExpenditureProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
   const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
 
-  // const isRowDirty = (index: number) =>
-  //   !isEqual(expenditures[index], initialDataRef.current[index]);
-
   useEffect(() => {
     const initialMap = new Map(
       initialDataRef.current.map(row => [row.id, row]),
@@ -440,8 +437,23 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
 
     expenditures.forEach((row, index) => {
       const original = initialMap.get(row.id);
-      if (original && !isEqual(row, original)) {
-        console.log(original, row);
+      if (!original) return;
+
+      const normalizedRow = {
+        ...row,
+        projectName: (row.projectName ?? "").trim(),
+      };
+      const normalizedOriginal = {
+        ...original,
+        projectName: (original.projectName ?? "").trim(),
+      };
+      console.log("normalizedRow:", normalizedRow);
+      console.log("normalizedOriginal:", normalizedOriginal);
+      console.log(normalizedRow === normalizedOriginal);
+      console.log("originalstatus", original.status);
+      console.log(row.status !== original.status);
+
+      if (!isEqual(normalizedRow, normalizedOriginal)) {
         if (row.status !== DocumentReviewStatusEnum.Unsaved) {
           setValue(
             `expenditures.${index}.status`,
@@ -453,6 +465,16 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
             },
           );
         }
+      }
+      if (
+        normalizedRow === normalizedOriginal &&
+        row.status !== original.status
+      ) {
+        setValue(`expenditures.${index}.status`, original.status, {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        });
       }
     });
   }, [expenditures, setValue]);
