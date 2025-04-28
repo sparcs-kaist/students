@@ -18,6 +18,7 @@ import ThreeInput, {
 import ReviewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectProposalFrame";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalFrame";
+import ManagerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalFrame";
 
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -123,9 +124,9 @@ const Proposal = () => {
         {userPermission === UserPermission.Reviewer && (
           <ReviewerProjectProposalFrame />
         )}
-        {/* {userPermission === UserPermission.Manager && ( */}
-        {/*   <ManagerProjectProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Manager && (
+          <ManagerProjectProposalFrame />
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );
