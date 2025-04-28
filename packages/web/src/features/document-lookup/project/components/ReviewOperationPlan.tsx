@@ -5,7 +5,7 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import styled, { useTheme } from "styled-components";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 
 interface ReviewOperationPlanProps {
   review?: string;

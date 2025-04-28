@@ -1,4 +1,4 @@
-import { TimelineDateTypeEnum } from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+import { TimelineDateTypeEnum } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 

@@ -14,7 +14,7 @@ import { mockData } from "@sparcs-students/web/features/document-lookup/componen
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 
-// import ViewerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetProposalFrame";
+// import ViewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetProposalFrame";
 import ReviewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetProposalFrame";
 // import ManagerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetProposalFrame";
 import { useRouter, useSearchParams } from "next/navigation";

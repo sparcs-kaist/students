@@ -3,7 +3,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import GroupDetail, {
   GroupProps,
-} from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
+} from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
 
 interface GroupListProps {
   data: GroupProps[];
