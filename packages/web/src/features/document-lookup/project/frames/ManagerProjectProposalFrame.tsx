@@ -1,10 +1,10 @@
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import ProjectTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
+// import ProjectTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
 import {
   mockOperationPlanData,
-  mockViewerProjectData,
+  // mockViewerProjectData,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
 import OperationPlan from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
 import ReviewOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ReviewOperationPlan";
@@ -24,7 +24,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const ReviewerProjectProposalFrame = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
   const [review, setReview] = useState<string>("");
   const handleSubmitAll = () => {
     console.log("리뷰하는 문서의 정보:", mockViewProjectProposalResultData);
@@ -70,11 +70,7 @@ const ReviewerProjectProposalFrame = () => {
 
   return (
     <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-      <ProjectTable
-        pageId={parseInt(id as string)}
-        data={mockViewerProjectData}
-        isProposal
-      />
+      {/* <ProjectTable pageId={id} data={mockViewerProjectData} isProposal /> */}
       <OperationPlan {...mockOperationPlanData} />
       <ReviewOperationPlan review={review} reviewHandler={setReview} />
       <ButtonWrapper>

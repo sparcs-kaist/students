@@ -35,9 +35,10 @@ export interface ReviewerProjectProps {
 }
 
 interface ProjectTableProps {
-  pageId: string | string[];
+  pageId: number;
   data: ViewerProjectProps[];
   isProposal?: boolean;
+  query?: string;
 }
 
 const columnHelper = createColumnHelper<ViewerProjectProps>();
@@ -46,14 +47,24 @@ const columns = [
   columnHelper.accessor("id", {
     id: "id",
     header: "번호",
-    cell: info => info.getValue(),
+    cell: info => parseInt(info.getValue()) + 1, // CHACHA: 1부터 시작하게 하자
     size: 90,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "사업명",
-    cell: info => <HoverClickText text={info.getValue()} />,
-    size: 861,
+    cell: info => (
+      <HoverClickText
+        text={info.getValue()}
+        // onClick={() =>
+        //   router.push(
+        //     `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/${query}/detail/${row.id}`,
+        //   )
+        // }
+      />
+    ),
+    minSize: 861,
+    size: 0,
   }),
   columnHelper.accessor("projectPeriod", {
     id: "projectPeriod",
@@ -80,6 +91,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
   pageId,
   data,
   isProposal = true,
+  query = "",
 }) => {
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
@@ -107,7 +119,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
           table={table}
           onClick={row =>
             router.push(
-              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}`,
+              `/document-lookup/${isProposal ? "project-proposal" : "project-report"}/result/${pageId}/detail/${row.id}?${query}`,
             )
           }
           emptyMessage={

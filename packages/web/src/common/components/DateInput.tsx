@@ -20,7 +20,7 @@ interface DateInputProps {
   minDate?: Date;
   maxDate?: Date;
   placeholderText?: string;
-  showTimeInput?: boolean;
+  dateFormat?: string;
 }
 
 const DateInputWrapper = styled.div<{ disabled: boolean }>`
@@ -187,7 +187,29 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
   .react-datepicker__sunday-outside-month {
     color: ${({ theme }) => theme.colors.RED[300]};
   }
-
+  .react-datepicker__month {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .react-datepicker__month-wrapper {
+    display: flex;
+    align-items: space-between;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .react-datepicker__month-text {
+    display: flex;
+    width: 40px;
+    height: 24px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .react-datepicker__month-text--keyboard-selected {
+    border-radius: 2px;
+    background-color: ${({ theme }) => theme.colors.GREEN[300]};
+  }
   ::placeholder {
     opacity: 1;
     color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -213,8 +235,12 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
     text-align: left;
     border: none;
     outline: none;
-    width: 100%;
+    width: fit-content;
     padding: 0px;
+    min-width: 200px; /* 추가 */
+    max-width: 100%; /* 추가 */
+    padding: 0px;
+    cursor: pointer;
   }
 `;
 
@@ -252,7 +278,7 @@ const DateInput: React.FC<
   minDate = undefined,
   maxDate = undefined,
   placeholderText = undefined,
-  showTimeInput = undefined,
+  dateFormat = "yyyy.MM.dd",
 }) => {
   const currentMonthRef = useRef<Date>(new Date());
   const datePickerRef = useRef<DatePicker | null>(null);
@@ -277,10 +303,11 @@ const DateInput: React.FC<
         <DatePicker
           ref={datePickerRef}
           disabled={disabled}
-          dateFormat={showTimeInput ? "yyyy.MM.dd HH:mm" : "yyyy.MM.dd"}
+          dateFormat={dateFormat}
           placeholderText={placeholderText}
           selectsRange
           selected={null}
+          withPortal
           startDate={startDate}
           endDate={endDate}
           onChange={onChange}
@@ -290,24 +317,6 @@ const DateInput: React.FC<
             const currentMonth = currentMonthRef.current.getMonth();
             return date.getMonth() === currentMonth;
           }}
-          // dayClassName={date => {
-          //   const day = date.getDay();
-          //
-          //   if (day === 6) {
-          //     if (date.getMonth() !== currentMonthDate.getMonth()) {
-          //       return "react-datepicker__sunday-outside-month";
-          //     }
-          //     return "react-datepicker__sunday";
-          //   }
-          //   if (day === 5) {
-          //     if (date.getMonth() !== currentMonthDate.getMonth()) {
-          //       return "react-datepicker__saturday-outside-month";
-          //     }
-          //     return "react-datepicker__saturday";
-          //   }
-          //   // CHACHA: react datepicker and students design is different.
-          //   return "react-datepicker__day";
-          // }}
           dayClassName={date => {
             const day = date.getDay();
             const currentMonth = currentMonthRef.current.getMonth();

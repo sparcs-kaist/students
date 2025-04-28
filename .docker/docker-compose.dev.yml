@@ -19,4 +19,4 @@ services:
       interval: 1s
       retries: 30
 volumes:
-db:
+  db:

@@ -16,6 +16,8 @@ import ThreeInput, {
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import ReviewerProjectReportFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectReportFrame";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerProjectReportFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectReportFrame";
 
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -34,7 +36,7 @@ const Proposal = () => {
   const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   const router = useRouter();
 
@@ -111,9 +113,9 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === UserPermission.Viewer && ( */}
-        {/*   <ViewerProjectReportFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectReportFrame />
+        )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerProjectReportFrame />
         )}

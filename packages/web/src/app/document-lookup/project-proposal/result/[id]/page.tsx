@@ -16,9 +16,13 @@ import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import ReviewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectProposalFrame";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalFrame";
+import ManagerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalFrame";
 
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
+  // const { id: resultId } = useParams();
   const searchParams = useSearchParams();
   const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
   const queryIsSpring = searchParams.get("isSpring") === "true";
@@ -26,6 +30,7 @@ const Proposal = () => {
   const queryKey = searchParams.get("key");
   const queryValue = searchParams.get("value");
   const queryId = parseInt(searchParams.get("id") || "");
+  // const queryId = parseInt(resultId as string);
 
   const [date, setDate] = useState(
     mockViewProjectProposalResultData.submitDate,
@@ -36,7 +41,7 @@ const Proposal = () => {
   const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission();
 
   const router = useRouter();
 
@@ -113,15 +118,15 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === UserPermission.Viewer && ( */}
-        {/*   <ViewerProjectProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectProposalFrame />
+        )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerProjectProposalFrame />
         )}
-        {/* {userPermission === UserPermission.Manager && ( */}
-        {/*   <ManagerProjectProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Manager && (
+          <ManagerProjectProposalFrame />
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );
