@@ -196,7 +196,10 @@ const ReviewerProjectProposalDetailFrame: React.FC = () => {
         <FlexWrapper direction="row" gap={60} ref={manager}>
           <TextAreaWithHeader
             header="담당부서 / 담당자"
-            contents={[`${proposal.teamId}`, `${proposal.manager}`]}
+            contents={[
+              `${proposal.manager.teamId}`,
+              `${proposal.manager.member}`,
+            ]}
           />
         </FlexWrapper>
         <FlexWrapper direction="row" gap={60} ref={documentPurpose}>

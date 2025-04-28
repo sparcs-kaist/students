@@ -70,7 +70,11 @@ const ReviewerProjectProposalFrame = () => {
 
   return (
     <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-      <ProjectTable pageId={id} data={mockViewerProjectData} isProposal />
+      <ProjectTable
+        pageId={parseInt(id as string)}
+        data={mockViewerProjectData}
+        isProposal
+      />
       <OperationPlan {...mockOperationPlanData} />
       <ReviewOperationPlan review={review} reviewHandler={setReview} />
       <ButtonWrapper>
