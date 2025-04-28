@@ -4,7 +4,6 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
-  UseFormGetValues,
   UseFormSetValue,
 } from "react-hook-form";
 
@@ -36,7 +35,6 @@ interface ProjectTimelineTableProps {
 
 interface TableRowProps {
   setValue: UseFormSetValue<FormValues>;
-  getValues: UseFormGetValues<FormValues>;
   rowIndex: number;
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
@@ -91,7 +89,6 @@ const TitleWithButtonWrapper = styled.div`
 
 const TableRow: React.FC<TableRowProps> = ({
   setValue,
-  getValues,
   rowIndex,
   deleteRow,
   isLast,
@@ -99,7 +96,7 @@ const TableRow: React.FC<TableRowProps> = ({
 }) => (
   <TableRowWrapper isLast={isLast}>
     <Controller
-      name={`timeline.${rowIndex}.index`}
+      name={`timelines.${rowIndex}.index`}
       render={() => (
         <TableCell type="Default" width="60px">
           <Typography>{rowIndex + 1}</Typography>
@@ -136,9 +133,9 @@ const TableRow: React.FC<TableRowProps> = ({
       }}
     />
     <Controller
-      name={`timeline.${rowIndex}.content`}
+      name={`timelines.${rowIndex}.content`}
       render={({ field }) => (
-        <TableCell type="Default" width="330px">
+        <TableCell type="Default" minWidth={330} width={0}>
           <TableTextInput
             placeholder="사업 내용을 입력하세요."
             handleChange={newVal => {
@@ -153,7 +150,7 @@ const TableRow: React.FC<TableRowProps> = ({
     <Controller
       name={`timeline.${rowIndex}.reason`}
       render={({ field }) => {
-        const projectItem = getValues(`timelines.${rowIndex}.content`);
+        const projectItem = "타임라인";
         return (
           <TableCell type="Default" width="90px">
             <EditableDetailButton
@@ -199,7 +196,6 @@ const ProjectTimelineTable: React.FC<ProjectTimelineTableProps> = ({
     // handleSubmit,
     control,
     setValue,
-    getValues,
   } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
@@ -287,7 +283,6 @@ const ProjectTimelineTable: React.FC<ProjectTimelineTableProps> = ({
                 {fields.map((field, index) => (
                   <TableRow
                     setValue={setValue}
-                    getValues={getValues}
                     key={field.id}
                     rowIndex={index}
                     deleteRow={() => deleteRow(index)}

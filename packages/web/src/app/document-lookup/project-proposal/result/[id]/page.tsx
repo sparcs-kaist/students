@@ -17,6 +17,7 @@ import ThreeInput, {
 } from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import ReviewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectProposalFrame";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalFrame";
 
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -116,9 +117,9 @@ const Proposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === UserPermission.Viewer && ( */}
-        {/*   <ViewerProjectProposalFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectProposalFrame />
+        )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerProjectProposalFrame />
         )}

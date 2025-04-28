@@ -8,6 +8,7 @@ import {
   ProjectTimelineProps,
   TimelineDateTypeEnum,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 
 export const ProjectProposalList: ProjectProposal[] = [
   {
@@ -33,7 +34,7 @@ export const ProjectProposalSingleContent: ProjectProposalContent[] = [
     },
     manager: {
       teamId: 0,
-      member: 10,
+      member: 10, // userId
     },
     purpose: "학생들의 시험 기간 응원 및 간식 제공을 위하여 본 사업을 진행함.",
     beneficiary: "KAIST 전체 학우",
@@ -188,3 +189,13 @@ export const mockProjectProposalDetailTotalReview: ProjectProposalDetailTotalRev
       reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
     },
   ];
+
+export function mapTimelineIdsToObjects(
+  timelineIds: number[],
+): ProjectTimelineProps[] {
+  return timelineIds
+    .map(id => ProjectProposalTimelines.find(timeline => timeline.id === id))
+    .filter(
+      (timeline): timeline is ProjectTimelineProps => timeline !== undefined,
+    );
+}

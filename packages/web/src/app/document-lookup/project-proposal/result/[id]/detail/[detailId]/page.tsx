@@ -5,7 +5,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 
 import { useParams, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import ViewerProjectProposalDetailFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalDetailFrame";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
@@ -33,6 +33,8 @@ const DocumentDetailPage: React.FC = () => {
     value: queryValue ?? "",
   }).toString();
 
+  const [projectTitle, setProjectTitle] = useState("사업명");
+
   const breadcrumbItems = [
     { name: "예결산 조회", path: "/document-lookup" },
     {
@@ -40,7 +42,7 @@ const DocumentDetailPage: React.FC = () => {
       path: `/document-lookup/project-proposal/result/${resultId}?${query}`,
     },
     {
-      name: "사업명",
+      name: projectTitle || "사업명",
       path: `/document-lookup/project-proposal/result/${resultId}/detail/${detailId}?${query}`,
     },
   ];
@@ -60,7 +62,7 @@ const DocumentDetailPage: React.FC = () => {
         <ReviewerProjectProposalDetailFrame />
       )}
       {userPermission === UserPermission.Manager && (
-        <ManagerProjectProposalDetailFrame />
+        <ManagerProjectProposalDetailFrame setProjectTitle={setProjectTitle} />
       )}
     </FlexWrapper>
   );

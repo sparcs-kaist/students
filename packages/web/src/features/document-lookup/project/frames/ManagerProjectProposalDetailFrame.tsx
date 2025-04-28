@@ -3,38 +3,42 @@
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
 import {
+  mapTimelineIdsToObjects,
   ProjectProposalSingleContent,
-  ProjectProposalTimelines,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable"; // TODO: API 호출로 받아오는 데이터
 import { useParams } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import {
-  ProjectProposalContent,
-  FormValues,
-} from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
-import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
+import { FormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import {
   mockDBExpenditureData,
   mockManagerProjectNameCandidateList,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
-// import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
-// import ReviewerExpenditureTable from "@sparcs-students/web/features/document-lookup/budget/components/ReviewerExpenditureTable";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import ManagerExpenditureTable from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTable";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
-// import TimeLineDateInput from "@sparcs-students/web/features/project/components/_atomic/TimelineDateInput";
-import ProjectTimelineTable from "@sparcs-students/web/features/project/components/ProjectTimelineTable";
+import ProjectTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTimelineTable";
+import { TimelineDateTypeEnum } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
+import TimeLineDateInput from "@sparcs-students/web/features/document-lookup/project/components/_atomic/TimelineDateInput";
+import {
+  mockTeamList,
+  mockTeamStructure,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockTeamManager";
+import TwoSelect from "@sparcs-students/web/common/components/Selects/TwoSelect";
+import ManagerExpenditureTableInProjectDetail from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTableInProjectDetail";
+import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 const headerHeight = 70;
+
+interface ManagerProjectProposalDetailFrameProps {
+  setProjectTitle: (title: string) => void;
+}
 
 const ScrollAbleArea = styled.div`
   display: flex;
@@ -59,7 +63,17 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const ManagerProjectProposalDetailFrame: React.FC = () => {
+const TextAndInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1 0 0;
+`;
+
+const ManagerProjectProposalDetailFrame: React.FC<
+  ManagerProjectProposalDetailFrameProps
+> = ({ setProjectTitle }) => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
   const manager = useRef<HTMLDivElement>(null);
@@ -72,19 +86,24 @@ const ManagerProjectProposalDetailFrame: React.FC = () => {
   const { detailId } = useParams(); // resultId 언젠간 쓸 것.
   const formMethods = useForm<FormValues>({
     defaultValues: {
-      proposalDetail:
-        ProjectProposalSingleContent[parseInt(detailId as string)], // CHACHA: 현재 페이지의 detailId와 같은 index, 실제로는 DB에서 온 값
-      expenditures: mockDBExpenditureData, // CHACHA: 현재 페이지의 사업명과 동일한 예산안 지출 row만 가져와야 함.
+      proposalDetail: {
+        ...ProjectProposalSingleContent[parseInt(detailId as string)],
+      },
+      expenditures: mockDBExpenditureData,
     },
   });
+  const { control, setValue, getValues } = formMethods;
 
-  const proposal = ProjectProposalSingleContent.find(
-    item => item.contentId === Number(detailId),
-  ) as ProjectProposalContent;
+  const proposalDetail = useWatch({
+    control,
+    name: "proposalDetail",
+  });
 
-  const timelines = ProjectProposalTimelines.filter(t =>
-    proposal?.timelineIds.includes(t.id),
-  );
+  useEffect(() => {
+    if (proposalDetail?.title) {
+      setProjectTitle(proposalDetail.title);
+    }
+  }, [proposalDetail?.title, setProjectTitle]);
 
   const indexContents = [
     { name: "사업명, 사업개요", reference: documentTitle },
@@ -99,13 +118,26 @@ const ManagerProjectProposalDetailFrame: React.FC = () => {
 
   const [resetKey, setResetKey] = useState(0); // 실시간 edit 렌더링 시 필요!
 
+  const [dirtyExpenditures, setDirtyExpenditures] = useState<{
+    updatedRows: DBExpenditureProps[];
+    createdRows: DBExpenditureProps[];
+    deletedRows: DBExpenditureProps[];
+  }>({ updatedRows: [], createdRows: [], deletedRows: [] });
+
   const handleSubmitAll = () => {
     // CHACHA: 백에 넘어가야 할 데이터들
+    console.log("제출된 사업계획서 상세 내용", proposalDetail);
+    console.log("제출된 예산안 변경 내역", dirtyExpenditures);
   };
 
   const handleResetAll = () => {
     setResetKey(prev => prev + 1); // CHACHA: re-render
-    console.log(resetKey); // 커밋을 위한 임시
+    formMethods.reset({
+      proposalDetail: {
+        ...ProjectProposalSingleContent[parseInt(detailId as string)],
+      },
+      expenditures: mockDBExpenditureData,
+    });
   };
 
   const openSaveModal = () => {
@@ -135,77 +167,191 @@ const ManagerProjectProposalDetailFrame: React.FC = () => {
           }}
           onClose={() => close()}
         >
-          임시저장 내역을{"\n"}모두 삭제하시겠습니까?
+          수정 내역을{"\n"}모두 삭제하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
   };
 
   return (
-    <ScrollAbleArea>
+    <ScrollAbleArea key={resetKey}>
       <ContentsArea>
         <FormProvider {...formMethods}>
           <FlexWrapper direction="row" gap={60} ref={documentTitle}>
             <Controller
-              name="projectDetail.title"
+              name="proposalDetail.title"
               render={({ field }) => (
-                // CHACHA: need header
-                <TextInput placeholder="내용을 입력하세요." {...field} />
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업명
+                  </Typography>
+                  <TextInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
               )}
             />
             <Controller
-              name="projectDetail.brief"
+              name="proposalDetail.brief"
               render={({ field }) => (
-                // CHACHA: need header
-                <TextInput placeholder="내용을 입력하세요." {...field} />
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업 개요
+                  </Typography>
+                  <TextInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
               )}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentPeriod}>
             <Controller
-              name="projectDetail.preparationPeriod"
-              render={({ field }) => (
-                <TextAreaWithHeader // CHACHA: impl component
-                  header="사업 준비 기간"
-                  contents={[
-                    field.value
-                      .map((d: Date) => (d ? formatDotDate(d) : "미정"))
-                      .join(" - "),
-                  ]}
-                />
-              )}
+              name="proposalDetail.preparationPeriod"
+              control={control}
+              render={({ field }) => {
+                const currentValue: [Date | null, Date | null] = field.value
+                  ?.value ?? [null, null];
+                const currentType: TimelineDateTypeEnum | undefined =
+                  field.value?.type;
+
+                return (
+                  <TextAndInputWrapper>
+                    <Typography fs={24} lh={30} fw="BOLD">
+                      사업 준비 기간
+                    </Typography>
+                    <TimeLineDateInput
+                      dateValue={currentValue}
+                      dateType={currentType}
+                      onValueChange={newVal => {
+                        field.onChange({
+                          ...field.value,
+                          value: newVal,
+                        });
+                      }}
+                      onTypeChange={newType => {
+                        field.onChange({
+                          ...field.value,
+                          type: newType,
+                        });
+                      }}
+                      typeItems={[
+                        { label: "분기", value: TimelineDateTypeEnum.Half },
+                        {
+                          label: "분기(상시)",
+                          value: TimelineDateTypeEnum.HalfAlways,
+                        },
+                        {
+                          label: "연도, 월",
+                          value: TimelineDateTypeEnum.Month,
+                        },
+                        {
+                          label: "연도, 월, 일",
+                          value: TimelineDateTypeEnum.Date,
+                        },
+                      ]}
+                    />
+                  </TextAndInputWrapper>
+                );
+              }}
             />
+
             <Controller
-              name="projectDetail.executionPeriod"
-              render={({ field }) => (
-                <TextAreaWithHeader // CHACHA: impl component
-                  header="사업 일시"
-                  contents={[
-                    field.value
-                      .map((d: Date) => (d ? formatDotDate(d) : "미정"))
-                      .join(" - "),
-                  ]}
-                />
-              )}
+              name="proposalDetail.executionPeriod"
+              control={control}
+              render={({ field }) => {
+                const currentValue: [Date | null, Date | null] = field.value
+                  ?.value ?? [null, null];
+                const currentType: TimelineDateTypeEnum | undefined =
+                  field.value?.type;
+
+                return (
+                  <TextAndInputWrapper>
+                    <Typography fs={24} lh={30} fw="BOLD">
+                      사업 일시
+                    </Typography>
+                    <TimeLineDateInput
+                      dateValue={currentValue}
+                      dateType={currentType}
+                      onValueChange={newVal => {
+                        field.onChange({
+                          ...field.value,
+                          value: newVal,
+                        });
+                      }}
+                      onTypeChange={newType => {
+                        field.onChange({
+                          ...field.value,
+                          type: newType,
+                        });
+                      }}
+                      typeItems={[
+                        { label: "분기", value: TimelineDateTypeEnum.Half },
+                        {
+                          label: "분기(상시)",
+                          value: TimelineDateTypeEnum.HalfAlways,
+                        },
+                        {
+                          label: "연도, 월",
+                          value: TimelineDateTypeEnum.Month,
+                        },
+                        {
+                          label: "연도, 월, 일",
+                          value: TimelineDateTypeEnum.Date,
+                        },
+                      ]}
+                    />
+                  </TextAndInputWrapper>
+                );
+              }}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={manager}>
             <Controller
               name="proposalDetail.manager"
-              render={({ field }) => (
-                <TextAreaWithHeader // CHACHA: impl component
-                  header="담당부서 / 담당자"
-                  contents={[field.value.teamId, field.value.member]}
-                />
-              )}
+              control={control}
+              render={({ field }) => {
+                const currentValue = field.value;
+
+                return (
+                  <TextAndInputWrapper>
+                    <Typography fs={24} lh={30} fw="BOLD">
+                      담당 부서 / 담당자
+                    </Typography>
+                    <TwoSelect
+                      leftItems={mockTeamList.map(team => ({
+                        label: team.name,
+                        value: team.teamId,
+                      }))}
+                      rightItems={mockTeamStructure.map(team => ({
+                        teamId: team.teamId,
+                        members: team.members.map(member => ({
+                          label: member.name,
+                          value: member.userId,
+                        })),
+                      }))}
+                      value={{
+                        teamId: currentValue?.teamId ?? null,
+                        memberId: currentValue?.member ?? null,
+                      }}
+                      onChange={selected => {
+                        field.onChange({
+                          teamId: selected.teamId,
+                          member: selected.memberId,
+                        });
+                      }}
+                    />
+                  </TextAndInputWrapper>
+                );
+              }}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentPurpose}>
             <Controller
               name="proposalDetail.purpose"
               render={({ field }) => (
-                // CHACHA: need header
-                <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업 추진 목적
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
               )}
             />
           </FlexWrapper>
@@ -213,8 +359,12 @@ const ManagerProjectProposalDetailFrame: React.FC = () => {
             <Controller
               name="proposalDetail.beneficiary"
               render={({ field }) => (
-                // CHACHA: need header
-                <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업 수혜 대상자
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
               )}
             />
           </FlexWrapper>
@@ -222,33 +372,44 @@ const ManagerProjectProposalDetailFrame: React.FC = () => {
             <Controller
               name="proposalDetail.detail"
               render={({ field }) => (
-                // CHACHA: need header
-                <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    세부 사업 내용
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
               )}
             />
           </FlexWrapper>
+          <FlexWrapper
+            direction="row"
+            gap={60}
+            ref={documentTimeline}
+            style={{ flexDirection: "column", gap: "12px" }}
+          >
+            <ProjectTimelineTable
+              initialData={mapTimelineIdsToObjects(
+                proposalDetail?.timelineIds ?? [],
+              )}
+              isProposal
+            />
+          </FlexWrapper>
         </FormProvider>
-        <FlexWrapper
-          direction="row"
-          gap={60}
-          ref={documentTimeline}
-          style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-        >
-          <Typography fs={24} lh={30} fw="BOLD">
-            사업 진행 타임라인
-          </Typography>
-          {/* this already has react hook form */}
-          {/* 얘는 지금 projectIds만 가지고 있어서, DB에서 타임라인 값 가져와서 여기다 넣는 게 필요할 듯. */}
-          <ProjectTimelineTable data={timelines} />
-        </FlexWrapper>
+
         <FlexWrapper direction="row" gap={0} ref={documentExpenditure}>
-          {/* this already has react hook form */}
-          {/* 이거 그냥 사계 상세 용으로 테이블 일단 따로 만들자. 말록이랑 formValues 때문에 컨플릭트 날 듯 */}
-          <ManagerExpenditureTable
-            formMethods={formMethods}
+          <ManagerExpenditureTableInProjectDetail
+            headerTitle="사업 예산안"
             projectNameCandidate={mockManagerProjectNameCandidateList}
             isProposal
-            initialData={mockDBExpenditureData}
+            initialData={mockDBExpenditureData.filter(
+              e => e.projectName === getValues("proposalDetail.title"),
+            )}
+            isInsideDetailFrame
+            projectTitleFromDetailFrame={proposalDetail.title}
+            onValuesChange={updatedExpenditures => {
+              setValue("expenditures", updatedExpenditures);
+            }}
+            onDiffExtract={setDirtyExpenditures}
           />
         </FlexWrapper>
         <ButtonWrapper>

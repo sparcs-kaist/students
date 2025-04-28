@@ -33,6 +33,8 @@ interface SelectProps<T> {
   dropdownHeight?: number;
   insideTable?: boolean;
   insideTimeline?: boolean;
+  justify?: string;
+  textWidth?: string;
 }
 
 const SelectInner = styled.div`
@@ -55,10 +57,11 @@ const StyledSelect = styled.div.withConfig({
   disabled?: boolean;
   isOpen?: boolean;
   insideTimeline?: boolean;
+  justify?: string;
 }>`
   display: flex;
   padding: 8px 16px;
-  justify-content: center;
+  justify-content: ${({ justify }) => justify || "center"};
   align-items: center;
   gap: 20px;
   width: 100%;
@@ -115,9 +118,14 @@ const SelectWrapper = styled.div`
 
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean; disabled: boolean; insideTimeline?: boolean }>`
+})<{
+  isSelected: boolean;
+  disabled: boolean;
+  insideTimeline?: boolean;
+  textWidth?: string;
+}>`
   display: flex;
-  width: 81px;
+  width: ${({ textWidth }) => (textWidth ? `${textWidth}` : "81px")};
   height: ${({ insideTimeline }) => (insideTimeline ? "20px" : "24px")};
   flex-direction: column;
   justify-content: center;
@@ -150,6 +158,8 @@ const Select = <T,>({
   dropdownHeight = undefined,
   insideTable = false,
   insideTimeline = false,
+  justify = "",
+  textWidth = "",
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -220,11 +230,13 @@ const Select = <T,>({
               onClick={handleSelectClick}
               isOpen={isOpen}
               insideTimeline={insideTimeline}
+              justify={justify}
             >
               <SelectValue
                 isSelected={value != null && value !== ""}
                 disabled={disabled}
                 insideTimeline={insideTimeline}
+                textWidth={textWidth}
               >
                 {selectedLabel}
               </SelectValue>
