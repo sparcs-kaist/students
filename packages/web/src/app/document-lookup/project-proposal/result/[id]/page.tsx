@@ -65,7 +65,7 @@ const Proposal = () => {
       case "예산안":
         router.push(`/document-lookup/budget-proposal/result/${id}?${query}`);
         break;
-      case "결산안":
+      case "결산":
         router.push(`/document-lookup/budget-report/result/${id}?${query}`);
         break;
       default:
