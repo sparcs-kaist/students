@@ -5,6 +5,7 @@ import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import {
   mapTimelineIdsToObjects,
+  mockProjectProposalDetailTotalReview,
   ProjectProposalSingleContent,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable"; // TODO: API 호출로 받아오는 데이터
 import { useParams } from "next/navigation";
@@ -33,6 +34,7 @@ import {
 import TwoSelect from "@sparcs-students/web/common/components/Selects/TwoSelect";
 import ManagerExpenditureTableInProjectDetail from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTableInProjectDetail";
 import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import ManagerProjectProposalReviewTable from "@sparcs-students/web/features/document-lookup/project/components/ManagerProjectProposalReviewTable";
 
 const headerHeight = 70;
 
@@ -81,6 +83,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
   const documentTarget = useRef<HTMLDivElement>(null);
   const documentDetail = useRef<HTMLDivElement>(null);
   const documentTimeline = useRef<HTMLDivElement>(null);
+  const documentReview = useRef<HTMLDivElement>(null);
   const documentExpenditure = useRef<HTMLDivElement>(null);
 
   const { detailId } = useParams(); // resultId 언젠간 쓸 것.
@@ -113,6 +116,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
     { name: "사업 추진 대상자", reference: documentTarget },
     { name: "사업 세부 내용", reference: documentDetail },
     { name: "사업 진행 타임라인", reference: documentTimeline },
+    { name: "사업 계획서 검토 내역", reference: documentReview },
     { name: "사업 예산안", reference: documentExpenditure },
   ];
 
@@ -395,6 +399,19 @@ const ManagerProjectProposalDetailFrame: React.FC<
             />
           </FlexWrapper>
         </FormProvider>
+        <FlexWrapper direction="row" gap={0} ref={documentReview}>
+          <TextAndInputWrapper>
+            <Typography fs={24} lh={30} fw="BOLD">
+              사업 계획서 검토 내역
+            </Typography>
+            <ManagerProjectProposalReviewTable
+              data={mockProjectProposalDetailTotalReview.filter(
+                e =>
+                  e.projectProposalContentId === parseInt(detailId as string),
+              )}
+            />
+          </TextAndInputWrapper>
+        </FlexWrapper>
 
         <FlexWrapper direction="row" gap={0} ref={documentExpenditure}>
           <ManagerExpenditureTableInProjectDetail
