@@ -53,21 +53,13 @@ export type Duration = z.infer<typeof zDuration>;
 
 // 기간이 정확히 정해진 경우
 export const zDurationFull = zDuration
-  .omit({
-    endTerm: true,
-  })
-  .extend({
-    endTerm: zDateOnly,
-  });
+  .omit({ endTerm: true })
+  .extend({ endTerm: zDateOnly });
 
 export type DurationFull = z.infer<typeof zDurationFull>;
 
 export const zDurationCreate = zDuration
-  .omit({
-    endTerm: true,
-  })
-  .extend({
-    endTerm: zDateOnly.optional(),
-  });
+  .omit({ endTerm: true })
+  .extend({ endTerm: zDateOnly.optional() });
 
 export type DurationCreate = z.infer<typeof zDurationCreate>;
