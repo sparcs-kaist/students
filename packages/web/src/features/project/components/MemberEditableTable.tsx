@@ -25,7 +25,7 @@ interface TableProps<T> {
   onClick?: (row: T) => void;
   rowStyleResolver?: (row: T) => React.CSSProperties;
   editData?: MemberProps[];
-  setEditData?: React.Dispatch<React.SetStateAction<T[]>>;
+  setEditData?: React.Dispatch<React.SetStateAction<MemberProps[]>>;
 }
 const TableWrapper = styled.div`
   width: 100%;
@@ -124,7 +124,7 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
 }: {
   row: Row<T>;
   editData: MemberProps[];
-  setEditData: React.Dispatch<React.SetStateAction<T[]>>;
+  setEditData: React.Dispatch<React.SetStateAction<MemberProps[]>>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownOpen = () => {
@@ -160,23 +160,25 @@ const GroupDropdownCell = <T extends { id: string; groups: string[] }>({
 
   // TODO: 임시로 부서 이름 스트링을 기준으로 구현했는데, 추후 백엔드 구현 방식에 따라 id 이용해서 구현하는 게 나을 듯. 그때 되면 타입도 수정.
   const groupClick = (selectedGroup: string) => {
-    setEditData(prev =>
-      prev.map(member => {
-        if (member.id !== row.original.id) return member;
-        if (selectedGroup === "미소속") {
-          return {
-            ...member,
-            groups: [],
-          };
-        }
+    // TODO: console에 띄우기 위해 임시 변수 설정.
+    const updated = editData.map(member => {
+      if (member.id !== row.original.id) return member;
+      if (selectedGroup === "미소속") {
         return {
           ...member,
-          groups: member.groups.includes(selectedGroup)
-            ? member.groups.filter((group: string) => group !== selectedGroup)
-            : [...member.groups, selectedGroup],
+          groups: [],
         };
-      }),
-    );
+      }
+      return {
+        ...member,
+        groups: member.groups.includes(selectedGroup)
+          ? member.groups.filter((group: string) => group !== selectedGroup)
+          : [...member.groups, selectedGroup],
+      };
+    });
+
+    setEditData(updated);
+    console.log(updated);
   };
 
   return (
