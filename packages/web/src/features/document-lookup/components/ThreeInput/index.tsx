@@ -37,7 +37,7 @@ interface ThreeInputProps {
   selectedValue: string | null;
   setSelectedValue: (value: string | null) => void;
   // selectedId: number | null;
-  setSelectedId?: (value: number | null) => void;
+  setSelectedId?: (value: number) => void;
 }
 
 const OuterWrapper = styled.div`
@@ -104,7 +104,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
     setSelectedKey("");
     setSelectedValue("");
     if (setSelectedId) {
-      setSelectedId(null);
+      setSelectedId(null as unknown as number);
     }
   }, [type, setSelectedKey, setSelectedValue, selectedKey, selectedValue]);
 
@@ -131,7 +131,9 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
         setSelectedKey={setSelectedKey}
         selectedValue={selectedValue ?? ""}
         setSelectedValue={setSelectedValue}
-        setSelectedId={setSelectedId}
+        setSelectedId={
+          setSelectedId as unknown as (value: number | null) => void
+        }
         disabled={year === null || isSpring === null || type === null}
       />
     </OuterWrapper>

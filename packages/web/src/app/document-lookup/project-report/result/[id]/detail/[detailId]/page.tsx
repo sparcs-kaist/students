@@ -9,14 +9,19 @@ import Index from "@sparcs-students/web/common/components/Index";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import BudgetReportTable from "@sparcs-students/web/features/document-lookup/project/components/BudgetReportTable";
 import DocumentTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/DocumentTimelineTable";
-import mockBudgetReportData from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockBudgetReportTable";
-import { mockDocumentTimelineData } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockDocumentTimelineTable";
+import mockBudgetReportData from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockBudgetReportTable";
 import TextAreaWithHeader from "@sparcs-students/web/features/report/components/TextAreaWithHeader";
 
 import { useParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+import {
+  ProjectProposalSingleContent,
+  ProjectProposalTimelines,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+import { ProjectProposalContent } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 
 const headerHeight = 70;
 
@@ -68,13 +73,21 @@ const DocumentViewerDetailPage: React.FC = () => {
     DocumentReviewStatusEnum.Accepted,
   );
 
-  const userPermission = UserPermission.Reviewer; // TODO: auth logic
+  const userPermission = getMockUserPermission(); // TODO: auth logic
 
-  const { resultId } = useParams();
+  const { resultId, detailId } = useParams();
   const theme = useTheme();
   const [reviewText, setReviewText] = useState("");
 
-  // 임시로 넣어둠. 나중에 백엔드와 연결될 수 있게 바꾸기
+  const proposal = ProjectProposalSingleContent.find(
+    item => item.contentId === Number(detailId),
+  ) as ProjectProposalContent;
+
+  const timelines = ProjectProposalTimelines.filter(t =>
+    proposal?.timelineIds.includes(t.id),
+  );
+
+  // TODO: 임시로 넣어둠. 나중에 백엔드와 연결될 수 있게 바꾸기
   const onConfirm = () => {};
   const handleReviewChange = (_detail: string) => {};
   const handleStatusChange = (newStatus: DocumentReviewStatusEnum) => {
@@ -89,7 +102,7 @@ const DocumentViewerDetailPage: React.FC = () => {
     },
     {
       name: "사업명",
-      path: `/document-lookup/project-proposal/result/${resultId}`,
+      path: `/document-lookup/project-proposal/result/${resultId}/detail/${detailId}`,
     },
   ];
 
@@ -156,7 +169,7 @@ const DocumentViewerDetailPage: React.FC = () => {
             <Typography fs={24} lh={30} fw="BOLD">
               사업 진행 타임라인
             </Typography>
-            <DocumentTimelineTable data={mockDocumentTimelineData} />
+            <DocumentTimelineTable data={timelines} />
           </FlexWrapper>
           <FlexWrapper direction="column" gap={12} ref={budgetReport}>
             <Typography fs={24} lh={30} fw="BOLD">

@@ -1,3 +1,7 @@
+/**
+ * @deprecated 더 이상 사용되지 않습니다.
+ */
+
 export function toKSTDate(input?: string | Date): Date {
   let date: Date;
 
@@ -14,6 +18,9 @@ export function toKSTDate(input?: string | Date): Date {
   return new Date(input);
 }
 
+/**
+ * @deprecated 더 이상 사용되지 않습니다.
+ */
 export function getKSTDate(input?: string | Date): Date {
   let date: Date;
 

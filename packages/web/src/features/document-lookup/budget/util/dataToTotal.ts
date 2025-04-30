@@ -1,7 +1,7 @@
-import { ViewerIncomeProps } from "@sparcs-students/web/features/document-lookup/budget/components/ViewerIncomeTable";
+// import { ViewerIncomeProps } from "@sparcs-students/web/features/document-lookup/budget/components/ViewerIncomeTable";
 import {
-  ManagerExpenditureProps,
-  ManagerIncomeProps,
+  DBExpenditureProps,
+  DBIncomeProps,
 } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import { ViewerExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/components/ViewerExpenditureTable";
 import { BudgetDomainEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
@@ -15,8 +15,8 @@ interface DomainAccum {
 }
 
 export const dataToTotal = (
-  incomeData: ViewerIncomeProps[] | ManagerIncomeProps[],
-  expenditureData: ViewerExpenditureProps[] | ManagerExpenditureProps[],
+  incomeData: DBIncomeProps[],
+  expenditureData: ViewerExpenditureProps[] | DBExpenditureProps[],
 ) => {
   const incomeMap = incomeData.reduce<Record<BudgetDomainEnum, DomainAccum>>(
     (acc, cur) => {

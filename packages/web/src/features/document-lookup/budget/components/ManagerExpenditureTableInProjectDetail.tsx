@@ -48,10 +48,8 @@ import {
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import {
-  FormValues,
-  DBExpenditureProps,
-} from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import { FormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import isEqual from "lodash/isEqual"; // CHACHA: array끼리 비교하는 데 필요함. lodash 통으로 import 하면 번들 너무 커짐
 
 export interface ManagerProjectNameCandidate {
@@ -61,7 +59,7 @@ export interface ManagerProjectNameCandidate {
 }
 
 interface ManagerExpenditureTableProps {
-  formMethods: ReturnType<typeof useForm<FormValues>>;
+  headerTitle?: string;
   projectNameCandidate: ManagerProjectNameCandidate[];
   isProposal: boolean;
   initialData: DBExpenditureProps[];
@@ -70,6 +68,9 @@ interface ManagerExpenditureTableProps {
     createdRows: DBExpenditureProps[];
     deletedRows: DBExpenditureProps[];
   }) => void;
+  isInsideDetailFrame?: boolean;
+  projectTitleFromDetailFrame?: string;
+  onValuesChange?: (values: DBExpenditureProps[]) => void;
 }
 
 interface TableRowProps {
@@ -81,6 +82,8 @@ interface TableRowProps {
   isLast: boolean;
   projectNameCandidate: ManagerProjectNameCandidate[]; // CHACHA: 같은 구분, 예산 분류에 해당하는 사업명을 불러오는 것. 작년 것 아님!
   // isDirty: boolean; // CHACHA: row가 수정되었는지
+  isInsideDetailFrame: boolean;
+  projectTitleFromDetailFrame: string;
 }
 
 const TableWrapper = styled.table`
@@ -134,6 +137,8 @@ const TableRow: React.FC<TableRowProps> = ({
   deleteRow,
   isLast,
   projectNameCandidate,
+  isInsideDetailFrame,
+  projectTitleFromDetailFrame,
 }) => {
   const budgetDomainList = Object.entries(budgetDomainTagList).map(
     ([key, { text, color }]) => {
@@ -265,23 +270,48 @@ const TableRow: React.FC<TableRowProps> = ({
           </TableCell>
         )}
       />
-      <Controller
-        name={`expenditures.${rowIndex}.projectName`}
-        render={({ field }) => (
-          <TableCell type="Default" width={0} minWidth={216}>
-            <InputSelect
-              items={setProjectNameListInputItem(getProjectNameCandidateList())}
-              value={field.value}
-              onChange={newVal => {
-                if (rowIndex === 0) return;
-                field.onChange(newVal);
-              }}
-              errorMessage="필수 항목입니다."
-              disabled={rowIndex === 0}
-            />
-          </TableCell>
-        )}
-      />
+      {isInsideDetailFrame ? (
+        <Controller
+          name={`expenditures.${rowIndex}.projectName`}
+          render={({ field }) => (
+            <TableCell type="Default" width={0} minWidth={216}>
+              <InputSelect
+                items={setProjectNameListInputItem(
+                  getProjectNameCandidateList(),
+                )}
+                value={projectTitleFromDetailFrame}
+                onChange={newVal => {
+                  if (rowIndex === 0) return;
+                  field.onChange(newVal);
+                }}
+                errorMessage="필수 항목입니다."
+                disabled
+              />
+            </TableCell>
+          )}
+        />
+      ) : (
+        <Controller
+          name={`expenditures.${rowIndex}.projectName`}
+          render={({ field }) => (
+            <TableCell type="Default" width={0} minWidth={216}>
+              <InputSelect
+                items={setProjectNameListInputItem(
+                  getProjectNameCandidateList(),
+                )}
+                value={field.value}
+                onChange={newVal => {
+                  if (rowIndex === 0) return;
+                  field.onChange(newVal);
+                }}
+                errorMessage="필수 항목입니다."
+                disabled={rowIndex === 0}
+              />
+            </TableCell>
+          )}
+        />
+      )}
+
       <Controller
         name={`expenditures.${rowIndex}.item`}
         render={({ field }) => (
@@ -360,7 +390,9 @@ const TableRow: React.FC<TableRowProps> = ({
       <Controller
         name={`expenditures.${rowIndex}.reason`}
         render={({ field }) => {
-          const projectItem = getValues(`expenditures.${rowIndex}.projectName`);
+          const projectItem = isInsideDetailFrame
+            ? projectTitleFromDetailFrame
+            : getValues(`expenditures.${rowIndex}.projectName`);
           return (
             <TableCell type="Default" width="90px">
               <EditableDetailButton
@@ -410,14 +442,24 @@ const TableRow: React.FC<TableRowProps> = ({
   );
 };
 
-const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
-  formMethods,
+const ManagerExpenditureTableInProjectDetail: React.FC<
+  ManagerExpenditureTableProps
+> = ({
+  headerTitle = "지출",
   projectNameCandidate,
   isProposal,
   initialData,
   onDiffExtract = () => {},
+  isInsideDetailFrame = false,
+  projectTitleFromDetailFrame = "",
+  onValuesChange = () => {},
 }) => {
-  const { handleSubmit, control, setValue, getValues } = formMethods;
+  const formMethods = useForm<FormValues>({
+    defaultValues: {
+      expenditures: initialData.length > 0 ? initialData : [],
+    },
+  });
+  const { control, setValue, getValues, handleSubmit } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "expenditures",
@@ -437,23 +479,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
 
     expenditures.forEach((row, index) => {
       const original = initialMap.get(row.id);
-      if (!original) return;
-
-      const normalizedRow = {
-        ...row,
-        projectName: (row.projectName ?? "").trim(),
-      };
-      const normalizedOriginal = {
-        ...original,
-        projectName: (original.projectName ?? "").trim(),
-      };
-      console.log("normalizedRow:", normalizedRow);
-      console.log("normalizedOriginal:", normalizedOriginal);
-      console.log(normalizedRow === normalizedOriginal);
-      console.log("originalstatus", original.status);
-      console.log(row.status !== original.status);
-
-      if (!isEqual(normalizedRow, normalizedOriginal)) {
+      if (original && !isEqual(row, original)) {
         if (row.status !== DocumentReviewStatusEnum.Unsaved) {
           setValue(
             `expenditures.${index}.status`,
@@ -466,18 +492,14 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
           );
         }
       }
-      if (
-        normalizedRow === normalizedOriginal &&
-        row.status !== original.status
-      ) {
-        setValue(`expenditures.${index}.status`, original.status, {
-          shouldDirty: false,
-          shouldTouch: false,
-          shouldValidate: false,
-        });
-      }
     });
-  }, [expenditures, setValue]);
+  }, [expenditures, setValue, projectTitleFromDetailFrame]);
+
+  useEffect(() => {
+    if (onValuesChange) {
+      onValuesChange(expenditures);
+    }
+  }, [expenditures, onValuesChange]);
 
   useEffect(() => {
     const initialMap = new Map(
@@ -497,6 +519,37 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
 
     onDiffExtract({ updatedRows, createdRows, deletedRows });
   }, [expenditures, onDiffExtract]);
+
+  useEffect(() => {
+    if (!isInsideDetailFrame) return;
+
+    expenditures.forEach((row, index) => {
+      const normalizedCurrent = (row.projectName ?? "").trim();
+      const normalizedTitle = (projectTitleFromDetailFrame ?? "").trim();
+
+      if (normalizedCurrent !== normalizedTitle) {
+        setValue(
+          `expenditures.${index}.projectName`,
+          projectTitleFromDetailFrame ?? "",
+          {
+            shouldDirty: true,
+          },
+        );
+        setValue(
+          `expenditures.${index}.status`,
+          DocumentReviewStatusEnum.Unsaved,
+          {
+            shouldDirty: true,
+          },
+        );
+      }
+    });
+  }, [
+    projectTitleFromDetailFrame,
+    expenditures,
+    isInsideDetailFrame,
+    setValue,
+  ]);
 
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     36 + (expenditures.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
@@ -540,7 +593,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
       code: 0,
       budgetDomain: BudgetDomainEnum.Undefined,
       budgetDivisionExpenditure: BudgetDivisionExpenseEnum.Undefined,
-      projectName: "",
+      projectName: isInsideDetailFrame ? projectTitleFromDetailFrame : "",
       item: BudgetClassExpenseEnum.Undefined,
       lastYear: "",
       thisYear: "",
@@ -592,7 +645,7 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
         <FlexWrapper direction="column" gap={16}>
           <TitleWithButtonWrapper>
             <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-              지출
+              {headerTitle}
             </Typography>
             <Button type="default" onClick={addNewRow}>
               행 추가
@@ -656,7 +709,8 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
                     deleteRow={() => deleteRow(index)}
                     isLast={index === expenditures.length - 1}
                     projectNameCandidate={projectNameCandidate}
-                    // isDirty={isRowDirty(index)}
+                    isInsideDetailFrame={isInsideDetailFrame}
+                    projectTitleFromDetailFrame={projectTitleFromDetailFrame}
                   />
                 ))}
               </TableContentWrapper>
@@ -669,4 +723,4 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   );
 };
 
-export default ManagerExpenditureTable;
+export default ManagerExpenditureTableInProjectDetail;

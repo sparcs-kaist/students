@@ -5,7 +5,7 @@ import {
   BudgetDomainEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/budget.enum";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
-import { BudgetReportProps } from "../../components/BudgetReportTable";
+import { BudgetReportProps } from "../../../project/components/BudgetReportTable";
 
 const mockBudgetReportData: BudgetReportProps[] = [
   {

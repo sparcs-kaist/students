@@ -62,7 +62,7 @@ const documentLookUp = () => {
       case "예산안":
         path = `/document-lookup/budget-proposal/result/${id}`;
         break;
-      case "결산안":
+      case "결산":
         path = `/document-lookup/budget-report/result/${id}`;
         break;
       default:

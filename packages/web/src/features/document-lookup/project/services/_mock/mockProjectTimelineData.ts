@@ -1,7 +1,10 @@
 export enum TimelineDateTypeEnum {
-  FirstHalf = 1,
-  SecondHalf,
-  Date,
+  FirstHalf = 1, // 상반기
+  SecondHalf, // 하반기
+  Half, // 분기
+  HalfAlways, // 분기 (상시)
+  Month, // 연도, 월
+  Date, // 날짜, 연도 월 일
   Undefined,
 }
 

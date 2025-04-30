@@ -40,6 +40,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import { useRouter } from "next/navigation";
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 
 // ExpenditureProps 인터페이스는 위에 정의된 대로 사용
 
@@ -59,7 +60,7 @@ export interface ExpenditureProps {
 }
 
 interface ExpenditureTableProps {
-  initialData: ExpenditureProps[];
+  initialData: DBExpenditureProps[];
   pageId: string | string[];
   type: string; // "proposal" || "report"
   onReviewUpdate: (data: {
@@ -67,9 +68,11 @@ interface ExpenditureTableProps {
     reviewText: string;
     reviewStatus: DocumentReviewStatusEnum;
   }) => void;
+  title?: string;
+  isInsideDetailPage?: boolean;
 }
 
-const columnHelper = createColumnHelper<ExpenditureProps>();
+const columnHelper = createColumnHelper<DBExpenditureProps>();
 
 const getColumns = (
   handleReviewChange: (code: number, newReview: string) => void,
@@ -80,6 +83,7 @@ const getColumns = (
   type: string,
   pageId: string | string[],
   router: AppRouterInstance,
+  isInsideDetailPage: boolean,
 ) => [
   columnHelper.accessor("code", {
     id: "code",
@@ -102,33 +106,38 @@ const getColumns = (
     },
     size: 157.5,
   }),
-  columnHelper.accessor("budgetDivisionExpense", {
-    id: "budgetDivisionExpense",
+  columnHelper.accessor("budgetDivisionExpenditure", {
+    id: "budgetDivisionExpenditure",
     header: "예산 분류",
     cell: info => {
       const { color, text } = getTagDetail(
-        info.getValue(),
+        info.getValue() as number,
         budgetDivisionExpenseTagList,
       );
       return <LightTag color={color}>{text}</LightTag>;
     },
     size: 195,
   }),
-  columnHelper.accessor("name", {
-    id: "name",
+  columnHelper.accessor("projectName", {
+    id: "projectName",
     header: "사업명",
-    cell: info => (
-      <HoverClickText
-        text={info.getValue()}
-        onClick={() =>
-          router.push(
-            `/document-lookup/project-${type}/result/${pageId}/detail/${info.row.id}`,
-            // CHACHA: 만약 n개의 row가 같은 상세 페이지 내의 항목이라면? row.id가 not unique...?
-          )
-        }
-      />
-    ),
-    size: 210,
+    cell: info => {
+      if (!isInsideDetailPage)
+        return (
+          <HoverClickText
+            text={info.getValue()}
+            onClick={() =>
+              router.push(
+                `/document-lookup/project-${type}/result/${pageId}/detail/${info.row.id}`,
+                // CHACHA: 만약 n개의 row가 같은 상세 페이지 내의 항목이라면? row.id가 not unique...?
+              )
+            }
+          />
+        );
+      return <Typography>{info.getValue()}</Typography>;
+    },
+
+    minSize: 210,
   }),
   columnHelper.accessor("item", {
     id: "item",
@@ -144,15 +153,14 @@ const getColumns = (
         <LightTag color={color}>{text}</LightTag>
       );
     },
-    size: 0,
-    minSize: 180,
+    size: 180,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
     header: "작년 결산",
     cell: info => {
       const format = useFormatter();
-      return format.number(info.getValue(), {
+      return format.number(parseInt(info.getValue() as string), {
         style: "currency",
         currency: "KRW",
       });
@@ -164,7 +172,7 @@ const getColumns = (
     header: "올해 예산",
     cell: info => {
       const format = useFormatter();
-      return format.number(info.getValue(), {
+      return format.number(parseInt(info.getValue() as string), {
         style: "currency",
         currency: "KRW",
       });
@@ -185,7 +193,7 @@ const getColumns = (
     header: "근거",
     cell: info => (
       <DetailButton
-        title={`${info.row.original.name}의 ${budgetExpenseToString(
+        title={`${info.row.original.projectName}의 ${budgetExpenseToString(
           info.row.original.item,
         )}에 대한 근거`}
         detail={info.getValue()}
@@ -229,9 +237,11 @@ const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
   initialData,
   pageId,
   type,
+  title = "",
   onReviewUpdate,
+  isInsideDetailPage = false,
 }) => {
-  const [data, setData] = useState<ExpenditureProps[]>(initialData);
+  const [data, setData] = useState<DBExpenditureProps[]>(initialData);
   const [loaded, setLoaded] = useState(false);
   const router = useRouter();
   useEffect(() => {
@@ -285,6 +295,7 @@ const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
     type,
     pageId,
     router,
+    isInsideDetailPage,
   );
 
   const table = useReactTable({
@@ -298,9 +309,9 @@ const ReviewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12} style={{ whiteSpace: "nowrap" }}>
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-          지출
+          {title}
         </Typography>
-        <ExpenditureHelpButton />
+        {!isInsideDetailPage && <ExpenditureHelpButton />}
       </FlexWrapper>
       {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>
