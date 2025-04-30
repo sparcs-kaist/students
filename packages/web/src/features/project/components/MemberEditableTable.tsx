@@ -44,13 +44,17 @@ const TableInner = styled.table.withConfig({
   min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;
-  /* overflow: hidden; */
   border-spacing: 0;
   /* height: ${({ height }) => (height ? `${height}px` : "fit-content")}; */
   table-layout: fixed;
   width: 100%;
 `;
 const Header = styled.thead`
+  overflow: hidden;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
