@@ -28,13 +28,29 @@ const FoldableInner = styled.div`
   gap: 10px;
 `;
 
-const GroupList: React.FC<GroupProps> = ({
+const GroupList: React.FC<
+  GroupProps & {
+    setTmpData?: React.Dispatch<React.SetStateAction<GroupProps[]>>;
+    isEditable: boolean;
+  }
+> = ({
   name,
   summary,
   members,
   projectName,
+  setTmpData = () => {},
+  isEditable,
 }) => {
   const [folded, setFolded] = useState(true);
+
+  const handleSummaryChange = (newSummary: string) => {
+    // TODO: 일단 name 기준으로 했는데 나중에 실제 데이터는 id 등으로 비교해야 할 듯
+    setTmpData(prev =>
+      prev.map(group =>
+        group.name === name ? { ...group, summary: newSummary } : group,
+      ),
+    );
+  };
 
   return (
     <CardWrapper>
@@ -62,8 +78,13 @@ const GroupList: React.FC<GroupProps> = ({
             <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
               활동 요약
             </Typography>
-            <TextInput placeholder="활동요약" value={summary} isGroup />
-            {/* <TextInput placeholder="활동요약" value={summary} constant={userPermission !== UserPermission.Manager} isGroup handleChange={handleSummaryChange} /> */}
+            <TextInput
+              placeholder="활동요약"
+              value={summary}
+              constant={!isEditable}
+              isGroup
+              handleChange={handleSummaryChange}
+            />
           </FlexWrapper>
           <FlexWrapper direction="column" gap={10}>
             <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
