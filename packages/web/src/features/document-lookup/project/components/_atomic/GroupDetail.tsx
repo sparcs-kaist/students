@@ -54,7 +54,7 @@ const GroupList: React.FC<GroupProps> = ({
             {folded ? "펼치기" : "접기"}
           </Typography>
         </FoldableInner>
-        <TextInput placeholder="국서명" value={name} constant />
+        <TextInput placeholder="국서명" value={name} constant isGroup />
       </FlexWrapper>
       {!folded && (
         <FlexWrapper direction="column" gap={10}>
@@ -62,7 +62,8 @@ const GroupList: React.FC<GroupProps> = ({
             <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
               활동 요약
             </Typography>
-            <TextInput placeholder="활동요약" value={summary} constant />
+            <TextInput placeholder="활동요약" value={summary} isGroup />
+            {/* <TextInput placeholder="활동요약" value={summary} constant={userPermission !== UserPermission.Manager} isGroup handleChange={handleSummaryChange} /> */}
           </FlexWrapper>
           <FlexWrapper direction="column" gap={10}>
             <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
@@ -72,13 +73,19 @@ const GroupList: React.FC<GroupProps> = ({
               placeholder="국서/TF원 명단"
               value={members.join(", ")}
               constant
+              isGroup
             />
           </FlexWrapper>
           <FlexWrapper direction="column" gap={10}>
             <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
               사업명
             </Typography>
-            <TextInput placeholder="사업명" value={projectName} constant />
+            <TextInput
+              placeholder="사업명"
+              value={projectName}
+              constant
+              isGroup
+            />
           </FlexWrapper>
         </FlexWrapper>
       )}
