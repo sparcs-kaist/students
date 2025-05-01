@@ -62,6 +62,7 @@ const TagInner = styled.div<{
   text-align: center;
   ${({ isInGroup, theme }) =>
     isInGroup && `box-shadow: 0px 0 0 4px ${theme.colors.GRAY[200]}`};
+  cursor: ${({ isDropdown }) => (isDropdown ? "pointer" : "default")};
 `;
 
 interface GroupsTagProps extends React.PropsWithChildren {
@@ -81,7 +82,7 @@ const GroupsTag: React.FC<GroupsTagProps> = ({
   onClick = undefined,
   rowId = "",
   editData = [],
-  isDropdown = false,
+  isDropdown,
   isNotAssigned = false,
 }) => {
   const selectedEditdData = editData.filter(member => member.id === rowId);
