@@ -15,6 +15,7 @@ import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/Co
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import styled from "styled-components";
 import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -71,7 +72,10 @@ const ReviewerProjectProposalFrame = () => {
   return (
     <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
       {/* <ProjectTable pageId={id} data={mockViewerProjectData} isProposal /> */}
-      <OperationPlan {...mockOperationPlanData} />
+      <OperationPlan
+        {...mockOperationPlanData}
+        userPermission={UserPermission.Manager}
+      />
       <ReviewOperationPlan review={review} reviewHandler={setReview} />
       <ButtonWrapper>
         <Button
