@@ -7,46 +7,49 @@ import {
 } from "@tanstack/react-table";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
-export interface DocumentTimelineProps {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  name: string;
-  memo: string | null;
-}
+import {
+  ProjectTimelineProps,
+  TimelineDateTypeEnum,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
+import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
 interface DocumentTimelineTableProps {
-  data: DocumentTimelineProps[];
+  data: ProjectTimelineProps[];
 }
 
-const columnHelper = createColumnHelper<DocumentTimelineProps>();
+const columnHelper = createColumnHelper<ProjectTimelineProps>();
 
-const columns = [
+const getColumns = (dataLength: number) => [
   columnHelper.accessor("id", {
     id: "id",
     header: "번호",
-    cell: info => info.getValue(),
+    cell: info => dataLength - info.row.index, // CHACHA:
     size: 60,
   }),
   columnHelper.display({
-    id: "dateRange",
+    id: "date",
     header: "날짜",
     cell: info => {
-      const { startDate, endDate } = info.row.original;
-      return `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+      const { date } = info.row.original;
+      if (date.type === TimelineDateTypeEnum.FirstHalf) {
+        return "상반기";
+      }
+      if (date.type === TimelineDateTypeEnum.SecondHalf) {
+        return "하반기";
+      }
+      return `${formatDotDate(date.value[0] as Date)} - ${formatDotDate(date.value[1] as Date)}`;
     },
     size: 260,
   }),
-  columnHelper.accessor("name", {
-    id: "name",
+  columnHelper.accessor("content", {
+    id: "content",
     header: "사업명",
     cell: info => info.getValue(),
     size: 0,
     minSize: 200,
   }),
-  columnHelper.accessor("memo", {
-    id: "memo",
+  columnHelper.accessor("reason", {
+    id: "reason",
     header: "비고",
     cell: info => info.getValue() ?? "-",
     size: 0,
@@ -65,6 +68,8 @@ const TableWrapper = styled.table`
 const DocumentTimelineTable: React.FC<DocumentTimelineTableProps> = ({
   data,
 }) => {
+  const columns = getColumns(data.length);
+
   const table = useReactTable({
     columns,
     data,

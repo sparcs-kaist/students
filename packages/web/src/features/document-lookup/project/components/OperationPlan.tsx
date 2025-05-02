@@ -3,10 +3,11 @@ import React from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
-import GroupList from "@sparcs-students/web/features/project/components/GroupList";
-import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
+import GroupList from "@sparcs-students/web/features/document-lookup/project/components/GroupList";
+import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import MemberTable, { MemberProps } from "./MemberTable";
 
 export interface OperationPlanProps {
@@ -15,6 +16,7 @@ export interface OperationPlanProps {
   groupList: GroupProps[];
   imagePath: string;
   isProposal?: boolean;
+  userPermission?: UserPermission;
 }
 
 const StyledImage = styled(Image)`
@@ -28,6 +30,7 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
   groupList,
   imagePath,
   isProposal = true,
+  userPermission = UserPermission.Viewer,
 }) => (
   <FlexWrapper direction="column" gap={60}>
     <FlexWrapper direction="column" gap={16}>
@@ -42,7 +45,10 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
       </Typography>
       <TextInput placeholder="비고 입력" value={note} constant />
     </FlexWrapper>
-    <GroupList data={groupList} />
+    <GroupList
+      data={groupList}
+      isEditable={userPermission === UserPermission.Manager}
+    />
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
         조직도

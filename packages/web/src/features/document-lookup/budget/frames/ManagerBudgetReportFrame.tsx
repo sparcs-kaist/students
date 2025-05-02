@@ -7,8 +7,8 @@ import Button from "@sparcs-students/web/common/components/Buttons/Button";
 
 import TotalTable from "@sparcs-students/web/features/document-lookup/budget/components/TotalTable";
 import {
-  mockManagerExpenditureData,
-  mockManagerIncomeData,
+  mockDBExpenditureData,
+  mockDBIncomeData,
   mockManagerProjectNameCandidateList,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
 import styled from "styled-components";
@@ -33,8 +33,8 @@ const ButtonWrapper = styled.div`
 const ManagerBudgetReportFrame = () => {
   const formMethods = useForm<FormValues>({
     defaultValues: {
-      incomes: mockManagerIncomeData,
-      expenditures: mockManagerExpenditureData,
+      incomes: mockDBIncomeData,
+      expenditures: mockDBExpenditureData,
     },
   });
 
@@ -52,8 +52,8 @@ const ManagerBudgetReportFrame = () => {
 
   const handleResetAll = () => {
     formMethods.reset({
-      incomes: mockManagerIncomeData,
-      expenditures: mockManagerExpenditureData,
+      incomes: mockDBIncomeData,
+      expenditures: mockDBExpenditureData,
     });
   };
 
@@ -93,11 +93,16 @@ const ManagerBudgetReportFrame = () => {
   return (
     <FlexWrapper direction="column" gap={48}>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-        <ManagerIncomeTable formMethods={formMethods} isProposal={false} />
+        <ManagerIncomeTable
+          formMethods={formMethods}
+          isProposal={false}
+          initialData={mockDBIncomeData}
+        />
         <ManagerExpenditureTable
           formMethods={formMethods}
           projectNameCandidate={mockManagerProjectNameCandidateList}
           isProposal={false}
+          initialData={mockDBExpenditureData}
         />
         <TotalTable
           data={dataToTotal(

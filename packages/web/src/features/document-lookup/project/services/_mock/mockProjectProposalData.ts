@@ -1,11 +1,13 @@
 import {
   ViewerProjectProps,
   ReviewerProjectProps,
-} from "@sparcs-students/web/features/project/components/ProjectTable";
-import { MemberProps } from "@sparcs-students/web/features/project/components/MemberTable";
-import { OperationPlanProps } from "@sparcs-students/web/features/project/components/OperationPlan";
-import { GroupProps } from "@sparcs-students/web/features/project/components/_atomic/GroupDetail";
-import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+} from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
+import { MemberProps } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
+import { OperationPlanProps } from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
+import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
+
+import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
 
 export const mockProjectProposalData: ReviewerProjectProps[] = [
   {
@@ -31,26 +33,27 @@ export const mockProjectProposalData: ReviewerProjectProps[] = [
   },
 ];
 
-export const mockViewerProjectData: ViewerProjectProps[] = [
-  {
-    id: "1",
-    name: "집행위원회 운영",
-    projectPeriod: "2024.09.06 - 2024.12.06",
-    status: DocumentReviewStatusEnum.Accepted,
-  },
-  {
-    id: "2",
-    name: "기업체 탐방",
-    projectPeriod: "2024.09.06 - 2024.12.06",
-    status: DocumentReviewStatusEnum.Accepted,
-  },
-  {
-    id: "3",
-    name: "연구실 탐방",
-    projectPeriod: "2024.09.06 - 2024.12.06",
-    status: DocumentReviewStatusEnum.Accepted,
-  },
-];
+function formatDate(date: Date): string {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yyyy}.${mm}.${dd}`;
+}
+
+export const mockViewerProjectData: ViewerProjectProps[] =
+  ProjectProposalSingleContent.map(content => {
+    const start = content.executionPeriod.value[0];
+    const end = content.executionPeriod.value[1];
+    return {
+      id: content.id.toString(),
+      name: content.title,
+      projectPeriod:
+        start && end
+          ? `${formatDate(start)} - ${formatDate(end)}`
+          : "기간 미정",
+      status: DocumentReviewStatusEnum.Accepted,
+    };
+  });
 
 export const mockMemberListData: MemberProps[] = [
   {

@@ -1,12 +1,13 @@
 {
   "로그인": "Login",
   "홈": "Home",
-  "총학 소개": "About",
-  "공지사항": "Notice",
-  "회칙": "Encyclic",
-  "안건지/회의록": "Agenda Notes",
-  "예/결산": "Budgets & Accounts",
   "만든 사람들": "Credits",
   "라이센스": "License",
-  "이용 약관": "Terms of Use"
+  "이용 약관": "Terms of Service",
+  "총학생회": "KAIST Undergraduate Association",
+  "공지사항": "Announcements",
+  "의결기구": "의결기구",
+  "예·결산 조회": "View Budget·Settlement",
+  "활동인증서": "활동인증서",
+  "학생 청원": "Student Petitions"
 }

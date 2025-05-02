@@ -18,6 +18,8 @@ import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetReportFrame";
 // import ViewerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetReportFrame";
 import { useRouter, useSearchParams } from "next/navigation";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetReportFrame";
 
 const Report = () => {
   // const { id } = useParams();
@@ -37,7 +39,7 @@ const Report = () => {
   const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
   const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = UserPermission.Reviewer; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
 
   const router = useRouter();
 
@@ -61,7 +63,7 @@ const Report = () => {
       case "예산안":
         router.push(`/document-lookup/budget-proposal/result/${id}?${query}`);
         break;
-      case "결산안":
+      case "결산":
         router.push(`/document-lookup/budget-report/result/${id}?${query}`);
         break;
       default:
@@ -115,9 +117,9 @@ const Report = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === UserPermission.Viewer && ( */}
-        {/*   <ViewerBudgetReportFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Viewer && (
+          <ViewerBudgetReportFrame />
+        )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerBudgetReportFrame />
         )}

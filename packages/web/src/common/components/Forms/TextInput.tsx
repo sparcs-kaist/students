@@ -10,6 +10,7 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
   disabled?: boolean;
   constant?: boolean;
+  isGroup?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
@@ -27,6 +28,11 @@ export const disabledStyle = css`
 const constantStyle = css`
   border-color: ${({ theme }) => theme.colors.GRAY[100]};
   cursor: not-allowed;
+`;
+
+const groupConstantStyle = css`
+  background-color: ${({ theme }) => theme.colors.GRAY[50]};
+  color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
 const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
@@ -59,6 +65,7 @@ const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
   ${({ constant }) => constant && constantStyle}
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
+  ${({ constant, isGroup }) => isGroup && constant && groupConstantStyle}
 `;
 
 export const InputWrapper = styled.div`
