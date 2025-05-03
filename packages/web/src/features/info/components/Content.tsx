@@ -6,9 +6,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 interface ContentProps {
   content: string;
-  withArrow: boolean;
-  isSubContent: boolean;
+  withArrow?: boolean;
+  isSubContent?: boolean;
   selected: boolean;
+  onClick: () => void;
 }
 
 const getTextColor = (props: {
@@ -19,9 +20,7 @@ const getTextColor = (props: {
   const { theme, selected, isSubContent } = props;
 
   if (selected && !isSubContent) return theme.colors.WHITE;
-
   if (selected && isSubContent) return theme.colors.PRIMARY;
-
   return theme.colors.BLACK;
 };
 
@@ -55,11 +54,16 @@ const ContentWrapper = styled.div.withConfig({
 
 const Content: React.FC<ContentProps> = ({
   content,
-  withArrow,
-  isSubContent,
+  withArrow = false,
+  isSubContent = false,
   selected,
+  onClick,
 }) => (
-  <ContentWrapper isSubContent={isSubContent} selected={selected}>
+  <ContentWrapper
+    isSubContent={isSubContent}
+    selected={selected}
+    onClick={onClick}
+  >
     {content}
     {withArrow &&
       !isSubContent &&
