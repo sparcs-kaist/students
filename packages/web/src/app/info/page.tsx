@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-students/web/common/components/PageHead";
 import mockInfo from "@sparcs-students/web/features/info/mock";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Content from "@sparcs-students/web/features/info/components/Content";
 import styled from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -20,13 +20,6 @@ const Info = () => {
   const searchParams = useSearchParams();
   const content = searchParams.get("content");
   const subContent = searchParams.get("subContent");
-
-  const [selectedContent, setSelectedContent] = useState<string | null>(
-    mockInfo[0].category,
-  );
-  const [selectedSubContent, setSelectedSubContent] = useState<string | null>(
-    null,
-  );
 
   const matchingInfo = useMemo(() => {
     // content가 없으면 첫 번째 항목 반환
@@ -67,22 +60,19 @@ const Info = () => {
                 key={item.category}
                 content={item.category}
                 withArrow={item.subContent !== undefined}
-                selected={selectedContent === item.category}
+                selected={content === item.category}
                 onClick={() => {
-                  setSelectedContent(item.category);
-                  setSelectedSubContent(null);
                   router.replace(`/info?content=${item.category}`);
                 }}
               />
-              {selectedContent === item.category &&
+              {content === item.category &&
                 item.subContent?.map(subItem => (
                   <Content
                     key={subItem.category}
                     content={subItem.title}
                     isSubContent
-                    selected={selectedSubContent === subItem.category}
+                    selected={subContent === subItem.category}
                     onClick={() => {
-                      setSelectedSubContent(subItem.category);
                       router.replace(
                         `/info?content=${item.category}&subContent=${subItem.category}`,
                       );
