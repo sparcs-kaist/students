@@ -9,6 +9,7 @@ import {
   getDay,
 } from "date-fns";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
@@ -40,7 +41,9 @@ const CalendarWrapper = styled.div<{
   height: ${({ height }) => height || "100%"};
 `;
 
-const CalendarContentWrapper = styled.div<{
+const CalendarContentWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   title?: CalendarProps["title"];
   small?: CalendarProps["small"];
 }>`
@@ -50,7 +53,7 @@ const CalendarContentWrapper = styled.div<{
   padding: ${({ small }) => (small ? "20px 18px" : "30px")};
   flex-direction: column;
   align-items: flex-end;
-  gap: 12px;
+  gap: 30px;
   flex-shrink: 0;
   border-radius: ${({ title }) => (title !== "" ? "0px 0px 4px 4px" : "4px")};
   ${({ title, theme }) =>
@@ -61,12 +64,14 @@ const CalendarContentWrapper = styled.div<{
   border-bottom: 2px solid ${theme.colors.GRAY[100]};`};
 `;
 
-const WeekWrapper = styled.div<{
+const WeekWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   small?: CalendarProps["small"];
 }>`
   display: flex;
   flex-direction: column;
-  gap: auto;
+  gap: 20px;
   justify-content: space-between;
   align-items: flex-start;
   align-self: stretch;
@@ -74,14 +79,15 @@ const WeekWrapper = styled.div<{
   height: 100%;
 `;
 
-const TitleWrapper = styled.div<{
+const TitleWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   small?: CalendarProps["small"];
 }>`
   display: flex;
   height: ${({ small }) => (small ? "28px" : "40px")};
-  border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0 0;
   background: ${({ theme }) => theme.colors.GREEN[600]};
-  display: flex;
   padding: ${({ small }) => (small ? "8px 12px" : "10px 20px")};
   align-items: center;
   gap: 20px;

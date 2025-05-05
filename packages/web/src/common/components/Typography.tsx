@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { Theme } from "@sparcs-students/web/styles/themes";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface TypographyPropsBase extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -44,7 +45,9 @@ interface TypographyProps extends TypographyPropsBase {
   color?: ThemeColors;
 }
 
-const TypographyInner = styled.div<TypographyProps>`
+const TypographyInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TypographyProps>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
   font-family: ${({ theme, ff }) =>
