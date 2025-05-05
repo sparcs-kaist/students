@@ -99,7 +99,12 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
               disabled={disabled}
               checked={disabled ? false : type === e}
             >
-              <Typography fs={16} lh={20} fw="REGULAR">
+              <Typography
+                fs={16}
+                lh={20}
+                fw="REGULAR"
+                color={disabled ? "GRAY.400" : undefined}
+              >
                 {enumToString(e)}
               </Typography>
             </RadioOption>
