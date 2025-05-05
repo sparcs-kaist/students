@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 
 export const example: Story = {
   render: function Render(args) {
-    const [{ value }, updateArgs] = useArgs();
+    const [{ value, placeholder }, updateArgs] = useArgs();
 
     const handleChange = (e: string) => {
       updateArgs({
@@ -45,6 +45,13 @@ export const example: Story = {
       });
     };
 
-    return <TextInput {...args} value={value} handleChange={handleChange} />;
+    return (
+      <TextInput
+        {...args}
+        value={value}
+        placeholder={placeholder}
+        handleChange={handleChange}
+      />
+    );
   },
 };

@@ -7,7 +7,7 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "tsc-alias": "^1.8.7",
-    "zod": "^3.21.4"
+    "zod": "^3.22.4"
   },
   "files": [
     "dist",
@@ -27,6 +27,7 @@
     "./*": "./dist/*.js"
   },
   "dependencies": {
-    "axios": "^1.6.7"
+    "axios": "^1.6.7",
+    "zod-openapi": "^4.2.4"
   }
 }

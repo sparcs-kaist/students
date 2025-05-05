@@ -47,6 +47,7 @@ fiveDaysAgo.setDate(today.getDate() - 5);
 
 export const example: Story = {
   args: {
+    header: "Header",
     moreLink: "",
     rows: [
       {
@@ -65,9 +66,10 @@ export const example: Story = {
   },
 
   render: function Render(args) {
+    const { header, rows } = args;
     return (
       <TableWrapper>
-        <SingleColumnTable {...args} />
+        <SingleColumnTable rows={rows} header={header} {...args} />
       </TableWrapper>
     );
   },
