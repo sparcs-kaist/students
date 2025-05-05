@@ -1,6 +1,6 @@
 const mockInfo = [
   {
-    title: "총학생회 소개",
+    title: "KAIST 학부 총학생회",
     content: "학부 총학생회 소개 내용",
     category: "총학생회 소개",
   },

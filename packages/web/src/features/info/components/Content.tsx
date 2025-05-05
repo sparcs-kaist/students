@@ -9,6 +9,8 @@ interface ContentProps {
   withArrow?: boolean;
   isSubContent?: boolean;
   selected: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
   onClick: () => void;
 }
 
@@ -29,6 +31,8 @@ const ContentWrapper = styled.div.withConfig({
 })<{
   isSubContent: boolean;
   selected: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 }>`
   width: 240px;
   display: flex;
@@ -36,16 +40,26 @@ const ContentWrapper = styled.div.withConfig({
   justify-content: space-between;
   cursor: pointer;
 
+  border-radius: ${({ isFirst, isLast }) =>
+    (isFirst || isLast) && (isFirst ? "4px 4px 0px 0px" : "0px 0px 4px 4px")};
+
   background-color: ${({ theme, selected, isSubContent }) =>
     selected && !isSubContent && theme.colors.PRIMARY};
   border-left: ${({ theme, isSubContent }) =>
-    isSubContent && `1px solid ${theme.colors.GRAY[200]}`};
+    isSubContent
+      ? `1px solid ${theme.colors.GRAY[200]}`
+      : `1px solid ${theme.colors.PRIMARY}`};
   border-right: ${({ theme, isSubContent }) =>
-    isSubContent && `1px solid ${theme.colors.GRAY[200]}`};
-  border: ${({ theme, isSubContent }) =>
+    isSubContent
+      ? `1px solid ${theme.colors.GRAY[200]}`
+      : `1px solid ${theme.colors.PRIMARY}`};
+  border-top: ${({ theme, isSubContent }) =>
     !isSubContent && `1px solid ${theme.colors.PRIMARY}`};
+  border-bottom: ${({ theme, isSubContent, isLast }) =>
+    !isSubContent && isLast && `1px solid ${theme.colors.PRIMARY}`};
   padding: ${({ isSubContent }) => (isSubContent ? "12px 48px" : "12px 24px")};
   gap: 10px;
+  border-collapse: collapse;
 
   color: ${getTextColor};
   font-weight: ${({ theme, selected }) =>
@@ -57,11 +71,15 @@ const Content: React.FC<ContentProps> = ({
   withArrow = false,
   isSubContent = false,
   selected,
+  isFirst = false,
+  isLast = false,
   onClick,
 }) => (
   <ContentWrapper
     isSubContent={isSubContent}
     selected={selected}
+    isFirst={isFirst}
+    isLast={isLast}
     onClick={onClick}
   >
     {content}

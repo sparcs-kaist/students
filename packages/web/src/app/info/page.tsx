@@ -12,7 +12,7 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 4px;
 `;
 
 const Info = () => {
@@ -54,13 +54,15 @@ const Info = () => {
       />
       <FlexWrapper direction="row" gap={40} style={{ paddingLeft: 20 }}>
         <ContentWrapper>
-          {mockInfo.map(item => (
+          {mockInfo.map((item, index) => (
             <>
               <Content
                 key={item.category}
                 content={item.category}
                 withArrow={item.subContent !== undefined}
                 selected={content === item.category}
+                isFirst={index === 0}
+                isLast={index === mockInfo.length - 1}
                 onClick={() => {
                   router.replace(`/info?content=${item.category}`);
                 }}
