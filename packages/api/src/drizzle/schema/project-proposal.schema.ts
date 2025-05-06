@@ -219,7 +219,7 @@ export const OperatingCommitteeProposalRevision = mysqlTable(
       foreignKey({
         columns: [table.operatingCommitteeProposalId],
         foreignColumns: [OperatingCommitteeProposal.id],
-        name: "operating_committee_proposal_revision_original_id_fk",
+        name: "op_com_prop_rev_orig_id_fk",
       }),
     operatingCommitteeProposalRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
@@ -251,7 +251,7 @@ export const ProjectProposalDocumentReview = mysqlTable(
     projectProposalDocumentReviewProjectProposalIdFk: foreignKey({
       columns: [table.projectProposalId],
       foreignColumns: [ProjectProposal.id],
-      name: "project_proposal_document_review_project_proposal_id_fk",
+      name: "proj_prop_doc_rev_orig_id_fk",
     }),
     projectProposalDocumentReviewUserIdFk: foreignKey({
       columns: [table.userId],
