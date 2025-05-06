@@ -76,10 +76,11 @@ export const InputWrapper = styled.div`
 `;
 
 export const InputContainer = styled.div`
-  position: relative;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 // Component
