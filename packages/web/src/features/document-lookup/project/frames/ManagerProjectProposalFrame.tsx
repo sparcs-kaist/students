@@ -6,7 +6,6 @@ import {
   mockOperationPlanData,
   // mockViewerProjectData,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
-import OperationPlan from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
 import ReviewOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ReviewOperationPlan";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import { overlay } from "overlay-kit";
@@ -15,7 +14,7 @@ import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/Co
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import styled from "styled-components";
 import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
-import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+import ManageOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ManageOperationPlan";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -72,10 +71,7 @@ const ReviewerProjectProposalFrame = () => {
   return (
     <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
       {/* <ProjectTable pageId={id} data={mockViewerProjectData} isProposal /> */}
-      <OperationPlan
-        {...mockOperationPlanData}
-        userPermission={UserPermission.Manager}
-      />
+      <ManageOperationPlan {...mockOperationPlanData} />
       <ReviewOperationPlan review={review} reviewHandler={setReview} />
       <ButtonWrapper>
         <Button
