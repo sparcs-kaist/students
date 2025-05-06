@@ -27,8 +27,8 @@ export enum DocumentItemStatusEnum {
 export const zRevisionBase = z.object({
   submittedAt: z.date().optional(),
   documentStatusEnum: z.nativeEnum(DocumentItemStatusEnum),
-  cogAgendaId: zExtractId(zAgenda).optional(),
-  gsrcAgendaId: zExtractId(zAgenda).optional(),
+  cogAgenda: zExtractId(zAgenda).optional(),
+  gsrcAgenda: zExtractId(zAgenda).optional(),
 });
 
 export type IRevisionBase = z.infer<typeof zRevisionBase>;
