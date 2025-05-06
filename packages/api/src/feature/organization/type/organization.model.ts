@@ -14,7 +14,9 @@ export class MOrganization implements IOrganization {
 
   name: IOrganization["name"];
 
-  duration: IOrganization["duration"];
+  startTerm: IOrganization["startTerm"];
+
+  endTerm: IOrganization["endTerm"];
 
   nameEng: IOrganization["nameEng"];
 
@@ -31,10 +33,8 @@ export class MOrganization implements IOrganization {
   static fromDBResult(result: OrganizationDBResult) {
     return new MOrganization({
       ...result,
-      duration: {
-        startTerm: result.startTerm,
-        endTerm: result.endTerm,
-      },
+      startTerm: result.startTerm,
+      endTerm: result.endTerm,
       organizationTypeEnum: result.organizationTypeEnum as OrganizationTypeEnum,
       organizationStateEnum:
         result.organizationStateEnum as OrganizationStateEnum,
