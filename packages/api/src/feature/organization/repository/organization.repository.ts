@@ -152,8 +152,8 @@ export class OrganizationRepository {
         nameEng: data.nameEng,
         organizationTypeEnum: data.organizationTypeEnum,
         foundingYear: data.foundingYear,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm ?? null,
+        startTerm: data.startTerm,
+        endTerm: data.endTerm ?? null,
         organizationStateEnum: data.organizationStateEnum,
       })
       .execute();

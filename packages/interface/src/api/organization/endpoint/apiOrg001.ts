@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zHalfYearSummary } from "@sparcs-students/interface/api/semester/type/semester.type";
+import { zSemester } from "@sparcs-students/interface/api/semester/type/semester.type";
 import { zOrganization } from "../type/organization.type";
 
 /**
@@ -23,7 +23,14 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     organizationLists: z.array(
       z.object({
-        halfYear: zHalfYearSummary,
+        semester: z.object({
+          id: zSemester.shape.id,
+          name: zSemester.shape.name,
+          year: zSemester.shape.year,
+          semesterEnum: zSemester.shape.semesterEnum,
+          startTerm: zSemester.shape.startTerm,
+          endTerm: zSemester.shape.endTerm,
+        }),
         organizationTypes: z.array(
           z.object({
             organizationTypeEnum: zOrganization.shape.organizationTypeEnum,
