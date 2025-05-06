@@ -7,19 +7,17 @@ import GroupList from "@sparcs-students/web/features/document-lookup/project/com
 import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
-import { UserPermission } from "@sparcs-students/web/constants/userPermission";
-import MemberTable, {
+import {
   MemberProps,
 } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
 import ManageProjectReportTable from "@sparcs-students/web/features/document-lookup/project/components/ManageProjectReportTable";
 
-export interface OperationPlanProps {
+export interface ManageOperationPlanProps {
   memberData: MemberProps[];
   note: string;
   groupList: GroupProps[];
   imagePath: string;
   isProposal?: boolean;
-  userPermission?: UserPermission;
 }
 
 const StyledImage = styled(Image)`
@@ -27,25 +25,19 @@ const StyledImage = styled(Image)`
   height: auto;
 `;
 
-const OperationPlan: React.FC<OperationPlanProps> = ({
+const ManageOperationPlan: React.FC<ManageOperationPlanProps> = ({
   memberData,
   note,
   groupList,
   imagePath,
   isProposal = true,
-  userPermission = UserPermission.Viewer,
 }) => (
   <FlexWrapper direction="column" gap={60}>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         {isProposal ? "운영계획" : "운영보고"}
       </Typography>
-      {userPermission === UserPermission.Manager && (
-        <ManageProjectReportTable data={memberData} />
-      )}
-      {userPermission === UserPermission.Viewer && (
-        <MemberTable data={memberData} />
-      )}
+      <ManageProjectReportTable data={memberData} />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
@@ -55,7 +47,7 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
     </FlexWrapper>
     <GroupList
       data={groupList}
-      isEditable={userPermission === UserPermission.Manager}
+      isEditable
     />
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
@@ -72,4 +64,4 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
   </FlexWrapper>
 );
 
-export default OperationPlan;
+export default ManageOperationPlan;

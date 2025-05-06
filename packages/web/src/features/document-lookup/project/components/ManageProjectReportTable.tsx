@@ -7,16 +7,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Table from "@sparcs-students/web/common/components/Table/Table";
-import GroupsTag from "@sparcs-students/web/common/components/Tag/GroupsTag";
+import MemberEditableTable from "@sparcs-students/web/features/document-lookup/project/components/MemberEditableTable";
+import GroupsTag, {
+  MemberProps,
+} from "@sparcs-students/web/common/components/Tag/GroupsTag";
 
-export interface MemberProps {
-  id: string;
-  name: string;
-  groups: string[];
-}
-
-interface MemberTableProps {
+interface ManagerProjectReportTableProps {
   data: MemberProps[];
 }
 
@@ -64,16 +60,21 @@ const columns = [
   }),
 ];
 
-const MemberTable: React.FC<MemberTableProps> = ({ data }) => {
+const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
+  data,
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
+  // TODO: back 구현되면, 저장 버튼 클릭시시 editData로 data update하기
+  const [editData, setEditData] = useState<MemberProps[]>(data);
+
   const table = useReactTable({
     columns,
-    data,
+    data: editData,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
@@ -86,10 +87,15 @@ const MemberTable: React.FC<MemberTableProps> = ({ data }) => {
         </Typography>
       </FlexWrapper>
       {loaded && (
-        <Table table={table} emptyMessage="운영위원 정보가 없습니다." />
+        <MemberEditableTable
+          table={table}
+          emptyMessage="운영위원 정보가 없습니다."
+          editData={editData}
+          setEditData={setEditData}
+        />
       )}
     </FlexWrapper>
   );
 };
 
-export default MemberTable;
+export default ManagerProjectReportTable;
