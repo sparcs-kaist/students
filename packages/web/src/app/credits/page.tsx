@@ -31,7 +31,10 @@ const Credits: React.FC = () => {
   );
   return (
     <FlexWrapper direction="column" gap={30}>
-      <PageHead title="만든 사람들" />
+      <PageHead
+        title="만든 사람들"
+        items={[{ name: "만든 사람들", path: "/credits" }]}
+      />
       {credits.map((credit, index) => (
         <CreditCardsFlexWrapper
           direction="column"
