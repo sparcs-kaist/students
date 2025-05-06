@@ -107,11 +107,12 @@ export class AuthController {
       httpOnly: true,
       path: "/",
     });
+    console.debug(req.user);
     return this.authService.postAuthSignout(req.user, refreshToken);
   }
 
   // test용 API, 실제 사용하지 않음
-  @Get("/test")
+  @Get("/profile")
   test(@GetStudent() user: StudentProfile) {
     function printObjectPropertyTypes<T>(obj: T): void {
       // eslint-disable-next-line no-restricted-syntax, guard-for-in

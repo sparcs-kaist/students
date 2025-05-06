@@ -1,4 +1,5 @@
-import createNextIntlPlugin from 'next-intl/plugin';
+import "dotenv/config";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 

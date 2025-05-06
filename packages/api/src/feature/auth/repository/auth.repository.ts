@@ -50,6 +50,7 @@ export class AuthRepository {
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     // TODO: 임시로 "이전 사원" 타입을 학생으로 분류
     if (type === "Student" || type === "Ex-employee") {
+      console.log(department);
       await this.db
         .insert(Student)
         .values({

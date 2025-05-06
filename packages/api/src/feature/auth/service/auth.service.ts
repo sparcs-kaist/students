@@ -59,7 +59,7 @@ export class AuthService {
    */
   public async getAuthSignInCallback(
     query: ApiAut004RequestQuery,
-    session: Request["session"],
+    _session: Request["session"],
   ) {
     const ssoProfile: SSOUser = await this.ssoClient.getUserInfo(query.code);
     const kaistInfo = ssoProfile.kaist_info;
@@ -91,7 +91,9 @@ export class AuthService {
       type,
       department,
     );
+
     const member = MMember.fromDBResult(memberDbResult);
+    console.log(member);
     const accessToken = this.getAccessToken(member);
     const refreshToken = this.getRefreshToken(member);
     const current = new Date(); // todo 시간 변경 필요.
@@ -102,7 +104,8 @@ export class AuthService {
       current.getTime() +
         parseInt(this.jwtConfig.signOptions.refreshExpiresIn) * 1000,
     );
-    const nextUrl = session.next ?? "/";
+    // const nextUrl = session.next ?? `${process.env.WEB_URL}`;
+    const nextUrl = `${process.env.WEB_URL}`;
 
     const token = {
       accessToken,

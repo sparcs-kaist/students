@@ -33,9 +33,12 @@ async function bootstrap() {
       cookie: { maxAge: 600000 },
     }),
   );
-  if (process.env.NODE_ENV === "local") {
+  if (
+    process.env.NODE_ENV === "local" ||
+    process.env.NODE_ENV === "development" // TODO: dev의 경우 도메인 필요, 이걸 지금 못 읽고 있음.
+  ) {
     app.enableCors({
-      origin: `http://localhost:${process.env.CLIENT_PORT}`,
+      origin: `http://localhost:3000`,
       credentials: true,
     });
     app.useGlobalFilters(

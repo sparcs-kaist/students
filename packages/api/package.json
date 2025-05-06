@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "pnpm db up -d && pnpm start:dev",
-    "dev:dev": "cross-env NODE_ENV=dev pnpm start:dev",
+    "dev:dev": "cross-env NODE_ENV=development pnpm start:dev",
     "dev:local": "pnpm db up -d && cross-env NODE_ENV=local pnpm start:dev",
     "prod": "pnpm migrate:prod && pnpm start:prod",
-    "db": "docker compose -f ../../.docker/docker-compose.dev.yml --env-file ../../env/.env -p ar-007-students",
+    "db": "docker compose -f ../../.docker/docker-compose.dev.yml --env-file ../../env/.env.local -p ar-007-students",
     "env": "echo $NODE_ENV",
     "clean": "rm -rf dist",
     "generate": "pnpm db up --wait && pnpm drizzle-kit push:mysql --config ./src/drizzle/drizzle.config.ts",
