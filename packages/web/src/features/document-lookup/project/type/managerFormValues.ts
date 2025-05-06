@@ -1,4 +1,6 @@
-import { TimelineDateTypeEnum } from "@sparcs-students/web/features/project/services/_mock/mockProjectTimelineData";
+import { TimelineDateTypeEnum } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
+import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 
 export enum DocumentTypeEnum {
   BudgetProposal = 1,
@@ -20,8 +22,10 @@ export interface ProjectProposalContent {
   brief: string; // 사업 개요
   preparationPeriod: ProjectDate; // 사업 준비 기간
   executionPeriod: ProjectDate; // 사업 일시
-  teamId: number; // 담당 부서 id
-  manager: number; // 담당자 userId
+  manager: {
+    teamId: number; // 담당 부서 id
+    member: number; // 담당자 userId
+  };
   purpose: string; // 사업 추진 목적
   beneficiary: string; // 사업 수혜 대상자
   detail: string; // 세부 사업 내용
@@ -33,4 +37,17 @@ export interface ProjectProposal {
   documentUniqueId: number; // 분기, 문서 유형, 단체 조합의 고유한 id
   documentTypeEnumId: DocumentTypeEnum; // 문서 4개 중 1개
   contentIds: number[]; // ProjectProposalContentId의 배열
+}
+
+export interface FormValues {
+  proposalDetail: ProjectProposalContent;
+  expenditures: DBExpenditureProps[];
+}
+
+export interface ProjectProposalDetailTotalReview {
+  // 사업계획서 검토 내역
+  id: number;
+  projectProposalContentId: number; // 해당 리뷰와 연결된 사업계획서 상세
+  reviewText: string;
+  reviewStatus: DocumentReviewStatusEnum;
 }

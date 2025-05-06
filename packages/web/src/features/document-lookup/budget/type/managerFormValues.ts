@@ -6,7 +6,7 @@ import {
   DocumentReviewStatusEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum";
 
-export interface ManagerIncomeProps {
+export interface DBIncomeProps {
   code: number;
   id: number;
   budgetDomain: BudgetDomainEnum;
@@ -20,7 +20,7 @@ export interface ManagerIncomeProps {
   review: string;
 }
 
-export interface ManagerExpenditureProps {
+export interface DBExpenditureProps {
   id: number;
   code: number; // 코드
   rowId: number; // row index 필요한지 의문. 프론트 로직 상 필요했던 것 같기도
@@ -37,11 +37,11 @@ export interface ManagerExpenditureProps {
 }
 
 export interface FormValues {
-  incomes: ManagerIncomeProps[];
-  expenditures: ManagerExpenditureProps[];
+  incomes: DBIncomeProps[];
+  expenditures: DBExpenditureProps[];
 }
 
-export interface ManagerProjectNameCandidate {
+export interface ProjectNameCandidate {
   budgetDomain: BudgetDomainEnum;
   budgetDivisionExpenditure: BudgetDivisionExpenseEnum | undefined;
   projectNameCandidate: string[];

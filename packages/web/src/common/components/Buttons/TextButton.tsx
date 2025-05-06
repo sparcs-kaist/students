@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface ButtonProps {
   disabled: boolean;
@@ -8,7 +9,9 @@ interface ButtonProps {
   mini: boolean;
 }
 
-const StyledTextButton = styled.button<ButtonProps>`
+const StyledTextButton = styled.button.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<ButtonProps>`
   background: none;
   border: none;
   color: ${({ theme, disabled, white }) => {
