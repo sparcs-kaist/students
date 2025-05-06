@@ -14,7 +14,7 @@ import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/Co
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import styled from "styled-components";
 import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
-import ManageOperationPlan from "../components/ManageOperationPlan";
+import ManageOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ManageOperationPlan";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
