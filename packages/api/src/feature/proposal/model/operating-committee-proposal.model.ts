@@ -3,9 +3,11 @@ import { IOperatingCommitteeProposal } from "@sparcs-students/interface/api/prop
 
 export interface IOperatingCommitteeProposalCreate
   extends IOperatingCommitteeProposal {
-  organizationId: number;
-  semesterId: number;
-  operatingCommitteeId: number;
+  organization: IOperatingCommitteeProposal["organization"];
+
+  semester: IOperatingCommitteeProposal["semester"];
+
+  operatingCommittee: IOperatingCommitteeProposal["operatingCommittee"];
 }
 
 export class MOperatingCommitteeProposal
@@ -20,7 +22,7 @@ export class MOperatingCommitteeProposal
 
   operatingCommittee: IOperatingCommitteeProposal["operatingCommittee"];
 
-  constructor(data: IOperatingCommitteeProposalCreate) {
+  constructor(data: IOperatingCommitteeProposal) {
     super();
     Object.assign(this, data);
   }

@@ -43,7 +43,7 @@ export class MBudgetProposalIncomeRevision
 
   note: IBudgetProposalIncomeRevision["note"];
 
-  constructor(data: IBudgetProposalIncomeRevisionCreate) {
+  constructor(data: IBudgetProposalIncomeRevision) {
     super();
     Object.assign(this, data);
   }

@@ -2,8 +2,9 @@ import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 import { IProjectProposal } from "@sparcs-students/interface/api/proposal/type/project-proposal.type";
 
 export interface IProjectProposalCreate extends IProjectProposal {
-  organizationId: number;
-  semesterId: number;
+  organization: IProjectProposal["organization"];
+
+  semester: IProjectProposal["semester"];
 }
 
 export class MProjectProposal extends MEntity implements IProjectProposal {
@@ -13,7 +14,7 @@ export class MProjectProposal extends MEntity implements IProjectProposal {
 
   semester: IProjectProposal["semester"];
 
-  constructor(data: IProjectProposalCreate) {
+  constructor(data: IProjectProposal) {
     super();
     Object.assign(this, data);
   }

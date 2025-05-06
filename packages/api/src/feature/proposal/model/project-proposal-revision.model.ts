@@ -21,6 +21,8 @@ export interface IProjectProposalRevisionCreate {
   detail: IProjectProposalRevision["detail"];
 
   note: IProjectProposalRevision["note"];
+
+  documentStatusEnum: IProjectProposalRevision["documentStatusEnum"];
 }
 
 export class MProjectProposalRevision
@@ -53,7 +55,7 @@ export class MProjectProposalRevision
 
   note: IProjectProposalRevision["note"];
 
-  constructor(data: IProjectProposalRevisionCreate) {
+  constructor(data: IProjectProposalRevision) {
     super();
     Object.assign(this, data);
   }

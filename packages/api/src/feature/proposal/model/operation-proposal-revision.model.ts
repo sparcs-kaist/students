@@ -20,7 +20,7 @@ export class MOperationProposalRevision
 
   note: IOperationProposalRevision["note"];
 
-  constructor(data: IOperationProposalRevisionCreate) {
+  constructor(data: IOperationProposalRevision) {
     super();
     Object.assign(this, data);
   }

@@ -8,7 +8,7 @@ export class MRevisionEntity extends MEntity {
 
   submittedAt: Date | undefined;
 
-  cogAgendaId: { id: number } | undefined;
+  cogAgenda: { id: number } | undefined;
 
-  gsrcAgendaId: { id: number } | undefined;
+  gsrcAgenda: { id: number } | undefined;
 }

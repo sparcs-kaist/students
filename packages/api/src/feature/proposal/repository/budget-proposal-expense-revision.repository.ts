@@ -2,30 +2,28 @@ import { Injectable } from "@nestjs/common";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 import {
+  BaseRepositoryFindQuery,
+  BaseRepositoryQuery,
   BaseTableFieldMapKeys,
   TableWithID,
 } from "@sparcs-students/api/common/base/base.repository";
 import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
-
-import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
-import { BudgetProposalExpenseRevision } from "src/drizzle/schema";
-
+import { BudgetProposalExpenseRevision } from "@sparcs-students/api/drizzle/schema/budget-proposal.schema";
 import {
   IBudgetProposalExpenseRevisionCreate,
   MBudgetProposalExpenseRevision,
-} from "../model/budget-proposal-expense-revision.model";
+} from "@sparcs-students/api/feature/proposal/model/budget-proposal-expense-revision.model";
+import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetProposalExpenseRevisionQuery = {
-  budgetProposalExpenseId: number;
+  // id: number; // id 는 기본 내장
+  organizationId: number;
+  semesterId: number;
+  projectProposalId: number;
 };
 
-type BudgetProposalExpenseRevisionOrderByKeys =
-  | "id"
-  | "budgetDomainEnum"
-  | "budgetDivisionExpenseEnum"
-  | "budgetClassExpenseEnum"
-  | "documentStatusEnum";
-type BudgetProposalExpenseRevisionQuerySupport = EmptyObject;
+type BudgetProposalExpenseRevisionOrderByKeys = "id";
+type BudgetProposalExpenseRevisionQuerySupport = EmptyObject; // Query Support 용
 
 type BudgetProposalExpenseRevisionTable = typeof BudgetProposalExpenseRevision;
 type BudgetProposalExpenseRevisionDbSelect =
@@ -34,11 +32,20 @@ type BudgetProposalExpenseRevisionDbUpdate =
   Partial<BudgetProposalExpenseRevisionDbSelect>;
 type BudgetProposalExpenseRevisionDbInsert =
   InferInsertModel<BudgetProposalExpenseRevisionTable>;
+
 type BudgetProposalExpenseRevisionFieldMapKeys = BaseTableFieldMapKeys<
   BudgetProposalExpenseRevisionQuery,
   BudgetProposalExpenseRevisionOrderByKeys,
   BudgetProposalExpenseRevisionQuerySupport
 >;
+
+export type BudgetProposalExpenseRevisionRepositoryFindQuery =
+  BaseRepositoryFindQuery<
+    BudgetProposalExpenseRevisionQuery,
+    BudgetProposalExpenseRevisionOrderByKeys
+  >;
+export type BudgetProposalExpenseRevisionRepositoryQuery =
+  BaseRepositoryQuery<BudgetProposalExpenseRevisionQuery>;
 
 @Injectable()
 export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepository<
@@ -67,6 +74,8 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       detail: result.detail,
       documentStatusEnum: result.documentStatusEnum,
       submittedAt: result.submittedAt,
+      cogAgenda: { id: result.cogAgendaId },
+      gsrcAgenda: { id: result.gsrcAgendaId },
     });
   }
 
@@ -84,6 +93,8 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       detail: model.detail,
       documentStatusEnum: model.documentStatusEnum,
       submittedAt: model.submittedAt,
+      cogAgendaId: model.cogAgenda?.id,
+      gsrcAgendaId: model.gsrcAgenda?.id,
     };
   }
 
@@ -110,11 +121,9 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       TableWithID | null
     > = {
       id: BudgetProposalExpenseRevision,
-      meetingId: BudgetProposalExpenseRevision,
-      agendaStatusEnum: BudgetProposalExpenseRevision,
-      submittedAt: BudgetProposalExpenseRevision,
-      name: BudgetProposalExpenseRevision,
-      detail: BudgetProposalExpenseRevision,
+      organizationId: BudgetProposalExpenseRevision,
+      semesterId: BudgetProposalExpenseRevision,
+      projectProposalId: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

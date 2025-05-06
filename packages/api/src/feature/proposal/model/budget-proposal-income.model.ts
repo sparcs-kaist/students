@@ -2,8 +2,9 @@ import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 import { IBudgetProposalIncome } from "@sparcs-students/interface/api/proposal/type/budget-proposal-income.type";
 
 export interface IBudgetProposalIncomeCreate extends IBudgetProposalIncome {
-  organizationId: number;
-  semesterId: number;
+  organization: IBudgetProposalIncome["organization"];
+
+  semester: IBudgetProposalIncome["semester"];
 }
 
 export class MBudgetProposalIncome
@@ -16,7 +17,7 @@ export class MBudgetProposalIncome
 
   semester: IBudgetProposalIncome["semester"];
 
-  constructor(data: IBudgetProposalIncomeCreate) {
+  constructor(data: IBudgetProposalIncome) {
     super();
     Object.assign(this, data);
   }

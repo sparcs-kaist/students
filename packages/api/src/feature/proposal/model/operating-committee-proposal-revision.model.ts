@@ -17,7 +17,7 @@ export class MOperatingCommitteeProposalRevision
 
   note: IOperatingCommitteeProposalRevision["note"];
 
-  constructor(data: IOperatingCommitteeProposalRevisionCreate) {
+  constructor(data: IOperatingCommitteeProposalRevision) {
     super();
     Object.assign(this, data);
   }
