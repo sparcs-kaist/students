@@ -41,7 +41,7 @@ export const OperatingCommittee = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "operating_committee_organization_id_fk",
+      name: "op_com_org_id_fk",
     }),
   }),
 );
@@ -63,7 +63,7 @@ export const Team = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "team_organization_id_fk",
+      name: "team_org_id_fk",
     }),
   }),
 );
@@ -90,12 +90,12 @@ export const OrganizationPresident = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_president_organization_id_fk",
+      name: "org_pres_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id], // Assume student table exists
-      name: "organization_president_student_id_fk",
+      name: "org_pres_stu_id_fk",
     }),
   }),
 );
@@ -117,12 +117,12 @@ export const OrganizationMember = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_member_organization_id_fk",
+      name: "org_mem_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "organization_member_student_id_fk",
+      name: "org_mem_stu_id_fk",
     }),
   }),
 );
@@ -144,12 +144,12 @@ export const OrganizationManager = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_manager_organization_id_fk",
+      name: "org_mgr_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "organization_manager_student_id_fk",
+      name: "org_mgr_stu_id_fk",
     }),
   }),
 );
@@ -173,12 +173,12 @@ export const OperatingCommitteeMember = mysqlTable(
     operatingCommitteeFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_member_operating_committee_id_fk",
+      name: "op_com_mem_com_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "operating_committee_member_student_id_fk",
+      name: "op_com_mem_stu_id_fk",
     }),
   }),
 );
@@ -200,12 +200,12 @@ export const TeamMember = mysqlTable(
     teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "team_member_team_id_fk",
+      name: "team_mem_team_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "team_member_student_id_fk",
+      name: "team_mem_stu_id_fk",
     }),
   }),
 );
@@ -227,12 +227,12 @@ export const TeamLeader = mysqlTable(
     teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "team_leader_team_id_fk",
+      name: "team_ldr_team_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "team_leader_student_id_fk",
+      name: "team_ldr_stu_id_fk",
     }),
   }),
 );

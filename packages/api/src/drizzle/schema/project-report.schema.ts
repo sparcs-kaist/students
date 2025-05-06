@@ -29,17 +29,17 @@ export const ProjectReport = mysqlTable(
     projectReportOrganizationIdFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "project_report_organization_id_fk",
+      name: "proj_rep_org_id_fk",
     }),
     projectReportSemesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "project_report_semester_id_fk",
+      name: "proj_rep_sem_id_fk",
     }),
     projectReportProjectProposalIdFk: foreignKey({
       columns: [table.projectProposalId],
       foreignColumns: [ProjectProposal.id],
-      name: "project_report_project_proposal_id_fk",
+      name: "proj_rep_prop_id_fk",
     }),
   }),
 );
@@ -75,32 +75,32 @@ export const ProjectReportRevision = mysqlTable(
     projectReportRevisionProjectReportIdFk: foreignKey({
       columns: [table.projectReportId],
       foreignColumns: [ProjectReport.id],
-      name: "project_report_revision_project_report_id_fk",
+      name: "proj_rep_rev_orig_id_fk",
     }),
     projectReportRevisionTeamIdFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "project_report_revision_team_id_fk",
+      name: "proj_rep_rev_team_id_fk",
     }),
     projectReportRevisionManagerIdFk: foreignKey({
       columns: [table.managerId],
       foreignColumns: [User.id],
-      name: "project_report_revision_manager_id_fk",
+      name: "proj_rep_rev_mgr_id_fk",
     }),
     projectReportRevisionAgendaIdFk: foreignKey({
       columns: [table.agendaId],
       foreignColumns: [Agenda.id],
-      name: "project_report_revision_agenda_id_fk",
+      name: "proj_rep_rev_agenda_id_fk",
     }),
     projectReportRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "project_report_revision_cog_agenda_id_fk",
+      name: "proj_rep_rev_cog_id_fk",
     }),
     projectReportRevisionGsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "project_report_revision_gsrc_agenda_id_fk",
+      name: "proj_rep_rev_gsrc_id_fk",
     }),
   }),
 );
@@ -122,7 +122,7 @@ export const ProjectReportTimeline = mysqlTable(
     projectReportTimelineProjectReportRevisionIdFk: foreignKey({
       columns: [table.projectReportRevisionId],
       foreignColumns: [ProjectReportRevision.id],
-      name: "project_report_timeline_project_report_id_fk",
+      name: "proj_rep_tim_orig_id_fk",
     }),
   }),
 );
@@ -140,12 +140,12 @@ export const ProjectDetailFile = mysqlTable(
     projectDetailFileProjectReportRevisionIdFk: foreignKey({
       columns: [table.projectReportRevisionId],
       foreignColumns: [ProjectReportRevision.id],
-      name: "project_detail_file_project_report_revision_id_fk",
+      name: "proj_det_file_rev_id_fk",
     }),
     projectDetailFileFileIdFk: foreignKey({
       columns: [table.fileId],
       foreignColumns: [File.id],
-      name: "project_detail_file_file_id_fk",
+      name: "proj_det_file_file_id_fk",
     }),
   }),
 );
@@ -161,12 +161,12 @@ export const OperationReport = mysqlTable(
     operationReportOrganizationIdFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "operation_report_organization_id_fk",
+      name: "op_rep_org_id_fk",
     }),
     operationReportSemesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "operation_report_semester_id_fk",
+      name: "op_rep_sem_id_fk",
     }),
   }),
 );
@@ -189,22 +189,22 @@ export const OperationReportRevision = mysqlTable(
     operationReportRevisionOperationReportIdFk: foreignKey({
       columns: [table.operationReportId],
       foreignColumns: [OperationReport.id],
-      name: "operation_report_revision_operation_report_id_fk",
+      name: "op_rep_rev_orig_id_fk",
     }),
     operationReportRevisionOrganizationDiagramIdFk: foreignKey({
       columns: [table.organizationDiagramId],
       foreignColumns: [File.id],
-      name: "operation_report_revision_organization_diagram_id_fk",
+      name: "op_rep_rev_org_diag_id_fk",
     }),
     operationReportCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operation_report_cog_agenda_id_fk",
+      name: "op_rep_cog_id_fk",
     }),
     operationReportGsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operation_report_gsrc_agenda_id_fk",
+      name: "op_rep_gsrc_id_fk",
     }),
   }),
 );
@@ -223,17 +223,17 @@ export const OperatingCommitteeReport = mysqlTable(
     operatingCommitteeReportOrganizationIdFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "operating_committee_report_organization_id_fk",
+      name: "op_com_rep_org_id_fk",
     }),
     operatingCommitteeReportSemesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "operating_committee_report_semester_id_fk",
+      name: "op_com_rep_sem_id_fk",
     }),
     operatingCommitteeReportOperatingCommitteeIdFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_report_operating_committee_id_fk",
+      name: "op_com_rep_com_id_fk",
     }),
   }),
 );
@@ -257,17 +257,17 @@ export const OperatingCommitteeReportRevision = mysqlTable(
     operatingCommitteeReportRevisionOperatingCommitteeReportIdFk: foreignKey({
       columns: [table.operatingCommitteeReportId],
       foreignColumns: [OperatingCommitteeReport.id],
-      name: "operating_committee_report_revision_operating_committee_report_id_fk",
+      name: "op_com_rep_rev_orig_id_fk",
     }),
     operatingCommitteeReportCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operating_committee_report_cog_agenda_id_fk",
+      name: "op_com_rep_cog_id_fk",
     }),
     operatingCommitteeReportGsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operating_committee_report_gsrc_agenda_id_fk",
+      name: "op_com_rep_gsrc_id_fk",
     }),
   }),
 );
@@ -284,7 +284,7 @@ export const OperatingCommitteeMeeting = mysqlTable(
     operatingCommitteeMeetingOperatingCommitteeIdFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_meeting_operating_committee_id_fk",
+      name: "op_com_meet_com_id_fk",
     }),
   }),
 );
@@ -312,17 +312,17 @@ export const OperatingCommitteeMeetingRevision = mysqlTable(
     operatingCommitteeMeetingRevisionOperatingCommitteeMeetingIdFk: foreignKey({
       columns: [table.operatingCommitteeMeetingId],
       foreignColumns: [OperatingCommitteeMeeting.id],
-      name: "operating_committee_meeting_revision_operating_committee_meeting_id_fk",
+      name: "op_com_meet_rev_orig_id_fk",
     }),
     operatingCommitteeMeetingCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operating_committee_meeting_cog_agenda_id_fk",
+      name: "op_com_meet_cog_id_fk",
     }),
     operatingCommitteeMeetingGsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operating_committee_meeting_gsrc_agenda_id_fk",
+      name: "op_com_meet_gsrc_id_fk",
     }),
   }),
 );
@@ -347,7 +347,7 @@ export const OperatingCommitteeMeetingResult = mysqlTable(
     operatingCommitteeResultMeetingRevisionIdFk: foreignKey({
       columns: [table.meetingRevisionId],
       foreignColumns: [OperatingCommitteeMeetingRevision.id],
-      name: "operating_committee_meeting_result_meeting_revision_id_fk",
+      name: "op_com_meet_res_rev_id_fk",
     }),
   }),
 );
@@ -365,12 +365,12 @@ export const RecruitReport = mysqlTable(
     recruitReportOrganizationIdFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "recruit_report_organization_id_fk",
+      name: "rec_rep_org_id_fk",
     }),
     recruitReportSemesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "recruit_report_semester_id_fk",
+      name: "rec_rep_sem_id_fk",
     }),
   }),
 );
@@ -396,22 +396,22 @@ export const RecruitReportRevision = mysqlTable(
     recruitOrganizationIdFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "recruit_organization_id_fk",
+      name: "rec_org_id_fk",
     }),
     recruitSemesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "recruit_semester_id_fk",
+      name: "rec_sem_id_fk",
     }),
     recruitCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "recruit_cog_agenda_id_fk",
+      name: "rec_cog_id_fk",
     }),
     recruitCogResultIdFk: foreignKey({
       columns: [table.cogResultId],
       foreignColumns: [Agenda.id],
-      name: "recruit_cog_result_id_fk",
+      name: "rec_cog_res_id_fk",
     }),
   }),
 );
@@ -429,12 +429,12 @@ export const RecruitEvidenceFile = mysqlTable(
     recruitEvidenceFileRecruitReportRevisionIdFk: foreignKey({
       columns: [table.recruitReportRevisionId],
       foreignColumns: [RecruitReportRevision.id],
-      name: "recruit_evidence_file_recruit_revision_id_fk",
+      name: "rec_evi_file_rev_id_fk",
     }),
     recruitEvidenceFileFileIdFk: foreignKey({
       columns: [table.fileId],
       foreignColumns: [File.id],
-      name: "recruit_evidence_file_file_id_fk",
+      name: "rec_evi_file_file_id_fk",
     }),
   }),
 );
@@ -452,12 +452,12 @@ export const RecruitMember = mysqlTable(
     recruitMemberRecruitIdFk: foreignKey({
       columns: [table.recruitReportRevisionId],
       foreignColumns: [RecruitReportRevision.id],
-      name: "recruit_member_recruit_report_revision_id_fk",
+      name: "rec_mem_rev_id_fk",
     }),
     recruitMemberStudentIdFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "recruit_member_student_id_fk",
+      name: "rec_mem_stu_id_fk",
     }),
   }),
 );
