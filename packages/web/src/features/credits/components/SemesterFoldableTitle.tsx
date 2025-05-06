@@ -38,7 +38,7 @@ const SemesterFoldableTitle: React.FC<{
   toggle?: boolean;
   toggleHandler: () => void;
   children?: React.ReactNode;
-}> = ({ title, toggle = null, toggleHandler = () => {}, children = null }) => (
+}> = ({ title, toggle = null, toggleHandler, children = null }) => (
   <FoldableSectionOuter>
     <FoldableSectionTitleInner>
       <SemesterTitle>{title}</SemesterTitle>

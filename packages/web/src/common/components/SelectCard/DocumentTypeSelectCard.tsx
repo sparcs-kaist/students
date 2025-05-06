@@ -8,7 +8,7 @@ import RadioOption from "@sparcs-students/web/common/components/Radio/RadioOptio
 
 export enum DocumentType {
   BudgetProposal = "예산안",
-  BudgetReport = "결산안",
+  BudgetReport = "결산",
   ProjectProposal = "사업 계획서",
   ProjectReport = "사업 보고서",
   None = "", // 문서 유형 선택 안함
@@ -19,7 +19,7 @@ const enumToString = (docType: DocumentType): string => {
     case DocumentType.BudgetProposal:
       return "예산안";
     case DocumentType.BudgetReport:
-      return "결산안";
+      return "결산";
     case DocumentType.ProjectProposal:
       return "사업 계획서";
     case DocumentType.ProjectReport:
@@ -99,7 +99,12 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
               disabled={disabled}
               checked={disabled ? false : type === e}
             >
-              <Typography fs={16} lh={20} fw="REGULAR">
+              <Typography
+                fs={16}
+                lh={20}
+                fw="REGULAR"
+                color={disabled ? "GRAY.400" : undefined}
+              >
                 {enumToString(e)}
               </Typography>
             </RadioOption>

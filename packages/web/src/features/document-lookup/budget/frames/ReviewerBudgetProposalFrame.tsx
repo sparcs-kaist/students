@@ -22,6 +22,7 @@ import ReviewerExpenditureTable from "@sparcs-students/web/features/document-loo
 import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { mockViewBudgetProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
+import { mockDBExpenditureData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -92,7 +93,7 @@ const ReviewerBudgetProposalFrame = () => {
 
   const updatedExpenditureData = useMemo(
     () =>
-      mockExpenditureData.map(item => {
+      mockDBExpenditureData.map(item => {
         const reviewEntry = reviewData.expenditure.find(
           d => d.code === item.code,
         );

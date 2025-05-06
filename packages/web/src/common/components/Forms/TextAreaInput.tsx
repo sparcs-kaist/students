@@ -70,8 +70,6 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;
-    console.log("e is", e);
-    console.log(inputValue);
     handleChange(inputValue);
   };
 

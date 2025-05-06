@@ -36,10 +36,12 @@ export const example: Story = {
     toggle: false,
   },
   render: function Render(args) {
-    const [toggle, setToggle] = useState<boolean>(false);
+    const { title, toggle: defaultToggle } = args;
+    const [toggle, setToggle] = useState<boolean>(defaultToggle);
     return (
       <FoldableSectionTitle
         {...args}
+        title={title}
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       />

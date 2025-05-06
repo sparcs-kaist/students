@@ -48,7 +48,7 @@ type Story = StoryObj<typeof meta>;
 
 export const example: Story = {
   render: function Render(args) {
-    const [{ value, selected }, updateArgs] = useArgs();
+    const [{ value, selected, placeholder, options }, updateArgs] = useArgs();
 
     const handleChange = (e: string) => {
       updateArgs({
@@ -63,6 +63,8 @@ export const example: Story = {
     return (
       <SearchSelect
         {...args}
+        options={options}
+        placeholder={placeholder}
         value={value}
         handleChange={handleChange}
         selected={selected}

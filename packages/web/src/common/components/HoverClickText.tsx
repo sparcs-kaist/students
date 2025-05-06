@@ -16,9 +16,8 @@ interface HoverClickTextProps {
   onClick?: () => void;
 }
 
-const HoverClickText = ({
-  text = "",
-  onClick = () => {},
-}: HoverClickTextProps) => <StyledText onClick={onClick}>{text}</StyledText>;
+const HoverClickText = ({ text, onClick = () => {} }: HoverClickTextProps) => (
+  <StyledText onClick={onClick}>{text}</StyledText>
+);
 
 export default HoverClickText;
