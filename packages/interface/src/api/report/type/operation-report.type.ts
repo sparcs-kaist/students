@@ -5,24 +5,21 @@ import { zSemester } from "@sparcs-students/interface/api/semester/type/semester
 import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 
-export const zOperationProposal = z.object({
+export const zOperationReport = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
 });
 
-export type IOperationProposal = z.infer<typeof zOperationProposal>;
+export type IOperationReport = z.infer<typeof zOperationReport>;
 
-export const zOperationProposalRevision = z
+export const zOperationReportRevision = z
   .object({
     id: zId,
-    operationProposal: zExtractId(zOperationProposal),
+    operationReport: zExtractId(zOperationReport),
     organizationDiagramFile: zExtractId(zFile),
-    // TODO: 리크루팅 관련 추가하기
     note: z.string(),
   })
   .merge(zRevisionBase);
 
-export type IOperationProposalRevision = z.infer<
-  typeof zOperationProposalRevision
->;
+export type IOperationReportRevision = z.infer<typeof zOperationReportRevision>;

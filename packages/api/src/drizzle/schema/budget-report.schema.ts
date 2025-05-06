@@ -11,12 +11,153 @@ import { Semester } from "./semester.schema";
 import { Organization } from "./organization.schema";
 import { User } from "./user.schema";
 import { File } from "./file.schema";
+// eslint-disable-next-line import/no-cycle
 import {
   BudgetProposalExpense,
   BudgetProposalIncome,
 } from "./budget-proposal.schema";
 import { ProjectReport } from "./project-report.schema";
+import { Agenda } from "./meeting.schema";
 
+export const BudgetReportIncome = mysqlTable(
+  "budget_report_income",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    organizationId: int("organization_id").notNull(),
+    semesterId: int("semester_id").notNull(),
+    budgetProposalIncomeId: int("budget_proposal_income_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    budgetReportIncomeOrganizationIdFk: foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [Organization.id],
+      name: "budget_report_income_organization_id_fk",
+    }),
+    budgetReportIncomeSemesterIdFk: foreignKey({
+      columns: [table.semesterId],
+      foreignColumns: [Semester.id],
+      name: "budget_report_income_semester_id_fk",
+    }),
+    budgetReportIncomeBudgetProposalIncomeIdFk: foreignKey({
+      columns: [table.budgetProposalIncomeId],
+      foreignColumns: [BudgetProposalIncome.id],
+      name: "budget_report_income_budget_proposal_income_id_fk",
+    }),
+  }),
+);
+
+export const BudgetReportIncomeRevision = mysqlTable(
+  "budget_report_income_revision",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    budgetReportIncomeId: int("budget_report_income_id").notNull(),
+    budgetDomainEnum: int("budget_domain_enum").notNull(),
+    budgetDivisionIncomeEnum: int("budget_division_income_enum").notNull(),
+    name: varchar("name", { length: 30 }).notNull(),
+    amount: int("amount"),
+    detail: text("detail"),
+    note: text("note"),
+    documentStatusEnum: int("document_status_enum").notNull(),
+    submittedAt: timestamp("submitted_at"),
+    cogAgendaId: int("cog_agenda_id"),
+    gsrcAgendaId: int("gsrc_agenda_id"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    budgetReportIncomeRevisionBudgetReportIncomeIdFk: foreignKey({
+      columns: [table.budgetReportIncomeId],
+      foreignColumns: [BudgetReportIncome.id],
+      name: "budget_report_income_revision_budget_report_income_id_fk",
+    }),
+    budgetReportIncomeRevisionCogAgendaIdFk: foreignKey({
+      columns: [table.cogAgendaId],
+      foreignColumns: [Agenda.id],
+      name: "budget_report_income_revision_cog_agenda_id_fk",
+    }),
+    budgetReportIncomeRevisionGsrcAgendaIdFk: foreignKey({
+      columns: [table.gsrcAgendaId],
+      foreignColumns: [Agenda.id],
+      name: "budget_report_income_revision_gsrc_agenda_id_fk",
+    }),
+  }),
+);
+
+export const BudgetReportExpense = mysqlTable(
+  "budget_report_expense",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    organizationId: int("organization_id").notNull(),
+    semesterId: int("semester_id").notNull(),
+    projectReportId: int("project_report_id").notNull(),
+    budgetProposalExpenseId: int("budget_proposal_expense_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    budgetReportExpenseOrganizationIdFk: foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [Organization.id],
+      name: "budget_report_expense_organization_id_fk",
+    }),
+    budgetReportExpenseSemesterIdFk: foreignKey({
+      columns: [table.semesterId],
+      foreignColumns: [Semester.id],
+      name: "budget_report_expense_semester_id_fk",
+    }),
+    budgetReportExpenseProjectReportIdFk: foreignKey({
+      columns: [table.projectReportId],
+      foreignColumns: [ProjectReport.id],
+      name: "budget_report_expense_project_report_id_fk",
+    }),
+    budgetReportExpenseBudgetProposalExpenseIdFk: foreignKey({
+      columns: [table.budgetProposalExpenseId],
+      foreignColumns: [BudgetProposalExpense.id],
+      name: "budget_report_expense_budget_proposal_expense_id_fk",
+    }),
+  }),
+);
+
+export const BudgetReportExpenseRevision = mysqlTable(
+  "budget_report_expense_revision",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    budgetReportExpenseId: int("budget_report_expense_id").notNull(),
+    budgetDomainEnum: int("budget_domain_enum").notNull(),
+    budgetDivisionExpenseEnum: int("budget_division_expense_enum").notNull(),
+    budgetClassExpenseEnum: int("budget_class_expense_enum").notNull(),
+    amount: int("amount"),
+    detail: text("detail"),
+    note: text("note"),
+    documentStatusEnum: int("document_status_enum").notNull(),
+    submittedAt: timestamp("submitted_at"),
+    cogAgendaId: int("cog_agenda_id"),
+    gsrcAgendaId: int("gsrc_agenda_id"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    budgetReportExpenseRevisionBudgetReportExpenseIdFk: foreignKey({
+      columns: [table.budgetReportExpenseId],
+      foreignColumns: [BudgetReportExpense.id],
+      name: "budget_report_expense_revision_document_id_fk",
+    }),
+    budgetReportExpenseRevisionCogAgendaIdFk: foreignKey({
+      columns: [table.cogAgendaId],
+      foreignColumns: [Agenda.id],
+      name: "budget_report_expense_revision_cog_agenda_id_fk",
+    }),
+    budgetReportExpenseRevisionGsrcAgendaIdFk: foreignKey({
+      columns: [table.gsrcAgendaId],
+      foreignColumns: [Agenda.id],
+      name: "budget_report_expense_revision_gsrc_agenda_id_fk",
+    }),
+  }),
+);
+
+// 일단 아래는 스탑.
 export const Account = mysqlTable(
   "account",
   {
@@ -51,130 +192,6 @@ export const Account = mysqlTable(
       foreignColumns: [File.id],
       name: "account_card_file_id_fk",
     }),
-  }),
-);
-
-export const BudgetReportIncome = mysqlTable(
-  "budget_report_income",
-  {
-    id: int("id").autoincrement().primaryKey().notNull(),
-    organizationId: int("organization_id").notNull(),
-    semesterId: int("semester_id").notNull(),
-    projectId: int("project_id").notNull(),
-    proposalId: int("proposal_id").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    budgetReportIncomeOrganizationIdFk: foreignKey({
-      columns: [table.organizationId],
-      foreignColumns: [Organization.id],
-      name: "budget_report_income_organization_id_fk",
-    }),
-    budgetReportIncomeSemesterIdFk: foreignKey({
-      columns: [table.semesterId],
-      foreignColumns: [Semester.id],
-      name: "budget_report_income_semester_id_fk",
-    }),
-    budgetReportIncomeProjectIdFk: foreignKey({
-      columns: [table.projectId],
-      foreignColumns: [ProjectReport.id],
-      name: "budget_report_income_project_id_fk",
-    }),
-    budgetReportIncomeProposalIdFk: foreignKey({
-      columns: [table.proposalId],
-      foreignColumns: [BudgetProposalIncome.id],
-      name: "budget_report_income_proposal_id_fk",
-    }),
-  }),
-);
-
-export const BudgetReportIncomeRevision = mysqlTable(
-  "budget_report_income_revision",
-  {
-    id: int("id").autoincrement().primaryKey().notNull(),
-    documentId: int("document_id").notNull(),
-    detail: text("detail"),
-    submittedAt: timestamp("submitted_at"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-    agendaId: int("agenda_id"),
-  },
-  table => ({
-    budgetReportIncomeRevisionDocumentIdFk: foreignKey({
-      columns: [table.documentId],
-      foreignColumns: [BudgetProposalIncome.id],
-      name: "budget_report_income_revision_document_id_fk",
-    }),
-    //   budgetReportIncomeRevisionAgendaIdFk: foreignKey({
-    //     columns: [table.agendaId],
-    //     foreignColumns: [Agenda.id],
-    //     name: "budget_report_income_revision_agenda_id_fk",
-    //   }),
-  }),
-);
-
-export const BudgetReportExpense = mysqlTable(
-  "budget_report_expense",
-  {
-    id: int("id").autoincrement().primaryKey().notNull(),
-    organizationId: int("organization_id").notNull(),
-    semesterId: int("semester_id").notNull(),
-    projectId: int("project_id").notNull(),
-    proposalId: int("proposal_id").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    budgetReportExpenseOrganizationIdFk: foreignKey({
-      columns: [table.organizationId],
-      foreignColumns: [Organization.id],
-      name: "budget_report_expense_organization_id_fk",
-    }),
-    budgetReportExpenseSemesterIdFk: foreignKey({
-      columns: [table.semesterId],
-      foreignColumns: [Semester.id],
-      name: "budget_report_expense_semester_id_fk",
-    }),
-    budgetReportExpenseProjectIdFk: foreignKey({
-      columns: [table.projectId],
-      foreignColumns: [ProjectReport.id],
-      name: "budget_report_expense_project_id_fk",
-    }),
-    budgetReportExpenseProposalIdFk: foreignKey({
-      columns: [table.proposalId],
-      foreignColumns: [BudgetProposalExpense.id],
-      name: "budget_report_expense_proposal_id_fk",
-    }),
-  }),
-);
-
-export const BudgetReportExpenseRevision = mysqlTable(
-  "budget_report_expense_revision",
-  {
-    id: int("id").autoincrement().primaryKey().notNull(),
-    documentId: int("document_id").notNull(),
-    note: text("note"),
-    submittedAt: timestamp("submitted_at"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-    agendaId: int("agenda_id"),
-  },
-  table => ({
-    budgetReportExpenseRevisionDocumentIdFk: foreignKey({
-      columns: [table.documentId],
-      foreignColumns: [BudgetReportExpense.id],
-      name: "budget_report_expense_revision_document_id_fk",
-    }),
-    //   budgetReportExpenseRevisionAgendaIdFk: foreignKey({
-    //     columns: [table.agendaId],
-    //     foreignColumns: [Agenda.id],
-    //     name: "budget_report_expense_revision_agenda_id_fk",
-    //   }),
   }),
 );
 

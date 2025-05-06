@@ -13,22 +13,22 @@ import {
 } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 // eslint-disable-next-line import/no-cycle
-import { zBudgetReportIncome } from "@sparcs-students/interface/api/report/type/budget-report-income.type";
+import { zBudgetProposalIncome } from "@sparcs-students/interface/api/proposal/type/budget-proposal-income.type";
 
-// BudgetProposalIncome: 예산안 수입 각 행 엔티티
-export const zBudgetProposalIncome = z.object({
+// BudgetReportIncome: 예산안 수입 각 행 엔티티
+export const zBudgetReportIncome = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
+  budgetProposalIncome: zExtractId(zBudgetProposalIncome), // 참조 예산안
 });
 
-export type IBudgetProposalIncome = z.infer<typeof zBudgetProposalIncome>;
+export type IBudgetReportIncome = z.infer<typeof zBudgetReportIncome>;
 
-export const zBudgetProposalIncomeRevision = z
+export const zBudgetReportIncomeRevision = z
   .object({
     id: zId,
-    previousBudgetReportIncome: zExtractId(zBudgetReportIncome),
-    budgetProposalIncome: zExtractId(zBudgetProposalIncome),
+    budgetReportIncome: zExtractId(zBudgetReportIncome), // 원본
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionIncomeEnum: z.nativeEnum(BudgetDivisionIncomeEnum),
     name: zDocumentItemName,
@@ -38,6 +38,6 @@ export const zBudgetProposalIncomeRevision = z
   })
   .merge(zRevisionBase);
 
-export type IBudgetProposalIncomeRevision = z.infer<
-  typeof zBudgetProposalIncomeRevision
+export type IBudgetReportIncomeRevision = z.infer<
+  typeof zBudgetReportIncomeRevision
 >;

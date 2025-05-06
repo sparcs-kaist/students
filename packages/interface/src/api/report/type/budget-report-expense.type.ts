@@ -2,6 +2,8 @@ import { zExtractId, zId } from "@sparcs-students/interface/common/type/ids";
 import { z } from "zod";
 import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { zSemester } from "@sparcs-students/interface/api/semester/type/semester.type";
+// eslint-disable-next-line import/no-cycle
+import { zBudgetProposalExpense } from "@sparcs-students/interface/api/proposal/type/budget-proposal-expense.type";
 import {
   BudgetClassExpenseEnum,
   BudgetDivisionExpenseEnum,
@@ -10,34 +12,33 @@ import {
 
 import { zMoney } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
-// eslint-disable-next-line import/no-cycle
-import { zBudgetReportExpense } from "@sparcs-students/interface/api/report/type/budget-report-expense.type";
-import { zProjectProposal } from "./project-proposal.type";
+import { zProjectReport } from "./project-report.type";
 
-// BudgetProposalExpense: 예산안 각 행 엔티티
-export const zBudgetProposalExpense = z.object({
+// BudgetReportExpense: 예산안 각 행 엔티티
+export const zBudgetReportExpense = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
-  projectProposal: zExtractId(zProjectProposal),
+  projectReport: zExtractId(zProjectReport), // 기반 사업보고서
+  budgetProposalExpense: zExtractId(zBudgetProposalExpense), // 참조 예산안
 });
 
-export type IBudgetProposalExpense = z.infer<typeof zBudgetProposalExpense>;
+export type IBudgetReportExpense = z.infer<typeof zBudgetReportExpense>;
 
-// BudgetProposalExpense: 예산안 각 행 엔티티
-export const zBudgetProposalExpenseRevision = z
+// BudgetReportExpense: 예산안 각 행 엔티티
+export const zBudgetReportExpenseRevision = z
   .object({
     id: zId,
-    budgetProposalExpense: zExtractId(zBudgetProposalExpense),
-    previousBudgetReportExpense: zExtractId(zBudgetReportExpense),
+    budgetReportExpense: zExtractId(zBudgetReportExpense), // 원본
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
     amount: zMoney,
     detail: z.string(),
+    note: z.string(),
   })
   .merge(zRevisionBase);
 
-export type IBudgetProposalExpenseRevision = z.infer<
-  typeof zBudgetProposalExpenseRevision
+export type IBudgetReportExpenseRevision = z.infer<
+  typeof zBudgetReportExpenseRevision
 >;

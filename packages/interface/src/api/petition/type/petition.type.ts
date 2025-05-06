@@ -3,10 +3,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 import { zUser } from "@sparcs-students/interface/api/user/type/user.type";
 import { zTeam } from "@sparcs-students/interface/api/organization/type/organization.type";
 
-import {
-  zDuration,
-  zDurationCreate,
-} from "@sparcs-students/interface/common/type/time.type";
+import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { z } from "zod";
 
 export const zPetition = z.object({
@@ -18,12 +15,9 @@ export const zPetition = z.object({
   petitionStatusEnumId: z.nativeEnum(PetitionStatusEnum),
 });
 
-export const zPetitonRequestCreate = zPetition
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zPetitonRequestCreate = zPetition.omit({
+  id: true,
+});
 
 export const zPetitonRequestUpdate = zPetition;
 
@@ -37,11 +31,9 @@ export const zPetitionAgree = z.object({
   user: zUser.pick({ id: true }),
 });
 
-export const zPetitionAgreeRequestCreate = zPetitionAgree
-  .omit({
-    id: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zPetitionAgreeRequestCreate = zPetitionAgree.omit({
+  id: true,
+});
 
 export const zPetitonAgreeRequestUpdate = zPetitionAgree;
 
@@ -61,11 +53,9 @@ export const zPetitonAnswer = z.object({
   posted: z.boolean().default(false),
 });
 
-export const zPetitionAnswerRequestCreate = zPetitonAnswer
-  .omit({
-    id: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zPetitionAnswerRequestCreate = zPetitonAnswer.omit({
+  id: true,
+});
 
 export const zPetitonAnswerRequestUpdate = zPetitonAnswer;
 

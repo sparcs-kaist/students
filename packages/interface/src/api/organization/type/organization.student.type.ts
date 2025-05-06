@@ -1,9 +1,6 @@
 import { OrganizationPresidentTypeEnum } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import {
-  zDuration,
-  zDurationCreate,
-} from "@sparcs-students/interface/common/type/time.type";
+import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { zPhoneNumber } from "@sparcs-students/interface/common/type/phoneNumber.type";
 import { zStudent } from "@sparcs-students/interface/api/user/type/user.type";
 import { z } from "zod";
@@ -21,12 +18,9 @@ export const zOrganizationPresident = z.object({
   duration: zDuration,
 });
 
-export const zOrganizationPresidentRequestCreate = zOrganizationPresident
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zOrganizationPresidentRequestCreate = zOrganizationPresident.omit({
+  id: true,
+});
 
 export const zOrganizationPresidentResponse = zOrganizationPresident.extend({
   organization: zOrganization,
@@ -50,12 +44,9 @@ export const zOrganizationMember = z.object({
   duration: zDuration,
 });
 
-export const zOrganizationMemberRequestCreate = zOrganizationMember
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zOrganizationMemberRequestCreate = zOrganizationMember.omit({
+  id: true,
+});
 
 export const zOrganizationMemberResponse = zOrganizationMember.extend({
   organization: zOrganization,
@@ -78,12 +69,9 @@ export const zOrganizationManager = z.object({
   duration: zDuration,
 });
 
-export const zOrganizationManagerRequestCreate = zOrganizationManager
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zOrganizationManagerRequestCreate = zOrganizationManager.omit({
+  id: true,
+});
 
 export const zOrganizationManagerResponse = zOrganizationManager.extend({
   organization: zOrganization,
@@ -108,12 +96,10 @@ export const zOperatingCommitteeMember = z.object({
   duration: zDuration,
 });
 
-export const zOperatingCommitteeMemberRequestCreate = zOperatingCommitteeMember
-  .omit({
+export const zOperatingCommitteeMemberRequestCreate =
+  zOperatingCommitteeMember.omit({
     id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+  });
 
 export const zOperatingCommitteeMemberResponse =
   zOperatingCommitteeMember.extend({
@@ -138,12 +124,9 @@ export const zTeamMember = z.object({
   duration: zDuration,
 });
 
-export const zTeamMemberRequestCreate = zTeamMember
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zTeamMemberRequestCreate = zTeamMember.omit({
+  id: true,
+});
 
 export const zTeamMemberResponse = zTeamMember.extend({
   team: zTeam,
@@ -162,12 +145,9 @@ export const zTeamLeader = z.object({
   duration: zDuration,
 });
 
-export const zTeamLeaderRequestCreate = zTeamLeader
-  .omit({
-    id: true,
-    duration: true,
-  })
-  .extend({ duration: zDurationCreate });
+export const zTeamLeaderRequestCreate = zTeamLeader.omit({
+  id: true,
+});
 
 export const zTeamLeaderResponse = zTeamLeader.extend({
   team: zTeam,
