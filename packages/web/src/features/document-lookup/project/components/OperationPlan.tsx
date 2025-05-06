@@ -11,7 +11,6 @@ import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import MemberTable, {
   MemberProps,
 } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
-import ManageProjectReportTable from "@sparcs-students/web/features/document-lookup/project/components/ManageProjectReportTable";
 
 export interface OperationPlanProps {
   memberData: MemberProps[];
@@ -40,12 +39,7 @@ const OperationPlan: React.FC<OperationPlanProps> = ({
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         {isProposal ? "운영계획" : "운영보고"}
       </Typography>
-      {userPermission === UserPermission.Manager && (
-        <ManageProjectReportTable data={memberData} />
-      )}
-      {userPermission === UserPermission.Viewer && (
-        <MemberTable data={memberData} />
-      )}
+      <MemberTable data={memberData} />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
