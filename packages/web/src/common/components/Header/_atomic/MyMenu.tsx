@@ -1,25 +1,20 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
+import { useAuth } from "@sparcs-students/web/common/providers/AuthContext";
 import colors from "@sparcs-students/web/styles/themes/colors";
+import { getUserRole } from "@sparcs-students/web/utils/getUserType";
 
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import ProfileList from "@sparcs-students/web/common/components/Header/_atomic/ProfileList";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { StudentsJwtPayload } from "@sparcs-students/web/features/login/type/payload";
-// import ProfileList from "./_atomic/ProfileList";
 
 interface MyMenuProps {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedToken: string;
   setSelectedToken: React.Dispatch<React.SetStateAction<string>>;
-  setUserName: React.Dispatch<React.SetStateAction<string | null>>;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoggedIn: boolean;
 }
 
 const MyMenuWrapper = styled.div`
@@ -54,64 +49,27 @@ const MyMenu: React.FC<MyMenuProps> = ({
   setIsMenuOpen,
   selectedToken,
   setSelectedToken,
-  setIsLoggedIn,
-  setUserName,
-  isLoggedIn,
 }) => {
   const router = useRouter();
-  const [profiles, setProfiles] = React.useState<
-    { profileType: string; token: string }[]
-  >([]);
 
   const handleMyPageClick = () => {
     router.push("/my");
     setIsMenuOpen(false);
   };
-  // const { logout } = useAuth(); // TODO: log out logic
+  const { logout } = useAuth(); // TODO: log out logic
   const handleLogout = async () => {
-    try {
-      await axios.post(`http://localhost:8000/auth/sign-out`, null, {
-        withCredentials: true,
-      });
-
-      setSelectedToken("");
-      setProfiles([]);
-      setUserName(null);
-      setIsLoggedIn(false);
-      setIsMenuOpen(false);
-    } catch (err) {
-      console.error("Failed to sign out:", err);
-    }
+    logout();
+    setIsMenuOpen(false);
   };
 
   const t = useTranslations();
 
-  useEffect(() => {
-    // 로그인 되었다면, accessToken을 Decode 하여 내부 데이터를 가져옵니다.
-    const token = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("accessToken="))
-      ?.split("=")[1];
-    if (token) {
-      setIsLoggedIn(true);
-      setSelectedToken(token);
-      const decoded = jwtDecode<StudentsJwtPayload>(token);
-      setUserName(decoded.name);
-    }
-  }, []);
+  const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "{}");
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setProfiles([]);
-      return;
-    }
-
-    setProfiles([
-      { profileType: "학부생", token: selectedToken },
-      { profileType: "전산학부 학생회 대표자", token: selectedToken },
-      { profileType: "SPARCS 회원", token: selectedToken },
-    ]);
-  }, [isLoggedIn, setIsLoggedIn]);
+  const profiles = Object.keys(parsedToken).map(type => ({
+    profileType: getUserRole(type), // TODO: 권한 type 관리 어떻게 할 건지
+    token: parsedToken[type],
+  }));
 
   return (
     <MyMenuWrapper>

@@ -1,10 +1,11 @@
 // import { jwtDecode, JwtPayload } from "jwt-decode";
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import Typography from "@sparcs-students/web/common/components/Typography";
 // import { setLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
+import { setLocalStorageItem } from "@sparcs-students/web/utils/localStorage";
 import Profile from "./Profile";
 
 interface ProfileListProps {
@@ -40,16 +41,9 @@ const ProfileList: React.FC<ProfileListProps> = ({
     token: string;
   }) => {
     setSelectedToken(profile.token);
-    // setLocalStorageItem("accessToken", profile.token);
+    setLocalStorageItem("accessToken", profile.token);
     setIsMenuOpen(false);
   };
-
-  useEffect(() => {
-    if (profiles) {
-      console.log(profiles);
-      setSelectedToken(profiles[0]);
-    } // TODO: default profile token selected
-  }, []);
 
   return (
     <ProfileListWrapper>

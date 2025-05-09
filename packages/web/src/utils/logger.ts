@@ -1,4 +1,4 @@
-import log from "loglevel";
+import logger from "loglevel";
 
 const initialize = () => {
   switch (process.env.NEXT_PUBLIC_ENVIRONMENT) {
@@ -6,13 +6,13 @@ const initialize = () => {
     case "swagger":
     case "stage":
     case "dev":
-      return log.setLevel(log.levels.TRACE);
+      return logger.setLevel(logger.levels.TRACE);
     case "prod":
     default:
-      return log.setLevel(log.levels.SILENT);
+      return logger.setLevel(logger.levels.SILENT);
   }
 };
 
 initialize();
 
-export default log;
+export default logger;
