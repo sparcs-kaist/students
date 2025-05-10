@@ -1,186 +1,136 @@
-import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
-
+import { Injectable } from "@nestjs/common";
 import {
   and,
   gt,
-  inArray,
-  isNotNull,
-  lt,
-  not,
-  or,
-  eq,
+  InferInsertModel,
+  InferSelectModel,
+  lte,
   SQL,
-  isNull,
 } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
-import {
-  DrizzleAsyncProvider,
-  DrizzleTransaction,
-} from "src/drizzle/drizzle.provider";
-import { OrganizationMember } from "src/drizzle/schema";
-import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
-import {
-  IOrganizationMemberRequestCreate,
-  IOrganizationMemberRequestUpdate,
-} from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationMember } from "../type/organization.member.model";
 
-type IOrganizationMemberQuery = {
-  id?: number;
-  ids?: number[];
-  studentId?: number;
-  organizationId?: number;
-  duration?: DurationFull;
+import {
+  BaseTableFieldMapKeys,
+  PrimitiveConditionValue,
+  TableWithID,
+} from "@sparcs-students/api/common/base/base.repository";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { OrganizationMember } from "@sparcs-students/api/drizzle/schema/organization.schema";
+import {
+  IOrganizationMemberCreate,
+  MOrganizationMember,
+} from "@sparcs-students/api/feature/organization/model/organization.member.model";
+
+type OrganizationMemberQuery = {
+  studentId: number;
+  organizationId: number;
+  date: Date;
 };
 
+type OrganizationMemberOrderByKeys =
+  | "id"
+  | "organizationId"
+  | "startTerm"
+  | "endTerm";
+type OrganizationMemberQuerySupport = {
+  startTerm: string;
+  endTerm: string;
+};
+
+type OrganizationMemberTable = typeof OrganizationMember;
+type OrganizationMemberDbSelect = InferSelectModel<OrganizationMemberTable>;
+type OrganizationMemberDbUpdate = Partial<OrganizationMemberDbSelect>;
+type OrganizationMemberDbInsert = InferInsertModel<OrganizationMemberTable>;
+
+type OrganizationMemberFieldMapKeys = BaseTableFieldMapKeys<
+  OrganizationMemberQuery,
+  OrganizationMemberOrderByKeys,
+  OrganizationMemberQuerySupport
+>;
+
 @Injectable()
-export class OrganizationMemberRepository {
-  constructor(
-    @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
-  ) {}
-
-  // WARD: Transaction
-  async withTransaction<T>(
-    callback: (tx: DrizzleTransaction) => Promise<T>,
-  ): Promise<T> {
-    return this.db.transaction(callback);
+export class OrganizationMemberRepository extends BaseSingleTableRepository<
+  MOrganizationMember,
+  IOrganizationMemberCreate,
+  OrganizationMemberTable,
+  OrganizationMemberQuery,
+  OrganizationMemberOrderByKeys,
+  OrganizationMemberQuerySupport
+> {
+  constructor() {
+    super(OrganizationMember, MOrganizationMember);
   }
 
-  // find methods
-  async findTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationMemberQuery,
-  ): Promise<MOrganizationMember[] | null> {
-    const whereClause: SQL[] = [];
-    if (param.id) {
-      whereClause.push(eq(OrganizationMember.id, param.id));
-    }
-    if (param.ids) {
-      whereClause.push(inArray(OrganizationMember.id, param.ids));
-    }
-    if (param.studentId) {
-      whereClause.push(eq(OrganizationMember.studentId, param.studentId));
-    }
-    if (param.organizationId) {
-      whereClause.push(
-        eq(OrganizationMember.organizationId, param.organizationId),
-      );
-    }
-    if (param.duration) {
-      whereClause.push(
-        not(
-          or(
-            gt(OrganizationMember.startTerm, param.duration.endTerm),
-            and(
-              isNotNull(OrganizationMember.endTerm),
-              lt(OrganizationMember.endTerm, param.duration.startTerm),
-            ),
-          ),
-        ),
-      );
-    }
-
-    whereClause.push(isNotNull(OrganizationMember.deletedAt));
-
-    const result = await tx
-      .select()
-      .from(OrganizationMember)
-      .where(and(...whereClause))
-      .execute();
-
-    if (result.length === 0) {
-      return null;
-    }
-    return result.map(r => MOrganizationMember.fromDBResult(r));
-  }
-
-  async find(
-    param: IOrganizationMemberQuery,
-  ): Promise<MOrganizationMember[] | null> {
-    return this.withTransaction(async tx => this.findTx(tx, param));
-  }
-
-  // insert methods
-  async insertTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationMemberRequestCreate,
-  ): Promise<void> {
-    const [result] = await tx.insert(OrganizationMember).values({
-      ...param,
-      organizationId: param.organization.id,
-      studentId: param.student.id,
-      startTerm: param.duration.startTerm,
-      endTerm: param.duration.endTerm,
+  protected dbToModelMapping(
+    result: OrganizationMemberDbSelect,
+  ): MOrganizationMember {
+    return new MOrganizationMember({
+      id: result.id,
+      organization: { id: result.organizationId },
+      student: { id: result.studentId },
+      duration: {
+        startTerm: result.startTerm,
+        endTerm: result.endTerm ?? undefined,
+      },
     });
-    if (result.insertId === undefined) {
-      throw new HttpException(
-        "Failed to insert organizationMember",
-        HttpStatus.BAD_REQUEST,
+  }
+
+  protected modelToDBMapping(
+    model: MOrganizationMember,
+  ): OrganizationMemberDbUpdate {
+    return {
+      id: model.id,
+      organizationId: model.organization.id,
+      studentId: model.student.id,
+      startTerm: model.duration.startTerm,
+      endTerm: model.duration.endTerm,
+    };
+  }
+
+  protected createToDBMapping(
+    model: IOrganizationMemberCreate,
+  ): OrganizationMemberDbInsert {
+    return {
+      organizationId: model.organization.id,
+      studentId: model.student.id,
+      startTerm: model.duration.startTerm,
+      endTerm: model.duration.endTerm,
+    };
+  }
+
+  protected fieldMap(
+    field: OrganizationMemberFieldMapKeys,
+  ): TableWithID | null | undefined {
+    const fieldMappings: Record<
+      OrganizationMemberFieldMapKeys,
+      TableWithID | null
+    > = {
+      id: OrganizationMember,
+      organizationId: OrganizationMember,
+      studentId: OrganizationMember,
+      startTerm: OrganizationMember,
+      endTerm: OrganizationMember,
+      date: null,
+    };
+
+    if (!(field in fieldMappings)) {
+      return undefined;
+    }
+
+    return fieldMappings[field];
+  }
+
+  protected processSpecialCondition(
+    key: OrganizationMemberFieldMapKeys,
+    value: PrimitiveConditionValue,
+  ): SQL {
+    if (key === "date" && value instanceof Date) {
+      // console.log(`semester date: ${value}`);
+      return and(
+        lte(OrganizationMember.startTerm, value),
+        gt(OrganizationMember.endTerm, value),
       );
     }
-  }
 
-  async insert(param: IOrganizationMemberRequestCreate): Promise<void> {
-    return this.db.transaction(async tx => this.insertTx(tx, param));
-  }
-
-  async updateTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationMemberRequestUpdate,
-  ): Promise<void> {
-    const [result] = await tx
-      .update(OrganizationMember)
-      .set({
-        startTerm: param.duration.startTerm,
-        endTerm: param.duration.endTerm,
-      })
-      .where(
-        and(
-          eq(OrganizationMember.id, param.id),
-          eq(OrganizationMember.organizationId, param.organization.id),
-          eq(OrganizationMember.studentId, param.student.id),
-          isNull(OrganizationMember.deletedAt),
-        ),
-      );
-    if (result.affectedRows === 0) {
-      throw new HttpException(
-        "Failed to update organizationMember",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  async update(param: IOrganizationMemberRequestUpdate): Promise<void> {
-    await this.withTransaction(async tx => this.updateTx(tx, param));
-  }
-
-  // delete methods
-  async deleteTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationMemberQuery,
-  ): Promise<void> {
-    const [result] = await tx
-      .update(OrganizationMember)
-      .set({
-        deletedAt: new Date(),
-      })
-      .where(
-        and(
-          eq(OrganizationMember.id, param.id),
-          eq(OrganizationMember.studentId, param.studentId),
-          eq(OrganizationMember.organizationId, param.organizationId),
-          isNull(OrganizationMember.deletedAt),
-        ),
-      );
-    if (result.affectedRows === 0) {
-      throw new HttpException(
-        "Failed to delete organizationMember",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  async delete(param: IOrganizationMemberQuery): Promise<void> {
-    await this.withTransaction(async tx => this.deleteTx(tx, param));
+    throw new Error(`Invalid key: ${String(key)}`);
   }
 }

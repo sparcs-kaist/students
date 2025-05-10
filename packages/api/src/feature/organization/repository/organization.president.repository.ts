@@ -1,202 +1,152 @@
-import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
-
+import { Injectable } from "@nestjs/common";
 import {
   and,
   gt,
-  inArray,
-  isNotNull,
-  lt,
-  not,
-  or,
-  eq,
+  InferInsertModel,
+  InferSelectModel,
+  lte,
   SQL,
-  isNull,
 } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
-import {
-  DrizzleAsyncProvider,
-  DrizzleTransaction,
-} from "src/drizzle/drizzle.provider";
-import { OrganizationPresident } from "src/drizzle/schema";
-import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
-import {
-  IOrganizationPresidentRequestCreate,
-  IOrganizationPresidentRequestUpdate,
-} from "@sparcs-students/interface/api/organization/type/organization.student.type";
-import { MOrganizationPresident } from "../type/organization.president.model";
 
-type IOrganizationPresidentQuery = {
-  id?: number;
-  ids?: number[];
-  studentId?: number;
-  organizationId?: number;
-  organizationPresidentTypeEnum?: number;
-  phoneNumber?: string;
-  duration?: DurationFull;
+import {
+  BaseTableFieldMapKeys,
+  PrimitiveConditionValue,
+  TableWithID,
+} from "@sparcs-students/api/common/base/base.repository";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { OrganizationPresident } from "@sparcs-students/api/drizzle/schema/organization.schema";
+import {
+  IOrganizationPresidentCreate,
+  MOrganizationPresident,
+} from "@sparcs-students/api/feature/organization/model/organization.president.model";
+
+type OrganizationPresidentQuery = {
+  studentId: number;
+  organizationId: number;
+  organizationPresidentTypeEnum: number;
+  phoneNumber: string;
+  date: Date;
 };
 
+type OrganizationPresidentOrderByKeys =
+  | "id"
+  | "organizationId"
+  | "organizationPresidentTypeEnum"
+  | "startTerm"
+  | "endTerm";
+type OrganizationPresidentQuerySupport = {
+  startTerm: string;
+  endTerm: string;
+};
+
+type OrganizationPresidentTable = typeof OrganizationPresident;
+type OrganizationPresidentDbSelect =
+  InferSelectModel<OrganizationPresidentTable>;
+type OrganizationPresidentDbUpdate = Partial<OrganizationPresidentDbSelect>;
+type OrganizationPresidentDbInsert =
+  InferInsertModel<OrganizationPresidentTable>;
+
+type OrganizationPresidentFieldMapKeys = BaseTableFieldMapKeys<
+  OrganizationPresidentQuery,
+  OrganizationPresidentOrderByKeys,
+  OrganizationPresidentQuerySupport
+>;
+
 @Injectable()
-export class OrganizationPresidentRepository {
-  constructor(
-    @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
-  ) {}
-
-  // WARD: Transaction
-  async withTransaction<T>(
-    callback: (tx: DrizzleTransaction) => Promise<T>,
-  ): Promise<T> {
-    return this.db.transaction(callback);
+export class OrganizationPresidentRepository extends BaseSingleTableRepository<
+  MOrganizationPresident,
+  IOrganizationPresidentCreate,
+  OrganizationPresidentTable,
+  OrganizationPresidentQuery,
+  OrganizationPresidentOrderByKeys,
+  OrganizationPresidentQuerySupport
+> {
+  constructor() {
+    super(OrganizationPresident, MOrganizationPresident);
   }
 
-  // find methods
-  async findTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationPresidentQuery,
-  ): Promise<MOrganizationPresident[] | null> {
-    const whereClause: SQL[] = [];
-    if (param.id) {
-      whereClause.push(eq(OrganizationPresident.id, param.id));
-    }
-    if (param.ids) {
-      whereClause.push(inArray(OrganizationPresident.id, param.ids));
-    }
-    if (param.studentId) {
-      whereClause.push(eq(OrganizationPresident.studentId, param.studentId));
-    }
-    if (param.organizationId) {
-      whereClause.push(
-        eq(OrganizationPresident.organizationId, param.organizationId),
-      );
-    }
-    if (param.organizationPresidentTypeEnum) {
-      whereClause.push(
-        eq(
-          OrganizationPresident.organizationPresidentTypeEnum,
-          param.organizationPresidentTypeEnum,
-        ),
-      );
-    }
-    if (param.phoneNumber) {
-      whereClause.push(
-        eq(OrganizationPresident.phoneNumber, param.phoneNumber),
-      );
-    }
-    if (param.duration) {
-      whereClause.push(
-        not(
-          or(
-            gt(OrganizationPresident.startTerm, param.duration.endTerm),
-            and(
-              isNotNull(OrganizationPresident.endTerm),
-              lt(OrganizationPresident.endTerm, param.duration.startTerm),
-            ),
-          ),
-        ),
-      );
-    }
-
-    whereClause.push(isNotNull(OrganizationPresident.deletedAt));
-
-    const result = await tx
-      .select()
-      .from(OrganizationPresident)
-      .where(and(...whereClause))
-      .execute();
-
-    if (result.length === 0) {
-      return null;
-    }
-    return result.map(r => MOrganizationPresident.fromDBResult(r));
-  }
-
-  async find(
-    param: IOrganizationPresidentQuery,
-  ): Promise<MOrganizationPresident[] | null> {
-    return this.withTransaction(async tx => this.findTx(tx, param));
-  }
-
-  // insert methods
-  async insertTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationPresidentRequestCreate,
-  ): Promise<void> {
-    const [result] = await tx.insert(OrganizationPresident).values({
-      ...param,
-      organizationId: param.organization.id,
-      studentId: param.student.id,
-      startTerm: param.duration.startTerm,
-      endTerm: param.duration.endTerm,
+  protected dbToModelMapping(
+    result: OrganizationPresidentDbSelect,
+  ): MOrganizationPresident {
+    return new MOrganizationPresident({
+      id: result.id,
+      organization: { id: result.organizationId },
+      organizationPresidentTypeEnum: result.organizationPresidentTypeEnum,
+      title: result.title,
+      student: { id: result.studentId },
+      phoneNumber: result.phoneNumber,
+      duration: {
+        startTerm: result.startTerm,
+        endTerm: result.endTerm ?? undefined,
+      },
     });
-    if (result.insertId === undefined) {
-      throw new HttpException(
-        "Failed to insert organizationPresident",
-        HttpStatus.BAD_REQUEST,
+  }
+
+  protected modelToDBMapping(
+    model: MOrganizationPresident,
+  ): OrganizationPresidentDbUpdate {
+    return {
+      id: model.id,
+      organizationId: model.organization.id,
+      organizationPresidentTypeEnum: model.organizationPresidentTypeEnum,
+      title: model.title,
+      studentId: model.student.id,
+      phoneNumber: model.phoneNumber,
+      startTerm: model.duration.startTerm,
+      endTerm: model.duration.endTerm,
+    };
+  }
+
+  protected createToDBMapping(
+    model: IOrganizationPresidentCreate,
+  ): OrganizationPresidentDbInsert {
+    return {
+      organizationId: model.organization.id,
+      organizationPresidentTypeEnum: model.organizationPresidentTypeEnum,
+      title: model.title,
+      studentId: model.student.id,
+      phoneNumber: model.phoneNumber,
+      startTerm: model.duration.startTerm,
+      endTerm: model.duration.endTerm,
+    };
+  }
+
+  protected fieldMap(
+    field: OrganizationPresidentFieldMapKeys,
+  ): TableWithID | null | undefined {
+    const fieldMappings: Record<
+      OrganizationPresidentFieldMapKeys,
+      TableWithID | null
+    > = {
+      id: OrganizationPresident,
+      organizationId: OrganizationPresident,
+      organizationPresidentTypeEnum: OrganizationPresident,
+      studentId: OrganizationPresident,
+      phoneNumber: OrganizationPresident,
+      startTerm: OrganizationPresident,
+      endTerm: OrganizationPresident,
+      date: null,
+    };
+
+    if (!(field in fieldMappings)) {
+      return undefined;
+    }
+
+    return fieldMappings[field];
+  }
+
+  protected processSpecialCondition(
+    key: OrganizationPresidentFieldMapKeys,
+    value: PrimitiveConditionValue,
+  ): SQL {
+    if (key === "date" && value instanceof Date) {
+      // console.log(`semester date: ${value}`);
+      return and(
+        lte(OrganizationPresident.startTerm, value),
+        gt(OrganizationPresident.endTerm, value),
       );
     }
-  }
 
-  async insert(param: IOrganizationPresidentRequestCreate): Promise<void> {
-    return this.withTransaction(async tx => this.insertTx(tx, param));
-  }
-
-  async updateTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationPresidentRequestUpdate,
-  ): Promise<void> {
-    const [result] = await tx
-      .update(OrganizationPresident)
-      .set({
-        organizationPresidentTypeEnum: param.organizationPresidentTypeEnum,
-        title: param.title,
-        phoneNumber: param.phoneNumber,
-        startTerm: param.duration.startTerm,
-        endTerm: param.duration.endTerm,
-      })
-      .where(
-        and(
-          eq(OrganizationPresident.id, param.id),
-          eq(OrganizationPresident.organizationId, param.organization.id),
-          eq(OrganizationPresident.studentId, param.student.id),
-          isNull(OrganizationPresident.deletedAt),
-        ),
-      );
-    if (result.affectedRows === 0) {
-      throw new HttpException(
-        "Failed to update organizationPresident",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  async update(param: IOrganizationPresidentRequestUpdate): Promise<void> {
-    return this.withTransaction(async tx => this.updateTx(tx, param));
-  }
-
-  // delete methods
-  async deleteTx(
-    tx: DrizzleTransaction,
-    param: IOrganizationPresidentQuery,
-  ): Promise<void> {
-    const [result] = await tx
-      .update(OrganizationPresident)
-      .set({ deletedAt: new Date() })
-      .where(
-        and(
-          eq(OrganizationPresident.id, param.id),
-          eq(OrganizationPresident.studentId, param.studentId),
-          eq(OrganizationPresident.organizationId, param.organizationId),
-          isNull(OrganizationPresident.deletedAt),
-        ),
-      );
-    if (result.affectedRows === 0) {
-      throw new HttpException(
-        "Failed to delete organizationPresident",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  async delete(param: IOrganizationPresidentQuery): Promise<void> {
-    await this.withTransaction(async tx => this.deleteTx(tx, param));
+    throw new Error(`Invalid key: ${String(key)}`);
   }
 }
