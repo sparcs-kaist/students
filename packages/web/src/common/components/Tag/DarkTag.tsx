@@ -14,6 +14,24 @@ export type DarkTagColor =
   | "TEAL"
   | "YELLOW";
 
+const darkTagColors = [
+  "MAROON",
+  "MARINE",
+  "LEMON",
+  "MELON",
+  "CYAN",
+  "ORCHID",
+  "BLUE",
+  "RED500",
+  "RED700",
+  "TEAL",
+  "YELLOW",
+] as const;
+
+export function isDarkTagColor(value: string): value is DarkTagColor {
+  return darkTagColors.includes(value as DarkTagColor);
+}
+
 const TagInner = styled.div<{ color: DarkTagColor; width: string }>`
   position: relative;
   width: ${({ width }) => width};

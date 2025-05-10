@@ -1,5 +1,6 @@
 import React, { ChangeEvent, TextareaHTMLAttributes, useEffect } from "react";
 import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 import {
@@ -16,12 +17,15 @@ export interface TextAreaInputProps
   errorMessage?: string;
   disabled?: boolean;
   value?: string;
+  height?: number;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
 
-const StyledTextArea = styled.textarea<{ hasError: boolean }>`
-  height: 190px;
+const StyledTextArea = styled.textarea.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ hasError: boolean; height: number }>`
+  height: ${({ height }) => `${height}px`};
   resize: none;
   overflow: auto;
   display: block;
@@ -61,6 +65,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
   handleChange = () => {},
   setErrorStatus = () => {},
   id,
+  height = 190,
   ...props
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -88,6 +93,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
           onChange={handleValueChange}
           aria-invalid={!!errorMessage}
           {...props}
+          height={height}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </InputContainer>

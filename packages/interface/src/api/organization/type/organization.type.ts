@@ -3,10 +3,6 @@ import {
   OrganizationTypeEnum,
 } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import {
-  zDuration,
-  zDurationCreate,
-} from "@sparcs-students/interface/common/type/time.type";
 import { z } from "zod";
 import {
   zName,
@@ -20,16 +16,18 @@ export const zOrganization = z.object({
   nameEng: zNameEng,
   organizationTypeEnum: z.nativeEnum(OrganizationTypeEnum),
   foundingYear: z.coerce.number(),
-  duration: zDuration,
+  startTerm: z.date(),
+  endTerm: z.date().nullable(),
   organizationStateEnum: z.nativeEnum(OrganizationStateEnum), // 정규 or 비대위
 });
 
 export const zOrganizationRequestCreate = zOrganization
   .omit({
     id: true,
-    duration: true,
+    startTerm: true,
+    endTerm: true,
   })
-  .extend({ duration: zDurationCreate });
+  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
 
 export type IOrganization = z.infer<typeof zOrganization>;
 export type IOrganizationRequestCreate = z.infer<
@@ -42,7 +40,8 @@ export const zOperatingCommittee = z.object({
   organization: zOrganization.pick({ id: true }),
   name: zName,
   nameEng: zNameEng,
-  duration: zDuration,
+  startTerm: z.date(),
+  endTerm: z.date().nullable(),
 });
 
 export const zOperatingCommitteeResponse = zOperatingCommittee.extend({
@@ -52,9 +51,10 @@ export const zOperatingCommitteeResponse = zOperatingCommittee.extend({
 export const zOperatingCommitteeRequestCreate = zOperatingCommittee
   .omit({
     id: true,
-    duration: true,
+    startTerm: true,
+    endTerm: true,
   })
-  .extend({ duration: zDurationCreate });
+  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
 
 export type IOperatingCommittee = z.infer<typeof zOperatingCommittee>;
 export type IOperatingCommitteeResponse = z.infer<
@@ -69,15 +69,17 @@ export const zTeam = z.object({
   id: zId,
   organization: zOrganization.pick({ id: true }),
   name: zName,
-  duration: zDuration,
+  startTerm: z.date(),
+  endTerm: z.date().nullable(),
 });
 
 export const zTeamRequestCreate = zTeam
   .omit({
     id: true,
-    duration: true,
+    startTerm: true,
+    endTerm: true,
   })
-  .extend({ duration: zDurationCreate });
+  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
 
 export const zTeamResponse = zTeam.extend({
   organization: zOrganization,

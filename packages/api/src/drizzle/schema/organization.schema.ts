@@ -4,6 +4,7 @@ import {
   mysqlTable,
   foreignKey,
   timestamp,
+  datetime,
 } from "drizzle-orm/mysql-core";
 import { Student } from "./user.schema";
 
@@ -14,8 +15,8 @@ export const Organization = mysqlTable("organization", {
   nameEng: varchar("name_eng", { length: 255 }).notNull(),
   organizationTypeEnum: int("organization_type_enum").notNull(),
   foundingYear: int("founding_year").notNull(),
-  startTerm: varchar("start_term", { length: 20 }).notNull(),
-  endTerm: varchar("end_term", { length: 20 }),
+  startTerm: datetime("start_term").notNull(),
+  endTerm: datetime("end_term"),
   organizationStateEnum: int("organization_state_enum").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
@@ -30,8 +31,8 @@ export const OperatingCommittee = mysqlTable(
     organizationId: int("organization_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     nameEng: varchar("name_eng", { length: 255 }).notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -40,7 +41,7 @@ export const OperatingCommittee = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "operating_committee_organization_id_fk",
+      name: "op_com_org_id_fk",
     }),
   }),
 );
@@ -52,8 +53,8 @@ export const Team = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -62,7 +63,7 @@ export const Team = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "team_organization_id_fk",
+      name: "team_org_id_fk",
     }),
   }),
 );
@@ -79,8 +80,8 @@ export const OrganizationPresident = mysqlTable(
     title: varchar("title", { length: 100 }).notNull(),
     studentId: int("student_id").notNull(),
     phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -89,12 +90,12 @@ export const OrganizationPresident = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_president_organization_id_fk",
+      name: "org_pres_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id], // Assume student table exists
-      name: "organization_president_student_id_fk",
+      name: "org_pres_stu_id_fk",
     }),
   }),
 );
@@ -106,8 +107,8 @@ export const OrganizationMember = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     studentId: int("student_id").notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -116,12 +117,12 @@ export const OrganizationMember = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_member_organization_id_fk",
+      name: "org_mem_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "organization_member_student_id_fk",
+      name: "org_mem_stu_id_fk",
     }),
   }),
 );
@@ -133,8 +134,8 @@ export const OrganizationManager = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     studentId: int("student_id").notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -143,12 +144,12 @@ export const OrganizationManager = mysqlTable(
     organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "organization_manager_organization_id_fk",
+      name: "org_mgr_org_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "organization_manager_student_id_fk",
+      name: "org_mgr_stu_id_fk",
     }),
   }),
 );
@@ -162,8 +163,8 @@ export const OperatingCommitteeMember = mysqlTable(
     studentId: int("student_id").notNull(),
     title: varchar("title", { length: 255 }).notNull(),
     legalBasis: varchar("legal_basis", { length: 255 }).notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -172,12 +173,12 @@ export const OperatingCommitteeMember = mysqlTable(
     operatingCommitteeFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_member_operating_committee_id_fk",
+      name: "op_com_mem_com_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "operating_committee_member_student_id_fk",
+      name: "op_com_mem_stu_id_fk",
     }),
   }),
 );
@@ -189,8 +190,8 @@ export const TeamMember = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     teamId: int("team_id").notNull(),
     studentId: int("student_id").notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -199,12 +200,12 @@ export const TeamMember = mysqlTable(
     teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "team_member_team_id_fk",
+      name: "team_mem_team_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "team_member_student_id_fk",
+      name: "team_mem_stu_id_fk",
     }),
   }),
 );
@@ -216,8 +217,8 @@ export const TeamLeader = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     teamId: int("team_id").notNull(),
     studentId: int("student_id").notNull(),
-    startTerm: varchar("start_term", { length: 20 }).notNull(),
-    endTerm: varchar("end_term", { length: 20 }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -226,12 +227,12 @@ export const TeamLeader = mysqlTable(
     teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "team_leader_team_id_fk",
+      name: "team_ldr_team_id_fk",
     }),
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "team_leader_student_id_fk",
+      name: "team_ldr_stu_id_fk",
     }),
   }),
 );

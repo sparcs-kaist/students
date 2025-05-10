@@ -22,12 +22,7 @@ const testZWeekTimeValidation = () => {
 export { zWeekTime, testZWeekTimeValidation };
 export type { WeekTime };
 
-// DateOnly: "YYYY-MM-DD" 형식
-const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
-export const zDateOnly = z.custom<string>(val =>
-  typeof val === "string" ? dateOnlyRegex.test(val) : false,
-);
-export type DateOnly = z.infer<typeof zDateOnly>;
+// DateOnly: "YYYY-MM-DD" 형식;
 
 // DateTime: ISO 8601 형식 "YYYY-MM-DDTHH:mm:ssZ"
 const dateTimeRegex =
@@ -45,29 +40,15 @@ export const zTimestamp = z.object({
 export type Timestamp = z.infer<typeof zTimestamp>;
 
 export const zDuration = z.object({
-  startTerm: zDateOnly,
-  endTerm: zDateOnly.nullable(),
+  startTerm: z.date(),
+  endTerm: z.date().nullable(),
 });
 
 export type Duration = z.infer<typeof zDuration>;
 
 // 기간이 정확히 정해진 경우
 export const zDurationFull = zDuration
-  .omit({
-    endTerm: true,
-  })
-  .extend({
-    endTerm: zDateOnly,
-  });
+  .omit({ endTerm: true })
+  .extend({ endTerm: z.date() });
 
 export type DurationFull = z.infer<typeof zDurationFull>;
-
-export const zDurationCreate = zDuration
-  .omit({
-    endTerm: true,
-  })
-  .extend({
-    endTerm: zDateOnly.optional(),
-  });
-
-export type DurationCreate = z.infer<typeof zDurationCreate>;

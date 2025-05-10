@@ -2,10 +2,10 @@
 
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import Select, {
-  SelectItem,
-} from "@sparcs-students/web/common/components/Select";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import colors from "@sparcs-students/web/styles/themes/colors";
+import Select, { SelectItem } from "../Selects/Select";
+
 import Icon from "../Icon";
 
 export interface OrganizationItem {
@@ -20,6 +20,8 @@ interface OrganizationSelectCardProps {
   setSelectedKey: (value: string) => void;
   selectedValue: string;
   setSelectedValue: (value: string) => void;
+  setSelectedId: (value: number | null) => void;
+  disabled?: boolean;
 }
 
 const CardWrapper = styled.div`
@@ -29,16 +31,17 @@ const CardWrapper = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   justify-self: stretch;
-  height: 100%;
+  height: 276px;
 `;
 
-const CardHeaderWrapper = styled.div`
+const CardHeaderWrapper = styled.div<{ disabled: boolean }>`
   display: flex;
   padding: 12px 20px;
   align-items: center;
   align-self: stretch;
   border-radius: 4px 4px 0px 0px;
-  background-color: ${({ theme }) => theme.colors.GREEN[700]};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.GRAY[400] : theme.colors.GREEN[700]};
 `;
 
 const CardContent = styled.div`
@@ -92,6 +95,8 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
   setSelectedKey,
   selectedValue,
   setSelectedValue,
+  setSelectedId,
+  disabled = false,
 }) => {
   const valueList = useMemo(() => {
     const selectedItem = totalList.find(item => item.key.value === selectedKey);
@@ -104,14 +109,31 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
     const selectedItem = totalList.find(item => item.key.value === newKey);
     if (selectedItem && selectedItem.values.length > 0) {
       setSelectedValue(selectedItem.values[0].value);
+      setSelectedId(selectedItem.values[0].id as number);
     } else {
       setSelectedValue("");
+      setSelectedId(null);
+    }
+  };
+
+  const handleValueChange = (newValue: string) => {
+    setSelectedValue(newValue);
+
+    const selectedItem = totalList.find(item => item.key.value === selectedKey);
+    const selectedValueItem = selectedItem?.values.find(
+      val => val.value === newValue,
+    );
+
+    if (selectedValueItem) {
+      setSelectedId(selectedValueItem.id as number);
+    } else {
+      setSelectedId(null);
     }
   };
 
   return (
     <CardWrapper>
-      <CardHeaderWrapper>
+      <CardHeaderWrapper disabled={disabled}>
         <Typography fs={18} fw="SEMIBOLD" color="WHITE" lh={20}>
           단체 선택
         </Typography>
@@ -119,7 +141,7 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
       <CardContent>
         <CardContentInner>
           <SelectWrapper>
-            <Select
+            <Select<string>
               items={keyList}
               value={selectedKey}
               onChange={handleKeyChange}
@@ -128,23 +150,29 @@ const OrganizationSelectCard: React.FC<OrganizationSelectCardProps> = ({
               noOptionMessage="항목을 선택하세요."
               onlyDropdown
               dropdownHeight={200}
+              disabled={disabled}
             />
           </SelectWrapper>
           <ArrowWrapper>
             <IconWrapper>
-              <Icon type="arrow_forward_ios" size={24} color="GREEN.300" />
+              <Icon
+                type="arrow_forward_ios"
+                size={24}
+                color={disabled ? colors.GRAY[400] : colors.GREEN[300]}
+              />
             </IconWrapper>
           </ArrowWrapper>
           <SelectWrapper>
             <Select
               items={valueList}
               value={selectedValue}
-              onChange={setSelectedValue}
+              onChange={handleValueChange}
               placeholder="선택하세요."
               errorMessage="필수 항목입니다."
               noOptionMessage="항목을 선택하세요."
               onlyDropdown
               dropdownHeight={200}
+              disabled={disabled}
             />
           </SelectWrapper>
         </CardContentInner>

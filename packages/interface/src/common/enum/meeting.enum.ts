@@ -20,7 +20,14 @@ export enum AgendaAcceptedStatusEnum {
 export enum DocumentReviewStatusEnum {
   Accepted = 1, // 승인
   Rejected, // 반려
+  ReviseNeeded, // 수정요청
   Progress, // 검토중
+  LateAccepted, // 사후승인
+  ReviewRejected, // 검토반려
+  ReviewAccepted, // 검토승인
+  Unsaved, // 미저장
+  Draft, // 임시저장
+  Revised, // 추가경정
 }
 
 // AssistantPermissionE
@@ -58,6 +65,36 @@ export const getDisplayNameAgendaAcceptedStatusEnum = (
       return "검토중";
     case AgendaAcceptedStatusEnum.LateAccepted:
       return "사후승인";
+    default:
+      return "";
+  }
+};
+
+// Document Review Status E
+export const getDisplayNameDocumentReviewStatusEnum = (
+  status: DocumentReviewStatusEnum | undefined,
+): string => {
+  switch (status) {
+    case DocumentReviewStatusEnum.Accepted:
+      return "승인";
+    case DocumentReviewStatusEnum.Rejected:
+      return "반려";
+    case DocumentReviewStatusEnum.ReviseNeeded:
+      return "수정요청";
+    case DocumentReviewStatusEnum.Progress:
+      return "검토중";
+    case DocumentReviewStatusEnum.LateAccepted:
+      return "사후승인";
+    case DocumentReviewStatusEnum.ReviewRejected:
+      return "검토반려";
+    case DocumentReviewStatusEnum.ReviewAccepted:
+      return "검토승인";
+    case DocumentReviewStatusEnum.Unsaved:
+      return "미저장";
+    case DocumentReviewStatusEnum.Draft:
+      return "임시저장";
+    case DocumentReviewStatusEnum.Revised:
+      return "추가경정";
     default:
       return "";
   }

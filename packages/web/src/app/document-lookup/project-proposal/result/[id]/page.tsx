@@ -1,77 +1,89 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import { mockViewResultData } from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 import ThreeInput, {
   ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
-import {
-  mockOperationPlanData,
-  mockProjectProposalData,
-} from "@sparcs-students/web/features/project/services/_mock/mockProjectProposalData";
-import OperationPlan from "@sparcs-students/web/features/project/components/OperationPlan";
-import { overlay } from "overlay-kit";
-import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import ReviewerProjectProposalTable from "@sparcs-students/web/features/project/components/ReviewerProjectProposalTable";
-import styled from "styled-components";
-import Modal from "@sparcs-students/web/common/components/Modal";
-import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
-import ReviewOperationPlan from "@sparcs-students/web/features/project/components/ReviewOperationPlan";
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
+import ReviewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ReviewerProjectProposalFrame";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalFrame";
+import ManagerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalFrame";
 
-const ButtonWrapper = styled.div`
-  gap: 30px;
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-`;
 const Proposal = () => {
-  const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
-  const [date, setDate] = useState(mockViewResultData.submitDate);
-  const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
-  const userPermission = 2; // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
-  const [review, setReview] = useState<string>("");
+  // const { id: resultId } = useParams();
+  const searchParams = useSearchParams();
+  const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
+  const queryIsSpring = searchParams.get("isSpring") === "true";
+  const queryType = searchParams.get("type") as DocumentType | null;
+  const queryKey = searchParams.get("key");
+  const queryValue = searchParams.get("value");
+  const queryId = parseInt(searchParams.get("id") || "");
+  // const queryId = parseInt(resultId as string);
 
-  const openSaveModal = () => {
-    // TODO: add save logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <ConfirmModalContent onConfirm={() => close()}>
-          저장되었습니다.
-        </ConfirmModalContent>
-      </Modal>
-    ));
-  };
+  const [date, setDate] = useState(
+    mockViewProjectProposalResultData.submitDate,
+  );
+  const [year, setYear] = useState<number>(queryYear);
+  const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
+  const [type, setType] = useState<DocumentType | null>(queryType);
+  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
+  const [selectedId, setSelectedId] = useState<number | null>(queryId);
+  const userPermission = getMockUserPermission();
 
-  const openDiscardModal = () => {
-    // TODO: add discard logic
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <CancellableModalContent
-          onConfirm={() => close()}
-          onClose={() => close()}
-        >
-          임시저장 내역을{"\n"}모두 삭제하시겠습니까?
-        </CancellableModalContent>
-      </Modal>
-    ));
+  const router = useRouter();
+
+  const lookUp = (id: number) => {
+    const query = new URLSearchParams({
+      year: String(year),
+      isSpring: String(isSpring),
+      type: String(type),
+      key: selectedKey ?? "",
+      value: selectedValue ?? "",
+      id: String(id),
+    }).toString();
+
+    switch (type) {
+      case "사업 계획서":
+        router.push(`/document-lookup/project-proposal/result/${id}?${query}`);
+        break;
+      case "사업 보고서":
+        router.push(`/document-lookup/project-report/result/${id}?${query}`);
+        break;
+      case "예산안":
+        router.push(`/document-lookup/budget-proposal/result/${id}?${query}`);
+        break;
+      case "결산":
+        router.push(`/document-lookup/budget-report/result/${id}?${query}`);
+        break;
+      default:
+        throw new Error(`잘못된 문서 유형: ${type}`);
+    }
   };
 
   return (
     <FlexWrapper direction="column" gap={48}>
-      <PageTitle>예결산 조회</PageTitle>
+      <FlexWrapper direction="column" gap={10}>
+        <PageTitle>예결산 조회</PageTitle>
+        <BreadCrumb
+          items={[
+            { name: "예결산 조회", path: "/document-lookup" },
+            { name: "사업계획서", path: "/project-proposal" },
+          ]}
+        />
+      </FlexWrapper>
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
         <FlexWrapper direction="column" gap={32}>
           <FlexWrapper direction="column" gap={16}>
@@ -90,48 +102,30 @@ const Proposal = () => {
               setSelectedKey={setSelectedKey}
               selectedValue={selectedValue}
               setSelectedValue={setSelectedValue}
+              setSelectedId={setSelectedId}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button buttonText="조회" style={{ marginLeft: "auto" }} />
+            <Button
+              buttonText="조회"
+              style={{ marginLeft: "auto" }}
+              onClick={() => lookUp(selectedId as number)}
+            />
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewProjectProposalResultData}
           submitDate={date}
           handleDateChange={setDate}
         />
-        {/* {userPermission === 1 && */}
-        {/*   <ViewerProjectProposalTable */}
-        {/*     pageId={id} */}
-        {/*     data={mockViewerProjectProposalData} */}
-        {/*   /> */}
-        {/* } */}
-        {userPermission === 2 && (
-          <ReviewerProjectProposalTable
-            pageId={id}
-            initialData={mockProjectProposalData}
-          />
+        {userPermission === UserPermission.Viewer && (
+          <ViewerProjectProposalFrame />
         )}
-        <OperationPlan {...mockOperationPlanData} />
-        <ReviewOperationPlan review={review} reviewHandler={setReview} />
-
-        {userPermission === 2 && (
-          <ButtonWrapper>
-            <Button
-              type="reverse"
-              onClick={openDiscardModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              삭제
-            </Button>
-            <Button
-              onClick={openSaveModal}
-              style={{ width: "100px", padding: "8px 16px" }}
-            >
-              제출
-            </Button>
-          </ButtonWrapper>
+        {userPermission === UserPermission.Reviewer && (
+          <ReviewerProjectProposalFrame />
+        )}
+        {userPermission === UserPermission.Manager && (
+          <ManagerProjectProposalFrame />
         )}
       </FlexWrapper>
     </FlexWrapper>

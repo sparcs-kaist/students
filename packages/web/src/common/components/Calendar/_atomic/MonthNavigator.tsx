@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { addMonths, format, subMonths } from "date-fns";
 import { ko } from "date-fns/locale";
 import Icon from "@sparcs-students/web/common/components/Icon";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface MonthNavigatorProps {
   currentDate: Date;
@@ -20,7 +21,9 @@ const NavigatorWrapper = styled.div`
   align-self: stretch;
 `;
 
-const MonthDisplay = styled.div<{
+const MonthDisplay = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   small?: MonthNavigatorProps["small"];
 }>`
   display: flex;

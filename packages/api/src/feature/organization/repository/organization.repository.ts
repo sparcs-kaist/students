@@ -1,6 +1,16 @@
 import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
 
-import { and, gt, inArray, isNotNull, lt, not, or, eq } from "drizzle-orm";
+import {
+  and,
+  gt,
+  inArray,
+  isNotNull,
+  lt,
+  not,
+  or,
+  eq,
+  isNull,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import {
   DrizzleAsyncProvider,
@@ -72,8 +82,9 @@ export class OrganizationRepository {
       );
     }
 
-    whereConditions.push(isNotNull(Organization.deletedAt));
+    whereConditions.push(isNull(Organization.deletedAt));
     query = query.where(and(...whereConditions));
+    console.log(query.toSQL());
 
     const res = await query.execute();
     return res.map(r => MOrganization.fromDBResult(r));
@@ -141,8 +152,8 @@ export class OrganizationRepository {
         nameEng: data.nameEng,
         organizationTypeEnum: data.organizationTypeEnum,
         foundingYear: data.foundingYear,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm ?? null,
+        startTerm: data.startTerm,
+        endTerm: data.endTerm ?? null,
         organizationStateEnum: data.organizationStateEnum,
       })
       .execute();
