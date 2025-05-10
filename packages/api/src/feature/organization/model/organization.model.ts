@@ -1,22 +1,8 @@
 import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
-import { InferSelectModel } from "drizzle-orm";
+import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 
-import { Organization } from "@sparcs-students/api/drizzle/schema/organization.schema";
-import {
-  OrganizationStateEnum,
-  OrganizationTypeEnum,
-} from "@sparcs-students/interface/common/enum/organization.enum";
-
-export type OrganizationDBResult = InferSelectModel<typeof Organization>;
-
-export class MOrganization implements IOrganization {
-  id: IOrganization["id"];
-
+export interface IOrganizationCreate {
   name: IOrganization["name"];
-
-  startTerm: IOrganization["startTerm"];
-
-  endTerm: IOrganization["endTerm"];
 
   nameEng: IOrganization["nameEng"];
 
@@ -26,18 +12,30 @@ export class MOrganization implements IOrganization {
 
   organizationStateEnum: IOrganization["organizationStateEnum"];
 
-  constructor(data: IOrganization) {
-    Object.assign(this, data);
-  }
+  startTerm: IOrganization["startTerm"];
 
-  static fromDBResult(result: OrganizationDBResult) {
-    return new MOrganization({
-      ...result,
-      startTerm: result.startTerm,
-      endTerm: result.endTerm,
-      organizationTypeEnum: result.organizationTypeEnum as OrganizationTypeEnum,
-      organizationStateEnum:
-        result.organizationStateEnum as OrganizationStateEnum,
-    });
+  endTerm: IOrganization["endTerm"];
+}
+
+export class MOrganization extends MEntity implements IOrganization {
+  static modelName = "Organization";
+
+  name: IOrganization["name"];
+
+  nameEng: IOrganization["nameEng"];
+
+  startTerm: IOrganization["startTerm"];
+
+  endTerm: IOrganization["endTerm"];
+
+  organizationTypeEnum: IOrganization["organizationTypeEnum"];
+
+  foundingYear: IOrganization["foundingYear"];
+
+  organizationStateEnum: IOrganization["organizationStateEnum"];
+
+  constructor(data: IOrganization) {
+    super();
+    Object.assign(this, data);
   }
 }
