@@ -1,46 +1,41 @@
-"use client";
-
-import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import Index from "@sparcs-students/web/common/components/Index";
-import Typography from "@sparcs-students/web/common/components/Typography";
-import {
-  mapTimelineIdsToObjects,
-  mockProjectProposalDetailTotalReview,
-  ProjectProposalSingleContent,
-} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable"; // TODO: API 호출로 받아오는 데이터
-import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { ProposalFormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { useParams } from "next/navigation";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
+import { ReportFormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { mapTimelineIdsToObjects } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
 import {
   mockDBExpenditureData,
   mockManagerProjectNameCandidateList,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
-import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import Typography from "@sparcs-students/web/common/components/Typography";
 import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
-import ProjectTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTimelineTable";
 import { TimelineDateTypeEnum } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 import TimeLineDateInput from "@sparcs-students/web/features/document-lookup/project/components/_atomic/TimelineDateInput";
+import TwoSelect from "@sparcs-students/web/common/components/Selects/TwoSelect";
 import {
   mockTeamList,
   mockTeamStructure,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockTeamManager";
-import TwoSelect from "@sparcs-students/web/common/components/Selects/TwoSelect";
+import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
+import ProjectTimelineTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTimelineTable";
 import ManagerExpenditureTableInProjectDetail from "@sparcs-students/web/features/document-lookup/budget/components/ManagerExpenditureTableInProjectDetail";
-import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
-import ManagerProjectProposalReviewTable from "@sparcs-students/web/features/document-lookup/project/components/ManagerProjectProposalReviewTable";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import Index from "@sparcs-students/web/common/components/Index";
+import { ManagerProjectDetailFrameProps } from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalDetailFrame";
+import {
+  mockProjectReportDetailTotalReview,
+  ProjectReportSingleContent,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectReportTable";
+import styled from "styled-components";
+import ManagerProjectReportReviewTable from "../components/ManagerProjectReportReviewTable";
 
 const headerHeight = 70;
-
-export interface ManagerProjectDetailFrameProps {
-  setProjectTitle: (title: string) => void;
-}
 
 const ScrollAbleArea = styled.div`
   display: flex;
@@ -73,51 +68,55 @@ const TextAndInputWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const ManagerProjectProposalDetailFrame: React.FC<
+const ManagerProjectReportDetailFrame: React.FC<
   ManagerProjectDetailFrameProps
 > = ({ setProjectTitle }) => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
   const manager = useRef<HTMLDivElement>(null);
-  const documentPurpose = useRef<HTMLDivElement>(null);
-  const documentTarget = useRef<HTMLDivElement>(null);
   const documentDetail = useRef<HTMLDivElement>(null);
+  const documentParticipation = useRef<HTMLDivElement>(null);
+  const documentResult = useRef<HTMLDivElement>(null);
+  const documentTodo = useRef<HTMLDivElement>(null);
+  const documentComment = useRef<HTMLDivElement>(null);
   const documentTimeline = useRef<HTMLDivElement>(null);
   const documentReview = useRef<HTMLDivElement>(null);
   const documentExpenditure = useRef<HTMLDivElement>(null);
 
-  const { detailId } = useParams(); // resultId 언젠간 쓸 것.
-  const formMethods = useForm<ProposalFormValues>({
+  const { detailId } = useParams();
+  const formMethods = useForm<ReportFormValues>({
     defaultValues: {
-      proposalDetail: {
-        ...ProjectProposalSingleContent[parseInt(detailId as string)],
+      reportDetail: {
+        ...ProjectReportSingleContent[parseInt(detailId as string)],
       },
       expenditures: mockDBExpenditureData,
     },
   });
   const { control, setValue, getValues } = formMethods;
 
-  const proposalDetail = useWatch({
+  const reportDetail = useWatch({
     control,
-    name: "proposalDetail",
+    name: "reportDetail",
   });
 
   useEffect(() => {
-    if (proposalDetail?.title) {
-      setProjectTitle(proposalDetail.title);
+    if (reportDetail?.title) {
+      setProjectTitle(reportDetail.title);
     }
-  }, [proposalDetail?.title, setProjectTitle]);
+  }, [reportDetail?.title, setProjectTitle]);
 
   const indexContents = [
     { name: "사업명, 사업개요", reference: documentTitle },
     { name: "사업 준비기간, 사업일시", reference: documentPeriod },
     { name: "담당부서 / 담당자", reference: manager },
-    { name: "사업 추진 목적", reference: documentPurpose },
-    { name: "사업 추진 대상자", reference: documentTarget },
-    { name: "사업 세부 내용", reference: documentDetail },
+    { name: "세부 사업 내용", reference: documentDetail },
+    { name: "사업 참여도", reference: documentParticipation },
+    { name: "사업 성과", reference: documentResult },
+    { name: "미달 목표", reference: documentTodo },
+    { name: "제언", reference: documentComment },
     { name: "사업 진행 타임라인", reference: documentTimeline },
-    { name: "사업 계획서 검토 내역", reference: documentReview },
-    { name: "사업 예산안", reference: documentExpenditure },
+    { name: "사업 보고서 검토 내역", reference: documentReview },
+    { name: "사업 결산안", reference: documentExpenditure },
   ];
 
   const [resetKey, setResetKey] = useState(0); // 실시간 edit 렌더링 시 필요!
@@ -129,16 +128,15 @@ const ManagerProjectProposalDetailFrame: React.FC<
   }>({ updatedRows: [], createdRows: [], deletedRows: [] });
 
   const handleSubmitAll = () => {
-    // CHACHA: 백에 넘어가야 할 데이터들
-    console.log("제출된 사업계획서 상세 내용", proposalDetail);
-    console.log("제출된 예산안 변경 내역", dirtyExpenditures);
+    console.log("제출보고서 상세 내용", reportDetail);
+    console.log("결산 예산안 변경 내역", dirtyExpenditures);
   };
 
   const handleResetAll = () => {
     setResetKey(prev => prev + 1); // CHACHA: re-render
     formMethods.reset({
-      proposalDetail: {
-        ...ProjectProposalSingleContent[parseInt(detailId as string)],
+      reportDetail: {
+        ...ProjectReportSingleContent[parseInt(detailId as string)],
       },
       expenditures: mockDBExpenditureData,
     });
@@ -183,7 +181,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
         <FormProvider {...formMethods}>
           <FlexWrapper direction="row" gap={60} ref={documentTitle}>
             <Controller
-              name="proposalDetail.title"
+              name="reportDetail.title"
               render={({ field }) => (
                 <TextAndInputWrapper>
                   <Typography fs={24} lh={30} fw="BOLD">
@@ -194,7 +192,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
               )}
             />
             <Controller
-              name="proposalDetail.brief"
+              name="reportDetail.brief"
               render={({ field }) => (
                 <TextAndInputWrapper>
                   <Typography fs={24} lh={30} fw="BOLD">
@@ -207,7 +205,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentPeriod}>
             <Controller
-              name="proposalDetail.preparationPeriod"
+              name="reportDetail.preparationPeriod"
               control={control}
               render={({ field }) => {
                 const currentValue: [Date | null, Date | null] = field.value
@@ -257,7 +255,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
             />
 
             <Controller
-              name="proposalDetail.executionPeriod"
+              name="reportDetail.executionPeriod"
               control={control}
               render={({ field }) => {
                 const currentValue: [Date | null, Date | null] = field.value
@@ -308,7 +306,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
           </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={manager}>
             <Controller
-              name="proposalDetail.manager"
+              name="reportDetail.manager"
               control={control}
               render={({ field }) => {
                 const currentValue = field.value;
@@ -346,32 +344,6 @@ const ManagerProjectProposalDetailFrame: React.FC<
               }}
             />
           </FlexWrapper>
-          <FlexWrapper direction="row" gap={60} ref={documentPurpose}>
-            <Controller
-              name="proposalDetail.purpose"
-              render={({ field }) => (
-                <TextAndInputWrapper>
-                  <Typography fs={24} lh={30} fw="BOLD">
-                    사업 추진 목적
-                  </Typography>
-                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
-                </TextAndInputWrapper>
-              )}
-            />
-          </FlexWrapper>
-          <FlexWrapper direction="row" gap={60} ref={documentTarget}>
-            <Controller
-              name="proposalDetail.beneficiary"
-              render={({ field }) => (
-                <TextAndInputWrapper>
-                  <Typography fs={24} lh={30} fw="BOLD">
-                    사업 수혜 대상자
-                  </Typography>
-                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
-                </TextAndInputWrapper>
-              )}
-            />
-          </FlexWrapper>
           <FlexWrapper direction="row" gap={60} ref={documentDetail}>
             <Controller
               name="proposalDetail.detail"
@@ -385,6 +357,59 @@ const ManagerProjectProposalDetailFrame: React.FC<
               )}
             />
           </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentParticipation}>
+            <Controller
+              name="reportDetail.participation"
+              render={({ field }) => (
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업 참여도
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
+              )}
+            />
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentResult}>
+            <Controller
+              name="reportDetail.result"
+              render={({ field }) => (
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    사업 성과
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
+              )}
+            />
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentTodo}>
+            <Controller
+              name="reportDetail.todo"
+              render={({ field }) => (
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    미달 목표
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
+              )}
+            />
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={60} ref={documentComment}>
+            <Controller
+              name="reportDetail.comment"
+              render={({ field }) => (
+                <TextAndInputWrapper>
+                  <Typography fs={24} lh={30} fw="BOLD">
+                    제언
+                  </Typography>
+                  <TextAreaInput placeholder="내용을 입력하세요." {...field} />
+                </TextAndInputWrapper>
+              )}
+            />
+          </FlexWrapper>
+
           <FlexWrapper
             direction="row"
             gap={60}
@@ -393,7 +418,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
           >
             <ProjectTimelineTable
               initialData={mapTimelineIdsToObjects(
-                proposalDetail?.timelineIds ?? [],
+                reportDetail?.timelineIds ?? [],
               )}
               isProposal
             />
@@ -404,10 +429,9 @@ const ManagerProjectProposalDetailFrame: React.FC<
             <Typography fs={24} lh={30} fw="BOLD">
               사업 계획서 검토 내역
             </Typography>
-            <ManagerProjectProposalReviewTable
-              data={mockProjectProposalDetailTotalReview.filter(
-                e =>
-                  e.projectProposalContentId === parseInt(detailId as string),
+            <ManagerProjectReportReviewTable
+              data={mockProjectReportDetailTotalReview.filter(
+                e => e.projectReportContentId === parseInt(detailId as string),
               )}
             />
           </TextAndInputWrapper>
@@ -417,12 +441,12 @@ const ManagerProjectProposalDetailFrame: React.FC<
           <ManagerExpenditureTableInProjectDetail
             headerTitle="사업 예산안"
             projectNameCandidate={mockManagerProjectNameCandidateList}
-            isProposal
+            isProposal={false}
             initialData={mockDBExpenditureData.filter(
-              e => e.projectName === getValues("proposalDetail.title"),
+              e => e.projectName === getValues("reportDetail.title"),
             )}
             isInsideDetailFrame
-            projectTitleFromDetailFrame={proposalDetail.title}
+            projectTitleFromDetailFrame={reportDetail.title}
             onValuesChange={updatedExpenditures => {
               setValue("expenditures", updatedExpenditures);
             }}
@@ -453,5 +477,4 @@ const ManagerProjectProposalDetailFrame: React.FC<
     </ScrollAbleArea>
   );
 };
-
-export default ManagerProjectProposalDetailFrame;
+export default ManagerProjectReportDetailFrame;

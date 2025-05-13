@@ -1,16 +1,15 @@
 import {
-  ViewerProjectProps,
   ReviewerProjectProps,
+  ViewerProjectProps,
 } from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
-import { MemberProps } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
-import { OperationPlanProps } from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
-import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
-import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
-
-import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
+import { MemberProps } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
+import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
+import { OperationPlanProps } from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
+import { ProjectReportSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectReportTable";
 
-export const mockProjectProposalData: ReviewerProjectProps[] = [
+export const mockProjectReportData: ReviewerProjectProps[] = [
   {
     id: "1",
     name: "집행위원회 운영",
@@ -34,8 +33,8 @@ export const mockProjectProposalData: ReviewerProjectProps[] = [
   },
 ];
 
-export const mockViewerProjectData: ViewerProjectProps[] =
-  ProjectProposalSingleContent.map(content => {
+export const mockViewerProjectReportData: ViewerProjectProps[] =
+  ProjectReportSingleContent.map(content => {
     const start = content.executionPeriod.value[0];
     const end = content.executionPeriod.value[1];
     return {
