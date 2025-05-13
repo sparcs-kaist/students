@@ -60,9 +60,9 @@ const columns = [
   }),
 ];
 
-const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
-  data,
-}) => {
+const ManagerProjectReportMemberTable: React.FC<
+  ManagerProjectReportTableProps
+> = ({ data }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -98,4 +98,4 @@ const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
   );
 };
 
-export default ManagerProjectReportTable;
+export default ManagerProjectReportMemberTable;

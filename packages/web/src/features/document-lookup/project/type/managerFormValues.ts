@@ -51,3 +51,12 @@ export interface ProjectProposalDetailTotalReview {
   reviewText: string;
   reviewStatus: DocumentReviewStatusEnum;
 }
+
+// 매니저 사업계획서 페이지에, 사업계획서 Table에 들어가는 정보
+export interface ProjectProposalTableRow {
+  id: number;
+  projectName: string;
+  executionPeriod: ProjectDate;
+  status: DocumentReviewStatusEnum;
+  review: string;
+}
