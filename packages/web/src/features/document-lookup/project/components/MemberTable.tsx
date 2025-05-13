@@ -18,6 +18,7 @@ export interface MemberProps {
 
 interface MemberTableProps {
   data: MemberProps[];
+  title?: string;
 }
 
 const columnHelper = createColumnHelper<MemberProps>();
@@ -27,13 +28,13 @@ const columns = [
     id: "id",
     header: "학번",
     cell: info => info.getValue(),
-    size: 450,
+    size: 240,
   }),
   columnHelper.accessor("name", {
     id: "name",
     header: "이름",
     cell: info => info.getValue(),
-    size: 450,
+    size: 240,
   }),
   columnHelper.accessor("groups", {
     id: "groups",
@@ -60,11 +61,15 @@ const columns = [
         )}
       </div>
     ),
-    size: 975,
+    size: 0,
+    minSize: 400,
   }),
 ];
 
-const MemberTable: React.FC<MemberTableProps> = ({ data }) => {
+const MemberTable: React.FC<MemberTableProps> = ({
+  data,
+  title = "위원 명단",
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const MemberTable: React.FC<MemberTableProps> = ({ data }) => {
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12}>
         <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
-          위원 명단
+          {title}
         </Typography>
       </FlexWrapper>
       {loaded && (
