@@ -10,6 +10,7 @@ import {
   InputContainer,
 } from "./TextInput";
 
+/* eslint-disable react/require-default-props */
 export interface TextAreaInputProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -21,6 +22,7 @@ export interface TextAreaInputProps
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
+/* eslint-enable react/require-default-props */
 
 const StyledTextArea = styled.textarea.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
@@ -56,49 +58,55 @@ const StyledTextArea = styled.textarea.withConfig({
   ${({ hasError }) => hasError && errorBorderStyle}
 `;
 
-const TextAreaInput: React.FC<TextAreaInputProps> = ({
-  label = "",
-  placeholder,
-  errorMessage = "",
-  disabled = false,
-  value = "",
-  handleChange = () => {},
-  setErrorStatus = () => {},
-  id,
-  height = 190,
-  ...props
-}) => {
-  const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const inputValue = e.target.value;
-    handleChange(inputValue);
-  };
+const TextAreaInput = React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(
+  (
+    {
+      label = "",
+      placeholder,
+      errorMessage = "",
+      disabled = false,
+      value = "",
+      handleChange = () => {},
+      setErrorStatus = () => {},
+      id,
+      height = 190,
+      ...props
+    },
+    ref,
+  ) => {
+    const handleValueChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+      const inputValue = e.target.value;
+      handleChange(inputValue);
+    };
 
-  useEffect(() => {
-    const hasError = !!errorMessage;
-    if (setErrorStatus) {
-      setErrorStatus(hasError);
-    }
-  }, [errorMessage, setErrorStatus]);
+    useEffect(() => {
+      const hasError = !!errorMessage;
+      if (setErrorStatus) {
+        setErrorStatus(hasError);
+      }
+    }, [errorMessage, setErrorStatus]);
 
-  return (
-    <InputWrapper>
-      {label && <Label>{label}</Label>}
-      <InputContainer>
-        <StyledTextArea
-          id={id}
-          placeholder={placeholder}
-          hasError={!!errorMessage}
-          disabled={disabled}
-          value={value}
-          onChange={handleValueChange}
-          aria-invalid={!!errorMessage}
-          {...props}
-          height={height}
-        />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </InputContainer>
-    </InputWrapper>
-  );
-};
+    return (
+      <InputWrapper>
+        {label && <Label>{label}</Label>}
+        <InputContainer>
+          <StyledTextArea
+            ref={ref}
+            id={id}
+            placeholder={placeholder}
+            hasError={!!errorMessage}
+            disabled={disabled}
+            value={value}
+            onChange={handleValueChange}
+            aria-invalid={!!errorMessage}
+            {...props}
+            height={height}
+          />
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        </InputContainer>
+      </InputWrapper>
+    );
+  },
+);
 
 export default TextAreaInput;
