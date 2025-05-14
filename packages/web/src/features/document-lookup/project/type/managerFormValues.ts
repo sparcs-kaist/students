@@ -39,7 +39,7 @@ export interface ProjectProposal {
   contentIds: number[]; // ProjectProposalContentId의 배열
 }
 
-export interface FormValues {
+export interface ProposalFormValues {
   proposalDetail: ProjectProposalContent;
   expenditures: DBExpenditureProps[];
 }
@@ -52,7 +52,39 @@ export interface ProjectProposalDetailTotalReview {
   reviewStatus: DocumentReviewStatusEnum;
 }
 
-// 매니저 사업계획서 페이지에, 사업계획서 Table에 들어가는 정보
+export interface ProjectReportContent {
+  id: number; // id
+  contentId: number; // 같은 documentUniqueId 내의 여러 상세 페이지 중의 id
+  title: string; // 사업명
+  brief: string; // 사업 개요
+  preparationPeriod: ProjectDate; // 사업 준비 기간
+  executionPeriod: ProjectDate; // 사업 일시
+  manager: {
+    teamId: number; // 담당 부서 id
+    member: number; // 담당자 userId
+  };
+  detail: string; // 세부 사업 내용
+  participation: string; // 사업 참여도
+  result: string; // 사업 성과
+  todo: string; // 미달 목표
+  comment: string; // 제언
+  timelineIds: number[]; // 사업 진행 타임라인 id의 배열
+  expenditure: number[]; // 사업 계획서에 편성된 예산안 row의 id 배열
+}
+
+export interface ReportFormValues {
+  reportDetail: ProjectReportContent;
+  expenditures: DBExpenditureProps[];
+}
+
+export interface ProjectReportDetailTotalReview {
+  // 사업보고서 검토 내역
+  id: number;
+  projectReportContentId: number; // 해당 리뷰와 연결된 사업보고서 상세
+  reviewText: string;
+  reviewStatus: DocumentReviewStatusEnum;
+}
+
 export interface ProjectProposalTableRow {
   id: number;
   projectName: string;

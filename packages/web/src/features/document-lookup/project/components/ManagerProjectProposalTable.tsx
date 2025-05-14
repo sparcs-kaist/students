@@ -28,8 +28,8 @@ import { ReadOnlyReviewButton } from "@sparcs-students/web/features/document-loo
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { useRouter } from "next/navigation";
 import ProjectProposalHelpButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ProjectProposalHelpButton";
-import { formatDate } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
 import { ProjectProposalTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
 export interface PPFormValues {
   proposals: ProjectProposalTableRow[];
@@ -164,8 +164,8 @@ const TableRow: React.FC<TableRowProps> = ({
         render={({ field }) => {
           const firstDate = new Date(field.value.value[0]);
           const secondDate = new Date(field.value.value[1]);
-          const firstDateStr = formatDate(firstDate);
-          const secondDateStr = formatDate(secondDate);
+          const firstDateStr = formatDotDate(firstDate);
+          const secondDateStr = formatDotDate(secondDate);
           return (
             <TableCell type="Default" width={400}>
               <DateWrapper>
