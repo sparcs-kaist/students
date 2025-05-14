@@ -83,4 +83,11 @@ export interface ProjectReportDetailTotalReview {
   projectReportContentId: number; // 해당 리뷰와 연결된 사업보고서 상세
   reviewText: string;
   reviewStatus: DocumentReviewStatusEnum;
+  
+export interface ProjectProposalTableRow {
+  id: number;
+  projectName: string;
+  executionPeriod: ProjectDate;
+  status: DocumentReviewStatusEnum;
+  review: string;
 }

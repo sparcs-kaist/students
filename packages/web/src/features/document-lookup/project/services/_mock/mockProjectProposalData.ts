@@ -62,12 +62,12 @@ export const mockMemberListData: MemberProps[] = [
   },
   {
     id: "20220XX2",
-    name: "김스튜",
+    name: "김스튜이",
     groups: ["어쩌구 부서 2", "어쩌구 부서 3"],
   },
   {
     id: "20220XX3",
-    name: "김스튜",
+    name: "김스튜삼",
     groups: [
       "어쩌구 부서 1",
       "어쩌구 부서 2",
@@ -76,28 +76,40 @@ export const mockMemberListData: MemberProps[] = [
   },
   {
     id: "20220XX4",
-    name: "김스튜",
+    name: "김스튜사",
     groups: [],
   },
 ];
 
 export const mockGroupListData: GroupProps[] = [
   {
-    name: "어떠한 TF",
+    name: "이름이 긴 부서 1",
     summary: "어떠한 사업입니다.",
-    members: ["김스튜", "김스팍", "김팍스"],
+    members: ["김스튜"],
     projectName: "어떠한 사업",
   },
   {
-    name: "어떠한 TF 2",
+    name: "어쩌구 부서 1",
     summary: "어떠한 저쩌구한 사업입니다.",
-    members: ["김스튜", "김스팍"],
+    members: ["김스튜", "김스튜삼"],
     projectName: "어떠한 사업",
   },
   {
-    name: "어떠한 TF 3",
+    name: "어쩌구 부서 2",
     summary: "어떠한 저떠한 사업입니다.",
-    members: ["김스튜", "김팍스"],
+    members: ["김스튜", "김스튜이", "김스튜삼"],
+    projectName: "어떠한 사업",
+  },
+  {
+    name: "어쩌구 부서 3",
+    summary: "어떠한 저떠한 사업입니다.",
+    members: ["김스튜", "김스튜이"],
+    projectName: "어떠한 사업",
+  },
+  {
+    name: "이름이 굉장히 긴 어떤 부서 예시",
+    summary: "어떠한 저떠한 사업입니다.",
+    members: ["김스튜", "김스튜삼"],
     projectName: "어떠한 사업",
   },
 ];
@@ -106,5 +118,5 @@ export const mockOperationPlanData: OperationPlanProps = {
   memberData: mockMemberListData,
   note: "어쩌구저쩌구 비고",
   groupList: mockGroupListData,
-  imagePath: "chacha.jpg",
+  imagePath: "조직도.png",
 };
