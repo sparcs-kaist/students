@@ -65,7 +65,7 @@ const ViewerProjectReportDetailFrame = () => {
     { name: "미달 목표", reference: documentUnachieved },
     { name: "제언", reference: suggestion },
     { name: "사업 진행 타임라인", reference: documentTimeline },
-    { name: "사업 결산안", reference: budgetReport },
+    { name: "사업 결산", reference: budgetReport },
     { name: "사업보고서 검토", reference: projectReportReview },
   ];
 
@@ -138,7 +138,7 @@ const ViewerProjectReportDetailFrame = () => {
                 e.status === DocumentReviewStatusEnum.Accepted,
             )}
             type="report"
-            title="사업 결산안"
+            title="사업 결산"
             pageId={resultId}
             isInsideDetailPage
           />

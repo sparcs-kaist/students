@@ -168,7 +168,7 @@ const ReviewerProjectReportDetailFrame = () => {
     { name: "미달 목표", reference: documentUnachieved },
     { name: "제언", reference: suggestion },
     { name: "사업 진행 타임라인", reference: documentTimeline },
-    { name: "사업 결산안", reference: budgetReport },
+    { name: "사업 결산", reference: budgetReport },
     { name: "사업보고서 검토", reference: projectReportReview },
   ];
 
@@ -235,7 +235,7 @@ const ReviewerProjectReportDetailFrame = () => {
         </FlexWrapper>
         <FlexWrapper direction="column" gap={12} ref={budgetReport}>
           <Typography fs={24} lh={30} fw="BOLD">
-            사업 결산안
+            사업 결산
           </Typography>
           <ReviewerExpenditureTable
             key={`income-${resetKey}`}

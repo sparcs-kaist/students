@@ -116,7 +116,7 @@ const ManagerProjectReportDetailFrame: React.FC<
     { name: "제언", reference: documentComment },
     { name: "사업 진행 타임라인", reference: documentTimeline },
     { name: "사업 보고서 검토 내역", reference: documentReview },
-    { name: "사업 결산안", reference: documentExpenditure },
+    { name: "사업 결산", reference: documentExpenditure },
   ];
 
   const [resetKey, setResetKey] = useState(0); // 실시간 edit 렌더링 시 필요!
@@ -427,7 +427,7 @@ const ManagerProjectReportDetailFrame: React.FC<
         <FlexWrapper direction="row" gap={0} ref={documentReview}>
           <TextAndInputWrapper>
             <Typography fs={24} lh={30} fw="BOLD">
-              사업 계획서 검토 내역
+              사업 보고서 검토 내역
             </Typography>
             <ManagerProjectReportReviewTable
               data={mockProjectReportDetailTotalReview.filter(
@@ -439,7 +439,7 @@ const ManagerProjectReportDetailFrame: React.FC<
 
         <FlexWrapper direction="row" gap={0} ref={documentExpenditure}>
           <ManagerExpenditureTableInProjectDetail
-            headerTitle="사업 예산안"
+            headerTitle="사업 결산"
             projectNameCandidate={mockManagerProjectNameCandidateList}
             isProposal={false}
             initialData={mockDBExpenditureData.filter(
