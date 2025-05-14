@@ -7,10 +7,10 @@ import GroupList from "@sparcs-students/web/features/document-lookup/project/com
 import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
-import {
-  MemberProps,
-} from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
+import { MemberProps } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
 import ManageProjectReportTable from "@sparcs-students/web/features/document-lookup/project/components/ManageProjectReportTable";
+import { mockOperatingCommitteeMemberTableListData } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
+import OperatingCommitteeMemberTable from "@sparcs-students/web/features/document-lookup/project/components/OperatingCommitteeMemberTable";
 
 export interface ManageOperationPlanProps {
   memberData: MemberProps[];
@@ -37,6 +37,13 @@ const ManageOperationPlan: React.FC<ManageOperationPlanProps> = ({
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         {isProposal ? "운영계획" : "운영보고"}
       </Typography>
+      {mockOperatingCommitteeMemberTableListData.map(
+        mockOperatingCommitteeMemberTableData => (
+          <OperatingCommitteeMemberTable
+            data={mockOperatingCommitteeMemberTableData}
+          />
+        ),
+      )}
       <ManageProjectReportTable data={memberData} />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>
@@ -45,10 +52,7 @@ const ManageOperationPlan: React.FC<ManageOperationPlanProps> = ({
       </Typography>
       <TextInput placeholder="비고 입력" value={note} constant />
     </FlexWrapper>
-    <GroupList
-      data={groupList}
-      isEditable
-    />
+    <GroupList data={groupList} isEditable />
     <FlexWrapper direction="column" gap={16}>
       <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
         조직도
