@@ -3,6 +3,7 @@ import {
   ProjectProposal,
   ProjectProposalContent,
   ProjectProposalDetailTotalReview,
+  ProjectProposalTableRow,
 } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import {
   ProjectTimelineProps,
@@ -198,4 +199,22 @@ export function mapTimelineIdsToObjects(
     .filter(
       (timeline): timeline is ProjectTimelineProps => timeline !== undefined,
     );
+}
+
+export function mapProposalDetailToReview(
+  proposalDetail: ProjectProposalContent[],
+  review: ProjectProposalDetailTotalReview[],
+): ProjectProposalTableRow[] {
+  return proposalDetail.map(proposalContent => {
+    const correspondingReview = review.find(
+      rev => rev.projectProposalContentId === proposalContent.contentId,
+    );
+    return {
+      id: proposalContent.contentId,
+      projectName: proposalContent.title,
+      executionPeriod: proposalContent.executionPeriod,
+      status: correspondingReview?.reviewStatus as DocumentReviewStatusEnum,
+      review: correspondingReview?.reviewText as string,
+    };
+  });
 }

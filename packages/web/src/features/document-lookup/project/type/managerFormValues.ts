@@ -84,3 +84,11 @@ export interface ProjectReportDetailTotalReview {
   reviewText: string;
   reviewStatus: DocumentReviewStatusEnum;
 }
+
+export interface ProjectProposalTableRow {
+  id: number;
+  projectName: string;
+  executionPeriod: ProjectDate;
+  status: DocumentReviewStatusEnum;
+  review: string;
+}
