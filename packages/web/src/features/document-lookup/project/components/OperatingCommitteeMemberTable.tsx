@@ -11,6 +11,15 @@ import Table from "@sparcs-students/web/common/components/Table/Table";
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 
+import styled from "styled-components";
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
 const TableTextInputCell: React.FC<{
   member: OperatingCommitteeMemberProps;
 }> = ({ member }) => {
@@ -96,13 +105,22 @@ const OperatingCommitteeMemberTable: React.FC<
           <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
             운영 위원 명단
           </Typography>
-          <Button
-            buttonText="저장"
-            style={{ width: "60px", padding: "5px 0px", fontSize: "14px" }}
-            onClick={() => {
-              console.log(tmpData);
-            }}
-          />
+          <ButtonWrapper>
+            <Button
+              buttonText="운영 위원 편집"
+              style={{ padding: "8px", fontSize: "14px" }}
+              onClick={() => {
+                console.log(tmpData);
+              }}
+            />
+            <Button
+              buttonText="부서 편집"
+              style={{ padding: "8px", fontSize: "14px" }}
+              onClick={() => {
+                console.log(tmpData);
+              }}
+            />
+          </ButtonWrapper>
         </FlexWrapper>
       </FlexWrapper>
       {loaded && (
