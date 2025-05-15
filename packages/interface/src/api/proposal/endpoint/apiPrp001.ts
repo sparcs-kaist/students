@@ -1,12 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  zName,
-  zUserName,
-} from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import { AgendaAcceptedStatusEnum } from "@sparcs-students/interface/common/enum";
 
 /**
  * @version v0.1
@@ -28,21 +23,21 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    organizationId: zId,
-    organizationName: zName,
-    semesterId: zId,
-    organizationPresidentId: zId,
-    organizationPresidentName: zUserName,
-    submitDate: z.date(),
-    projects: z
-      .object({
-        projectProposalId: zId,
-        name: z.coerce.string().max(255),
-        startTerm: z.date(),
-        endTerm: z.date(),
-        acceptedStatus: z.nativeEnum(AgendaAcceptedStatusEnum),
-      })
-      .array(),
+    // organizationId: zId,
+    // organizationName: zName,
+    // semesterId: zId,
+    // organizationPresidentId: zId,
+    // organizationPresidentName: zUserName,
+    // submitDate: z.date(),
+    // projects: z
+    //   .object({
+    //     projectProposalId: zId,
+    //     name: z.coerce.string().max(255),
+    //     startTerm: z.date(),
+    //     endTerm: z.date(),
+    //     acceptedStatus: z.nativeEnum(AgendaAcceptedStatusEnum),
+    //   })
+    //   .array(),
   }),
 };
 
