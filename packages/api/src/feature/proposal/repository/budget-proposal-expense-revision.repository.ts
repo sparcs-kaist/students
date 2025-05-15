@@ -76,6 +76,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
+      isRemoved: result.isRemoved,
     });
   }
 
@@ -95,6 +96,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
+      isRemoved: model.isRemoved,
     };
   }
 

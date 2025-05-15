@@ -75,6 +75,7 @@ export class OperatingCommitteeProposalRevisionRepository extends BaseSingleTabl
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
+      isRemoved: result.isRemoved,
     });
   }
 
@@ -89,6 +90,7 @@ export class OperatingCommitteeProposalRevisionRepository extends BaseSingleTabl
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
+      isRemoved: model.isRemoved,
     };
   }
 

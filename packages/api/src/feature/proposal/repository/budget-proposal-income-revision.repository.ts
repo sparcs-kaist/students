@@ -77,6 +77,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
+      isRemoved: result.isRemoved,
     });
   }
 
@@ -97,6 +98,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
+      isRemoved: model.isRemoved,
     };
   }
 

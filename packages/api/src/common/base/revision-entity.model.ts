@@ -11,4 +11,6 @@ export class MRevisionEntity extends MEntity {
   cogAgenda: { id: number } | undefined;
 
   gsrcAgenda: { id: number } | undefined;
+
+  isRemoved: boolean | undefined;
 }

@@ -5,6 +5,7 @@ import {
   foreignKey,
   timestamp,
   text,
+  boolean,
 } from "drizzle-orm/mysql-core";
 import { Semester } from "./semester.schema";
 import { OperatingCommittee, Organization, Team } from "./organization.schema";
@@ -55,6 +56,7 @@ export const ProjectProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
+    isRemoved: boolean("is_removed"),
     documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -142,6 +144,7 @@ export const OperationProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
+    isRemoved: boolean("is_removed"),
     documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -210,6 +213,7 @@ export const OperatingCommitteeProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
+    isRemoved: boolean("is_removed"),
     documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),

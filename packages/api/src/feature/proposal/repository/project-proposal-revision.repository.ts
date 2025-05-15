@@ -130,6 +130,8 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
       cogAgenda: { id: result.main.cogAgendaId },
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
+
+      isRemoved: result.main.isRemoved,
     });
   }
 
@@ -150,6 +152,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         submittedAt: model.submittedAt,
         cogAgendaId: model.cogAgenda?.id,
         gsrcAgendaId: model.gsrcAgenda?.id,
+        isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
