@@ -110,14 +110,14 @@ const OperatingCommitteeMemberTable: React.FC<
               buttonText="운영 위원 편집"
               style={{ padding: "8px", fontSize: "14px" }}
               onClick={() => {
-                console.log(tmpData);
+                // TODO: endpoint로 redirect
               }}
             />
             <Button
               buttonText="부서 편집"
-              style={{ padding: "8px", fontSize: "14px" }}
+              style={{ padding: "8px", fontSize: "14px", width: "80px" }}
               onClick={() => {
-                console.log(tmpData);
+                // TODO: endpoint로 redirect
               }}
             />
           </ButtonWrapper>
