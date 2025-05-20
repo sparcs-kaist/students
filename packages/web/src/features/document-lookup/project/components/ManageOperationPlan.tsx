@@ -51,6 +51,8 @@ const ManagerOperationPlan: React.FC<ManageOperationPlanProps> = ({
       <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
         {isProposal ? "운영계획" : "운영보고"}
       </Typography>
+      {/* <ManagerProjectReportMemberTable data={memberData} /> */}
+      {/* 부서 변경은 회원 등록에서 일괄 처리하기로 변경 */}
       {mockOperatingCommitteeMemberTableListData.map(
         mockOperatingCommitteeMemberTableData => (
           <OperatingCommitteeMemberTable
@@ -58,10 +60,6 @@ const ManagerOperationPlan: React.FC<ManageOperationPlanProps> = ({
           />
         ),
       )}
-      {/* <ManagerProjectReportMemberTable data={memberData} /> */}
-      {/* 부서 변경은 회원 등록에서 일괄 처리하기로 변경 */}
-      <MemberTable title="운영위원 명단" data={memberData} />
-      {/* TODO: 추후 운영위원 명단 표 머지되면 삽입 */}
       <MemberTable title="집행위원 명단" data={memberData} />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>
