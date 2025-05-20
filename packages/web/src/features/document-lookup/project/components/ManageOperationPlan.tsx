@@ -7,6 +7,8 @@ import GroupList from "@sparcs-students/web/features/document-lookup/project/com
 import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
 import Image from "next/image";
 import styled from "styled-components";
+import { mockOperatingCommitteeMemberTableListData } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
+import OperatingCommitteeMemberTable from "@sparcs-students/web/features/document-lookup/project/components/OperatingCommitteeMemberTable";
 import MemberTable, {
   MemberProps,
 } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
@@ -51,8 +53,13 @@ const ManagerOperationPlan: React.FC<ManageOperationPlanProps> = ({
       </Typography>
       {/* <ManagerProjectReportMemberTable data={memberData} /> */}
       {/* 부서 변경은 회원 등록에서 일괄 처리하기로 변경 */}
-      <MemberTable title="운영위원 명단" data={memberData} />
-      {/* TODO: 추후 운영위원 명단 표 머지되면 삽입 */}
+      {mockOperatingCommitteeMemberTableListData.map(
+        mockOperatingCommitteeMemberTableData => (
+          <OperatingCommitteeMemberTable
+            data={mockOperatingCommitteeMemberTableData}
+          />
+        ),
+      )}
       <MemberTable title="집행위원 명단" data={memberData} />
     </FlexWrapper>
     <FlexWrapper direction="column" gap={16}>

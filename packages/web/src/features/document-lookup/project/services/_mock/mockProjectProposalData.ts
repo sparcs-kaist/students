@@ -8,6 +8,7 @@ import { GroupProps } from "@sparcs-students/web/features/document-lookup/projec
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 
 import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+import { OperatingCommitteeMemberProps } from "@sparcs-students/web/features/document-lookup/project/components/OperatingCommitteeMemberTable";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
 export const mockProjectProposalData: ReviewerProjectProps[] = [
@@ -113,6 +114,54 @@ export const mockGroupListData: GroupProps[] = [
     projectName: "어떠한 사업",
   },
 ];
+
+export const mockOperatingCommitteeMemberTableListData: OperatingCommitteeMemberProps[][] =
+  [
+    [
+      {
+        id: "20210XX1",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX2",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX3",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX4",
+        name: "김스튜",
+        regulation: "",
+      },
+    ],
+    [
+      {
+        id: "20210XX1",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX2",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX3",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX4",
+        name: "김스튜",
+        regulation: "",
+      },
+    ],
+  ];
 
 export const mockOperationPlanData: OperationPlanProps = {
   memberData: mockMemberListData,
