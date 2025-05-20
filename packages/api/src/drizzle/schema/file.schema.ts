@@ -4,7 +4,6 @@ import {
   varchar,
   datetime,
   timestamp,
-  serial,
   foreignKey,
 } from "drizzle-orm/mysql-core";
 
@@ -13,7 +12,7 @@ import { User } from "./user.schema";
 export const File = mysqlTable(
   "file",
   {
-    id: serial("id").primaryKey(),
+    id: int("id").autoincrement().primaryKey().notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     extension: varchar("extension", { length: 30 }).notNull(),
     size: int("size").notNull(),

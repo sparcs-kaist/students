@@ -11,7 +11,7 @@ import {
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { FormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { ProposalFormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import {
   mockDBExpenditureData,
   mockManagerProjectNameCandidateList,
@@ -38,7 +38,7 @@ import ManagerProjectProposalReviewTable from "@sparcs-students/web/features/doc
 
 const headerHeight = 70;
 
-interface ManagerProjectProposalDetailFrameProps {
+export interface ManagerProjectDetailFrameProps {
   setProjectTitle: (title: string) => void;
 }
 
@@ -74,7 +74,7 @@ const TextAndInputWrapper = styled.div`
 `;
 
 const ManagerProjectProposalDetailFrame: React.FC<
-  ManagerProjectProposalDetailFrameProps
+  ManagerProjectDetailFrameProps
 > = ({ setProjectTitle }) => {
   const documentTitle = useRef<HTMLDivElement>(null);
   const documentPeriod = useRef<HTMLDivElement>(null);
@@ -87,7 +87,7 @@ const ManagerProjectProposalDetailFrame: React.FC<
   const documentExpenditure = useRef<HTMLDivElement>(null);
 
   const { detailId } = useParams(); // resultId 언젠간 쓸 것.
-  const formMethods = useForm<FormValues>({
+  const formMethods = useForm<ProposalFormValues>({
     defaultValues: {
       proposalDetail: {
         ...ProjectProposalSingleContent[parseInt(detailId as string)],

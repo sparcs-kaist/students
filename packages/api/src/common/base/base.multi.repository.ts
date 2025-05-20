@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import {
+  and,
   eq,
   inArray,
   InferInsertModel,
   InferSelectModel,
+  isNull,
   SQL,
   sql,
 } from "drizzle-orm";
@@ -15,8 +17,8 @@ import {
   IdType,
   MEntity,
   ModelPatchFunction,
-  PlainObject,
 } from "./entity.model";
+
 import { forEachAsyncSequentially } from "../util/util";
 import { getDeletedAtObject } from "../util/time-util";
 import {
@@ -27,6 +29,7 @@ import {
   InferUpdateModel,
   ModelConstructor,
   MultiTableWithID,
+  PlainObject,
   TableWithID,
 } from "./base.repository";
 
@@ -133,7 +136,7 @@ export type MultiModelInsertTableArray<MultiTable extends MultiTableWithID> = {
 // 베이스 레포지토리 추상클래스
 // 사용 방법
 // 1. Model에 모델 클래스 넣기
-// 2. Table에 FromDB (InferSelectTable) 타입 넣기
+// 2. Table 타입 넣기
 // 3. 쿼리 조건 추가 (id 등 제외)
 // 4. 추가 쿼리 조건이 있을 경우 specialKeys에 추가하여 makeWhereClause를 상속하여 구현
 @Injectable()
@@ -210,7 +213,12 @@ export abstract class BaseMultiTableRepository<
     const main = await tx
       .select()
       .from(this.table.main)
-      .where(inArray(this.table.main.id, mainIds))
+      .where(
+        and(
+          inArray(this.table.main.id, mainIds),
+          isNull(this.table.main.deletedAt),
+        ),
+      )
       .execute();
 
     const oneToOneMapEntries = await Promise.all(
@@ -218,7 +226,12 @@ export abstract class BaseMultiTableRepository<
         const rows = await tx
           .select()
           .from(table)
-          .where(inArray(table[this.mainTableIdName], mainIds))
+          .where(
+            and(
+              inArray(table[this.mainTableIdName], mainIds),
+              isNull(table.deletedAt),
+            ),
+          )
           .execute();
         return [key, rows];
       }),
@@ -230,7 +243,12 @@ export abstract class BaseMultiTableRepository<
         const rows = await tx
           .select()
           .from(table)
-          .where(inArray(table[this.mainTableIdName], mainIds))
+          .where(
+            and(
+              inArray(table[this.mainTableIdName], mainIds),
+              isNull(table.deletedAt),
+            ),
+          )
           .execute();
         return [key, rows];
       }),
@@ -257,7 +275,7 @@ export abstract class BaseMultiTableRepository<
     data: IModelCreate[],
     tx: DrizzleTransaction,
   ): Promise<Model[]> {
-    const dbFormattedData = data.map(d => this.createToDBMapping(d));
+    const dbFormattedData = data.map(d => this.createToDB(d));
 
     // 메인 테이블 삽입
     const processedData = await Promise.all(
@@ -509,7 +527,12 @@ export abstract class BaseMultiTableRepository<
       oneToMany: Object.fromEntries(
         Object.keys(this.table.oneToMany).map(key => [
           key,
-          models.flatMap(m => m.oneToMany[key as keyof typeof m.oneToMany]),
+          models.flatMap(m =>
+            m.oneToMany[key as keyof typeof m.oneToMany].map(data => ({
+              ...data,
+              [this.mainTableIdName]: m.id,
+            })),
+          ),
         ]),
       ) as unknown as MultiModelInsertTableArray<Table>["oneToMany"],
     };
@@ -566,7 +589,9 @@ export abstract class BaseMultiTableRepository<
       const oneToMany = Object.fromEntries(
         Object.entries(tableResult.oneToMany).map(([key]) => [
           key,
-          oneToManyMaps[key].get(id as IdType),
+          oneToManyMaps[key].has(id as IdType)
+            ? oneToManyMaps[key].get(id as IdType)
+            : [],
         ]),
       ) as MultiSelectModel<Table>["oneToMany"];
 

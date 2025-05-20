@@ -107,7 +107,7 @@ export const mockDBExpenditureData: DBExpenditureProps[] = [
     thisYear: "125000",
     ratio: 100.0,
     reason: "",
-    status: DocumentReviewStatusEnum.Progress,
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -122,7 +122,7 @@ export const mockDBExpenditureData: DBExpenditureProps[] = [
     thisYear: "600000",
     ratio: 120.0,
     reason: "어떠한 사업을 위한 지출입니다.",
-    status: DocumentReviewStatusEnum.Progress,
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
@@ -152,7 +152,7 @@ export const mockDBExpenditureData: DBExpenditureProps[] = [
     thisYear: "600000",
     ratio: 120.0,
     reason: "어떠한 사업을 위한 지출입니다.",
-    status: DocumentReviewStatusEnum.Progress,
+    status: DocumentReviewStatusEnum.Accepted,
     review: "",
   },
   {
