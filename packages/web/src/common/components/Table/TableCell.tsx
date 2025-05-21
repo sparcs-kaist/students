@@ -5,10 +5,11 @@ import isPropValid from "@emotion/is-prop-valid";
 import Icon from "../Icon";
 
 interface TableCellProps {
-  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort";
+  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort" | "Icon";
   children: ReactNode;
   width?: string | number;
   minWidth?: number;
+  icon?: ReactNode;
 }
 
 const CommonCellHeaderWrapper = styled.th.withConfig({
@@ -35,6 +36,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
 const CommonCellBodyWrapper = styled.td.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{
+  isIcon: boolean;
   isHeader: boolean;
   width: string | number;
   minWidth: number;
@@ -49,6 +51,7 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
   ${({ width }) => (width === 0 ? "flex: 1;" : "")}
+  position: ${({ isIcon }) => (isIcon ? "relative" : "static")};
 `;
 
 const CellText = styled.div.withConfig({
@@ -83,13 +86,35 @@ const SortWrapper = styled.div`
   padding-left: 20px;
 `;
 
+const IconCellWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`;
+
+const IconCell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TableCell: React.FC<TableCellProps> = ({
   type,
   children,
   width = "150px",
   minWidth = 60,
+  icon = null,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
+  const isIcon = type === "Icon";
   let content;
   const CommonCellWrapper = useMemo(
     () => (isHeader ? CommonCellHeaderWrapper : CommonCellBodyWrapper),
@@ -117,12 +142,25 @@ const TableCell: React.FC<TableCellProps> = ({
         </SortWrapper>
       );
       break;
+    case "Icon":
+      content = (
+        <IconCellWrapper>
+          <IconCell>{children}</IconCell>
+          {icon && <IconWrapper>{icon}</IconWrapper>}
+        </IconCellWrapper>
+      );
+      break;
     default:
       throw new Error(`Unhandled cell type: ${type}`);
   }
 
   return (
-    <CommonCellWrapper width={width} minWidth={minWidth} isHeader={isHeader}>
+    <CommonCellWrapper
+      width={width}
+      minWidth={minWidth}
+      isHeader={isHeader}
+      isIcon={isIcon}
+    >
       {content}
     </CommonCellWrapper>
   );

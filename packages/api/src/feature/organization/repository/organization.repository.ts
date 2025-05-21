@@ -1,175 +1,144 @@
-import { Injectable, Inject, HttpStatus, HttpException } from "@nestjs/common";
-
+import { Injectable } from "@nestjs/common";
 import {
   and,
   gt,
-  inArray,
-  isNotNull,
-  lt,
-  not,
-  or,
-  eq,
-  isNull,
+  InferInsertModel,
+  InferSelectModel,
+  lte,
+  SQL,
 } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
+
 import {
-  DrizzleAsyncProvider,
-  DrizzleTransaction,
-} from "src/drizzle/drizzle.provider";
-import { Organization } from "src/drizzle/schema";
-import { DurationFull } from "@sparcs-students/interface/common/type/time.type";
+  BaseTableFieldMapKeys,
+  PrimitiveConditionValue,
+  TableWithID,
+} from "@sparcs-students/api/common/base/base.repository";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { Organization } from "@sparcs-students/api/drizzle/schema/organization.schema";
 import {
-  IOrganization,
-  IOrganizationRequestCreate,
-} from "@sparcs-students/interface/api/organization/type/organization.type";
-import { MOrganization } from "../type/organization.model";
+  IOrganizationCreate,
+  MOrganization,
+} from "@sparcs-students/api/feature/organization/model/organization.model";
+
+type OrganizationQuery = {
+  organizationId: number;
+  organizationTypeEnum: number;
+  foundingYear: number;
+  startTerm: string;
+  endTerm: string;
+  organizationStateEnum: number;
+  date: Date;
+};
+
+type OrganizationOrderByKeys =
+  | "id"
+  | "organizationId"
+  | "organizationTypeEnum"
+  | "startTerm"
+  | "endTerm";
+type OrganizationQuerySupport = {
+  startTerm: string;
+  endTerm: string;
+};
+
+type OrganizationTable = typeof Organization;
+type OrganizationDbSelect = InferSelectModel<OrganizationTable>;
+type OrganizationDbUpdate = Partial<OrganizationDbSelect>;
+type OrganizationDbInsert = InferInsertModel<OrganizationTable>;
+
+type OrganizationFieldMapKeys = BaseTableFieldMapKeys<
+  OrganizationQuery,
+  OrganizationOrderByKeys,
+  OrganizationQuerySupport
+>;
 
 @Injectable()
-export class OrganizationRepository {
-  constructor(
-    @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
-  ) {}
-
-  // WARD: Transaction
-  async withTransaction<T>(
-    callback: (tx: DrizzleTransaction) => Promise<T>,
-  ): Promise<T> {
-    return this.db.transaction(callback);
+export class OrganizationRepository extends BaseSingleTableRepository<
+  MOrganization,
+  IOrganizationCreate,
+  OrganizationTable,
+  OrganizationQuery,
+  OrganizationOrderByKeys,
+  OrganizationQuerySupport
+> {
+  constructor() {
+    super(Organization, MOrganization);
   }
 
-  // find methods
-  async findTx(
-    tx: DrizzleTransaction,
-    organizationId: IOrganization["id"],
-  ): Promise<MOrganization | null> {
-    const [result] = await tx
-      .select()
-      .from(Organization)
-      .where(eq(Organization.id, organizationId))
-      .execute();
-
-    return result ? MOrganization.fromDBResult(result) : null;
+  protected dbToModelMapping(result: OrganizationDbSelect): MOrganization {
+    return new MOrganization({
+      id: result.id,
+      name: result.name,
+      nameEng: result.nameEng,
+      organizationTypeEnum: result.organizationTypeEnum,
+      foundingYear: result.foundingYear,
+      startTerm: result.startTerm,
+      endTerm: result.endTerm,
+      organizationStateEnum: result.organizationStateEnum,
+    });
   }
 
-  async findAllTx(
-    tx: DrizzleTransaction,
-    organizationIds: IOrganization["id"][],
-  ): Promise<MOrganization[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    duration: DurationFull,
-  ): Promise<MOrganization[]>;
-  async findAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganization["id"][] | DurationFull,
-  ): Promise<MOrganization[]> {
-    let query = tx.select().from(Organization).$dynamic();
-    const whereConditions = [];
+  protected modelToDBMapping(model: MOrganization): OrganizationDbUpdate {
+    return {
+      id: model.id,
+      name: model.name,
+      nameEng: model.nameEng,
+      organizationTypeEnum: model.organizationTypeEnum,
+      foundingYear: model.foundingYear,
+      startTerm: model.startTerm,
+      endTerm: model.endTerm,
+      organizationStateEnum: model.organizationStateEnum,
+    };
+  }
 
-    if (arg1 instanceof Array) {
-      whereConditions.push(inArray(Organization.id, arg1));
-    } else if ("startTerm" in arg1 && "endTerm" in arg1) {
-      whereConditions.push(
-        not(
-          or(
-            gt(Organization.startTerm, arg1.endTerm),
-            and(
-              isNotNull(Organization.endTerm),
-              lt(Organization.endTerm, arg1.startTerm),
-            ),
-          ),
-        ),
+  protected createToDBMapping(
+    model: IOrganizationCreate,
+  ): OrganizationDbInsert {
+    return {
+      name: model.name,
+      nameEng: model.nameEng,
+      organizationTypeEnum: model.organizationTypeEnum,
+      foundingYear: model.foundingYear,
+      startTerm: model.startTerm,
+      endTerm: model.endTerm,
+      organizationStateEnum: model.organizationStateEnum,
+    };
+  }
+
+  protected fieldMap(
+    field: OrganizationFieldMapKeys,
+  ): TableWithID | null | undefined {
+    const fieldMappings: Record<OrganizationFieldMapKeys, TableWithID | null> =
+      {
+        id: Organization,
+        organizationId: Organization,
+        organizationTypeEnum: Organization,
+        foundingYear: Organization,
+        startTerm: Organization,
+        endTerm: Organization,
+        organizationStateEnum: Organization,
+        date: null,
+      };
+
+    if (!(field in fieldMappings)) {
+      return undefined;
+    }
+
+    return fieldMappings[field];
+  }
+
+  protected processSpecialCondition(
+    key: OrganizationFieldMapKeys,
+    value: PrimitiveConditionValue,
+  ): SQL {
+    if (key === "date" && value instanceof Date) {
+      // console.log(`semester date: ${value}`);
+      return and(
+        lte(Organization.startTerm, value),
+        gt(Organization.endTerm, value),
       );
     }
 
-    whereConditions.push(isNull(Organization.deletedAt));
-    query = query.where(and(...whereConditions));
-    console.log(query.toSQL());
-
-    const res = await query.execute();
-    return res.map(r => MOrganization.fromDBResult(r));
-  }
-
-  // fetch methods
-  async fetchTx(
-    tx: DrizzleTransaction,
-    id: IOrganization["id"],
-  ): Promise<MOrganization> {
-    const result = await this.findTx(tx, id);
-    if (!result) {
-      throw new HttpException("Organization not found", HttpStatus.NOT_FOUND);
-    }
-    return result;
-  }
-
-  async fetch(id: IOrganization["id"]): Promise<MOrganization> {
-    return this.db.transaction(async tx => this.fetchTx(tx, id));
-  }
-
-  async fetchAllTx(
-    tx: DrizzleTransaction,
-    arg1: IOrganization["id"][] | DurationFull,
-  ): Promise<MOrganization[]> {
-    if (Array.isArray(arg1)) {
-      // arg1이 organizationIds 배열인 경우
-      // 요청한 ID를 Set으로 변환하여 중복 제거
-      const uniqueIds = Array.from(new Set(arg1));
-
-      const results = await this.findAllTx(tx, uniqueIds);
-      // 반환된 ID를 Set으로 변환하여 중복 제거
-      const returnedIds = new Set(results.map(org => org.id));
-
-      if (returnedIds.size === uniqueIds.length) {
-        throw new HttpException("No Organizations found", HttpStatus.NOT_FOUND);
-      }
-      return results;
-    }
-    // arg1이 DurationFull인 경우
-    const results = await this.findAllTx(tx, arg1);
-    if (results.length === 0) {
-      throw new HttpException("No Organizations found", HttpStatus.NOT_FOUND);
-    }
-    return results;
-  }
-
-  async fetchAll(ids: IOrganization["id"][]): Promise<MOrganization[]>;
-  async fetchAll(duration: DurationFull): Promise<MOrganization[]>;
-  async fetchAll(
-    arg1: IOrganization["id"][] | DurationFull,
-  ): Promise<MOrganization[]> {
-    return this.db.transaction(async tx => this.fetchAllTx(tx, arg1));
-  }
-
-  // insert methods
-  async insertTx(
-    tx: DrizzleTransaction,
-    data: IOrganizationRequestCreate,
-  ): Promise<MOrganization> {
-    const result = await tx
-      .insert(Organization)
-      .values({
-        name: data.name,
-        nameEng: data.nameEng,
-        organizationTypeEnum: data.organizationTypeEnum,
-        foundingYear: data.foundingYear,
-        startTerm: data.duration.startTerm,
-        endTerm: data.duration.endTerm ?? null,
-        organizationStateEnum: data.organizationStateEnum,
-      })
-      .execute();
-    const insertedId = result[0].insertId;
-    const organization = await this.findTx(tx, insertedId);
-    if (!organization) {
-      throw new HttpException(
-        "Failed to create organization",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return organization;
-  }
-
-  async insert(data: IOrganizationRequestCreate): Promise<MOrganization> {
-    return this.db.transaction(async tx => this.insertTx(tx, data));
+    throw new Error(`Invalid key: ${String(key)}`);
   }
 }

@@ -1,21 +1,37 @@
-// import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-// import ProjectTable from "@sparcs-students/web/features/document-lookup/project/components/ProjectTable";
 import {
+  mockGroupListData,
   mockOperationPlanData,
   // mockViewerProjectData,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalData";
-import OperationPlan from "@sparcs-students/web/features/document-lookup/project/components/OperationPlan";
-import ReviewOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ReviewOperationPlan";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import styled from "styled-components";
-import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
-import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+import ManagerOperationPlan from "@sparcs-students/web/features/document-lookup/project/components/ManageOperationPlan";
+import ManagerProjectProposalTable from "@sparcs-students/web/features/document-lookup/project/components/ManagerProjectProposalTable";
+import {
+  mapProposalDetailToReview,
+  mockProjectProposalDetailTotalReview,
+  ProjectProposalSingleContent,
+} from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+import { useForm } from "react-hook-form";
+import { ProjectProposalTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
+
+interface FrameProps {
+  query: string;
+  resultId: string;
+}
+
+export interface PPFormValues {
+  proposals: ProjectProposalTableRow[];
+  operatingCommittee: string[];
+  executiveCommittee: string[];
+}
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -24,16 +40,48 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const ReviewerProjectProposalFrame = () => {
+const ManagerProjectProposalFrame: React.FC<FrameProps> = ({
+  query,
+  resultId,
+}) => {
   // const { id } = useParams();
-  const [review, setReview] = useState<string>("");
+  const [note, setNote] = React.useState<string>("");
+  const [groupList, setGroupList] =
+    React.useState<GroupProps[]>(mockGroupListData);
+
+  const formMethods = useForm<PPFormValues>({
+    defaultValues: {
+      proposals: mapProposalDetailToReview(
+        ProjectProposalSingleContent,
+        mockProjectProposalDetailTotalReview,
+      ),
+      operatingCommittee: [],
+      executiveCommittee: [],
+    },
+  });
+
+  const proposals = formMethods.watch("proposals");
+
+  const initialDataLength = mapProposalDetailToReview(
+    ProjectProposalSingleContent,
+    mockProjectProposalDetailTotalReview,
+  ).length;
+
   const handleSubmitAll = () => {
-    console.log("리뷰하는 문서의 정보:", mockViewProjectProposalResultData);
-    console.log("제출된 리뷰:", review);
+    console.log(proposals); // 사업계획서 표
+    console.log(note); // 비고
+    console.log(groupList); // 국서/TF 활동 요약 표
   };
 
   const handleResetAll = () => {
-    setReview("");
+    setNote("");
+    formMethods.reset({
+      proposals: mapProposalDetailToReview(
+        ProjectProposalSingleContent,
+        mockProjectProposalDetailTotalReview,
+      ),
+    });
+    setGroupList(mockGroupListData);
   };
 
   const openSaveModal = () => {
@@ -71,12 +119,20 @@ const ReviewerProjectProposalFrame = () => {
 
   return (
     <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-      {/* <ProjectTable pageId={id} data={mockViewerProjectData} isProposal /> */}
-      <OperationPlan
-        {...mockOperationPlanData}
-        userPermission={UserPermission.Manager}
+      <ManagerProjectProposalTable
+        formMethods={formMethods}
+        initialDataLength={initialDataLength}
+        isProposal
+        query={query}
+        resultId={resultId}
       />
-      <ReviewOperationPlan review={review} reviewHandler={setReview} />
+      <ManagerOperationPlan
+        {...mockOperationPlanData}
+        note={note}
+        handleNoteChange={setNote}
+        groupList={groupList}
+        setGroupList={setGroupList}
+      />
       <ButtonWrapper>
         <Button
           type="reverse"
@@ -96,4 +152,4 @@ const ReviewerProjectProposalFrame = () => {
   );
 };
 
-export default ReviewerProjectProposalFrame;
+export default ManagerProjectProposalFrame;

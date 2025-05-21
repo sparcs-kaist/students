@@ -5,6 +5,7 @@ import {
   timestamp,
   text,
   boolean,
+  datetime,
 } from "drizzle-orm/mysql-core";
 
 // Petition 테이블
@@ -13,8 +14,8 @@ export const Petition = mysqlTable("Petition", {
   title: varchar("title", { length: 255 }).notNull(),
   userId: int("user_id").notNull(),
   detail: text("detail").notNull(),
-  startTerm: varchar("start_term", { length: 20 }).notNull(),
-  endTerm: varchar("end_term", { length: 20 }),
+  startTerm: datetime("start_term").notNull(),
+  endTerm: datetime("end_term"),
   petitionStatusEnumId: int("petition_status_enum_id").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),

@@ -22,23 +22,12 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  name: z.coerce.string().max(255),
-  method: z.coerce.string().optional(),
-  prepareStartTerm: z.coerce.date().optional(),
-  prepareEndTerm: z.coerce.date().optional(),
-  startTerm: z.coerce.date().optional(),
-  endTerm: z.coerce.date().optional(),
-  teamId: zId.optional(), // Id(Team)
-  managerId: zId.optional(), // Id(User)
-  purpose: z.coerce.string().optional(),
-  target: z.coerce.string().optional(),
-  detail: z.coerce.string().optional(),
-  note: z.coerce.string().optional(),
+  // todo
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    projectProposalId: zId,
+    // todo
   }),
 };
 
