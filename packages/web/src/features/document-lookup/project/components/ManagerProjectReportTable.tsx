@@ -28,26 +28,26 @@ import { ReadOnlyReviewButton } from "@sparcs-students/web/features/document-loo
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { useRouter } from "next/navigation";
 import ProjectHelpButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ProjectHelpButton";
-import { ProjectProposalTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { ProjectReportTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
-export interface PPFormValues {
-  proposals: ProjectProposalTableRow[];
+export interface PRFormValues {
+  reports: ProjectReportTableRow[];
   operatingCommittee: string[];
   executiveCommittee: string[];
 }
 
-interface ManagerProjectProposalTableProps {
+interface ManagerProjectReportTableProps {
   isProposal: boolean;
   query: string;
   resultId: string;
-  formMethods: ReturnType<typeof useForm<PPFormValues>>;
+  formMethods: ReturnType<typeof useForm<PRFormValues>>;
   initialDataLength: number;
 }
 
 interface TableRowProps {
   // setValue: UseFormSetValue<FormValues>;
-  getValues: UseFormGetValues<PPFormValues>;
+  getValues: UseFormGetValues<PRFormValues>;
   rowIndex: number;
   deleteRow: (rowIndex: number) => void;
   isLast: boolean;
@@ -137,7 +137,7 @@ const TableRow: React.FC<TableRowProps> = ({
   return (
     <TableRowWrapper isLast={isLast}>
       <Controller
-        name={`proposals.${rowIndex}.id`} // 번호
+        name={`reports.${rowIndex}.id`} // 번호
         render={() => (
           <TableCell type="Default" width="60px">
             <Typography>{rowIndex + 1}</Typography>
@@ -145,14 +145,14 @@ const TableRow: React.FC<TableRowProps> = ({
         )}
       />
       <Controller
-        name={`proposals.${rowIndex}.projectName`} // 사업명
+        name={`reports.${rowIndex}.projectName`} // 사업명
         render={({ field }) => (
           <TableCell type="Default" width={0} minWidth={400}>
             <HoverClickText
               text={field.value}
               onClick={() =>
                 router.push(
-                  `/document-lookup/project-proposal/result/${resultId}/detail/${getValues(`proposals.${rowIndex}.id`)}?${query}`,
+                  `/document-lookup/project-report/result/${resultId}/detail/${getValues(`reports.${rowIndex}.id`)}?${query}`,
                 )
               }
             />
@@ -160,7 +160,7 @@ const TableRow: React.FC<TableRowProps> = ({
         )}
       />
       <Controller
-        name={`proposals.${rowIndex}.executionPeriod`} // 사업 기간
+        name={`reports.${rowIndex}.executionPeriod`} // 사업 기간
         render={({ field }) => {
           const firstDate = new Date(field.value.value[0]);
           const secondDate = new Date(field.value.value[1]);
@@ -178,7 +178,7 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`proposals.${rowIndex}.status`} // 현황
+        name={`reports.${rowIndex}.status`} // 현황
         render={({ field }) => {
           const { color, text } = getbudgetStatusTag(field.value);
           return (
@@ -193,7 +193,7 @@ const TableRow: React.FC<TableRowProps> = ({
         }}
       />
       <Controller
-        name={`proposals.${rowIndex}.review`} // 검토
+        name={`reports.${rowIndex}.review`} // 검토
         render={({ field }) => (
           <TableCell type="Default" width="90px">
             <ReadOnlyReviewButton review={field.value} />
@@ -217,20 +217,23 @@ const TableRow: React.FC<TableRowProps> = ({
   );
 };
 
-const ManagerProjectProposalTable: React.FC<
-  ManagerProjectProposalTableProps
-> = ({ formMethods, initialDataLength, query, resultId }) => {
+const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
+  formMethods,
+  initialDataLength,
+  query,
+  resultId,
+}) => {
   const { handleSubmit, control } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "proposals",
+    name: "reports",
   });
 
-  const proposals = formMethods.watch("proposals");
+  const reports = formMethods.watch("reports");
 
   const defaultNewRow = [
     {
-      projectName: "새로운 사업계획서",
+      projectName: "새로운 사업보고서",
       executionPeriod: {
         value: [null, null] as [Date | null, Date | null],
         type: undefined,
@@ -249,13 +252,13 @@ const ManagerProjectProposalTable: React.FC<
   };
 
   const deleteRow = (rowIndex: number) => {
-    if (proposals.length === 1) {
+    if (reports.length === 1) {
       return;
     }
     remove(rowIndex);
   };
 
-  const onSubmit = (data: PPFormValues) => {
+  const onSubmit = (data: PRFormValues) => {
     console.log(data);
   };
 
@@ -267,7 +270,7 @@ const ManagerProjectProposalTable: React.FC<
             <TitleWithToolTipWrapper>
               <TitleWrapper>
                 <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
-                  사업 계획서
+                  사업 보고서
                 </Typography>
               </TitleWrapper>
               <ProjectHelpButton />
@@ -307,8 +310,8 @@ const ManagerProjectProposalTable: React.FC<
                     getValues={formMethods.getValues}
                     rowIndex={index}
                     deleteRow={() => deleteRow(index)}
-                    isLast={index === proposals.length - 1}
-                    rowCount={proposals.length}
+                    isLast={index === reports.length - 1}
+                    rowCount={reports.length}
                     query={query}
                     resultId={resultId}
                   />
@@ -322,4 +325,4 @@ const ManagerProjectProposalTable: React.FC<
   );
 };
 
-export default ManagerProjectProposalTable;
+export default ManagerProjectReportTable;

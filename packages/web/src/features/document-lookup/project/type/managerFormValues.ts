@@ -92,3 +92,11 @@ export interface ProjectProposalTableRow {
   status: DocumentReviewStatusEnum;
   review: string;
 }
+
+export interface ProjectReportTableRow {
+  id: number;
+  projectName: string;
+  executionPeriod: ProjectDate;
+  status: DocumentReviewStatusEnum;
+  review: string;
+}
