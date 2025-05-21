@@ -4,6 +4,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import ProfileCard from "@sparcs-students/web/common/components/ProfileCard";
 import StudentFeeCard from "@sparcs-students/web/common/components/StudentFeeCard";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import MyOrganizationTable from "@sparcs-students/web/features/my/components/MyOrganizationTable";
 
 const MyPage = () => (
   <FlexWrapper direction="column" gap={20}>
@@ -16,9 +17,7 @@ const MyPage = () => (
         <StudentFeeCard />
       </FlexWrapper>
       <FlexWrapper direction="column" gap={10}>
-        <Typography fs={24} lh={24} color="BLACK" fw="BOLD">
-          나의 청원
-        </Typography>
+        <MyOrganizationTable />
       </FlexWrapper>
     </FlexWrapper>
   </FlexWrapper>
