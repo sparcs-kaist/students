@@ -250,3 +250,45 @@ export const getbudgetCodeTag = (code: number) => {
       return { color: "GRAY", text: "-" };
   }
 };
+
+export enum MemberRoleEnum { // TODO: 백엔드에 없는 enum - 임시
+  Chief = 1,
+  Vice,
+  Editor,
+  Member,
+}
+
+export const memberRoleTagList: {
+  [key in MemberRoleEnum]: StatusDetail;
+} = {
+  [MemberRoleEnum.Chief]: {
+    text: "대표자",
+    color: "GREEN800",
+  },
+  [MemberRoleEnum.Vice]: {
+    text: "부대표자",
+    color: "GREEN600",
+  },
+  [MemberRoleEnum.Editor]: {
+    text: "예결산 편집자",
+    color: "GREEN300",
+  },
+  [MemberRoleEnum.Member]: {
+    text: "부원",
+    color: "GREEN100",
+  },
+};
+
+export const getMemberTag = (role: number) => {
+  // TODO: change to enum
+  switch (role) {
+    case 0: // 대표자
+      return { color: "GREEN800", text: "대표자" };
+    case 1: // 부대표자
+      return { color: "GREEN600", text: "부대표자" };
+    case 2: // 예결산 편집자
+      return { color: "GREEN300", text: "예결산 편집자" };
+    default: // 부원
+      return { color: "GREEN100", text: "부원" };
+  }
+};
