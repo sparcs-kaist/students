@@ -4,7 +4,7 @@ import React, { FC, useState, useEffect } from "react";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import colors from "@sparcs-students/web/styles/themes/colors";
 import styled from "styled-components";
-import PageIndexButton from "@sparcs-students/web/common/components/Pagenation/_atomic/PageIndexButton";
+import PageIndexButton from "@sparcs-students/web/common/components/Pagination/_atomic/PageIndexButton";
 
 interface PaginationProps {
   currentPageIndex: number; // 현재 페이지 인덱스
@@ -14,7 +14,7 @@ interface PaginationProps {
   onPageIndexChange: (page: number) => void;
 }
 
-const PagenationWrapper = styled.div`
+const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,7 +61,7 @@ const Pagination: FC<PaginationProps> = ({
   }, [currentPageIndex, groupSize, totalCount]);
 
   return (
-    <PagenationWrapper>
+    <PaginationWrapper>
       <ArrowWrapper>
         <Icon
           type="arrow_back_ios_new"
@@ -106,7 +106,7 @@ const Pagination: FC<PaginationProps> = ({
           }
         />
       </ArrowWrapper>
-    </PagenationWrapper>
+    </PaginationWrapper>
   );
 };
 

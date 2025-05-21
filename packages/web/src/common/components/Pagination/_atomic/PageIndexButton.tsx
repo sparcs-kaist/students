@@ -21,8 +21,8 @@ const StyledTextButton = styled.button.withConfig({
   border: none;
   color: ${({ theme, selected }) =>
     selected ? theme.colors.PRIMARY : theme.colors.BLACK};
-  font-size: "16px";
-  line-height: "20px";
+  font-size: 16px;
+  line-height: 20px;
   font-weight: ${({ theme, selected }) =>
     selected ? theme.fonts.WEIGHT.SEMIBOLD : theme.fonts.WEIGHT.REGULAR};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
