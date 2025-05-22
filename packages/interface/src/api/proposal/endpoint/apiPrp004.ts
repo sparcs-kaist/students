@@ -20,7 +20,22 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  // todo
+  projectName: z.coerce.string().max(255),
+  startTerm: z.date(),
+  endTerm: z.date(),
+  teamName: z.coerce.string().max(30),
+  managerName: zUserName,
+  purpose: z.coerce.string(),
+  target: z.coerce.string(),
+  detail: z.coerce.string(),
+  timeLines: z.array(
+    z.object({
+      detail: z.coerce.string(),
+      startTerm: z.date(),
+      endTerm: z.date(),
+    }),
+  ),
+  // 사업 계획서 검토 내역도 여기서 같이 넣어야 하나?
 });
 
 const responseBodyMap = {

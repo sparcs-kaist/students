@@ -29,12 +29,21 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
+    success: z.boolean(),
     submittedIds: z
       .object({
         projectProposalId: zId,
         projectProposalRevisionId: zId,
       })
       .array(),
+  }),
+  [HttpStatusCode.NotFound]: z.object({
+    error: z.literal(
+      "No changes detected from the previously submitted content.",
+    ),
+  }),
+  [HttpStatusCode.UnprocessableEntity]: z.object({
+    error: z.literal("Some required fields are empty."),
   }),
 };
 

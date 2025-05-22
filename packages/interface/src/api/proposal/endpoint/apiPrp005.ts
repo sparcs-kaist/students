@@ -13,7 +13,7 @@ const url = (projectProposalId: number) =>
   `/manager/proposals/project-proposals/project-proposal/${projectProposalId}`;
 const method = "PUT";
 export const ApiPrp005RequestUrl =
-  "/manager/proposals/project-proposals/project-proposal/:projectProposalId";
+  "/manager/proposals/project-proposals/project-proposal/projectProposalId";
 
 const requestParam = z.object({
   projectProposalId: zId,
@@ -22,12 +22,28 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  // todo
+  projectName: z.coerce.string().max(255).optional(),
+  startTerm: z.date().optional(),
+  endTerm: z.date().optional(),
+  teamName: z.coerce.string().max(30).optional(),
+  managerName: zUserName.optional(),
+  purpose: z.coerce.string().optional(),
+  target: z.coerce.string().optional(),
+  detail: z.coerce.string().optional(),
+  timeLines: z
+    .array(
+      z.object({
+        detail: z.coerce.string(),
+        startTerm: z.date(),
+        endTerm: z.date(),
+      }),
+    )
+    .optional(),
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    // todo
+    success: z.boolean(),
   }),
 };
 
