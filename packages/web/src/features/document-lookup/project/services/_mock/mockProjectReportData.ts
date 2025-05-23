@@ -105,5 +105,5 @@ export const mockOperationPlanData: OperationPlanProps = {
   memberData: mockMemberListData,
   note: "어쩌구저쩌구 비고",
   groupList: mockGroupListData,
-  imagePath: "chacha.jpg",
+  imagePath: "조직도.png",
 };

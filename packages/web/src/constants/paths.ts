@@ -60,6 +60,10 @@ const paths = {
     name: "학생 청원",
     path: "/petition",
   },
+  ORGANIZATION_MANAGE: {
+    name: "단체 관리",
+    path: "/organization-manage",
+  },
 
   MADE_BY: { name: "만든 사람들", path: "/credits" },
   LICENSE: { name: "라이센스", path: "/" },

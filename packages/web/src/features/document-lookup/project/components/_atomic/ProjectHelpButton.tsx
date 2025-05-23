@@ -20,7 +20,7 @@ const ToolTipWrapper = styled.div`
   transform: translateY(-60%) translateX(32px);
 `;
 
-const ProjectProposalHelpButton = () => {
+const ProjectHelpButton = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const handleMouseEnter = () => {
     setShowTooltip(true);
@@ -47,4 +47,4 @@ const ProjectProposalHelpButton = () => {
   );
 };
 
-export default ProjectProposalHelpButton;
+export default ProjectHelpButton;

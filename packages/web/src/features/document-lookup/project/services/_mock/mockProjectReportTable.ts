@@ -1,6 +1,7 @@
 import {
   ProjectReportContent,
   ProjectReportDetailTotalReview,
+  ProjectReportTableRow,
 } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import {
   ProjectTimelineProps,
@@ -84,3 +85,21 @@ export const mockProjectReportDetailTotalReview: ProjectReportDetailTotalReview[
       reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
     },
   ];
+
+export function mapReportDetailToReview(
+  reportDetail: ProjectReportContent[],
+  review: ProjectReportDetailTotalReview[],
+): ProjectReportTableRow[] {
+  return reportDetail.map(reportContent => {
+    const correspondingReview = review.find(
+      rev => rev.projectReportContentId === reportContent.contentId,
+    );
+    return {
+      id: reportContent.contentId,
+      projectName: reportContent.title,
+      executionPeriod: reportContent.executionPeriod,
+      status: correspondingReview?.reviewStatus as DocumentReviewStatusEnum,
+      review: correspondingReview?.reviewText as string,
+    };
+  });
+}
