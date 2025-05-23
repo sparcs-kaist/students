@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
 import { mockViewBudgetReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
@@ -20,6 +19,7 @@ import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lo
 import { useRouter, useSearchParams } from "next/navigation";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetReportFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 const Report = () => {
   // const { id } = useParams();
@@ -105,7 +105,7 @@ const Report = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => lookUp(selectedId as number)}
