@@ -1,9 +1,9 @@
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import React, { useState } from "react";
 import styled, { useTheme } from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 interface ReviewModalProps {
   onConfirm: () => void;
@@ -70,11 +70,11 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         value={reviewText}
       />
       <ButtonWrapper>
-        <Button onClick={onConfirm} type="reverse">
+        <ModalTableButton onClick={onConfirm} type="reverse">
           취소
-        </Button>
+        </ModalTableButton>
         <ThreeButtonWrapper>
-          <Button
+          <ModalTableButton
             onClick={() => {
               handleReviewChange(reviewText);
               handleStatusChange(DocumentReviewStatusEnum.ReviewRejected);
@@ -98,8 +98,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             }
           >
             반려
-          </Button>
-          <Button
+          </ModalTableButton>
+          <ModalTableButton
             onClick={() => {
               handleReviewChange(reviewText);
               handleStatusChange(DocumentReviewStatusEnum.ReviseNeeded);
@@ -121,8 +121,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             }
           >
             수정 요청
-          </Button>
-          <Button
+          </ModalTableButton>
+          <ModalTableButton
             onClick={() => {
               handleStatusChange(DocumentReviewStatusEnum.ReviewAccepted);
               onConfirm();
@@ -136,7 +136,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             }
           >
             승인
-          </Button>
+          </ModalTableButton>
         </ThreeButtonWrapper>
       </ButtonWrapper>
     </ModalContentInner>
@@ -155,9 +155,9 @@ export const ReadOnlyReviewModal: React.FC<ReadOnlyReviewModalProps> = ({
     </Typography>
     <ContentWrapper>{review}</ContentWrapper>
     <ButtonWrapper>
-      <Button onClick={onConfirm} type="default">
+      <ModalTableButton onClick={onConfirm} type="default">
         닫기
-      </Button>
+      </ModalTableButton>
     </ButtonWrapper>
   </ModalContentInner>
 );

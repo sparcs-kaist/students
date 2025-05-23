@@ -1,6 +1,6 @@
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import React from "react";
 import styled from "styled-components";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 import Typography from "../Typography";
 
 interface ConfirmModalContentProps {
@@ -36,12 +36,12 @@ const ConfirmModalContent: React.FC<ConfirmModalContentProps> = ({
       {children}
     </Typography>
     <ButtonWrapper>
-      <Button
+      <ModalTableButton
         onClick={onConfirm}
         style={{ fontSize: "14px", lineHeight: "12px" }}
       >
         {confirmButtonText}
-      </Button>
+      </ModalTableButton>
     </ButtonWrapper>
   </ModalContentInner>
 );
