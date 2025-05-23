@@ -1,5 +1,5 @@
 import { OrganizationMemberProps } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
-import { MemberRoleEnum } from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+import { MemberRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const mockOrganizationMemberData: OrganizationMemberProps[] = [
   {

@@ -9,6 +9,7 @@ import {
   StatusDetail,
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
+import { MemberRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {
   // 구분
@@ -250,13 +251,6 @@ export const getbudgetCodeTag = (code: number) => {
       return { color: "GRAY", text: "-" };
   }
 };
-
-export enum MemberRoleEnum { // TODO: 백엔드에 없는 enum - 임시
-  Chief = 1,
-  Vice,
-  Editor,
-  Member,
-}
 
 export const memberRoleTagList: {
   [key in MemberRoleEnum]: StatusDetail;

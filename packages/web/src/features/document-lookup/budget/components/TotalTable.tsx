@@ -18,7 +18,7 @@ import {
   budgetDomainTagList,
   getbudgetRatioTag,
   getbudgetTypeTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import { useTheme } from "styled-components";
 
 export interface TotalProps {

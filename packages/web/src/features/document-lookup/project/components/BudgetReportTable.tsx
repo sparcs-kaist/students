@@ -25,14 +25,14 @@ import {
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import { useFormatter } from "next-intl";
 import DetailButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
   isDarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
-import { budgetExpenseToString } from "@sparcs-students/web/features/document-lookup/util/enumToItem";
+import { budgetExpenseToString } from "@sparcs-students/web/common/util/enumToItem";
 import ReviewButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import styled from "styled-components";

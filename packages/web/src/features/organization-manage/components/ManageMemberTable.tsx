@@ -16,10 +16,8 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import {
-  MemberRoleEnum,
-  memberRoleTagList,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+import { memberRoleTagList } from "@sparcs-students/web/common/util/tableTagList";
+import { MemberRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import isEqual from "lodash/isEqual";
 
 const TableWrapper = styled.table`

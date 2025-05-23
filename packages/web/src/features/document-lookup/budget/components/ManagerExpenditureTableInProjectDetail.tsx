@@ -28,7 +28,7 @@ import {
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import {
   BudgetClassExpenseEnum,
   BudgetDivisionExpenseEnum,

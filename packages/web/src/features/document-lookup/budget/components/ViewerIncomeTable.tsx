@@ -18,7 +18,7 @@ import {
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import DetailButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/DetailButton";
 import DarkTag, {
   DarkTagColor,
