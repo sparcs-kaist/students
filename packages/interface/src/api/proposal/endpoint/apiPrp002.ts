@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
-
+import { zUserName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
@@ -23,17 +23,16 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    projectName: z.coerce.string().max(255), // 사업명
+    projectName: z.coerce.string().max(255),
     // 사업 개요
-    startTerm: z.date(), // 사업 준비 기간? 사업 일시?
-    endTerm: z.date(), // 사업 준비 기간? 사업 일시?
-    teamName: z.coerce.string().max(30), // 담당부서
-    managerName: zUserName, // 담당자
-    purpose: z.coerce.string(), // 사업 추진 목적
-    target: z.coerce.string(), // 사업 수혜 대상자
-    detail: z.coerce.string(), // 세부 사업 내용
+    startTerm: z.date(),
+    endTerm: z.date(),
+    teamName: z.coerce.string().max(30),
+    managerName: zUserName,
+    purpose: z.coerce.string(),
+    target: z.coerce.string(),
+    detail: z.coerce.string(),
     timeLines: z.array(
-      // 사업 진행 타임라인
       z.object({
         detail: z.coerce.string(),
         startTerm: z.date(),
@@ -41,20 +40,7 @@ const responseBodyMap = {
         note: z.coerce.string(),
       }),
     ),
-    // 사업 예산안도 여기에 같이 들어가야 하나?
-    // budgetProposals: z.array(
-    //   z.object({
-    //     budgetId: zId,
-    //     budgetCode: z.coerce.string().max(10),
-    //     budgetDomain: zEnumName,
-    //     budgetDivision: zEnumName,
-    //     budgetClass: zEnumName,
-    //     detail: z.coerce.string(),
-    //     previousAmount: z.number(),
-    //     amount: z.number(),
-    //     acceptedStatus: zEnumName,
-    //   })
-    // ),
+    // 사업 예산안
   }),
 };
 

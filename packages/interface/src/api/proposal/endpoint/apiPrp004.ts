@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
-
+import { zUserName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
@@ -10,64 +10,40 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
  *
  */
 
-const url = () => `/president/proposals/project-proposals/project-proposal`;
-const method = "POST";
 export const ApiPrp004RequestUrl =
   "/president/proposals/project-proposals/project-proposal";
 
-const requestParam = z.object({});
+export const ApiPrp004Method = "POST";
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
-  projectName: z.coerce.string().max(255),
-  startTerm: z.date(),
-  endTerm: z.date(),
-  teamName: z.coerce.string().max(30),
+export const ApiPrp004RequestBody = z.object({
+  projectName: z.string().max(255),
+  startTerm: z.coerce.date(),
+  endTerm: z.coerce.date(),
+  teamName: z.string().max(30),
   managerName: zUserName,
-  purpose: z.coerce.string(),
-  target: z.coerce.string(),
-  detail: z.coerce.string(),
+  purpose: z.string(),
+  target: z.string(),
+  detail: z.string(),
   timeLines: z.array(
     z.object({
-      detail: z.coerce.string(),
-      startTerm: z.date(),
-      endTerm: z.date(),
+      detail: z.string(),
+      startTerm: z.coerce.date(),
+      endTerm: z.coerce.date(),
+      note: z.string().optional(),
     }),
   ),
-  // 사업 계획서 검토 내역도 여기서 같이 넣어야 하나?
+  // 사업 계획서 검토 내역
 });
 
-const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({
-    projectProposalId: zId,
-  }),
-};
+export const ApiPrp004ResponseBody = z.object({
+  projectProposalId: zId,
+});
 
-const responseErrorMap = {};
-
-const apiPrp004 = {
-  url,
-  method,
-  requestParam,
-  requestQuery,
-  requestBody,
-  responseBodyMap,
-  responseErrorMap,
-};
-
-type ApiPrp004RequestParam = z.infer<typeof apiPrp004.requestParam>;
-type ApiPrp004RequestQuery = z.infer<typeof apiPrp004.requestQuery>;
-type ApiPrp004RequestBody = z.infer<typeof apiPrp004.requestBody>;
-type ApiPrp004ResponseCreated = z.infer<
-  (typeof apiPrp004.responseBodyMap)[201]
->;
-
-export default apiPrp004;
-
-export type {
-  ApiPrp004RequestParam,
-  ApiPrp004RequestQuery,
-  ApiPrp004RequestBody,
-  ApiPrp004ResponseCreated,
+export const apiPrp004 = {
+  url: ApiPrp004RequestUrl,
+  method: ApiPrp004Method,
+  requestBody: ApiPrp004RequestBody,
+  responseBodyMap: {
+    [HttpStatusCode.Created]: ApiPrp004ResponseBody,
+  },
 };
