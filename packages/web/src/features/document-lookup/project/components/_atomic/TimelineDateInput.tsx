@@ -84,6 +84,10 @@ const TimeLineDateInput: React.FC<TimeLineDateInputProps> = ({
           value={selectOption ?? TimelineDateTypeEnum.Undefined}
           onChange={option => {
             setSelectOption(option);
+            setFirstDate(null);
+            setSecondDate(null);
+            setFirstMonthText("");
+            setSecondMonthText("");
             onTypeChange(option);
           }}
           placeholder="유형 선택"
