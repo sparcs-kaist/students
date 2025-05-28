@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
 
 import { mockViewBudgetProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
@@ -24,6 +23,7 @@ import ThreeInput, {
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetProposalFrame";
 import ManagerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ManagerBudgetProposalFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 const BudgetProposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -107,7 +107,7 @@ const BudgetProposal = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => lookUp(selectedId as number)}

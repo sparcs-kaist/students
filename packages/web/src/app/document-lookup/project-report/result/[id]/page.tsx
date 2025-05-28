@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
 import { mockViewProjectReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
@@ -19,6 +18,7 @@ import ReviewerProjectReportFrame from "@sparcs-students/web/features/document-l
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerProjectReportFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectReportFrame";
 import ManagerProjectReportFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectReportFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 const Report = () => {
   const items: ThreeInputItem[] = mockData;
@@ -102,7 +102,7 @@ const Report = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => lookUp(selectedId as number)}

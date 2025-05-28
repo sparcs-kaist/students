@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
@@ -13,6 +12,7 @@ import { useRouter } from "next/navigation";
 import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 const documentLookUp = () => {
   const items: ThreeInputItem[] = mockData;
@@ -102,7 +102,7 @@ const documentLookUp = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => {
