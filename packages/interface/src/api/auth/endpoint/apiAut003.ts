@@ -1,12 +1,18 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { registry, restMethod } from "@sparcs-students/interface/open-api";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
+
 /**
  * @version v0.1
- * @description
+ * @description 로그아웃을 시도합니다.
  */
 
 const url = () => `/auth/sign-out`;
+export const ApiAut003RequestUrl = "/auth/sign-out";
 const method = "POST";
 
 const requestParam = z.object({});
@@ -44,3 +50,36 @@ export type {
   ApiAut003RequestBody,
   ApiAut003ResponseOk,
 };
+
+registry.registerPath({
+  tags: ["Auth"],
+  method: restMethod.method[method],
+  path: ApiAut003RequestUrl,
+  description: `
+  # AUT-003
+
+  로그아웃을 시도합니다.
+  `,
+  summary: "AUT-003: 로그아웃을 시도합니다.",
+  request: {
+    params: requestParam,
+    query: requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    [restMethod.code[method]]: {
+      description: "성공적으로 로그아웃 했습니다.",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[HttpStatusCode.Created],
+        },
+      },
+    },
+  },
+});

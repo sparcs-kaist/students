@@ -55,7 +55,7 @@ export type {
 
 registry.registerPath({
   tags: ["Semester"],
-  method: restMethod[method],
+  method: restMethod.method[method],
   path: ApiSem001RequestUrl,
   description: `
   # SEM-001
@@ -75,7 +75,7 @@ registry.registerPath({
     },
   },
   responses: {
-    200: {
+    [restMethod.code[method]]: {
       description: "성공적으로 학기 목록을 가져왔습니다.",
       content: {
         "application/json": {

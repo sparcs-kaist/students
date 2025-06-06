@@ -7,7 +7,10 @@ import express from "express";
 import * as swaggerUi from "swagger-ui-express";
 // import settings from "@sparcs-students/api/settings";
 import { env } from "@sparcs-students/api/env";
-import { generateOpenAPI } from "@sparcs-students/interface/open-api";
+import {
+  generateOpenAPI,
+  swaggerSortBySummary,
+} from "@sparcs-students/interface/open-api";
 import {
   HttpExceptionFilter,
   UnexpectedExceptionFilter,
@@ -32,23 +35,13 @@ async function bootstrap() {
     "",
     swaggerUi.serve,
     swaggerUi.setup(openApiSpec, {
-      swaggerOptions: {
-        operationsSorter: (
-          a: {
-            get: (arg0: string) => string;
-          },
-          b: {
-            get: (arg0: string) => string;
-          },
-        ) => {
-          const result = a.get("path").localeCompare(b.get("path"));
-          return result;
-        },
-      },
+      swaggerOptions: swaggerSortBySummary,
     }),
   );
   app.use("/docs", swaggerApp);
-
+  app.use("/swagger", (req, res) => {
+    res.json(JSON.stringify(openApiSpec));
+  });
   /* swagger 세팅 끝 */
 
   app.use(cookieParser());
