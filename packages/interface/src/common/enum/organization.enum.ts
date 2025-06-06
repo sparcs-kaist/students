@@ -23,6 +23,28 @@ export enum OrganizationStateEnum {
   Emergency, // 비대위
 }
 
+export enum MemberRoleEnum {
+  Chief = 1,
+  Vice,
+  Editor,
+  Member,
+}
+
+export const getMemberRoleEnum = (type: MemberRoleEnum | undefined) => {
+  switch (type) {
+    case MemberRoleEnum.Chief:
+      return "대표자";
+    case MemberRoleEnum.Vice:
+      return "부대표자";
+    case MemberRoleEnum.Editor:
+      return "예결산 편집자";
+    case MemberRoleEnum.Member:
+      return "부원";
+    default:
+      return "";
+  }
+};
+
 // OrganizationTypeE
 export const getDisplayNameOrganizationTypeEnum = (
   type: OrganizationTypeEnum | undefined,

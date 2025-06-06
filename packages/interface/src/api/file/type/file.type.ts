@@ -1,13 +1,14 @@
-import { zId } from "@sparcs-students/interface/common/type/ids";
 import { z } from "zod";
+import { zId } from "@sparcs-students/interface/common/type/ids";
+import { zFileName } from "@sparcs-students/interface/common/stringLength";
 
 export const zFile = z.object({
   id: zId,
-  name: z.string().max(255),
+  name: zFileName,
   extension: z.string().max(30),
   size: z.coerce.number(),
   url: z.string(),
-  userId: zId, // 엔티티적으로 그렇게 중요한 정보가 아니어서 그냥 id만 적음
+  userId: zId,
 });
 
 export type IFile = z.infer<typeof zFile>;

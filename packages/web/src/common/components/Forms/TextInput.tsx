@@ -1,19 +1,22 @@
 import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
 import styled, { css } from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
-// PhoneInput, RentalInput에서 사용하기 위해 export
+/* eslint-disable react/require-default-props */
 export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
   constant?: boolean;
+  isGroup?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
+/* eslint-enable react/require-default-props */
 
 export const errorBorderStyle = css`
   border-color: ${({ theme }) => theme.colors.RED[700]};
@@ -29,9 +32,18 @@ const constantStyle = css`
   cursor: not-allowed;
 `;
 
-const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
-  readOnly: constant,
-}))<TextInputProps & { hasError: boolean }>`
+const groupConstantStyle = css`
+  background-color: ${({ theme }) => theme.colors.GRAY[50]};
+  color: ${({ theme }) => theme.colors.GRAY[100]};
+`;
+
+const Input = styled.input
+  .withConfig({
+    shouldForwardProp: prop => isPropValid(prop),
+  })
+  .attrs<TextInputProps>(({ constant }) => ({
+    readOnly: constant,
+  }))<TextInputProps & { hasError: boolean }>`
   display: block;
   width: 100%;
   padding: 8px 12px 8px 12px;
@@ -59,6 +71,7 @@ const Input = styled.input.attrs<TextInputProps>(({ constant }) => ({
   ${({ constant }) => constant && constantStyle}
   ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
+  ${({ constant, isGroup }) => isGroup && constant && groupConstantStyle}
 `;
 
 export const InputWrapper = styled.div`
@@ -75,45 +88,54 @@ export const InputContainer = styled.div`
   align-items: center;
 `;
 
-// Component
-const TextInput: React.FC<TextInputProps> = ({
-  label = "",
-  placeholder,
-  errorMessage = "",
-  disabled = false,
-  value = "",
-  handleChange = () => {},
-  setErrorStatus = () => {},
-  ...props
-}) => {
-  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    handleChange(inputValue);
-  };
+const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
+  (
+    {
+      label = "",
+      placeholder,
+      errorMessage = "",
+      disabled = false,
+      constant = false,
+      isGroup = false,
+      value = "",
+      handleChange = () => {},
+      setErrorStatus = () => {},
+      ...props
+    },
+    ref,
+  ) => {
+    const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.target.value;
+      handleChange(inputValue);
+    };
 
-  useEffect(() => {
-    const hasError = !!errorMessage;
-    if (setErrorStatus) {
-      setErrorStatus(hasError);
-    }
-  }, [errorMessage, setErrorStatus]);
+    useEffect(() => {
+      const hasError = !!errorMessage;
+      if (setErrorStatus) {
+        setErrorStatus(hasError);
+      }
+    }, [errorMessage, setErrorStatus]);
 
-  return (
-    <InputWrapper>
-      {label && <Label>{label}</Label>}
-      <InputContainer>
-        <Input
-          placeholder={placeholder}
-          hasError={!!errorMessage}
-          disabled={disabled}
-          value={value}
-          onChange={handleValueChange}
-          {...props}
-        />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </InputContainer>
-    </InputWrapper>
-  );
-};
+    return (
+      <InputWrapper>
+        {label && <Label>{label}</Label>}
+        <InputContainer>
+          <Input
+            ref={ref}
+            placeholder={placeholder}
+            hasError={!!errorMessage}
+            disabled={disabled}
+            constant={constant}
+            isGroup={isGroup}
+            value={value}
+            onChange={handleValueChange}
+            {...props}
+          />
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        </InputContainer>
+      </InputWrapper>
+    );
+  },
+);
 
 export default TextInput;

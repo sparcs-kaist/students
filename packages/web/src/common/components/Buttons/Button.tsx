@@ -9,6 +9,10 @@ Custom Children을 넣고자 하면, iconType, buttonText 전달X
 
 "use client";
 
+/*
+
+ */
+
 import React, { HTMLAttributes } from "react";
 import styled from "styled-components";
 import Icon from "@sparcs-students/web/common/components/Icon";
@@ -19,6 +23,7 @@ type ButtonProps = {
   children?: React.ReactNode;
   iconType?: string;
   buttonText?: string;
+  onClick?: (() => void) | ((e: React.MouseEvent<HTMLDivElement>) => void);
 } & HTMLAttributes<HTMLDivElement>;
 
 const ButtonInner = styled.div`
@@ -110,6 +115,7 @@ const Button = ({
   children = undefined,
   iconType = "",
   buttonText = "",
+
   ...divProps
 }: ButtonProps) => {
   const ButtonChosenInner = ButtonTypeInner[type];

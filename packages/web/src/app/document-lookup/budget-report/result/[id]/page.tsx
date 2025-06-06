@@ -1,151 +1,75 @@
 "use client";
 
 import React, { useState } from "react";
-// import { useParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import ViewResult from "@sparcs-students/web/features/documents/components/ViewResult";
-import ViewerIncomeTable, {
-  ViewerIncomeProps,
-} from "@sparcs-students/web/features/budget/components/ViewerIncomeTable";
-import ViewerExpenditureTable, {
-  ViewerExpenditureProps,
-} from "@sparcs-students/web/features/documents/components/ViewerExpenditureTable";
-import TotalTable, {
-  TotalProps,
-} from "@sparcs-students/web/features/documents/components/TotalTable";
-import {
-  mockViewerExpenditureData,
-  mockViewerIncomeData,
-  mockViewResultData,
-} from "@sparcs-students/web/features/budget/services/_mock/mockProposalTableData";
+import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+import { mockViewBudgetReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
-import { mockData } from "@sparcs-students/web/features/documents/components/ThreeInput/mock";
+import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
 import ThreeInput, {
   ThreeInputItem,
-} from "@sparcs-students/web/features/documents/components/ThreeInput";
-import { BudgetDomainEnum } from "@sparcs-students/interface/common/enum/budget.enum";
-import { useParams } from "next/navigation";
+} from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+// import ManagerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetReportFrame";
+import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetReportFrame";
+// import ViewerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetReportFrame";
+import { useRouter, useSearchParams } from "next/navigation";
+import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
+import ViewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetReportFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
-interface DomainAccum {
-  incomeLastYear: number;
-  incomeThisYear: number;
-  expenditureLastYear: number;
-  expenditureThisYear: number;
-}
-
-const dataToTotal = (
-  incomeData: ViewerIncomeProps[],
-  expenditureData: ViewerExpenditureProps[],
-) => {
-  const incomeMap = incomeData.reduce<Record<BudgetDomainEnum, DomainAccum>>(
-    (acc, cur) => {
-      const { budgetDomain, lastYear, thisYear } = cur;
-
-      const prev = acc[budgetDomain] ?? {
-        incomeLastYear: 0,
-        incomeThisYear: 0,
-        expenditureLastYear: 0,
-        expenditureThisYear: 0,
-      };
-
-      return {
-        ...acc,
-        [budgetDomain]: {
-          ...prev,
-          incomeLastYear: prev.incomeLastYear + lastYear,
-          incomeThisYear: prev.incomeThisYear + thisYear,
-        },
-      };
-    },
-    {} as Record<BudgetDomainEnum, DomainAccum>,
-  );
-
-  const combinedMap = expenditureData.reduce<
-    Record<BudgetDomainEnum, DomainAccum>
-  >((acc, cur) => {
-    const { budgetDomain, lastYear, thisYear } = cur;
-
-    const prev = acc[budgetDomain] ?? {
-      incomeLastYear: 0,
-      incomeThisYear: 0,
-      expenditureLastYear: 0,
-      expenditureThisYear: 0,
-    };
-
-    return {
-      ...acc,
-      [budgetDomain]: {
-        ...prev,
-        expenditureLastYear: prev.expenditureLastYear + lastYear,
-        expenditureThisYear: prev.expenditureThisYear + thisYear,
-      },
-    };
-  }, incomeMap);
-
-  const resultArray = Object.entries(combinedMap).reduce<TotalProps[]>(
-    (acc, [key, sums]) => {
-      const domain = Number(key) as BudgetDomainEnum;
-
-      const incomeRow = {
-        budgetDomain: domain,
-        type: "수입",
-        lastYear: sums.incomeLastYear,
-        thisYear: sums.incomeThisYear,
-        ratio:
-          sums.incomeLastYear === 0
-            ? null
-            : (sums.incomeThisYear / sums.incomeLastYear) * 100,
-      };
-
-      const expenditureRow = {
-        budgetDomain: domain,
-        type: "지출",
-        lastYear: sums.expenditureLastYear,
-        thisYear: sums.expenditureThisYear,
-        ratio:
-          sums.expenditureLastYear === 0
-            ? null
-            : (sums.expenditureThisYear / sums.expenditureLastYear) * 100,
-      };
-
-      const totalLastYear = sums.incomeLastYear - sums.expenditureLastYear;
-      const totalThisYear = sums.incomeThisYear - sums.expenditureThisYear;
-      const totalRow = {
-        budgetDomain: domain,
-        type: "총계",
-        lastYear: totalLastYear,
-        thisYear: totalThisYear,
-        ratio:
-          totalLastYear === 0 ? null : (totalThisYear / totalLastYear) * 100,
-      };
-
-      return [...acc, incomeRow, expenditureRow, totalRow];
-    },
-    [] as {
-      budgetDomain: BudgetDomainEnum;
-      type: string;
-      lastYear: number;
-      thisYear: number;
-      ratio: number;
-    }[],
-  );
-
-  return resultArray;
-};
-
-const Proposal = () => {
-  const { id } = useParams();
+const Report = () => {
+  // const { id } = useParams();
   const items: ThreeInputItem[] = mockData;
-  const [date, setDate] = useState(mockViewResultData.submitDate);
-  const [year, setYear] = useState<number>(items[0].year);
-  const [isSpring, setIsSpring] = useState<boolean>(items[0].value.isSpring);
-  const [type, setType] = useState<DocumentType>(DocumentType.BudgetProposal);
-  const [selectedKey, setSelectedKey] = useState<string>(""); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string>(""); // TODO: enum으로 변경
+  const searchParams = useSearchParams();
+  const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
+  const queryIsSpring = searchParams.get("isSpring") === "true";
+  const queryType = searchParams.get("type") as DocumentType | null;
+  const queryKey = searchParams.get("key");
+  const queryValue = searchParams.get("value");
+  const queryId = parseInt(searchParams.get("id") || "");
+
+  const [date, setDate] = useState(mockViewBudgetReportResultData.submitDate);
+  const [year, setYear] = useState<number>(queryYear);
+  const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
+  const [type, setType] = useState<DocumentType | null>(queryType);
+  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
+  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
+  const [selectedId, setSelectedId] = useState<number | null>(queryId);
+  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+
+  const router = useRouter();
+
+  const lookUp = (id: number) => {
+    const query = new URLSearchParams({
+      year: String(year),
+      isSpring: String(isSpring),
+      type: String(type),
+      key: selectedKey ?? "",
+      value: selectedValue ?? "",
+      id: String(id),
+    }).toString();
+
+    switch (type) {
+      case "사업 계획서":
+        router.push(`/document-lookup/project-proposal/result/${id}?${query}`);
+        break;
+      case "사업 보고서":
+        router.push(`/document-lookup/project-report/result/${id}?${query}`);
+        break;
+      case "예산안":
+        router.push(`/document-lookup/budget-proposal/result/${id}?${query}`);
+        break;
+      case "결산":
+        router.push(`/document-lookup/budget-report/result/${id}?${query}`);
+        break;
+      default:
+        throw new Error(`잘못된 문서 유형: ${type}`);
+    }
+  };
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -177,28 +101,33 @@ const Proposal = () => {
               setSelectedKey={setSelectedKey}
               selectedValue={selectedValue}
               setSelectedValue={setSelectedValue}
+              setSelectedId={setSelectedId}
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button buttonText="조회" style={{ marginLeft: "auto" }} />
+            <ModalTableButton
+              buttonText="조회"
+              style={{ marginLeft: "auto" }}
+              onClick={() => lookUp(selectedId as number)}
+            />
           </FlexWrapper>
         </FlexWrapper>
         <ViewResult
-          {...mockViewResultData}
+          {...mockViewBudgetReportResultData}
           submitDate={date}
           handleDateChange={setDate}
         />
-        <ViewerIncomeTable data={mockViewerIncomeData} />
-        <ViewerExpenditureTable
-          data={mockViewerExpenditureData}
-          type="report"
-          pageId={id}
-        />
-        <TotalTable
-          data={dataToTotal(mockViewerIncomeData, mockViewerExpenditureData)}
-        />
+        {userPermission === UserPermission.Viewer && (
+          <ViewerBudgetReportFrame />
+        )}
+        {userPermission === UserPermission.Reviewer && (
+          <ReviewerBudgetReportFrame />
+        )}
+        {/* {userPermission === UserPermission.Manager && ( */}
+        {/*   <ManagerBudgetReportFrame /> */}
+        {/* )} */}
       </FlexWrapper>
     </FlexWrapper>
   );
 };
-export default Proposal;
+export default Report;

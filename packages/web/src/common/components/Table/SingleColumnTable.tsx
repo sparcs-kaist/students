@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { useRouter } from "next/navigation";
+import isPropValid from "@emotion/is-prop-valid";
 import TextButton from "../Buttons/TextButton";
 
 interface TableProps {
@@ -18,7 +19,9 @@ interface TableRowProps {
   mini?: boolean;
 }
 
-const TableWrapper = styled.div<TableRowProps>`
+const TableWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -31,14 +34,18 @@ const TableWrapper = styled.div<TableRowProps>`
   }
 `;
 
-const HeaderText = styled.div<TableRowProps>`
+const HeaderText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   font-size: ${({ mini }) => (mini ? "14px" : "18px")};
   line-height: ${({ mini }) => (mini ? "12px" : "20px")};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
   color: ${({ theme }) => theme.colors.WHITE};
 `;
 
-const TableHeader = styled.div<TableRowProps>`
+const TableHeader = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,7 +55,9 @@ const TableHeader = styled.div<TableRowProps>`
   font-weight: bold;
 `;
 
-const TableRow = styled.div<TableRowProps>`
+const TableRow = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,21 +79,27 @@ const TableRow = styled.div<TableRowProps>`
   }
 `;
 
-const TableRowText = styled.div<TableRowProps>`
+const TableRowText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   font-size: ${({ mini }) => (mini ? "12px" : "16px")};
   line-height: ${({ mini }) => (mini ? "12px" : "20px")};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const EmptyRowText = styled.div<TableRowProps>`
+const EmptyRowText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   font-size: ${({ mini }) => (mini ? "12px" : "16px")};
   line-height: ${({ mini }) => (mini ? "12px" : "20px")};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
-const TableRowContents = styled.div<TableRowProps>`
+const TableRowContents = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TableRowProps>`
   gap: ${({ mini }) => (mini ? "5px" : "10px")};
   justify-content: flex-start;
   align-items: center;

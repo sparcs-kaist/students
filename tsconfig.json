@@ -16,7 +16,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "removeComments": true,
-    "noEmit": false
+    "noEmit": false,
+    "paths": {
+      "@sparcs-students/root/*": ["./*"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }
