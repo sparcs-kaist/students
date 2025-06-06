@@ -1,13 +1,16 @@
 import { NestFactory } from "@nestjs/core";
 import { HttpException } from "@nestjs/common";
 import { ZodError } from "zod";
-import { SwaggerModule } from "@nestjs/swagger";
 import session from "express-session";
 import cookieParser from "cookie-parser";
-
-import settings from "@sparcs-students/api/settings";
+import express from "express";
+import * as swaggerUi from "swagger-ui-express";
+// import settings from "@sparcs-students/api/settings";
 import { env } from "@sparcs-students/api/env";
-
+import {
+  generateOpenAPI,
+  swaggerSortBySummary,
+} from "@sparcs-students/interface/open-api";
 import {
   HttpExceptionFilter,
   UnexpectedExceptionFilter,
@@ -18,11 +21,29 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   // console.log(`NODE_ENV environment: ${process.env.NODE_ENV}`);
   const app = await NestFactory.create(AppModule);
-  const document = SwaggerModule.createDocument(
-    app,
-    settings().getSwaggerConfig(),
+
+  // swagger with openapi
+  /* swagger 세팅 시작 THX to hama */
+  // OpenAPI 스펙 생성
+
+  const openApiSpec = generateOpenAPI();
+  // Swagger UI 제공 (NestJS 기본 SwaggerModule 사용 불가)
+  // SwaggerModule을 사용하는 NestJS Zod OpenAPI의 경우 ts config strict 를 켜야 함.
+  // https://www.npmjs.com/package/@wahyubucil/nestjs-zod-openapi
+  const swaggerApp = express();
+  swaggerApp.use(
+    "",
+    swaggerUi.serve,
+    swaggerUi.setup(openApiSpec, {
+      swaggerOptions: swaggerSortBySummary,
+    }),
   );
-  SwaggerModule.setup("api/docs", app, document);
+  app.use("/docs", swaggerApp);
+  app.use("/swagger", (req, res) => {
+    res.json(JSON.stringify(openApiSpec));
+  });
+  /* swagger 세팅 끝 */
+
   app.use(cookieParser());
 
   app.use(

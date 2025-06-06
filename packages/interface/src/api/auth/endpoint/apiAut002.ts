@@ -1,5 +1,10 @@
+import { registry, restMethod } from "@sparcs-students/interface/open-api";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
+
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
 
 /**
  * @version v0.1
@@ -7,6 +12,7 @@ import { z } from "zod";
  */
 
 const url = () => `/auth/refresh`;
+export const ApiAut002RequestUrl = "/auth/refresh";
 const method = "POST";
 
 const requestParam = z.object({});
@@ -48,3 +54,36 @@ export type {
   ApiAut002RequestBody,
   ApiAut002ResponseCreated,
 };
+
+registry.registerPath({
+  tags: ["Auth"],
+  method: restMethod.method[method],
+  path: ApiAut002RequestUrl,
+  description: `
+  # AUT-002
+
+  만료된 access token을 재발급 합니다.
+  `,
+  summary: "AUT-002: 만료된 access token을 재발급 합니다.",
+  request: {
+    params: requestParam,
+    query: requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    [restMethod.code[method]]: {
+      description: "성공적으로 만료된 access token을 재발급 했습니다.",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[HttpStatusCode.Created],
+        },
+      },
+    },
+  },
+});
