@@ -10,9 +10,10 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import { OrganizationModule } from "./feature/organization/organization.module";
+import { SemesterModule } from "./feature/semester/semester.module";
 
 @Module({
-  imports: [DrizzleModule, OrganizationModule, AuthModule],
+  imports: [DrizzleModule, OrganizationModule, AuthModule, SemesterModule],
   controllers: [AppController],
   providers: [
     {
