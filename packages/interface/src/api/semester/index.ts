@@ -15,7 +15,7 @@ const zDomainModels = z.object({
 registry.registerPath({
   tags: ["Semester"],
   method: "head",
-  path: "/#/Semester",
+  path: "/#/",
   summary: "SEM-???: Semester 도메인",
   description: `
     TODO: 학기에 관한 도메인 설명 추가하기

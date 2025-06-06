@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { takeSole } from "@sparcs-students/api/common/util/util";
+import { takeOnlyOne } from "@sparcs-students/api/common/util/util";
 
 import { MFile } from "../model/file.model";
 import { FileRepository } from "../repository/file.repository";
@@ -18,7 +18,7 @@ export class FilePublicService {
   async getFileInfoById(fileId: number): Promise<MFile> {
     const file = await this.fileRepository
       .find({ id: fileId })
-      .then(takeSole("File"));
+      .then(takeOnlyOne("File"));
 
     return file;
   }

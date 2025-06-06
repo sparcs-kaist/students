@@ -1,16 +1,22 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+import { registry, restMethod } from "@sparcs-students/interface/open-api";
 import { zFile } from "../type/file.type";
+
+extendZodWithOpenApi(z);
 
 /**
  * @version v0.1
- * @description 파일 업로드를 위한 url과 flieId를 받아옵니다.
+ * @description S3 업로드를 위해 presigned url을 발급합니다.
  * - 로그인되어 있어야 사용 가능합니다.
  * - 제출한 metadata 개수만큼의 URL과 filedId pair를 제공합니다.
  */
 
 const url = () => `/files/upload`;
+export const ApiFil001RequestUrl = url();
 const method = "POST";
 
 const requestParam = z.object({});
@@ -21,8 +27,10 @@ const requestBody = z.object({
   metadata: z.array(
     z.object({
       name: zFile.shape.name,
-      type: z.string().max(256), // aws s3 업로드 presigned url을 위한 타입
       size: zFile.shape.size,
+      type: z.string().max(256).openapi({
+        description: "aws s3 업로드 presigned url을 위한 MIME type",
+      }),
     }),
   ),
 });
@@ -66,3 +74,41 @@ export type {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
 };
+
+registry.registerPath({
+  tags: ["File"],
+  method: restMethod.method[method],
+  path: ApiFil001RequestUrl,
+  description: `
+  # FIL-001
+
+  S3 업로드를 위해 presigned url을 발급합니다.
+
+  - 로그인되어 있어야 사용 가능합니다.
+  - 제출한 metadata 개수만큼의 URL과 filedId pair를 제공합니다.
+
+  `,
+  summary: "FIL-001: S3 업로드를 위한 presigned url 발급",
+  request: {
+    params: requestParam,
+    query: requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    [restMethod.code[method]]: {
+      description:
+        "성공적으로 S3 업로드를 위한 presigned url 발급을 처리했습니다.",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[restMethod.code[method]],
+        },
+      },
+    },
+  },
+});
