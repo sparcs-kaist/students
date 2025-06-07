@@ -26,6 +26,6 @@ import { FileService } from "./service/file.service";
         }),
     },
   ],
-  exports: [FilePublicService],
+  exports: [FilePublicService, FileRepository],
 })
 export default class FileModule {}

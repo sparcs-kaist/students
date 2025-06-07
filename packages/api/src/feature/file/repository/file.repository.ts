@@ -1,140 +1,95 @@
+import { Injectable } from "@nestjs/common";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
 import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
-import { and, eq, inArray, SQL, isNull, count } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
-import {
-  DrizzleAsyncProvider,
-  DrizzleTransaction,
-} from "src/drizzle/drizzle.provider";
-import { File } from "src/drizzle/schema/file.schema";
+  BaseRepositoryFindQuery,
+  BaseRepositoryQuery,
+  BaseTableFieldMapKeys,
+  TableWithID,
+} from "@sparcs-students/api/common/base/base.repository";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { File } from "@sparcs-students/api/drizzle/schema/file.schema";
+import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
+import { IFileCreate, MFile } from "../model/file.model";
 
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-import { MFile } from "../model/file.model";
-
-type IFileQuery = {
-  id?: number;
-  ids?: number[];
-  userId?: number;
-};
-
-type IFileCreate = {
-  name: string;
-  extension: string;
-  size: number;
-  signedAt: Date;
+type FileQuery = {
   userId: number;
 };
 
+type FileOrderByKeys = "id";
+type FileQuerySupport = EmptyObject; // Query Support 용
+
+type FileTable = typeof File;
+type FileDbSelect = InferSelectModel<FileTable>;
+type FileDbUpdate = Partial<FileDbSelect>;
+type FileDbInsert = InferInsertModel<FileTable>;
+
+type FileFieldMapKeys = BaseTableFieldMapKeys<
+  FileQuery,
+  FileOrderByKeys,
+  FileQuerySupport
+>;
+
+export type FileRepositoryFindQuery = BaseRepositoryFindQuery<
+  FileQuery,
+  FileOrderByKeys
+>;
+export type FileRepositoryQuery = BaseRepositoryQuery<FileQuery>;
+
 @Injectable()
-export class FileRepository {
-  constructor(
-    @Inject(DrizzleAsyncProvider) private db: MySql2Database,
-    private readonly s3Client: S3Client,
-  ) {}
-
-  async withTransaction<Result>(
-    callback: (tx: DrizzleTransaction) => Promise<Result>,
-  ): Promise<Result> {
-    return this.db.transaction(callback);
+export class FileRepository extends BaseSingleTableRepository<
+  MFile,
+  IFileCreate,
+  FileTable,
+  FileQuery,
+  FileOrderByKeys,
+  FileQuerySupport
+> {
+  constructor() {
+    super(File, MFile);
   }
 
-  private makeWhereClause(param: IFileQuery): SQL[] {
-    const whereClause: SQL[] = [];
-    if (param.id) {
-      whereClause.push(eq(File.id, param.id));
-    }
-    if (param.ids) {
-      whereClause.push(inArray(File.id, param.ids));
-    }
-    if (param.userId) {
-      whereClause.push(eq(File.userId, param.userId));
-    }
-    whereClause.push(isNull(File.deletedAt));
-
-    return whereClause;
+  protected dbToModelMapping(result: FileDbSelect): MFile {
+    return new MFile({
+      id: result.id,
+      name: result.name,
+      extension: result.extension,
+      size: result.size,
+      signedAt: result.signedAt,
+      userId: result.userId,
+    });
   }
 
-  async countTx(tx: DrizzleTransaction, query: IFileQuery): Promise<number> {
-    const whereClause = this.makeWhereClause(query);
-    const cnt = await tx
-      .select({ count: count() })
-      .from(File)
-      .where(and(...whereClause));
-    return cnt[0].count;
+  protected modelToDBMapping(model: MFile): FileDbUpdate {
+    return {
+      id: model.id,
+      name: model.name,
+      extension: model.extension,
+      size: model.size,
+      userId: model.userId,
+    };
   }
 
-  async count(query: IFileQuery): Promise<number> {
-    return this.withTransaction(tx => this.countTx(tx, query));
+  protected createToDBMapping(model: IFileCreate): FileDbInsert {
+    return {
+      name: model.name,
+      extension: model.extension,
+      size: model.size,
+      userId: model.userId,
+      signedAt: model.signedAt,
+    };
   }
 
-  async findTx(tx: DrizzleTransaction, query: IFileQuery): Promise<MFile[]> {
-    const whereClause = this.makeWhereClause(query);
-    const files = await tx
-      .select()
-      .from(File)
-      .where(and(...whereClause));
+  protected fieldMap(field: FileFieldMapKeys): TableWithID | null | undefined {
+    const fieldMappings: Record<FileFieldMapKeys, TableWithID | null> = {
+      id: File,
+      userId: File,
+    };
 
-    const filesWithUrl = await Promise.all(
-      files.map(async file => {
-        // 내가 S3에 하려는 작업을 명시한다.
-        const command = new GetObjectCommand({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: this.getFileKey(file),
-        });
-
-        const url = await getSignedUrl(this.s3Client, command, {
-          expiresIn: 600,
-        });
-
-        return {
-          ...file,
-          url,
-        };
-      }),
-    );
-
-    return filesWithUrl.map(file => MFile.fromDbResult(file));
-  }
-
-  async find(query: IFileQuery): Promise<MFile[]> {
-    return this.withTransaction(tx => this.findTx(tx, query));
-  }
-
-  async insertTx(tx: DrizzleTransaction, param: IFileCreate): Promise<number> {
-    const [fileId] = await tx.insert(File).values(param);
-
-    if (!fileId.insertId) {
-      throw new InternalServerErrorException("File insert failed");
+    if (!(field in fieldMappings)) {
+      return undefined;
     }
 
-    return fileId.insertId;
-  }
-
-  async insert(param: IFileCreate): Promise<number> {
-    return this.withTransaction(tx => this.insertTx(tx, param));
-  }
-
-  async deleteTx(tx: DrizzleTransaction, fileId: number): Promise<void> {
-    const [res] = await tx
-      .update(File)
-      .set({ deletedAt: new Date() })
-      .where(eq(File.id, fileId));
-
-    if (!res.affectedRows) {
-      throw new InternalServerErrorException("File is not deleted");
-    }
-  }
-
-  async delete(fileId: number): Promise<void> {
-    return this.withTransaction(tx => this.deleteTx(tx, fileId));
-  }
-
-  private getFileKey(file: { userId: number; signedAt: Date; name: string }) {
-    return `file/${file.userId}.${file.signedAt.valueOf()}.${file.name}`;
+    return fieldMappings[field];
   }
 }

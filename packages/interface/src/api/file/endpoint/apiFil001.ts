@@ -39,7 +39,9 @@ const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
     files: z.array(
       z.object({
-        uploadUrl: zFile.shape.url,
+        uploadUrl: z.string().openapi({
+          description: "파일 업로드 URL",
+        }),
         id: zFile.shape.id,
         name: zFile.shape.name,
       }),

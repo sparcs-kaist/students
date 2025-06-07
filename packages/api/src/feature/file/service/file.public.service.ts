@@ -1,43 +1,41 @@
 import { Injectable } from "@nestjs/common";
-import { takeOnlyOne } from "@sparcs-students/api/common/util/util";
 
-import { MFile } from "../model/file.model";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+import { MFile, RMFile } from "../model/file.model";
 import { FileRepository } from "../repository/file.repository";
+import { getFileKey } from "../file.util";
 
 @Injectable()
 export class FilePublicService {
-  constructor(private readonly fileRepository: FileRepository) {}
+  constructor(
+    private readonly fileRepository: FileRepository,
+    private readonly s3Client: S3Client,
+  ) {}
 
   /**
-   * fileId에 해당하는 파일의 정보를 가져옵니다.
-   * @param fileId 파일의 id
-   * @returns 파일의 정보
-   * @throws NotFoundException 파일이 존재하지 않을 경우
-   * @throws NotFoundException 파일 URL이 존재하지 않을 경우
+   * MFile을 받고 RMFile을 반환합니다.
+   * @param files MFile[]
+   * @returns RMFile[]
    * */
-  async getFileInfoById(fileId: number): Promise<MFile> {
-    const file = await this.fileRepository
-      .find({ id: fileId })
-      .then(takeOnlyOne("File"));
-
-    return file;
-  }
-
-  /**
-   * fileId Array에 해당하는 파일의 정보를 가져옵니다.
-   * @param fileIds 파일의 id
-   * @returns 파일의 정보
-   * @throws NotFoundException 파일이 하나라도 존재하지 않을 경우
-   * @throws NotFoundException 파일 URL이 하나라도 존재하지 않을 경우
-   * */
-  async getFilesByIds(fileIds: number[]): Promise<MFile[]> {
-    const files = await this.fileRepository.find({ ids: fileIds });
-    return files;
-  }
-
-  async deleteFilesByIds(fileIds: number[]): Promise<void> {
-    await Promise.all(
-      fileIds.map(fileId => this.fileRepository.delete(fileId)),
+  async getFileInfoById(files: MFile[]): Promise<RMFile[]> {
+    return Promise.all(
+      files.map(async file => ({
+        id: file.id,
+        name: file.name,
+        extension: file.extension,
+        size: file.size,
+        url: await this.getFileUrl(file),
+      })),
     );
+  }
+
+  private async getFileUrl(file: MFile): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: getFileKey(file),
+    });
+    return getSignedUrl(this.s3Client, command, { expiresIn: 600 });
   }
 }

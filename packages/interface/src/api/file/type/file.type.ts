@@ -19,8 +19,8 @@ export const zFile = z
     size: z.coerce.number().openapi({
       description: "파일 크기",
     }),
-    url: z.string().openapi({
-      description: "파일 Presigned URL",
+    signedAt: z.date().openapi({
+      description: "파일 업로드 시간",
     }),
     userId: zId.openapi({
       description: "파일 소유자 ID",
@@ -28,4 +28,17 @@ export const zFile = z
   })
   .openapi("File");
 
+export const zrFile = z
+  .object({
+    id: zFile.shape.id,
+    name: zFile.shape.name,
+    extension: zFile.shape.extension,
+    size: zFile.shape.size,
+    url: z.string().openapi({
+      description: "파일 Presigned URL",
+    }),
+  })
+  .openapi("File");
+
 export type IFile = z.infer<typeof zFile>;
+export type IRFile = z.infer<typeof zrFile>;
