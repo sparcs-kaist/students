@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Typography from "../Typography";
 import FlexWrapper from "../FlexWrapper";
-import TextInput from "../Forms/TextInput";
+import PhoneInput from "../Forms/PhoneInput";
 
 interface TelEditingModalContentProps {
   onClose: () => void;
@@ -33,27 +33,12 @@ const TelEditingModalContent: React.FC<TelEditingModalContentProps> = ({
   default: defaultTel = "",
 }) => {
   const [value, setValue] = useState(defaultTel);
-  const formatPhoneNumber = (input: string) => {
-    const digits = input.replace(/\D/g, "");
-
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
-  };
   const isValidPhoneNumber = (input: string) => /^010-\d{4}-\d{4}$/.test(input);
 
   const isValid = isValidPhoneNumber(value);
 
-  const [errorMessage, setErrorMessage] = useState("");
-
   const handleInputChange = (val: string) => {
-    setValue(formatPhoneNumber(val));
-
-    if (!/^010-\d{4}-\d{4}$/.test(val)) {
-      setErrorMessage("유효한 전화번호 형식이 아닙니다.");
-    } else {
-      setErrorMessage("");
-    }
+    setValue(val);
   };
 
   return (
@@ -67,11 +52,11 @@ const TelEditingModalContent: React.FC<TelEditingModalContentProps> = ({
         >
           전화번호 변경
         </Typography>
-        <TextInput
-          placeholder="010-xxxx-xxxx"
+        <PhoneInput
+          label="전화번호"
+          placeholder="010-XXXX-XXXX"
           value={value}
-          onChange={e => handleInputChange(e.target.value)}
-          errorMessage={errorMessage}
+          handleChange={handleInputChange}
         />
       </FlexWrapper>
       <ButtonWrapper>
