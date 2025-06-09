@@ -14,10 +14,11 @@ import { useEffect, useState } from "react";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import styled from "styled-components";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
+
 import {
   getOrgainizationRoleTag,
   getOrganizationRegisterStatusTag,
-} from "../../document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import {
   OrganizationRegisterStatusEnum,
   OrganizationRoleTypeEnum,
