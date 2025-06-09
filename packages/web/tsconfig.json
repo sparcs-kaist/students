@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@sparcs-students/root/*": ["../../*"],
-      "@sparcs-students/web/*": ["./src/*"],
+      "@sparcs-students/web/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
