@@ -1,8 +1,8 @@
 "use client";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import ProfileCard from "@sparcs-students/web/common/components/ProfileCard";
-import StudentFeeCard from "@sparcs-students/web/common/components/StudentFeeCard";
+import ProfileCard from "@sparcs-students/web/features/my/components/ProfileCard";
+import StudentFeeCard from "@sparcs-students/web/features/my/components/StudentFeeCard";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import MyOrganizationTable from "@sparcs-students/web/features/my/components/MyOrganizationTable";
 

@@ -2,10 +2,12 @@
 
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import Typography from "./Typography";
-import FlexWrapper from "./FlexWrapper";
-import Icon from "./Icon";
-import TextButton from "./Buttons/TextButton";
+import isPropValid from "@emotion/is-prop-valid";
+
+import Typography from "@sparcs-students/web/common/components/Typography";
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import Icon from "@sparcs-students/web/common/components/Icon";
+import TextButton from "@sparcs-students/web/common/components/Buttons/TextButton";
 
 const CardWrapper = styled.div`
   display: flex;
@@ -26,7 +28,9 @@ const TitleWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const RatioTile = styled.div<{ isFilled: boolean }>`
+const RatioTile = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isFilled: boolean }>`
   height: 24px;
   display: flex;
   flex: 1;
@@ -57,8 +61,6 @@ const StudentFeeCard = () => {
     id: index,
     isFilled: index < semester,
   }));
-
-  console.log(tiles);
 
   return (
     <CardWrapper>

@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import TextButton from "@sparcs-students/web/common/components/Buttons/TextButton";
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import Modal from "@sparcs-students/web/common/components/Modal";
+import TelEditingModalContent from "@sparcs-students/web/common/components/Modal/TelEditingModalContent";
+import Typography from "@sparcs-students/web/common/components/Typography";
 import { useState } from "react";
 import styled from "styled-components";
-import Typography from "./Typography";
-import FlexWrapper from "./FlexWrapper";
-import TextButton from "./Buttons/TextButton";
-import Modal from "./Modal";
-import TelEditingModalContent from "./Modal/TelEditingModalContent";
 
 const CardWrapper = styled.div`
   display: flex;
@@ -15,10 +17,12 @@ const CardWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
 `;
 const ProfileCard = () => {
+  // TODO : Api 연결
   const [tel, setTel] = useState("010-0000-0000");
-  const studentID = 20240602;
-  const department = "수리과학과/학사";
-  const clubs = ["SPARCS/정회원", "학부총학생회/국원"];
+  const [studentID, setStudentID] = useState(20240602);
+  const [department, setDepartment] = useState("수리과학과/학사");
+  const [clubs, setClubs] = useState(["SPARCS/정회원", "학부총학생회/국원"]);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEditOnclick = () => {
