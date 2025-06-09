@@ -28,7 +28,7 @@ import {
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import {
   BudgetClassExpenseEnum,
   BudgetDivisionExpenseEnum,
@@ -48,7 +48,7 @@ import {
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import { FormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
+import { ProposalFormValues } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
 import isEqual from "lodash/isEqual"; // CHACHA: array끼리 비교하는 데 필요함. lodash 통으로 import 하면 번들 너무 커짐
 
@@ -74,8 +74,8 @@ interface ManagerExpenditureTableProps {
 }
 
 interface TableRowProps {
-  setValue: UseFormSetValue<FormValues>;
-  getValues: UseFormGetValues<FormValues>;
+  setValue: UseFormSetValue<ProposalFormValues>;
+  getValues: UseFormGetValues<ProposalFormValues>;
   rowIndex: number;
   changeCode: () => void;
   deleteRow: (rowIndex: number) => void;
@@ -454,7 +454,7 @@ const ManagerExpenditureTableInProjectDetail: React.FC<
   projectTitleFromDetailFrame = "",
   onValuesChange = () => {},
 }) => {
-  const formMethods = useForm<FormValues>({
+  const formMethods = useForm<ProposalFormValues>({
     defaultValues: {
       expenditures: initialData.length > 0 ? initialData : [],
     },
@@ -632,7 +632,7 @@ const ManagerExpenditureTableInProjectDetail: React.FC<
     }, 0);
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = (data: ProposalFormValues) => {
     const dirtyRows = data.expenditures.filter(
       (row, index) => !isEqual(row, initialDataRef.current[index]),
     );

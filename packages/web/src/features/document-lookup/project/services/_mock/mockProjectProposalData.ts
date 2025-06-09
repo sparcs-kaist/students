@@ -8,6 +8,8 @@ import { GroupProps } from "@sparcs-students/web/features/document-lookup/projec
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 
 import { ProjectProposalSingleContent } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectProposalTable";
+import { OperatingCommitteeMemberProps } from "@sparcs-students/web/features/document-lookup/project/components/OperatingCommitteeMemberTable";
+import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
 export const mockProjectProposalData: ReviewerProjectProps[] = [
   {
@@ -33,13 +35,6 @@ export const mockProjectProposalData: ReviewerProjectProps[] = [
   },
 ];
 
-function formatDate(date: Date): string {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yyyy}.${mm}.${dd}`;
-}
-
 export const mockViewerProjectData: ViewerProjectProps[] =
   ProjectProposalSingleContent.map(content => {
     const start = content.executionPeriod.value[0];
@@ -49,7 +44,7 @@ export const mockViewerProjectData: ViewerProjectProps[] =
       name: content.title,
       projectPeriod:
         start && end
-          ? `${formatDate(start)} - ${formatDate(end)}`
+          ? `${formatDotDate(start)} - ${formatDotDate(end)}`
           : "기간 미정",
       status: DocumentReviewStatusEnum.Accepted,
     };
@@ -57,7 +52,7 @@ export const mockViewerProjectData: ViewerProjectProps[] =
 
 export const mockMemberListData: MemberProps[] = [
   {
-    id: "20210XX4",
+    id: "20210XX1",
     name: "김스튜",
     groups: [
       "이름이 긴 부서 1",
@@ -67,41 +62,110 @@ export const mockMemberListData: MemberProps[] = [
     ],
   },
   {
-    id: "20220XX4",
-    name: "김스튜",
+    id: "20220XX2",
+    name: "김스튜이",
     groups: ["어쩌구 부서 2", "어쩌구 부서 3"],
   },
   {
+    id: "20220XX3",
+    name: "김스튜삼",
+    groups: [
+      "어쩌구 부서 1",
+      "어쩌구 부서 2",
+      "이름이 굉장히 긴 어떤 부서 예시",
+    ],
+  },
+  {
     id: "20220XX4",
-    name: "김스튜",
-    groups: ["어쩌구 부서 1", "어쩌구 부서 2"],
+    name: "김스튜사",
+    groups: [],
   },
 ];
 
 export const mockGroupListData: GroupProps[] = [
   {
-    name: "어떠한 TF",
+    name: "이름이 긴 부서 1",
     summary: "어떠한 사업입니다.",
-    members: ["김스튜", "김스팍", "김팍스"],
+    members: ["김스튜"],
     projectName: "어떠한 사업",
   },
   {
-    name: "어떠한 TF 2",
+    name: "어쩌구 부서 1",
     summary: "어떠한 저쩌구한 사업입니다.",
-    members: ["김스튜", "김스팍"],
+    members: ["김스튜", "김스튜삼"],
     projectName: "어떠한 사업",
   },
   {
-    name: "어떠한 TF 3",
+    name: "어쩌구 부서 2",
     summary: "어떠한 저떠한 사업입니다.",
-    members: ["김스튜", "김팍스"],
+    members: ["김스튜", "김스튜이", "김스튜삼"],
+    projectName: "어떠한 사업",
+  },
+  {
+    name: "어쩌구 부서 3",
+    summary: "어떠한 저떠한 사업입니다.",
+    members: ["김스튜", "김스튜이"],
+    projectName: "어떠한 사업",
+  },
+  {
+    name: "이름이 굉장히 긴 어떤 부서 예시",
+    summary: "어떠한 저떠한 사업입니다.",
+    members: ["김스튜", "김스튜삼"],
     projectName: "어떠한 사업",
   },
 ];
+
+export const mockOperatingCommitteeMemberTableListData: OperatingCommitteeMemberProps[][] =
+  [
+    [
+      {
+        id: "20210XX1",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX2",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX3",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX4",
+        name: "김스튜",
+        regulation: "",
+      },
+    ],
+    [
+      {
+        id: "20210XX1",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX2",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX3",
+        name: "김스튜",
+        regulation: "",
+      },
+      {
+        id: "20220XX4",
+        name: "김스튜",
+        regulation: "",
+      },
+    ],
+  ];
 
 export const mockOperationPlanData: OperationPlanProps = {
   memberData: mockMemberListData,
   note: "어쩌구저쩌구 비고",
   groupList: mockGroupListData,
-  imagePath: "chacha.jpg",
+  imagePath: "조직도.png",
 };

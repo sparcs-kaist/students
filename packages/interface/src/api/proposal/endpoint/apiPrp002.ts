@@ -1,10 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  zEnumName,
-  zUserName,
-} from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
@@ -27,35 +23,35 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    projectName: z.coerce.string().max(255),
-    startTerm: z.date(),
-    endTerm: z.date(),
-    teamName: z.coerce.string().max(30),
-    managerName: zUserName,
-    purpose: z.coerce.string(),
-    target: z.coerce.string(),
-    detail: z.coerce.string(),
-    timeLines: z
-      .object({
-        detail: z.coerce.string(),
-        startTerm: z.date(),
-        endTerm: z.date(),
-        note: z.coerce.string(),
-      })
-      .array(),
-    budgetProposals: z
-      .object({
-        budgetId: zId,
-        budgetCode: z.coerce.string().max(10),
-        budgetDomain: zEnumName,
-        budgetDivision: zEnumName,
-        budgetClass: zEnumName,
-        detail: z.coerce.string(),
-        previousAmount: z.number(),
-        amount: z.number(),
-        acceptedStatus: zEnumName,
-      })
-      .array(),
+    // projectName: z.coerce.string().max(255),
+    // startTerm: z.date(),
+    // endTerm: z.date(),
+    // teamName: z.coerce.string().max(30),
+    // managerName: zUserName,
+    // purpose: z.coerce.string(),
+    // target: z.coerce.string(),
+    // detail: z.coerce.string(),
+    // timeLines: z
+    //   .object({
+    //     detail: z.coerce.string(),
+    //     startTerm: z.date(),
+    //     endTerm: z.date(),
+    //     note: z.coerce.string(),
+    //   })
+    //   .array(),
+    // budgetProposals: z
+    //   .object({
+    //     budgetId: zId,
+    //     budgetCode: z.coerce.string().max(10),
+    //     budgetDomain: zEnumName,
+    //     budgetDivision: zEnumName,
+    //     budgetClass: zEnumName,
+    //     detail: z.coerce.string(),
+    //     previousAmount: z.number(),
+    //     amount: z.number(),
+    //     acceptedStatus: zEnumName,
+    //   })
+    //   .array(),
   }),
 };
 

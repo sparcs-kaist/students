@@ -8,7 +8,9 @@ import { GroupProps } from "@sparcs-students/web/features/document-lookup/projec
 import Image from "next/image";
 import styled from "styled-components";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
-import MemberTable, { MemberProps } from "./MemberTable";
+import MemberTable, {
+  MemberProps,
+} from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
 
 export interface OperationPlanProps {
   memberData: MemberProps[];

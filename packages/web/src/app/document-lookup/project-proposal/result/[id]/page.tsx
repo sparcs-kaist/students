@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
 import { mockViewProjectProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
@@ -19,10 +18,11 @@ import ReviewerProjectProposalFrame from "@sparcs-students/web/features/document
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ViewerProjectProposalFrame";
 import ManagerProjectProposalFrame from "@sparcs-students/web/features/document-lookup/project/frames/ManagerProjectProposalFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 const Proposal = () => {
   const items: ThreeInputItem[] = mockData;
-  // const { id: resultId } = useParams();
+  const { id: resultId } = useParams();
   const searchParams = useSearchParams();
   const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
   const queryIsSpring = searchParams.get("isSpring") === "true";
@@ -30,7 +30,6 @@ const Proposal = () => {
   const queryKey = searchParams.get("key");
   const queryValue = searchParams.get("value");
   const queryId = parseInt(searchParams.get("id") || "");
-  // const queryId = parseInt(resultId as string);
 
   const [date, setDate] = useState(
     mockViewProjectProposalResultData.submitDate,
@@ -45,16 +44,15 @@ const Proposal = () => {
 
   const router = useRouter();
 
-  const lookUp = (id: number) => {
-    const query = new URLSearchParams({
-      year: String(year),
-      isSpring: String(isSpring),
-      type: String(type),
-      key: selectedKey ?? "",
-      value: selectedValue ?? "",
-      id: String(id),
-    }).toString();
+  const query = new URLSearchParams({
+    year: String(year),
+    isSpring: String(isSpring),
+    type: String(type),
+    key: selectedKey ?? "",
+    value: selectedValue ?? "",
+  }).toString();
 
+  const lookUp = (id: number) => {
     switch (type) {
       case "사업 계획서":
         router.push(`/document-lookup/project-proposal/result/${id}?${query}`);
@@ -80,7 +78,10 @@ const Proposal = () => {
         <BreadCrumb
           items={[
             { name: "예결산 조회", path: "/document-lookup" },
-            { name: "사업계획서", path: "/project-proposal" },
+            {
+              name: "사업계획서",
+              path: `/document-lookup/project-proposal/result/${resultId}?${query}`,
+            },
           ]}
         />
       </FlexWrapper>
@@ -106,7 +107,7 @@ const Proposal = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => lookUp(selectedId as number)}
@@ -125,7 +126,10 @@ const Proposal = () => {
           <ReviewerProjectProposalFrame />
         )}
         {userPermission === UserPermission.Manager && (
-          <ManagerProjectProposalFrame />
+          <ManagerProjectProposalFrame
+            query={query}
+            resultId={resultId as string}
+          />
         )}
       </FlexWrapper>
     </FlexWrapper>

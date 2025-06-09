@@ -1,38 +1,38 @@
-import {
-  HalfYearEnum,
-  SemesterEnum,
-} from "@sparcs-students/interface/common/enum";
 import { zSemesterName } from "@sparcs-students/interface/common/stringLength";
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import { zDurationFull } from "@sparcs-students/interface/common/type/time.type";
 import { z } from "zod";
 
-export const zSemester = z.object({
-  id: zId,
-  name: zSemesterName,
-  year: z.coerce.number(),
-  semesterEnum: z.nativeEnum(SemesterEnum),
-  duration: zDurationFull,
-});
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
+
+export enum SemesterEnum {
+  H1 = 1,
+  H2 = 2,
+}
+
+// gb: 그냥 상하반기만 씁시다! 어우 머리아파
+export const zSemester = z
+  .object({
+    id: zId.openapi({
+      description: "학기 ID",
+    }),
+    name: zSemesterName.openapi({
+      description: "학기 이름",
+    }),
+    year: z.coerce.number().openapi({
+      description: "학기 연도",
+    }),
+    semesterEnum: z.nativeEnum(SemesterEnum).openapi({
+      description: "학기 종류",
+    }),
+    startTerm: z.date().openapi({
+      description: "학기 시작일",
+    }),
+    endTerm: z.date().openapi({
+      description: "학기 종료일",
+    }),
+  })
+  .openapi("Semester");
 
 export type ISemester = z.infer<typeof zSemester>;
-
-export const zHalfYear = z.object({
-  id: zId,
-  name: zSemesterName, // ex) 2024년 상반기
-  year: z.coerce.number(),
-  halfYearEnum: z.nativeEnum(HalfYearEnum),
-  regularSemester: zSemester, // pick 예외: duration 완성을 위해 semester 값을 받아와야 함
-  seasonalSemester: zSemester, // pick 예외: duration 완성을 위해 semester 값을 받아와야 함
-  duration: zDurationFull,
-});
-
-export const zHalfYearSummary = zHalfYear.pick({
-  id: true,
-  name: true,
-  year: true,
-  halfYearEnum: true,
-});
-
-export type IHalfYear = z.infer<typeof zHalfYear>;
-export type IHalfYearSummary = z.infer<typeof zHalfYearSummary>;

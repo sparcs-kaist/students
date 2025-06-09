@@ -4,6 +4,7 @@ import styled from "styled-components";
 export type LightTagColor =
   | "GREEN800"
   | "GREEN600"
+  | "GREEN300"
   | "GREEN100"
   | "GREEN300"
   | "BLUE"
