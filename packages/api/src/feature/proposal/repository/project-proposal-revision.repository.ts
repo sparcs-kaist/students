@@ -76,7 +76,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         },
       },
       MProjectProposalRevision,
-      "activityId",
+      "projectProposalRevisionId",
     );
   }
 

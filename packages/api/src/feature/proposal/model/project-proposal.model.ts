@@ -1,5 +1,5 @@
 import { MEntity } from "@sparcs-students/api/common/base/entity.model";
-import { IProjectProposal } from "@sparcs-students/interface/api/proposal/type/project-proposal.type";
+import { IProjectProposal } from "@sparcs-students/interface/api/proposal/index";
 
 export interface IProjectProposalCreate extends IProjectProposal {
   organization: IProjectProposal["organization"];
