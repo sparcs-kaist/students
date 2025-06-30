@@ -2,10 +2,21 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from "@nestjs/common";
+import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repository";
 import { OrganizationRepository } from "../repository/organization.repository";
 import { OrganizationPresidentRepository } from "../repository/organization.president.repository";
 import { OrganizationMemberRepository } from "../repository/organization.member.repository";
+
+type OrganizationPresidentQuery = {
+  id: number;
+  organizationId: number;
+  organizationPresidentTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
 
 @Injectable()
 export class OrganizationService {
@@ -81,5 +92,45 @@ export class OrganizationService {
     );
 
     return { organizationPresident: createdPresident };
+  }
+
+  async retirePresident(presidentId: number, body: { endTerm: Date }) {
+    const presidentList = [
+      await this.organizationPresidentRepository.fetch(presidentId),
+    ];
+
+    if (presidentList.length === 0) {
+      throw new NotFoundException("President not found");
+    }
+
+    const president = presidentList[0];
+
+    if (
+      president.duration.endTerm !== undefined &&
+      president.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const updatedPresident = await this.organizationPresidentRepository.patch(
+      { id: presidentId } as BaseRepositoryQuery<
+        OrganizationPresidentQuery,
+        number
+      >,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: body.endTerm,
+        },
+      }),
+    );
+
+    return {
+      organizationPresident: updatedPresident[0],
+    };
   }
 }

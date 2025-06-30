@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Param, Patch, Post, UsePipes } from "@nestjs/common";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -6,6 +6,9 @@ import {
   apiOrg003,
   ApiOrg002RequestBody,
   ApiOrg003RequestBody,
+  apiOrg004,
+  ApiOrg004RequestParam,
+  ApiOrg004RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 import {} from // GetUser,
 "@sparcs-students/api/common/decorators/get-user.decorator";
@@ -29,5 +32,16 @@ export class OrganizationuapresidentController {
   @UsePipes(new ZodPipe(apiOrg003))
   async createPresident(@Body() body: ApiOrg003RequestBody) {
     return this.organizationService.createPresident(body);
+  }
+
+  // 총학생회장 권한으로 단체장 임기 종료
+  @Public() // 임시 ""
+  @Patch("president/:id/retire")
+  @UsePipes(new ZodPipe(apiOrg004))
+  async retirePresident(
+    @Param() param: ApiOrg004RequestParam,
+    @Body() body: ApiOrg004RequestBody,
+  ) {
+    return this.organizationService.retirePresident(param.id, body);
   }
 }
