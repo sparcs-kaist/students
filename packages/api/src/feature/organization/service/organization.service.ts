@@ -133,4 +133,34 @@ export class OrganizationService {
       organizationPresident: updatedPresident[0],
     };
   }
+
+  async createMember(body) {
+    const { OrganizationMember } = body;
+
+    const existingMember = await this.organizationMemberRepository.find({
+      organizationId: OrganizationMember.organization.id,
+      studentId: OrganizationMember.student.id,
+      endTerm: null,
+    });
+
+    if (existingMember.length === 0) {
+      await this.organizationMemberRepository.create({
+        organization: OrganizationMember.organization,
+        student: OrganizationMember.student,
+        duration: OrganizationMember.duration,
+      });
+    } else {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Member",
+      });
+    }
+
+    const createdMember = await this.organizationMemberRepository.find({
+      organizationId: OrganizationMember.organization.id,
+      studentId: OrganizationMember.student.id,
+    });
+
+    return { organizationPresident: createdMember };
+  }
 }
