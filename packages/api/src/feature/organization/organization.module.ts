@@ -10,6 +10,7 @@ import { OrganizationPublicService } from "./service/organization.public.service
 import { OrganizationRepository } from "./repository/organization.repository";
 import { OrganizationPresidentRepository } from "./repository/organization.president.repository";
 import { OrganizationMemberRepository } from "./repository/organization.member.repository";
+import { OrganizationManagerRepository } from "./repository/organization.manager.repository";
 
 @Module({
   imports: [DrizzleModule, SemesterModule],
@@ -24,6 +25,7 @@ import { OrganizationMemberRepository } from "./repository/organization.member.r
     OrganizationPublicService,
     OrganizationPresidentRepository,
     OrganizationMemberRepository,
+    OrganizationManagerRepository,
   ],
   exports: [OrganizationPublicService],
 })

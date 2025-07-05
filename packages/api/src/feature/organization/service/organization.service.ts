@@ -8,6 +8,7 @@ import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repos
 import { OrganizationRepository } from "../repository/organization.repository";
 import { OrganizationPresidentRepository } from "../repository/organization.president.repository";
 import { OrganizationMemberRepository } from "../repository/organization.member.repository";
+import { OrganizationManagerRepository } from "../repository/organization.manager.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -24,6 +25,7 @@ export class OrganizationService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly organizationPresidentRepository: OrganizationPresidentRepository,
     private readonly organizationMemberRepository: OrganizationMemberRepository,
+    private readonly organizationManagerRepository: OrganizationManagerRepository,
   ) {}
 
   async createOrganization(body) {
@@ -161,6 +163,36 @@ export class OrganizationService {
       studentId: OrganizationMember.student.id,
     });
 
-    return { organizationPresident: createdMember };
+    return { organizationMember: createdMember };
+  }
+
+  async createManager(body) {
+    const { OrganizationManager } = body;
+
+    const existingManager = await this.organizationManagerRepository.find({
+      organizationId: OrganizationManager.organization.id,
+      studentId: OrganizationManager.student.id,
+      endTerm: null,
+    });
+
+    if (existingManager.length === 0) {
+      await this.organizationManagerRepository.create({
+        organization: OrganizationManager.organization,
+        student: OrganizationManager.student,
+        duration: OrganizationManager.duration,
+      });
+    } else {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Manager",
+      });
+    }
+
+    const createdManager = await this.organizationManagerRepository.find({
+      organizationId: OrganizationManager.organization.id,
+      studentId: OrganizationManager.student.id,
+    });
+
+    return { organizationManager: createdManager };
   }
 }

@@ -3,7 +3,9 @@ import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorat
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
   apiOrg005,
+  apiOrg006,
   ApiOrg005RequestBody,
+  ApiOrg006RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 import {} from // GetUser,
 "@sparcs-students/api/common/decorators/get-user.decorator";
@@ -17,7 +19,15 @@ export class OrganizationpresidentController {
   @Public() // 임시. 단체장단 데코레이터 추가 필요
   @Post("member")
   @UsePipes(new ZodPipe(apiOrg005))
-  async createPresident(@Body() body: ApiOrg005RequestBody) {
+  async createMember(@Body() body: ApiOrg005RequestBody) {
     return this.organizationService.createMember(body);
+  }
+
+  // 단체장단 권한으로 단체 매니저 임명
+  @Public() // 임시. 단체장단 데코레이터 추가 필요
+  @Post("manager")
+  @UsePipes(new ZodPipe(apiOrg006))
+  async createManager(@Body() body: ApiOrg006RequestBody) {
+    return this.organizationService.createManager(body);
   }
 }
