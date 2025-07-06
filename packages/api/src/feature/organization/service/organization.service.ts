@@ -139,23 +139,45 @@ export class OrganizationService {
   async createMember(body) {
     const { OrganizationMember } = body;
 
-    const existingMember = await this.organizationMemberRepository.find({
+    // 단체에 가입 신청한 사람 ( startTerm === null ) 을 확인
+    const appliedMember = await this.organizationMemberRepository.find({
       organizationId: OrganizationMember.organization.id,
       studentId: OrganizationMember.student.id,
+      startTerm: null,
       endTerm: null,
     });
 
-    if (existingMember.length === 0) {
-      await this.organizationMemberRepository.create({
-        organization: OrganizationMember.organization,
-        student: OrganizationMember.student,
-        duration: OrganizationMember.duration,
+    if (appliedMember.length === 0) {
+      const existingMember = await this.organizationMemberRepository.find({
+        organizationId: OrganizationMember.organization.id,
+        studentId: OrganizationMember.student.id,
+        endTerm: null,
       });
+
+      if (existingMember.length === 0) {
+        await this.organizationMemberRepository.create({
+          organization: OrganizationMember.organization,
+          student: OrganizationMember.student,
+          duration: OrganizationMember.duration,
+        });
+      } else {
+        throw new ConflictException({
+          status: "Error",
+          message: "Already Member",
+        });
+      }
     } else {
-      throw new ConflictException({
-        status: "Error",
-        message: "Already Member",
-      });
+      await this.organizationMemberRepository.patch(
+        {
+          organizationId: OrganizationMember.organizationId,
+          studentId: OrganizationMember.studentId,
+          startTerm: null,
+        },
+        model => ({
+          ...model,
+          duration: OrganizationMember.duration,
+        }),
+      );
     }
 
     const createdMember = await this.organizationMemberRepository.find({
