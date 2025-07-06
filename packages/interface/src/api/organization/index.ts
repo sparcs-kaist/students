@@ -15,3 +15,6 @@ export { default as apiOrg005 } from "./endpoint/apiOrg005"; // default export �
 
 export * from "./endpoint/apiOrg006";
 export { default as apiOrg006 } from "./endpoint/apiOrg006"; // default export 추가
+
+export * from "./endpoint/apiOrg011";
+export { default as apiOrg011 } from "./endpoint/apiOrg011"; // default export 추가
