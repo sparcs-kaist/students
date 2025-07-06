@@ -109,7 +109,17 @@ export const zTeamMember = z.object({
   duration: zDuration,
 });
 
+export const zTeamMemberRequestCreate = zTeamMember.omit({
+  id: true,
+});
+
+export const zTeamMemberResponse = zTeamMember.pick({
+  id: true,
+});
+
 export type ITeamMember = z.infer<typeof zTeamMember>;
+export type ITeamMemberRequestCreate = z.infer<typeof zTeamMemberRequestCreate>;
+export type ITeamMemberResponse = z.infer<typeof zTeamMemberResponse>;
 
 export const zTeamLeader = z.object({
   id: zId,
@@ -119,4 +129,13 @@ export const zTeamLeader = z.object({
   duration: zDuration,
 });
 
+export const zTeamLeaderRequestCreate = zTeamLeader.omit({
+  id: true,
+});
+
+export const zTeamLeaderResponse = zTeamLeader.pick({
+  id: true,
+});
 export type ITeamLeader = z.infer<typeof zTeamLeader>;
+export type ITeamLeaderRequestCreate = z.infer<typeof zTeamLeaderRequestCreate>;
+export type ITeamLeaderResponse = z.infer<typeof zTeamLeaderResponse>;
