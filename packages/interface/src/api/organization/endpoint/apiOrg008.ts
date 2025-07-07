@@ -25,7 +25,7 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    team: zTeamMemberResponse,
+    teamMemberId: zTeamMemberResponse,
   }),
 };
 

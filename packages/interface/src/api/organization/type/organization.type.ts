@@ -81,9 +81,7 @@ export const zTeamRequestCreate = zTeam
   })
   .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
 
-export const zTeamResponse = zTeam.extend({
-  organization: zOrganization,
-});
+export const zTeamResponse = zTeam.pick({ id: true });
 
 export type ITeam = z.infer<typeof zTeam>;
 export type ITeamResponse = z.infer<typeof zTeamResponse>;

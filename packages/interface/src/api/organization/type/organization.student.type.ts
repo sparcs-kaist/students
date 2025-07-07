@@ -125,7 +125,7 @@ export const zTeamLeader = z.object({
   id: zId,
   team: zExtractId(zTeam),
   student: zExtractId(zStudent),
-  title: zName,
+  // title: zName,
   duration: zDuration,
 });
 
