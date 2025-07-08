@@ -34,28 +34,27 @@ export class OrganizationController {
   async postOrganizationTeamForPresident(
     @Body() body: ApiOrg007RequestBody,
   ): Promise<ApiOrg007ResponseCreated> {
-    // TODO: PublicService -> Service
-    return this.organizationPublicService.postOrganizationTeamForPresident(
-      body.team,
-    );
+    return this.organizationService.postOrganizationTeamForPresident(body.team);
   }
 
+  @Public() // TODO: 유저 데코레이터 추가
   @Post(ApiOrg008RequestUrl)
   @UsePipes(new ZodPipe(apiOrg008))
   async postOrganizationTeamMemberForPresident(
     @Body() body: ApiOrg008RequestBody,
   ): Promise<ApiOrg008ResponseCreated> {
-    return this.organizationPublicService.postOrganizationTeamMemberForPresident(
+    return this.organizationService.postOrganizationTeamMemberForPresident(
       body.teamMember,
     );
   }
 
+  @Public() // TODO: 유저 데코레이터 추가
   @Post(ApiOrg009RequestUrl)
   @UsePipes(new ZodPipe(apiOrg009))
   async postOrganizationTeamLeaderForPresident(
     @Body() body: ApiOrg009RequestBody,
   ): Promise<ApiOrg009ResponseCreated> {
-    return this.organizationPublicService.postOrganizationTeamLeaderForPresident(
+    return this.organizationService.postOrganizationTeamLeaderForPresident(
       body.teamLeader,
     );
   }

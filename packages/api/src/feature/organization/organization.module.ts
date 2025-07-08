@@ -7,6 +7,8 @@ import { OrganizationController } from "./controller/organization.controller";
 import { OrganizationPublicService } from "./service/organization.public.service";
 import { OrganizationRepository } from "./repository/organization.repository";
 import { TeamRepository } from "./repository/organization.team.repository";
+import { TeamMemberRepository } from "./repository/organization.team.member.repository";
+import { TeamLeaderRepository } from "./repository/organization.team.leader.repository";
 
 @Module({
   imports: [DrizzleModule, SemesterModule],
@@ -15,6 +17,8 @@ import { TeamRepository } from "./repository/organization.team.repository";
     OrganizationService,
     OrganizationRepository,
     TeamRepository,
+    TeamMemberRepository,
+    TeamLeaderRepository,
     OrganizationPublicService,
   ],
   exports: [OrganizationPublicService],
