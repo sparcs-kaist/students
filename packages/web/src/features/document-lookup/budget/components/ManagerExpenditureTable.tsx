@@ -502,6 +502,19 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
     36 + (expenditures.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
   );
 
+  const sortExpendituresByCode = () => {
+    const currentExpenditures = getValues("expenditures");
+    const sortedExpenditures = [...currentExpenditures].sort((a, b) => {
+      // 코드가 0인 경우(첫 번째 행)는 항상 맨 위에
+      if (a.code === 0) return -1;
+      if (b.code === 0) return -1;
+      return a.code - b.code;
+    });
+
+    // 정렬된 데이터로 폼 전체 업데이트
+    setValue("expenditures", sortedExpenditures);
+  };
+
   const changeCode = () => {
     let studentsFeeCount = 400;
     let schoolFeeCount = 500;
@@ -533,7 +546,18 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
         shouldValidate: true,
       });
     });
+
+    // 코드 업데이트 후 정렬
+    setTimeout(() => {
+      sortExpendituresByCode();
+    }, 0);
   };
+
+  useEffect(() => {
+    if (expenditures.length > 0) {
+      sortExpendituresByCode();
+    }
+  }, []);
 
   const defaultNewRow = [
     {
@@ -571,11 +595,11 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
     remove(rowIndex);
     const length = expenditures.length - 1;
 
-    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+    setDynamicHeight(36 + length * 48 + 250);
 
     setTimeout(() => {
-      // CHACHA: remove is async. Ensure that changeCode is executed after remove.
       changeCode();
+      // changeCode 내에서 정렬이 실행되므로 별도 정렬 불필요
     }, 0);
   };
 
