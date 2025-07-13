@@ -138,8 +138,26 @@ export class OrganizationService {
     };
   }
 
-  async getApplying() {
-    const allOrganizations = await this.organizationRepository.find({});
+  async getApplying(student) {
+    const { studentId } = student;
+
+    const myOrganizations = await this.organizationPresidentRepository.find({
+      studentId,
+      endTerm: null,
+    });
+
+    const organizationIds = myOrganizations.map(m => m.organization.id);
+
+    if (organizationIds.length === 0) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Not president",
+      });
+    }
+
+    const allOrganizations =
+      await this.organizationRepository.fetchAll(organizationIds);
+
     const semesters = await this.semesterPublicService.fetchSemesterAll();
 
     const organizationLists = await Promise.all(

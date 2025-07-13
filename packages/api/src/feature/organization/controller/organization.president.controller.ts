@@ -7,8 +7,10 @@ import {
   ApiOrg005RequestBody,
   ApiOrg006RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
-import {} from // GetUser,
-"@sparcs-students/api/common/decorators/get-user.decorator";
+import {
+  GetStudent,
+  StudentProfile,
+} from "@sparcs-students/api/common/decorators/get-user.decorator";
 import { OrganizationService } from "../service/organization.service";
 
 @Controller("president/organizations")
@@ -18,8 +20,8 @@ export class OrganizationpresidentController {
   // 단체장단 권한으로 단체 멤버 정보를 불러옵니다.
   @Public() // 임시. 단체장단 데코레이터 추가 필요
   @Get("get-applying")
-  async getApplying() {
-    return this.organizationService.getApplying();
+  async getApplying(@GetStudent() student: StudentProfile) {
+    return this.organizationService.getApplying(student);
   }
 
   // 단체장단 권한으로 단체 멤버 임명
