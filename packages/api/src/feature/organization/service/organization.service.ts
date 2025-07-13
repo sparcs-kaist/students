@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repository";
+import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { OrganizationRepository } from "../repository/organization.repository";
 import { OrganizationPresidentRepository } from "../repository/organization.president.repository";
 import { OrganizationMemberRepository } from "../repository/organization.member.repository";
@@ -26,6 +27,7 @@ export class OrganizationService {
     private readonly organizationPresidentRepository: OrganizationPresidentRepository,
     private readonly organizationMemberRepository: OrganizationMemberRepository,
     private readonly organizationManagerRepository: OrganizationManagerRepository,
+    private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
   async createOrganization(body) {
@@ -134,6 +136,76 @@ export class OrganizationService {
     return {
       organizationPresident: updatedPresident[0],
     };
+  }
+
+  async getApplying() {
+    const allOrganizations = await this.organizationRepository.find({});
+    const semesters = await this.semesterPublicService.fetchSemesterAll();
+
+    const organizationLists = await Promise.all(
+      semesters.map(async semester => {
+        const organizationsInSemester = allOrganizations.filter(
+          org =>
+            org.startTerm >= semester.startTerm &&
+            (org.endTerm === null || org.startTerm <= semester.endTerm),
+        );
+
+        const typeMap = new Map();
+        organizationsInSemester.forEach(org => {
+          if (!typeMap.has(org.organizationTypeEnum)) {
+            typeMap.set(org.organizationTypeEnum, []);
+          }
+          typeMap.get(org.organizationTypeEnum).push(org);
+        });
+
+        const organizationTypes = await Promise.all(
+          Array.from(typeMap.entries()).map(
+            async ([organizationTypeEnum, organizations]) => {
+              const filteredOrganizations = await Promise.all(
+                organizations.map(async org => {
+                  const members = await this.organizationMemberRepository.find({
+                    organizationId: org.id,
+                    startTerm: null,
+                    endTerm: null,
+                  });
+
+                  if (members.length === 0) return null;
+
+                  return {
+                    id: org.id,
+                    name: org.name,
+                    nameEng: org.nameEng,
+                    members: members.map(m => ({
+                      id: m.id,
+                      student: {
+                        id: m.student.id,
+                      },
+                    })),
+                  };
+                }),
+              );
+
+              return {
+                organizationTypeEnum,
+                organizations: filteredOrganizations.filter(Boolean),
+              };
+            },
+          ),
+        );
+
+        return {
+          halfYear: {
+            year: semester.year,
+            name: semester.name,
+          },
+          organizationTypes: organizationTypes.filter(
+            type => type.organizations.length > 0,
+          ),
+        };
+      }),
+    );
+
+    return { organizationLists };
   }
 
   async createMember(body) {

@@ -53,8 +53,6 @@ export class OrganizationPublicService {
     const { studentId } = student;
     const organizationId = body.OrganizationMember.organization.id;
 
-    console.log(studentId);
-
     // 이미 신청한 사람인지 확인
     const appliedMember = await this.organizationMemberRepository.find({
       organizationId,

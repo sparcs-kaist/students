@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -14,6 +14,13 @@ import { OrganizationService } from "../service/organization.service";
 @Controller("president/organizations")
 export class OrganizationpresidentController {
   constructor(private readonly organizationService: OrganizationService) {}
+
+  // 단체장단 권한으로 단체 멤버 정보를 불러옵니다.
+  @Public() // 임시. 단체장단 데코레이터 추가 필요
+  @Get("get-applying")
+  async getApplying() {
+    return this.organizationService.getApplying();
+  }
 
   // 단체장단 권한으로 단체 멤버 임명
   @Public() // 임시. 단체장단 데코레이터 추가 필요
