@@ -17,9 +17,9 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetProposalExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectProposalId: number;
+  budgetProposalExpenseId: number;
+  previousBudgetReportExpenseId: number;
+  projectProposalRevisionId: number;
 };
 
 type BudgetProposalExpenseRevisionOrderByKeys = "id";
@@ -69,6 +69,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpense: { id: result.previousBudgetReportExpenseId },
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionExpenseEnum: result.budgetDivisionExpenseEnum,
+      projectProposalRevision: { id: result.projectProposalRevisionId },
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
       amount: result.amount,
       detail: result.detail,
@@ -87,6 +88,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
+      projectProposalRevisionId: model.projectProposalRevision.id,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
@@ -104,6 +106,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
+      projectProposalRevisionId: model.projectProposalRevision.id,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
@@ -118,9 +121,9 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       TableWithID | null
     > = {
       id: BudgetProposalExpenseRevision,
-      organizationId: BudgetProposalExpenseRevision,
-      semesterId: BudgetProposalExpenseRevision,
-      projectProposalId: BudgetProposalExpenseRevision,
+      budgetProposalExpenseId: BudgetProposalExpenseRevision,
+      previousBudgetReportExpenseId: BudgetProposalExpenseRevision,
+      projectProposalRevisionId: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

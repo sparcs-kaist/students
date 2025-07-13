@@ -34,7 +34,6 @@ export const zBudgetProposalIncomeRevision = z
     name: zDocumentItemName,
     amount: zMoney,
     detail: z.string(),
-    note: z.string(),
   })
   .merge(zRevisionBase);
 

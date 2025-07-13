@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/mysql-core";
 import { Semester } from "./semester.schema";
 import { OperatingCommittee, Organization, Team } from "./organization.schema";
-import { User } from "./user.schema";
+import { Student } from "./user.schema";
 import { File } from "./file.schema";
 import { Agenda } from "./meeting.schema";
 
@@ -73,7 +73,7 @@ export const ProjectProposalRevision = mysqlTable(
     }),
     projectProposalRevisionManagerIdFk: foreignKey({
       columns: [table.managerId],
-      foreignColumns: [User.id],
+      foreignColumns: [Student.id],
       name: "project_proposal_revision_manager_id_fk",
     }),
     projectProposalRevisionCogAgendaIdFk: foreignKey({
@@ -135,13 +135,14 @@ export const OperationProposal = mysqlTable(
   }),
 );
 
+// 수정 필요! 2025-07-13
 export const OperationProposalRevision = mysqlTable(
   "operation_proposal_revision",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     operationProposalId: int("operation_proposal_id").notNull(),
     organizationDiagramId: int("organization_diagram_id").notNull(),
-    note: text("note"), // 2025-07-13 일단 여까지 함 어케 할지 모르겠다
+    note: text("note"),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
@@ -201,6 +202,7 @@ export const OperatingCommitteeProposal = mysqlTable(
   }),
 );
 
+// 수정 필요! 2025-07-13
 export const TeamOperationProposal = mysqlTable(
   "team_operation_proposal",
   {
@@ -227,13 +229,12 @@ export const TeamOperationProposal = mysqlTable(
   }),
 );
 
-// TODO: Review는 나중에
 export const ProjectProposalDocumentReview = mysqlTable(
   "project_proposal_document_review",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    projectProposalId: int("project_proposal_id").notNull(),
-    userId: int("user_id").notNull(),
+    projectProposalRevisionId: int("project_proposal_revision_id").notNull(),
+    studentId: int("student_id").notNull(),
     documentReviewStatusEnum: int("document_review_status_enum").notNull(),
     detail: text("detail"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -241,15 +242,15 @@ export const ProjectProposalDocumentReview = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectProposalDocumentReviewProjectProposalIdFk: foreignKey({
-      columns: [table.projectProposalId],
-      foreignColumns: [ProjectProposal.id],
-      name: "proj_prop_doc_rev_orig_id_fk",
+    projectProposalDocumentReviewProjectProposalRevisionIdFk: foreignKey({
+      columns: [table.projectProposalRevisionId],
+      foreignColumns: [ProjectProposalRevision.id],
+      name: "proj_prop_doc_review_proj_prop_rev_id_fk",
     }),
-    projectProposalDocumentReviewUserIdFk: foreignKey({
-      columns: [table.userId],
-      foreignColumns: [User.id],
-      name: "project_proposal_document_review_user_id_fk",
+    projectProposalDocumentReviewStudentIdFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "proj_prop_doc_review_student_id_fk",
     }),
   }),
 );

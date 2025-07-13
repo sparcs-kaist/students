@@ -6,8 +6,11 @@ import { zProjectProposal } from "./type/project-proposal.type";
 import { zBudgetProposalIncome } from "./type/budget-proposal-income.type";
 
 export * from "./type/project-proposal.type";
+export * from "./type/project-proposal-document-review.type";
 export * from "./type/budget-proposal-income.type";
+export * from "./type/budget-proposal-income-document-review.type";
 export * from "./type/budget-proposal-expense.type";
+export * from "./type/budget-proposal-expense-document-review.type";
 export * from "./type/operation-proposal.type";
 
 export * from "./endpoint/apiPrp001";
