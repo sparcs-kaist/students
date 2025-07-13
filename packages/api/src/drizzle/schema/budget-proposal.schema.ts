@@ -5,7 +5,6 @@ import {
   foreignKey,
   timestamp,
   text,
-  boolean,
 } from "drizzle-orm/mysql-core";
 import { Organization } from "./organization.schema";
 import { Semester } from "./semester.schema";
@@ -54,11 +53,9 @@ export const BudgetProposalIncomeRevision = mysqlTable(
     amount: int("amount").notNull(),
     detail: text("detail").notNull(),
     note: text("note").notNull(),
-    documentStatusEnum: int("document_status_enum").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -133,11 +130,9 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
     amount: int("amount"),
     detail: text("detail"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),

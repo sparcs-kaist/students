@@ -5,7 +5,6 @@ import {
   foreignKey,
   timestamp,
   text,
-  boolean,
 } from "drizzle-orm/mysql-core";
 import { Semester } from "./semester.schema";
 import { OperatingCommittee, Organization, Team } from "./organization.schema";
@@ -20,6 +19,7 @@ export const ProjectProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -42,7 +42,7 @@ export const ProjectProposalRevision = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     projectProposalId: int("project_proposal_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
-    method: text("method"), // TEXT 처리
+    method: text("method"),
     prepareStartTerm: timestamp("prepare_start_term"),
     prepareEndTerm: timestamp("prepare_end_term"),
     startTerm: timestamp("start_term"),
@@ -56,9 +56,8 @@ export const ProjectProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -100,6 +99,7 @@ export const ProjectProposalTimeline = mysqlTable(
     detail: text("detail").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -118,6 +118,7 @@ export const OperationProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -140,13 +141,12 @@ export const OperationProposalRevision = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     operationProposalId: int("operation_proposal_id").notNull(),
     organizationDiagramId: int("organization_diagram_id").notNull(),
-    note: text("note"),
+    note: text("note"), // 2025-07-13 일단 여까지 함 어케 할지 모르겠다
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({

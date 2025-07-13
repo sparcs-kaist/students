@@ -72,11 +72,9 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
       amount: result.amount,
       detail: result.detail,
-      documentStatusEnum: result.documentStatusEnum,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
-      isRemoved: result.isRemoved,
     });
   }
 
@@ -92,11 +90,9 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
-      documentStatusEnum: model.documentStatusEnum,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
-      isRemoved: model.isRemoved,
     };
   }
 
@@ -111,7 +107,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
-      documentStatusEnum: model.documentStatusEnum,
     };
   }
 
