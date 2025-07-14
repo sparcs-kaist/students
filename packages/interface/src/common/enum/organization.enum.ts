@@ -88,3 +88,8 @@ export const getDisplayNameOrganizationPresidentTypeEnum = (
       return "";
   }
 };
+
+export enum CommitteeRoleEnum {
+  Chief = 1,
+  Member,
+}
