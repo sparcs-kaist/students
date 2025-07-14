@@ -39,6 +39,7 @@ export const zBudgetProposalExpenseRevision = z
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
     amount: zMoney,
     detail: z.string(),
+    code: z.coerce.number(),
   })
   .merge(zRevisionBase);
 

@@ -73,6 +73,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
       amount: result.amount,
       detail: result.detail,
+      code: result.code,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
@@ -92,6 +93,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
+      code: model.code,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
@@ -110,6 +112,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       amount: model.amount,
       detail: model.detail,
+      code: model.code,
     };
   }
 

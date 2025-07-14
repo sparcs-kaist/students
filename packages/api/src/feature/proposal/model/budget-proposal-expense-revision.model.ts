@@ -17,6 +17,8 @@ export interface IBudgetProposalExpenseRevisionCreate {
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
+
+  code: IBudgetProposalExpenseRevision["code"];
 }
 
 export class MBudgetProposalExpenseRevision
@@ -40,6 +42,8 @@ export class MBudgetProposalExpenseRevision
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
+
+  code: IBudgetProposalExpenseRevision["code"];
 
   constructor(data: IBudgetProposalExpenseRevision) {
     super();
