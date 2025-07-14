@@ -135,7 +135,6 @@ export const OperationProposal = mysqlTable(
   }),
 );
 
-// 수정 필요! 2025-07-13
 export const OperationProposalRevision = mysqlTable(
   "operation_proposal_revision",
   {
@@ -184,6 +183,7 @@ export const OperatingCommitteeProposal = mysqlTable(
     operatingCommitteeId: int("operating_committee_id").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -202,7 +202,6 @@ export const OperatingCommitteeProposal = mysqlTable(
   }),
 );
 
-// 수정 필요! 2025-07-13
 export const TeamOperationProposal = mysqlTable(
   "team_operation_proposal",
   {
@@ -213,6 +212,7 @@ export const TeamOperationProposal = mysqlTable(
     teamId: int("team_id").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
