@@ -11,7 +11,6 @@ import { zDocumentItemName } from "@sparcs-students/interface/common/stringLengt
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 
 import { zProjectProposal } from "@sparcs-students/interface/api/proposal/type/project-proposal.type";
-import { zFile } from "@sparcs-students/interface/api/file/type/file.type";
 
 // ProjectReport: 사업계획서 각 행 엔티티
 export const zProjectReport = z.object({
@@ -26,7 +25,7 @@ export type IProjectReport = z.infer<typeof zProjectReport>;
 export const zProjectReportRevision = z
   .object({
     id: zId,
-    projectReport: zExtractId(zProjectReport),
+    projectReportId: zExtractId(zProjectReport),
     name: zDocumentItemName,
     method: z.string(),
     prepareDuration: zDuration.optional(),
@@ -39,14 +38,13 @@ export const zProjectReportRevision = z
         note: z.string().optional(),
       }),
     ),
-    team: zExtractId(zTeam),
-    manager: zExtractId(zStudent).nullable(),
-    target: z.string(),
+    teamId: zExtractId(zTeam),
+    managerId: zExtractId(zStudent).nullable(),
     detail: z.string(),
+    participation: z.string(),
     result: z.string(),
     unmet: z.string(),
     note: z.string(),
-    detailFiles: z.array(zExtractId(zFile)),
   })
   .merge(zRevisionBase);
 

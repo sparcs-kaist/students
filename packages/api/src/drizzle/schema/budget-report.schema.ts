@@ -1,20 +1,13 @@
 import {
   int,
-  varchar,
   mysqlTable,
   foreignKey,
   timestamp,
   text,
-  boolean,
 } from "drizzle-orm/mysql-core";
 import { Semester } from "./semester.schema";
 import { Organization } from "./organization.schema";
 
-// eslint-disable-next-line import/no-cycle
-import {
-  BudgetProposalExpense,
-  BudgetProposalIncome,
-} from "./budget-proposal.schema";
 import { ProjectReport } from "./project-report.schema";
 import { Agenda } from "./meeting.schema";
 
@@ -24,8 +17,9 @@ export const BudgetReportIncome = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
-    budgetProposalIncomeId: int("budget_proposal_income_id").notNull(),
+    projectReportId: int("project_report_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -39,10 +33,10 @@ export const BudgetReportIncome = mysqlTable(
       foreignColumns: [Semester.id],
       name: "bud_rep_inc_sem_id_fk",
     }),
-    budgetReportIncomeBudgetProposalIncomeIdFk: foreignKey({
-      columns: [table.budgetProposalIncomeId],
-      foreignColumns: [BudgetProposalIncome.id],
-      name: "bud_rep_inc_prop_id_fk",
+    budgetReportIncomeProjectReportIdFk: foreignKey({
+      columns: [table.projectReportId],
+      foreignColumns: [ProjectReport.id],
+      name: "bud_rep_inc_pro_rep_id_fk",
     }),
   }),
 );
@@ -52,17 +46,11 @@ export const BudgetReportIncomeRevision = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     budgetReportIncomeId: int("budget_report_income_id").notNull(),
-    budgetDomainEnum: int("budget_domain_enum").notNull(),
-    budgetDivisionIncomeEnum: int("budget_division_income_enum").notNull(),
-    name: varchar("name", { length: 30 }).notNull(),
     amount: int("amount"),
-    detail: text("detail"),
     note: text("note"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
@@ -92,7 +80,6 @@ export const BudgetReportExpense = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     projectReportId: int("project_report_id").notNull(),
-    budgetProposalExpenseId: int("budget_proposal_expense_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
@@ -112,11 +99,6 @@ export const BudgetReportExpense = mysqlTable(
       foreignColumns: [ProjectReport.id],
       name: "bud_rep_exp_proj_id_fk",
     }),
-    budgetReportExpenseBudgetProposalExpenseIdFk: foreignKey({
-      columns: [table.budgetProposalExpenseId],
-      foreignColumns: [BudgetProposalExpense.id],
-      name: "bud_rep_exp_prop_id_fk",
-    }),
   }),
 );
 
@@ -125,17 +107,11 @@ export const BudgetReportExpenseRevision = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     budgetReportExpenseId: int("budget_report_expense_id").notNull(),
-    budgetDomainEnum: int("budget_domain_enum").notNull(),
-    budgetDivisionExpenseEnum: int("budget_division_expense_enum").notNull(),
-    budgetClassExpenseEnum: int("budget_class_expense_enum").notNull(),
     amount: int("amount"),
-    detail: text("detail"),
     note: text("note"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
