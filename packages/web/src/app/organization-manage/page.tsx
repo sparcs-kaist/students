@@ -9,7 +9,7 @@ import ManageMemberTable, {
 import { useForm } from "react-hook-form";
 import {
   mockOrganizationMemberData,
-  mockCommitteeMemberData,
+  mockCommitteeMemberTableData,
 } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
@@ -34,17 +34,6 @@ const Box = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
 `;
 
-const TitleWithButton = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  gap: 16px;
-`;
-
 const ButtonWrapper = styled.div`
   display: flex;
   flex: 1;
@@ -57,6 +46,10 @@ type DirtyCommitteeMemberData = {
   deletedRows: OrganizationMemberProps[];
 };
 
+type DirtyCommitteeMemberDataItem = {
+  id: number;
+  dirtyData: DirtyCommitteeMemberData;
+};
 const OrganizationManage = () => {
   const mockOrganizationName = "전산학부";
   const mockPendingApprovalCount = 3;
@@ -77,11 +70,37 @@ const OrganizationManage = () => {
       members: mockOrganizationMemberData,
     },
   });
-  const formCommitteeMethods = useForm<MemberFormValues>({
-    defaultValues: {
-      members: mockCommitteeMemberData,
+
+  const dirtyCommitteeMemberDataList: Array<DirtyCommitteeMemberDataItem> = [];
+
+  const committeeTables = mockCommitteeMemberTableData.map(
+    mockCommitteeMemberTable => {
+      const [dirtyCommitteeMemberData, setDirtyCommitteeMemberData] =
+        useState<DirtyCommitteeMemberData>({
+          updatedRows: [],
+          createdRows: [],
+          deletedRows: [],
+        });
+
+      dirtyCommitteeMemberDataList.push({
+        id: mockCommitteeMemberTable.id,
+        dirtyData: dirtyCommitteeMemberData,
+      });
+
+      return {
+        id: mockCommitteeMemberTable.id,
+        name: mockCommitteeMemberTable.name,
+        formMethods: useForm<MemberFormValues>({
+          defaultValues: {
+            members: mockCommitteeMemberTable.OrganizationMember,
+          },
+        }),
+        initialData: mockCommitteeMemberTable.OrganizationMember,
+        onDiffExtract: setDirtyCommitteeMemberData,
+        roleType: "committee",
+      };
     },
-  });
+  );
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -143,52 +162,32 @@ const OrganizationManage = () => {
         />
       </FlexWrapper>
       <FlexWrapper direction="column" gap={48} padding="0 20px">
-        <FlexWrapper direction="column" gap={10}>
-          <TitleWithButton>
-            <Typography fs={24} lh={24} color="PRIMARY" fw="BOLD">
-              {mockOrganizationName} 운영위원회
-            </Typography>
-            <ButtonsWrapper>
-              <Button type="reverse">운위 삭제</Button>
-              <Button>운위 추가</Button>
-            </ButtonsWrapper>
-          </TitleWithButton>
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={16}>
-          <TitleWithButton>
+        <Typography fs={24} lh={24} color="PRIMARY" fw="BOLD">
+          {mockOrganizationName} 운영위원회
+        </Typography>
+        {committeeTables.map(committeeTable => (
+          <FlexWrapper direction="column" gap={16}>
             <Typography fs={20} lh={20} color="BLACK" fw="BOLD">
-              운영 위원회
+              {committeeTable.name}
             </Typography>
-            <ButtonsWrapper>
-              <Button>위원 추가</Button>
-            </ButtonsWrapper>
-          </TitleWithButton>
-          <ManageMemberTable
-            formMethods={formCommitteeMethods}
-            initialData={mockCommitteeMemberData}
-            onDiffExtract={setDirtyMemberData}
-            roleType="committee"
-          />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={16}>
-          <TitleWithButton>
-            <Typography fs={20} lh={20} color="BLACK" fw="BOLD">
-              확대운영위원회
-            </Typography>
-            <ButtonsWrapper>
-              <Button>위원 추가</Button>
-            </ButtonsWrapper>
-          </TitleWithButton>
-          <ManageMemberTable
-            formMethods={formCommitteeMethods}
-            initialData={mockCommitteeMemberData}
-            onDiffExtract={setDirtyMemberData}
-            roleType="committee"
-          />
-        </FlexWrapper>
+            <ManageMemberTable
+              formMethods={committeeTable.formMethods}
+              initialData={committeeTable.initialData}
+              onDiffExtract={committeeTable.onDiffExtract}
+              roleType="committee"
+            />
+          </FlexWrapper>
+        ))}
       </FlexWrapper>
       <ButtonWrapper>
-        <Button style={{ padding: "8px 16px" }}>제출</Button>
+        <Button
+          style={{ padding: "8px 16px" }}
+          onClick={() => {
+            console.log(dirtyMemberData, dirtyCommitteeMemberDataList);
+          }}
+        >
+          제출
+        </Button>
       </ButtonWrapper>
     </FlexWrapper>
   );
