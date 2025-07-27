@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import isPropValid from "@emotion/is-prop-valid";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
@@ -32,6 +32,10 @@ import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import { overlay } from "overlay-kit";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import NameSearchInput from "@sparcs-students/web/features/organization-manage/components/NameSearchInput";
+import NameSearchResults from "@sparcs-students/web/features/organization-manage/components/NameSearchResults";
+import NameSearchModalContent from "@sparcs-students/web/features/organization-manage/components/NameSearchModalContent";
+import { mockSearchMemberData } from "../services/_mock/mockOrganizationManageData";
 
 const TableWrapper = styled.table`
   position: relative;
@@ -64,6 +68,20 @@ const TableRowWrapper = styled.tr.withConfig({
   height: 48px;
 `;
 
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: end;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+`;
+
 type RoleType = "member" | "committee";
 type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
 type RoleCellInfo = {
@@ -81,7 +99,7 @@ export interface OrganizationMemberProps {
   endDate: string;
 }
 
-interface ManageMemberTableProps {
+export interface ManageMemberTableProps {
   formMethods: ReturnType<typeof useForm<MemberFormValues>>;
   initialData: OrganizationMemberProps[];
   onDiffExtract?: (diff: {
@@ -290,7 +308,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   roleType,
 }) => {
   const { handleSubmit, control, setValue } = formMethods;
-  const { fields, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "members",
   });
@@ -339,7 +357,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   }, [members, onDiffExtract]);
 
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
-    36 + (members.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
+    36 + (members.length + 1) * 48 + 125, // TODO: magic number 36 + 48 + 250
   );
 
   const onSubmit = (data: MemberFormValues) => {
@@ -356,20 +374,64 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
     remove(rowIndex);
     const length = members.length - 1;
 
-    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+    setDynamicHeight(36 + length * 48 + 125); // TODO: magic number
+  };
+
+  const addNewRow = (newRow: OrganizationMemberProps) => {
+    append(newRow);
+
+    const length = members.length + 1;
+    setDynamicHeight(36 + length * 48 + 125);
+  };
+
+  const openAddMemberModal = () => {
+    overlay.open(({ isOpen, close }) => {
+      const [inputText, setInputText] = useState<string>("");
+      const [searchText, setSearchText] = useState<string>("");
+      const [searchResults, setSearchResults] = useState<
+        OrganizationMemberProps[]
+      >([]);
+
+      const onSearch = (text: string) => {
+        // TODO: add search logic
+        console.log("search name: ", text);
+        setSearchText(text);
+        setSearchResults(mockSearchMemberData);
+      };
+
+      return (
+        <Modal isOpen={isOpen} width="400px">
+          <NameSearchModalContent onCancel={close}>
+            <TitleWrapper>
+              <Typography fs={20} lh={20} fw="BOLD" color="BLACK">
+                위원 추가
+              </Typography>
+            </TitleWrapper>
+            <NameSearchInput
+              searchText={inputText}
+              onChange={setInputText}
+              onSearch={onSearch}
+            />
+            <NameSearchResults
+              isSearch={searchText !== ""}
+              searchResults={searchResults}
+              onAddNewRow={addNewRow}
+            />
+          </NameSearchModalContent>
+        </Modal>
+      );
+    });
   };
 
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlexWrapper direction="column" gap={16}>
-          <Typography fs={24} lh={32} fw="SEMIBOLD">
-            구성원 관리
-          </Typography>
-
-          <FlexWrapper direction="row" gap={10}>
-            <Button>저장</Button>
-          </FlexWrapper>
+          {roleType === "committee" && (
+            <ButtonsWrapper>
+              <Button onClick={openAddMemberModal}>위원 추가</Button>
+            </ButtonsWrapper>
+          )}
           <FlexWrapper
             direction="column"
             gap={16}
