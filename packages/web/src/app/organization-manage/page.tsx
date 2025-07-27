@@ -18,6 +18,9 @@ import Notice from "@sparcs-students/web/common/components/Notice";
 import styled from "styled-components";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import { useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
+import Modal from "@sparcs-students/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 
 const BoxWrapper = styled.div`
   display: flex;
@@ -50,6 +53,28 @@ type DirtyCommitteeMemberDataItem = {
   id: number;
   dirtyData: DirtyCommitteeMemberData;
 };
+
+const calculateChangedRows = ({
+  dirtyMemberData,
+  dirtyCommitteeMemberDataList,
+}: {
+  dirtyMemberData: DirtyCommitteeMemberData;
+  dirtyCommitteeMemberDataList: DirtyCommitteeMemberDataItem[];
+}) => {
+  let rows =
+    dirtyMemberData.createdRows.length +
+    dirtyMemberData.deletedRows.length +
+    dirtyMemberData.updatedRows.length;
+
+  dirtyCommitteeMemberDataList.forEach(dirtyCommitteeMemberData => {
+    rows += dirtyCommitteeMemberData.dirtyData.createdRows.length;
+    rows += dirtyCommitteeMemberData.dirtyData.updatedRows.length;
+    rows += dirtyCommitteeMemberData.dirtyData.deletedRows.length;
+  });
+
+  return rows;
+};
+
 const OrganizationManage = () => {
   const mockOrganizationName = "전산학부";
   const mockPendingApprovalCount = 3;
@@ -101,6 +126,31 @@ const OrganizationManage = () => {
       };
     },
   );
+
+  const onConfirmModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} onClose={close}>
+        <CancellableModalContent
+          onConfirm={() => {
+            console.log(dirtyMemberData, dirtyCommitteeMemberDataList);
+          }}
+          onClose={close}
+        >
+          <Typography fs={20} lh={28} fw="REGULAR">
+            <b>
+              {calculateChangedRows({
+                dirtyMemberData,
+                dirtyCommitteeMemberDataList,
+              })}
+              인
+            </b>
+            의 정보가 변경되었습니다. <br />
+            <b>반영</b> 하시겠습니까?
+          </Typography>
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -180,12 +230,7 @@ const OrganizationManage = () => {
         ))}
       </FlexWrapper>
       <ButtonWrapper>
-        <Button
-          style={{ padding: "8px 16px" }}
-          onClick={() => {
-            console.log(dirtyMemberData, dirtyCommitteeMemberDataList);
-          }}
-        >
+        <Button style={{ padding: "8px 16px" }} onClick={onConfirmModal}>
           제출
         </Button>
       </ButtonWrapper>
