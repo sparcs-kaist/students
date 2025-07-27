@@ -51,6 +51,12 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
+type DirtyCommitteeMemberData = {
+  updatedRows: OrganizationMemberProps[];
+  createdRows: OrganizationMemberProps[];
+  deletedRows: OrganizationMemberProps[];
+};
+
 const OrganizationManage = () => {
   const mockOrganizationName = "전산학부";
   const mockPendingApprovalCount = 3;
@@ -59,11 +65,13 @@ const OrganizationManage = () => {
   const router = useRouter();
   // TODO: remove esline disable (임시라서 넣어놓음)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [dirtyMemberData, setDirtyMemberData] = useState<{
-    updatedRows: OrganizationMemberProps[];
-    createdRows: OrganizationMemberProps[];
-    deletedRows: OrganizationMemberProps[];
-  }>({ updatedRows: [], createdRows: [], deletedRows: [] });
+  const [dirtyMemberData, setDirtyMemberData] =
+    useState<DirtyCommitteeMemberData>({
+      updatedRows: [],
+      createdRows: [],
+      deletedRows: [],
+    });
+
   const formMemberMethods = useForm<MemberFormValues>({
     defaultValues: {
       members: mockOrganizationMemberData,
