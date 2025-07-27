@@ -49,3 +49,45 @@ export const mockCommitteeMemberData: OrganizationMemberProps[] = [
     endDate: "2025-12-31",
   },
 ];
+
+export const mockAnotherCommitteeMemberData: OrganizationMemberProps[] = [
+  {
+    id: 1,
+    studentId: "20210000",
+    name: "박정민",
+    role: CommitteeRoleEnum.Chief,
+    startDate: "2025-05-22",
+    endDate: "2025-12-31",
+  },
+  {
+    id: 2,
+    studentId: "20210000",
+    name: "박정민",
+    role: CommitteeRoleEnum.Member,
+    startDate: "2025-05-22",
+    endDate: "2025-12-31",
+  },
+  {
+    id: 3,
+    studentId: "20210000",
+    name: "박정민",
+    role: CommitteeRoleEnum.Member,
+    startDate: "2025-05-22",
+    endDate: "2025-12-31",
+  },
+];
+
+export type OrganizationMemberTableType = {
+  id: number;
+  name: string;
+  OrganizationMember: OrganizationMemberProps[];
+};
+
+export const mockCommitteeMemberTableData: OrganizationMemberTableType[] = [
+  { id: 1, name: "운영위원회", OrganizationMember: mockCommitteeMemberData },
+  {
+    id: 2,
+    name: "확대운영위원회",
+    OrganizationMember: mockAnotherCommitteeMemberData,
+  },
+];
