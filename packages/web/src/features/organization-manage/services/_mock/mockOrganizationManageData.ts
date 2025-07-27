@@ -1,8 +1,18 @@
-import { OrganizationMemberProps } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
+
+type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+
+interface OrganizationMemberProps {
+  id: number;
+  studentId: string;
+  name: string;
+  role: RoleEnumType; // TODO: change to real enum
+  startDate: string;
+  endDate: string;
+}
 
 export const mockOrganizationMemberData: OrganizationMemberProps[] = [
   {
@@ -89,5 +99,32 @@ export const mockCommitteeMemberTableData: OrganizationMemberTableType[] = [
     id: 2,
     name: "확대운영위원회",
     OrganizationMember: mockAnotherCommitteeMemberData,
+  },
+];
+
+export const mockSearchMemberData: OrganizationMemberProps[] = [
+  {
+    id: 7,
+    studentId: "20210000",
+    name: "박정민",
+    role: MemberRoleEnum.Chief,
+    startDate: "2025-07-18",
+    endDate: "2025-12-31",
+  },
+  {
+    id: 18,
+    studentId: "20210000",
+    name: "빅정민",
+    role: MemberRoleEnum.Vice,
+    startDate: "2025-05-22",
+    endDate: "2025-07-18",
+  },
+  {
+    id: 718,
+    studentId: "20210000",
+    name: "박민정",
+    role: MemberRoleEnum.Member,
+    startDate: "2024-07-18",
+    endDate: "2025-07-18",
   },
 ];
