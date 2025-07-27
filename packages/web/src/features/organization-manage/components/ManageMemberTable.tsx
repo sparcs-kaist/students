@@ -9,13 +9,13 @@ import {
   useForm,
   useWatch,
   UseFormSetValue,
+  UseFormGetValues,
 } from "react-hook-form";
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 import TagSelect from "@sparcs-students/web/common/components/Selects/TagSelect";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import {
   memberRoleTagList,
   committeeRoleTagList,
@@ -27,6 +27,11 @@ import {
 import isEqual from "lodash/isEqual";
 import { DarkTagColor } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { LightTagColor } from "@sparcs-students/web/common/components/Tag/LightTag";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
+
+import Modal from "@sparcs-students/web/common/components/Modal";
+import { overlay } from "overlay-kit";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 
 const TableWrapper = styled.table`
   position: relative;
@@ -101,6 +106,7 @@ const COL_WIDTHS = {
 };
 
 interface MemberRowProps {
+  getValues: UseFormGetValues<MemberFormValues>;
   setValue: UseFormSetValue<MemberFormValues>;
   rowIndex: number;
   isLast: boolean;
@@ -109,6 +115,7 @@ interface MemberRowProps {
 }
 
 const MemberRow: React.FC<MemberRowProps> = ({
+  getValues,
   setValue,
   rowIndex,
   isLast,
@@ -162,6 +169,29 @@ const MemberRow: React.FC<MemberRowProps> = ({
     default:
       break;
   }
+
+  const openDeleteModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <CancellableModalContent
+          onConfirm={() => {
+            deleteRow(rowIndex);
+            close();
+          }}
+          onClose={() => close()}
+        >
+          <Typography fs={20} lh={28} color="BLACK" fw="REGULAR">
+            <b>{getValues(`members.${rowIndex}.name`)}</b> 학우를 <b>삭제</b>
+            하시겠습니까?
+          </Typography>
+
+          <Typography fs={12} lh={12} color="BLACK" fw="REGULAR">
+            이 경우 기록 자체가 삭제되므로, 실수로 승인한 경우에만 삭제해주세요.
+          </Typography>
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
 
   return (
     <TableRowWrapper isLast={isLast}>
@@ -245,7 +275,7 @@ const MemberRow: React.FC<MemberRowProps> = ({
         <Icon
           type="delete"
           size={16}
-          onClick={() => deleteRow(rowIndex)}
+          onClick={() => openDeleteModal()}
           color="BLACK"
         />
       </TableCell>
@@ -375,6 +405,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
               <TableContentWrapper>
                 {fields.map((field, idx) => (
                   <MemberRow
+                    getValues={formMethods.getValues}
                     setValue={setValue}
                     key={field.id}
                     rowIndex={idx}
