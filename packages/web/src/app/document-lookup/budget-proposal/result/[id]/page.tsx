@@ -13,9 +13,7 @@ import { mockData } from "@sparcs-students/web/features/document-lookup/componen
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import { UserPermission } from "@sparcs-students/web/constants/userPermission";
 
-// import ViewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetProposalFrame";
 import ReviewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetProposalFrame";
-// import ManagerBudgetProposalFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetProposalFrame";
 import { useRouter, useSearchParams } from "next/navigation";
 import ThreeInput, {
   ThreeInputItem,
@@ -24,6 +22,16 @@ import getMockUserPermission from "@sparcs-students/web/features/document-lookup
 import ViewerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetProposalFrame";
 import ManagerBudgetProposalFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ManagerBudgetProposalFrame";
 import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
+import ExcelDownloadButton from "@sparcs-students/web/features/document-lookup/budget/components/ExcelDownloadButton";
+
+// 실제 mock 데이터 import
+import {
+  mockDBIncomeData,
+  mockDBExpenditureData,
+} from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
+
+// TotalTable용 mock 데이터는 별도로 import
+import { mockTotalData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewerReviewerBudgetData";
 
 const BudgetProposal = () => {
   const items: ThreeInputItem[] = mockData;
@@ -39,10 +47,10 @@ const BudgetProposal = () => {
   const [year, setYear] = useState<number>(queryYear);
   const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
   const [type, setType] = useState<DocumentType | null>(queryType);
-  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
+  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey);
+  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue);
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission();
 
   const router = useRouter();
 
@@ -119,6 +127,25 @@ const BudgetProposal = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
+
+        {/* 엑셀 다운로드 버튼 추가 */}
+        <FlexWrapper
+          direction="row"
+          gap={8}
+          style={{ justifyContent: "flex-end" }}
+        >
+          <ExcelDownloadButton
+            totalData={mockTotalData}
+            expenditureData={mockDBExpenditureData}
+            incomeData={mockDBIncomeData}
+            year={year}
+            semester={isSpring ? "상반기" : "하반기"}
+            documentType={type || "예산안"}
+            organization="전산학부"
+            submitter="김스튜"
+          />
+        </FlexWrapper>
+
         {userPermission === UserPermission.Viewer && (
           <ViewerBudgetProposalFrame />
         )}

@@ -60,6 +60,8 @@
   "packageManager": "pnpm@9.14.4",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
-    "uuid": "^11.0.3"
+    "@types/xlsx": "^0.0.36",
+    "uuid": "^11.0.3",
+    "xlsx": "^0.18.5"
   }
 }
