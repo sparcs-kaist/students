@@ -5,11 +5,27 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repository";
+import {
+  ApiOrg007ResponseCreated,
+  ApiOrg008ResponseCreated,
+  ApiOrg009ResponseCreated,
+} from "@sparcs-students/interface/api/organization/index";
+import { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
+import {
+  ITeamMemberRequestCreate,
+  ITeamLeaderRequestCreate,
+} from "@sparcs-students/interface/api/organization/type/organization.student.type";
+
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 import { OrganizationRepository } from "../repository/organization.repository";
+
 import { OrganizationPresidentRepository } from "../repository/organization.president.repository";
 import { OrganizationMemberRepository } from "../repository/organization.member.repository";
 import { OrganizationManagerRepository } from "../repository/organization.manager.repository";
+
+import { TeamRepository } from "../repository/organization.team.repository";
+import { TeamMemberRepository } from "../repository/organization.team.member.repository";
+import { TeamLeaderRepository } from "../repository/organization.team.leader.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -28,6 +44,9 @@ export class OrganizationService {
     private readonly organizationMemberRepository: OrganizationMemberRepository,
     private readonly organizationManagerRepository: OrganizationManagerRepository,
     private readonly semesterPublicService: SemesterPublicService,
+    private readonly teamRepository: TeamRepository,
+    private readonly teamMemberRepository: TeamMemberRepository,
+    private readonly teamLeaderRepository: TeamLeaderRepository,
   ) {}
 
   async createOrganization(body) {
@@ -306,5 +325,52 @@ export class OrganizationService {
     });
 
     return { organizationManager: createdManager };
+  }
+
+  async postOrganizationTeamForPresident(
+    body: ITeamRequestCreate,
+  ): Promise<ApiOrg007ResponseCreated> {
+    // TODO: Type 수정
+    const existing = await this.teamRepository.find({
+      organizationId: body.organization.id,
+      name: body.name,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    if (existing.length > 0) {
+      throw new ConflictException("duplicated team");
+    }
+    const newTeam = await this.teamRepository.create(body);
+    return { team: newTeam[0] };
+  }
+
+  async postOrganizationTeamMemberForPresident(
+    body: ITeamMemberRequestCreate,
+  ): Promise<ApiOrg008ResponseCreated> {
+    // TODO: Type 수정
+    const existing = await this.teamMemberRepository.find({
+      teamId: body.team.id,
+      studentId: body.student.id,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    if (existing.length > 0) {
+      throw new ConflictException("duplicated member");
+    }
+    const newMember = await this.teamMemberRepository.create(body);
+    return { teamMemberId: newMember[0] };
+  }
+
+  async postOrganizationTeamLeaderForPresident(
+    body: ITeamLeaderRequestCreate,
+  ): Promise<ApiOrg009ResponseCreated> {
+    // TODO: Type 수정
+    const existing = await this.teamLeaderRepository.find({
+      teamId: body.team.id,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    if (existing.length > 0) {
+      throw new ConflictException("leader exists");
+    }
+    const newLeader = await this.teamLeaderRepository.create(body);
+    return { teamLeaderId: newLeader[0] };
   }
 }

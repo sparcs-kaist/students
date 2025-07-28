@@ -69,8 +69,8 @@ export const zTeam = z.object({
   id: zId,
   organization: zOrganization.pick({ id: true }),
   name: zName,
-  startTerm: z.date(),
-  endTerm: z.date().nullable(),
+  startTerm: z.coerce.date(),
+  endTerm: z.coerce.date().nullable(),
 });
 
 export const zTeamRequestCreate = zTeam
@@ -79,11 +79,9 @@ export const zTeamRequestCreate = zTeam
     startTerm: true,
     endTerm: true,
   })
-  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
+  .extend({ startTerm: z.coerce.date(), endTerm: z.coerce.date().nullable() });
 
-export const zTeamResponse = zTeam.extend({
-  organization: zOrganization,
-});
+export const zTeamResponse = zTeam.pick({ id: true });
 
 export type ITeam = z.infer<typeof zTeam>;
 export type ITeamResponse = z.infer<typeof zTeamResponse>;
