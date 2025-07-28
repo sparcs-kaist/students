@@ -16,9 +16,17 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import { memberRoleTagList } from "@sparcs-students/web/common/util/tableTagList";
-import { MemberRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
+import {
+  memberRoleTagList,
+  committeeRoleTagList,
+} from "@sparcs-students/web/common/util/tableTagList";
+import {
+  MemberRoleEnum,
+  CommitteeRoleEnum,
+} from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import isEqual from "lodash/isEqual";
+import { DarkTagColor } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import { LightTagColor } from "@sparcs-students/web/common/components/Tag/LightTag";
 
 const TableWrapper = styled.table`
   position: relative;
@@ -51,11 +59,19 @@ const TableRowWrapper = styled.tr.withConfig({
   height: 48px;
 `;
 
+type RoleType = "member" | "committee";
+type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+type RoleCellInfo = {
+  label: string;
+  value: RoleEnumType;
+  color: LightTagColor | DarkTagColor;
+};
+
 export interface OrganizationMemberProps {
   id: number;
   studentId: string;
   name: string;
-  role: MemberRoleEnum; // TODO: change to real enum
+  role: RoleEnumType; // TODO: change to real enum
   startDate: string;
   endDate: string;
 }
@@ -68,6 +84,7 @@ interface ManageMemberTableProps {
     createdRows: OrganizationMemberProps[];
     deletedRows: OrganizationMemberProps[];
   }) => void;
+  roleType: RoleType;
 }
 
 export interface MemberFormValues {
@@ -88,6 +105,7 @@ interface MemberRowProps {
   rowIndex: number;
   isLast: boolean;
   deleteRow: (index: number) => void;
+  roleType: RoleType;
 }
 
 const MemberRow: React.FC<MemberRowProps> = ({
@@ -95,28 +113,55 @@ const MemberRow: React.FC<MemberRowProps> = ({
   rowIndex,
   isLast,
   deleteRow,
+  roleType,
 }) => {
-  const memberRoleList = Object.entries(memberRoleTagList).map(
-    ([key, { text, color }]) => {
-      const value = () => {
-        switch (key) {
-          case "1":
-            return MemberRoleEnum.Chief;
-          case "2":
-            return MemberRoleEnum.Vice;
-          case "3":
-            return MemberRoleEnum.Editor;
-          default:
-            return MemberRoleEnum.Member;
-        }
-      };
-      return {
-        label: text,
-        value: value(),
-        color,
-      };
-    },
-  );
+  let roleList: RoleCellInfo[];
+  switch (roleType) {
+    case "committee":
+      roleList = Object.entries(committeeRoleTagList).map(
+        ([key, { text, color }]) => {
+          const value = () => {
+            switch (key) {
+              case "1":
+                return CommitteeRoleEnum.Chief;
+              default:
+                return CommitteeRoleEnum.Member;
+            }
+          };
+          return {
+            label: text,
+            value: value(),
+            color,
+          };
+        },
+      );
+      break;
+    case "member":
+      roleList = Object.entries(memberRoleTagList).map(
+        ([key, { text, color }]) => {
+          const value = () => {
+            switch (key) {
+              case "1":
+                return MemberRoleEnum.Chief;
+              case "2":
+                return MemberRoleEnum.Vice;
+              case "3":
+                return MemberRoleEnum.Editor;
+              default:
+                return MemberRoleEnum.Member;
+            }
+          };
+          return {
+            label: text,
+            value: value(),
+            color,
+          };
+        },
+      );
+      break;
+    default:
+      break;
+  }
 
   return (
     <TableRowWrapper isLast={isLast}>
@@ -154,8 +199,8 @@ const MemberRow: React.FC<MemberRowProps> = ({
         name={`members.${rowIndex}.role`}
         render={({ field }) => (
           <TableCell type="Default" width={COL_WIDTHS.role}>
-            <TagSelect<MemberRoleEnum>
-              items={memberRoleList.slice(0, 4)}
+            <TagSelect<RoleEnumType>
+              items={roleList.slice(0, 4)}
               value={field.value || "-"}
               onChange={newValue => {
                 setValue(`members.${rowIndex}.role`, newValue);
@@ -212,6 +257,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   formMethods,
   initialData,
   onDiffExtract = () => {},
+  roleType,
 }) => {
   const { handleSubmit, control, setValue } = formMethods;
   const { fields, remove } = useFieldArray({
@@ -334,6 +380,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
                     rowIndex={idx}
                     isLast={idx === fields.length - 1}
                     deleteRow={() => deleteRow(idx)}
+                    roleType={roleType}
                   />
                 ))}
               </TableContentWrapper>
