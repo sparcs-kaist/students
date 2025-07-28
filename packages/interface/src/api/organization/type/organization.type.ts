@@ -1,6 +1,7 @@
 import {
   OrganizationStateEnum,
   OrganizationTypeEnum,
+  CommitteeTypeEnum,
 } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import { z } from "zod";
@@ -40,6 +41,7 @@ export const zOperatingCommittee = z.object({
   organization: zOrganization.pick({ id: true }),
   name: zName,
   nameEng: zNameEng,
+  committeeTypeEnum: z.nativeEnum(CommitteeTypeEnum),
   startTerm: z.date(),
   endTerm: z.date().nullable(),
 });
