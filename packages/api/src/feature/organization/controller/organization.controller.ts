@@ -1,61 +1,35 @@
-import { Controller, UsePipes, Post, Body } from "@nestjs/common";
-
+import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
-  ApiOrg007RequestBody,
-  ApiOrg007RequestUrl,
-  ApiOrg007ResponseCreated,
-  apiOrg007,
-  ApiOrg008RequestBody,
-  ApiOrg008RequestUrl,
-  ApiOrg008ResponseCreated,
-  apiOrg008,
-  ApiOrg009RequestBody,
-  ApiOrg009RequestUrl,
-  ApiOrg009ResponseCreated,
-  apiOrg009,
+  apiOrg011,
+  ApiOrg011RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
-
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
-
-import { OrganizationService } from "../service/organization.service";
+import {
+  GetStudent,
+  StudentProfile,
+} from "@sparcs-students/api/common/decorators/get-user.decorator";
 import { OrganizationPublicService } from "../service/organization.public.service";
 
-@Controller()
+@Controller("organizations")
 export class OrganizationController {
   constructor(
-    private readonly organizationPublicService: OrganizationPublicService,
-    private readonly organizationService: OrganizationService,
+    private readonly organizationService: OrganizationPublicService,
   ) {}
 
-  @Public() // TODO: 유저 데코레이터 추가
-  @Post(ApiOrg007RequestUrl)
-  @UsePipes(new ZodPipe(apiOrg007))
-  async postOrganizationTeamForPresident(
-    @Body() body: ApiOrg007RequestBody,
-  ): Promise<ApiOrg007ResponseCreated> {
-    return this.organizationService.postOrganizationTeamForPresident(body.team);
+  // 전체 단체 조회 ( 학기별로 그룹 )
+  @Public()
+  @Get("lookup")
+  async getOrganizationList() {
+    return this.organizationService.getOrganizationList();
   }
 
-  @Public() // TODO: 유저 데코레이터 추가
-  @Post(ApiOrg008RequestUrl)
-  @UsePipes(new ZodPipe(apiOrg008))
-  async postOrganizationTeamMemberForPresident(
-    @Body() body: ApiOrg008RequestBody,
-  ): Promise<ApiOrg008ResponseCreated> {
-    return this.organizationService.postOrganizationTeamMemberForPresident(
-      body.teamMember,
-    );
-  }
-
-  @Public() // TODO: 유저 데코레이터 추가
-  @Post(ApiOrg009RequestUrl)
-  @UsePipes(new ZodPipe(apiOrg009))
-  async postOrganizationTeamLeaderForPresident(
-    @Body() body: ApiOrg009RequestBody,
-  ): Promise<ApiOrg009ResponseCreated> {
-    return this.organizationService.postOrganizationTeamLeaderForPresident(
-      body.teamLeader,
-    );
+  @Post("apply")
+  @UsePipes(new ZodPipe(apiOrg011))
+  async applyMember(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiOrg011RequestBody,
+  ) {
+    return this.organizationService.applyMember(student, body);
   }
 }

@@ -27,7 +27,7 @@ export const zOrganizationRequestCreate = zOrganization
     startTerm: true,
     endTerm: true,
   })
-  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
+  .extend({ startTerm: z.coerce.date(), endTerm: z.coerce.date().nullable() });
 
 export type IOrganization = z.infer<typeof zOrganization>;
 export type IOrganizationRequestCreate = z.infer<
