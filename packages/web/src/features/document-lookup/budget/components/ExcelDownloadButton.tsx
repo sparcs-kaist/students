@@ -161,6 +161,7 @@ const ExcelDownloadButton: React.FC<ExcelDownloadButtonProps> = ({
         "수입 소계",
         "",
         "",
+        "",
         formatCurrency(studentIncomeTotal.lastYear),
         formatCurrency(studentIncomeTotal.thisYear),
         formatRatio(studentIncomeRatio),
@@ -206,6 +207,7 @@ const ExcelDownloadButton: React.FC<ExcelDownloadButtonProps> = ({
       sheetData.push([
         "",
         "수입 소계",
+        "",
         "",
         "",
         formatCurrency(schoolIncomeTotal.lastYear),
@@ -256,6 +258,7 @@ const ExcelDownloadButton: React.FC<ExcelDownloadButtonProps> = ({
         "수입 소계",
         "",
         "",
+        "",
         formatCurrency(autonomousIncomeTotal.lastYear),
         formatCurrency(autonomousIncomeTotal.thisYear),
         formatRatio(autonomousIncomeRatio),
@@ -283,6 +286,7 @@ const ExcelDownloadButton: React.FC<ExcelDownloadButtonProps> = ({
     sheetData.push([
       "",
       "수입 총계",
+      "",
       "",
       "",
       formatCurrency(totalIncome.lastYear),
