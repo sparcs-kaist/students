@@ -225,7 +225,6 @@ const TableRow: React.FC<TableRowProps> = ({
               items={budgetDomainList.slice(0, 3)}
               value={field.value || "-"}
               onChange={newValue => {
-                if (rowIndex === 0) return;
                 setValue(`expenditures.${rowIndex}.budgetDomain`, newValue);
                 field.onChange(newValue);
                 setValue(`expenditures.${rowIndex}.projectName`, "");
@@ -239,7 +238,6 @@ const TableRow: React.FC<TableRowProps> = ({
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="65px"
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -252,7 +250,6 @@ const TableRow: React.FC<TableRowProps> = ({
               items={divisionItemsList.slice(0, 3)}
               value={field.value || divisionItemsList[0].value}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 setValue(
                   `expenditures.${rowIndex}.item`,
                   BudgetClassExpenseEnum.Undefined,
@@ -269,7 +266,6 @@ const TableRow: React.FC<TableRowProps> = ({
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="90px"
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -282,11 +278,9 @@ const TableRow: React.FC<TableRowProps> = ({
               items={setProjectNameListInputItem(getProjectNameCandidateList())}
               value={field.value}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               errorMessage="필수 항목입니다."
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -299,14 +293,12 @@ const TableRow: React.FC<TableRowProps> = ({
               items={divisionItemsClassList.slice(0, 16)}
               value={field.value || divisionItemsClassList[0]}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="90px"
               isLight={false} // DarkTag is used.
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -318,7 +310,6 @@ const TableRow: React.FC<TableRowProps> = ({
             <TableTextInput
               value={field.value}
               handleChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="금액 입력"
@@ -334,7 +325,6 @@ const TableRow: React.FC<TableRowProps> = ({
             <TableTextInput
               value={field.value}
               handleChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="금액 입력"
@@ -409,10 +399,9 @@ const TableRow: React.FC<TableRowProps> = ({
           type="delete"
           size={16}
           onClick={() => {
-            if (rowIndex === 0) return;
             deleteRow(rowIndex);
           }}
-          color={rowIndex === 0 ? colors.GRAY["50"] : colors.BLACK}
+          color={colors.BLACK}
         />
       </TableCell>
     </TableRowWrapper>
