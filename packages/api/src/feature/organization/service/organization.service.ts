@@ -27,6 +27,7 @@ import { TeamRepository } from "../repository/organization.team.repository";
 import { TeamMemberRepository } from "../repository/organization.team.member.repository";
 import { TeamLeaderRepository } from "../repository/organization.team.leader.repository";
 import { OperatingCommitteeRepository } from "../repository/organization.operatingcommittee.repository";
+import { OperatingCommitteeMemberRepository } from "../repository/organization.operatingcommittee.member.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -49,6 +50,7 @@ export class OrganizationService {
     private readonly teamMemberRepository: TeamMemberRepository,
     private readonly teamLeaderRepository: TeamLeaderRepository,
     private readonly operatingCommitteeRepository: OperatingCommitteeRepository,
+    private readonly operatingCommitteeMemberRepository: OperatingCommitteeMemberRepository,
   ) {}
 
   async createOrganization(body) {
@@ -387,5 +389,18 @@ export class OrganizationService {
     const newOperatingCommittee =
       await this.operatingCommitteeRepository.create(body);
     return { operatingCommittee: newOperatingCommittee[0] };
+  }
+
+  async createOperatingCommitteeMember(body) {
+    const existing = await this.operatingCommitteeMemberRepository.find({
+      operatingCommitteeId: body.operatingCommittee.id,
+      studentId: body.student.id,
+    });
+    if (existing.length > 0) {
+      throw new ConflictException("duplicated member");
+    }
+    const newMember =
+      await this.operatingCommitteeMemberRepository.create(body);
+    return { operatingCommitteeMember: newMember[0] };
   }
 }
