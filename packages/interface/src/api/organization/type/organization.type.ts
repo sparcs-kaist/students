@@ -42,8 +42,8 @@ export const zOperatingCommittee = z.object({
   name: zName,
   nameEng: zNameEng,
   committeeTypeEnum: z.nativeEnum(CommitteeTypeEnum),
-  startTerm: z.date(),
-  endTerm: z.date().nullable(),
+  startTerm: z.coerce.date(),
+  endTerm: z.coerce.date().nullable(),
 });
 
 export const zOperatingCommitteeResponse = zOperatingCommittee.extend({
@@ -56,7 +56,7 @@ export const zOperatingCommitteeRequestCreate = zOperatingCommittee
     startTerm: true,
     endTerm: true,
   })
-  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
+  .extend({ startTerm: z.coerce.date(), endTerm: z.coerce.date().nullable() });
 
 export type IOperatingCommittee = z.infer<typeof zOperatingCommittee>;
 export type IOperatingCommitteeResponse = z.infer<

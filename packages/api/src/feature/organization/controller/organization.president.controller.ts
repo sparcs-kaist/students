@@ -7,14 +7,17 @@ import {
   apiOrg007,
   apiOrg008,
   apiOrg009,
+  apiOrg012,
   ApiOrg005RequestBody,
   ApiOrg006RequestBody,
   ApiOrg007RequestBody,
   ApiOrg008RequestBody,
   ApiOrg009RequestBody,
+  ApiOrg012RequestBody,
   ApiOrg007ResponseCreated,
   ApiOrg008ResponseCreated,
   ApiOrg009ResponseCreated,
+  ApiOrg012ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 import {
   GetStudent,
@@ -77,6 +80,17 @@ export class OrganizationpresidentController {
   ): Promise<ApiOrg009ResponseCreated> {
     return this.organizationService.postOrganizationTeamLeaderForPresident(
       body.teamLeader,
+    );
+  }
+
+  @Public() // 임시로 로그인 없이 생성. 총학생회장 데코레이터 추가 필요
+  @Post("operating-committee")
+  @UsePipes(new ZodPipe(apiOrg012))
+  async createOperatingCommittee(
+    @Body() body: ApiOrg012RequestBody,
+  ): Promise<ApiOrg012ResponseCreated> {
+    return this.organizationService.createOperatingCommittee(
+      body.operatingCommittee,
     );
   }
 }

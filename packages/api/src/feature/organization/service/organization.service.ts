@@ -26,6 +26,7 @@ import { OrganizationManagerRepository } from "../repository/organization.manage
 import { TeamRepository } from "../repository/organization.team.repository";
 import { TeamMemberRepository } from "../repository/organization.team.member.repository";
 import { TeamLeaderRepository } from "../repository/organization.team.leader.repository";
+import { OperatingCommitteeRepository } from "../repository/organization.operatingcommittee.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -47,6 +48,7 @@ export class OrganizationService {
     private readonly teamRepository: TeamRepository,
     private readonly teamMemberRepository: TeamMemberRepository,
     private readonly teamLeaderRepository: TeamLeaderRepository,
+    private readonly operatingCommitteeRepository: OperatingCommitteeRepository,
   ) {}
 
   async createOrganization(body) {
@@ -372,5 +374,18 @@ export class OrganizationService {
     }
     const newLeader = await this.teamLeaderRepository.create(body);
     return { teamLeaderId: newLeader[0] };
+  }
+
+  async createOperatingCommittee(body) {
+    const existing = await this.operatingCommitteeRepository.find({
+      organizationId: body.organization.id,
+      name: body.name,
+    });
+    if (existing.length > 0) {
+      throw new ConflictException("duplicated operatingCommittee");
+    }
+    const newOperatingCommittee =
+      await this.operatingCommitteeRepository.create(body);
+    return { operatingCommittee: newOperatingCommittee[0] };
   }
 }
