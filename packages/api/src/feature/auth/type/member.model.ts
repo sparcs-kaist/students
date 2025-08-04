@@ -28,6 +28,8 @@ export type MemberDbResult = {
 export class MMember implements IMember {
   id: IMember["id"];
 
+  studentId: IMember["studentId"];
+
   organization?: IMember["organization"];
 
   user: IMember["user"];
@@ -53,6 +55,7 @@ export class MMember implements IMember {
   static fromDBResult(dbResult: MemberDbResult) {
     return new MMember({
       id: dbResult.user.id,
+      studentId: dbResult.student?.id,
       organization: dbResult.organization
         ? { id: dbResult.organization.id }
         : undefined,

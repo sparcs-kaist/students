@@ -22,6 +22,7 @@ import {
 
 type OrganizationQuery = {
   organizationId: number;
+  name: string;
   organizationTypeEnum: number;
   foundingYear: number;
   startTerm: string;
@@ -112,6 +113,7 @@ export class OrganizationRepository extends BaseSingleTableRepository<
       {
         id: Organization,
         organizationId: Organization,
+        name: Organization,
         organizationTypeEnum: Organization,
         foundingYear: Organization,
         startTerm: Organization,
