@@ -133,6 +133,7 @@ const OrganizationManage = () => {
         <CancellableModalContent
           onConfirm={() => {
             console.log(dirtyMemberData, dirtyCommitteeMemberDataList);
+            close();
           }}
           onClose={close}
         >
