@@ -1,5 +1,4 @@
 import { OrganizationMemberProps } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
-import { CommitteeProps } from "@sparcs-students/web/features/organization-manage/components/ManageCommitteeTable";
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
@@ -32,25 +31,6 @@ export const mockOrganizationMemberData: OrganizationMemberProps[] = [
   },
 ];
 
-export const mockCommitteeListData: CommitteeProps[] = [
-  {
-    id: "1",
-    name: "간식이벤트",
-    leader: "박정민",
-    headcount: 5,
-  },
-  {
-    id: "2",
-    name: "스튜던츠",
-    leader: "김스튜",
-    headcount: 7,
-  },
-  {
-    id: "3",
-    name: "스팍스",
-    leader: "김팍스",
-    headcount: 18,
-    
 export const mockCommitteeMemberData: OrganizationMemberProps[] = [
   {
     id: 1,
