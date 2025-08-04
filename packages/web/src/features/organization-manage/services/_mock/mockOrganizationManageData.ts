@@ -50,7 +50,9 @@ export const mockCommitteeListData: CommitteeProps[] = [
     name: "스팍스",
     leader: "김팍스",
     headcount: 18,
-    
+  },
+];
+
 export const mockCommitteeMemberData: OrganizationMemberProps[] = [
   {
     id: 1,

@@ -12,6 +12,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  MemberRegistrationEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {
@@ -276,14 +277,14 @@ export const memberRoleTagList: {
   },
 };
 
-export const getMemberTag = (role: number) => {
+export const getMemberTag = (role: MemberRoleEnum) => {
   // TODO: change to enum
   switch (role) {
-    case 0: // 대표자
+    case MemberRoleEnum.Chief: // 대표자
       return { color: "GREEN800", text: "대표자" };
-    case 1: // 부대표자
+    case MemberRoleEnum.Vice: // 부대표자
       return { color: "GREEN600", text: "부대표자" };
-    case 2: // 예결산 편집자
+    case MemberRoleEnum.Editor: // 예결산 편집자
       return { color: "GREEN300", text: "예결산 편집자" };
     default: // 부원
       return { color: "GREEN100", text: "부원" };
@@ -301,4 +302,34 @@ export const committeeRoleTagList: {
     text: "위원",
     color: "GREEN100",
   },
+};
+
+export const MemberRegistrationTagList: {
+  [key in MemberRegistrationEnum]: StatusDetail;
+} = {
+  [MemberRegistrationEnum.NotReviewed]: {
+    text: "미검토",
+    color: "GRAY",
+  },
+  [MemberRegistrationEnum.Approved]: {
+    text: "승인됨",
+    color: "BLUE",
+  },
+  [MemberRegistrationEnum.Rejected]: {
+    text: "반려됨",
+    color: "RED",
+  },
+};
+
+export const getMemberRegistrationTag = (status: MemberRegistrationEnum) => {
+  switch (status) {
+    case MemberRegistrationEnum.NotReviewed:
+      return { color: "GRAY", text: "미검토" };
+    case MemberRegistrationEnum.Approved:
+      return { color: "BLUE", text: "승인됨" };
+    case MemberRegistrationEnum.Rejected:
+      return { color: "RED", text: "반려됨" };
+    default:
+      return { color: "GRAY", text: "-" };
+  }
 };
