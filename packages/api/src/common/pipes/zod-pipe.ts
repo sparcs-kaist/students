@@ -25,6 +25,11 @@ export class ZodPipe implements PipeTransform {
       body: this.schema.requestBody,
     }; // custom type이 없다고 가정.
     const schema = schemaMap[metadata.type];
+
+    if (!schema) {
+      return value;
+    }
+
     return schema.parse(value);
   }
 }

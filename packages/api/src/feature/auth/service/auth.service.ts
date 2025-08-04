@@ -167,7 +167,16 @@ export class AuthService {
   }
 
   getAccessToken(user: MMember) {
-    const userStored = removeUndefined({ ...user });
+    const userStored = removeUndefined({
+      id: user.id,
+      sid: user.sid,
+      name: user.name,
+      email: user.email,
+      type: "Student",
+      studentId: user.studentId,
+      studentNumber: user.studentNumber,
+      departmentId: user.department?.id,
+    });
     const accessToken = this.jwtService.sign(userStored, {
       secret: this.jwtConfig.secret,
       expiresIn: `${this.jwtConfig.signOptions.expiresIn}s`,

@@ -1,13 +1,16 @@
 import { HttpStatusCode } from "axios";
 import "zod-openapi/extend";
 import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { registry, restMethod } from "@sparcs-students/interface/open-api";
 
 /**
  * @version v0.1
- * @description 로그인을 시도합니다
+ * @description SPARCS SSO 로그인 콜백을 처리합니다.
  */
 
 const url = () => `/auth/sign-in/callback`;
+export const ApiAut004RequestUrl = url();
 const method = "GET";
 
 const requestParam = z.object({});
@@ -57,3 +60,43 @@ export type {
   ApiAut004RequestBody,
   ApiAut004ResponseOk,
 };
+
+extendZodWithOpenApi(z);
+
+registry.registerPath({
+  tags: ["Auth"],
+  method: restMethod.method[method],
+  path: ApiAut004RequestUrl,
+  description: `
+  # AUT-004
+
+  SPARCS SSO 로그인 콜백을 처리합니다.
+
+  uid, sid 로 email을 upsert 처리 합니다.
+
+  studentNumber로 userId를 upsert 처리 합니다.
+
+  `,
+  summary: "AUT-004: SPARCS SSO 로그인 콜백",
+  request: {
+    params: requestParam,
+    query: requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    [restMethod.code[method]]: {
+      description: "성공적으로 SPARCS SSO 로그인 콜백을 처리했습니다.",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[HttpStatusCode.Ok],
+        },
+      },
+    },
+  },
+});

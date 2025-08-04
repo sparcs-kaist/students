@@ -1,4 +1,4 @@
-import { ISemester } from "@sparcs-students/interface/api/semester/type/semester.type";
+import { ISemester } from "@sparcs-students/interface/api/semester/index";
 
 export interface ISemesterCreate {
   name: ISemester["name"];

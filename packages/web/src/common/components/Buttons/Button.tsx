@@ -9,6 +9,10 @@ Custom Children을 넣고자 하면, iconType, buttonText 전달X
 
 "use client";
 
+/*
+
+ */
+
 import React, { HTMLAttributes } from "react";
 import styled from "styled-components";
 import Icon from "@sparcs-students/web/common/components/Icon";
@@ -41,9 +45,9 @@ const ButtonDefaultInner = styled(ButtonInner)`
 `;
 
 const ButtonReverseInner = styled(ButtonInner)`
-  color: ${({ theme }) => theme.colors.GREEN[700]};
+  color: ${({ theme }) => theme.colors.PRIMARY};
   background: ${({ theme }) => theme.colors.WHITE};
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[700]};
+  border: 1px solid ${({ theme }) => theme.colors.PRIMARY};
   cursor: pointer;
 `;
 

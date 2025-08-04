@@ -1,8 +1,8 @@
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
 interface DetailModalProps {
   onConfirm: () => void;
@@ -51,7 +51,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
     </Typography>
     <DetailWrapper>{detail}</DetailWrapper>
     <ButtonWrapper>
-      <Button onClick={onConfirm}>닫기</Button>
+      <ModalTableButton onClick={onConfirm}>닫기</ModalTableButton>
     </ButtonWrapper>
   </ModalContentInner>
 );
@@ -82,22 +82,22 @@ export const EditableDetailModal: React.FC<EditableDetailModalProps> = ({
         handleChange={setLocalText}
       />
       <ButtonWrapper>
-        <Button // CHACHA: 디자인에는 없으나 필요할 것 같아서 넣음
+        <ModalTableButton // CHACHA: 디자인에는 없으나 필요할 것 같아서 넣음
           onClick={() => {
             onClose();
           }}
           type="reverse"
         >
           닫기
-        </Button>
-        <Button
+        </ModalTableButton>
+        <ModalTableButton
           onClick={() => {
             onChange(localText);
             onConfirm();
           }}
         >
           저장
-        </Button>
+        </ModalTableButton>
       </ButtonWrapper>
     </ModalContentInner>
   );

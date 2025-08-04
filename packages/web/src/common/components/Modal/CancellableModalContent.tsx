@@ -1,7 +1,7 @@
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import React from "react";
 import styled from "styled-components";
 import Typography from "../Typography";
+import ModalTableButton from "../Buttons/ModalTableButton";
 
 interface CancellableModalContentProps {
   onClose: () => void;
@@ -39,19 +39,19 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
       {children}
     </Typography>
     <ButtonWrapper>
-      <Button
-        type="outlined"
+      <ModalTableButton
+        type="reverse"
         onClick={onClose}
         style={{ fontSize: "14px", lineHeight: "12px" }}
       >
         {closeButtonText}
-      </Button>
-      <Button
+      </ModalTableButton>
+      <ModalTableButton
         onClick={onConfirm}
         style={{ fontSize: "14px", lineHeight: "12px" }}
       >
         {confirmButtonText}
-      </Button>
+      </ModalTableButton>
     </ButtonWrapper>
   </ModalContentInner>
 );

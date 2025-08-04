@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 
 import TotalTable from "@sparcs-students/web/features/document-lookup/budget/components/TotalTable";
 import {
@@ -23,6 +22,7 @@ import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budge
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { mockViewBudgetProposalResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import { mockDBExpenditureData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
+import PageButton from "@sparcs-students/web/common/components/Buttons/PageButton";
 
 const ButtonWrapper = styled.div`
   gap: 30px;
@@ -187,19 +187,19 @@ const ReviewerBudgetProposalFrame = () => {
       />
       <TotalTable data={dataToTotal(mockIncomeData, mockExpenditureData)} />
       <ButtonWrapper>
-        <Button
+        <PageButton
           type="reverse"
           onClick={openDiscardModal}
           style={{ width: "100px", padding: "8px 16px" }}
         >
           삭제
-        </Button>
-        <Button
+        </PageButton>
+        <PageButton
           onClick={openSaveModal}
           style={{ width: "100px", padding: "8px 16px" }}
         >
           제출
-        </Button>
+        </PageButton>
       </ButtonWrapper>
     </FlexWrapper>
   );

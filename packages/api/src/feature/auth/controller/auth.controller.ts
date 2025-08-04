@@ -9,19 +9,17 @@ import {
   UsePipes,
 } from "@nestjs/common";
 import { Response } from "express";
-import apiAut001, {
+import {
+  apiAut001,
+  apiAut002,
+  apiAut003,
+  apiAut004,
   ApiAut001RequestQuery,
   ApiAut001ResponseOk,
-} from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut001";
-import apiAut004, {
-  ApiAut004RequestQuery,
-} from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut004";
-import apiAut002, {
   ApiAut002ResponseCreated,
-} from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut002";
-import apiAut003, {
   ApiAut003ResponseOk,
-} from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut003";
+  ApiAut004RequestQuery,
+} from "@sparcs-students/interface/api/auth/index";
 
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";

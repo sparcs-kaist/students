@@ -174,66 +174,55 @@ export const OperationProposalRevision = mysqlTable(
 );
 
 export const OperatingCommitteeProposal = mysqlTable(
-  "operating_committee_proposal",
+  "operating_committee_proposal_revision",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    organizationId: int("organization_id").notNull(),
+    operationProposalRevisionId: int(
+      "operation_proposal_revision_id",
+    ).notNull(),
     operatingCommitteeId: int("operating_committee_id").notNull(),
-    semesterId: int("semester_id").notNull(),
+    note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    operatingCommitteeProposalOrganizationIdFk: foreignKey({
-      columns: [table.organizationId],
-      foreignColumns: [Organization.id],
-      name: "operating_committee_proposal_organization_id_fk",
-    }),
-    operatingCommitteeProposalSemesterIdFk: foreignKey({
-      columns: [table.semesterId],
-      foreignColumns: [Semester.id],
-      name: "operating_committee_proposal_semester_id_fk",
-    }),
-    operatingCommitteeProposalOperatingCommitteeIdFk: foreignKey({
+    operatingCommitteeProposalRevisionOperationProposalRevisionIdFk: foreignKey(
+      {
+        columns: [table.operationProposalRevisionId],
+        foreignColumns: [OperationProposalRevision.id],
+        name: "operating_committee_proposal_operation_proposal_revision_id_fk",
+      },
+    ),
+    operatingCommitteeProposalRevisionOperatingCommitteeIdFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_proposal_operating_committee_id_fk",
+      name: "operating_committee_proposal_ope_com_id_fk",
     }),
   }),
 );
 
-export const OperatingCommitteeProposalRevision = mysqlTable(
-  "operating_committee_proposal_revision",
+export const TeamOperationProposal = mysqlTable(
+  "team_operation_proposal",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    operatingCommitteeProposalId: int(
-      "operating_committee_proposal_id",
+    operationProposalRevisionId: int(
+      "operation_proposal_revision_id",
     ).notNull(),
-    note: text("note"),
-    submittedAt: timestamp("submitted_at"),
-    cogAgendaId: int("cog_agenda_id"),
-    gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
-    documentStatusEnum: int("document_status_enum").notNull(),
+    teamId: int("team_id").notNull(),
+    description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    operatingCommitteeProposalRevisionOperatingCommitteeProposalIdFk:
-      foreignKey({
-        columns: [table.operatingCommitteeProposalId],
-        foreignColumns: [OperatingCommitteeProposal.id],
-        name: "op_com_prop_rev_orig_id_fk",
-      }),
-    operatingCommitteeProposalRevisionCogAgendaIdFk: foreignKey({
-      columns: [table.cogAgendaId],
-      foreignColumns: [Agenda.id],
-      name: "operating_committee_proposal_revision_cog_agenda_id_fk",
+    teamOperationProposalOperationProposalRevisionIdFk: foreignKey({
+      columns: [table.operationProposalRevisionId],
+      foreignColumns: [OperationProposalRevision.id],
+      name: "team_operation_proposal_operation_proposal_revision_id_fk",
     }),
-    operatingCommitteeProposalRevisionGsrcAgendaIdFk: foreignKey({
-      columns: [table.gsrcAgendaId],
-      foreignColumns: [Agenda.id],
-      name: "operating_committee_proposal_revision_gsrc_agenda_id_fk",
+    teamOperationProposalTeamIdFk: foreignKey({
+      columns: [table.teamId],
+      foreignColumns: [Team.id],
+      name: "team_operation_proposal_team_id_fk",
     }),
   }),
 );
