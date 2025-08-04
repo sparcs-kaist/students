@@ -23,6 +23,7 @@ import {
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  DepartmentRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import isEqual from "lodash/isEqual";
 import { DarkTagColor } from "@sparcs-students/web/common/components/Tag/DarkTag";
@@ -60,7 +61,10 @@ const TableRowWrapper = styled.tr.withConfig({
 `;
 
 type RoleType = "member" | "committee";
-type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+export type RoleEnumType =
+  | MemberRoleEnum
+  | CommitteeRoleEnum
+  | DepartmentRoleEnum;
 type RoleCellInfo = {
   label: string;
   value: RoleEnumType;
@@ -72,8 +76,8 @@ export interface OrganizationMemberProps {
   studentId: string;
   name: string;
   role: RoleEnumType; // TODO: change to real enum
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 interface ManageMemberTableProps {

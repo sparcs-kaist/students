@@ -93,3 +93,8 @@ export enum CommitteeRoleEnum {
   Chief = 1,
   Member,
 }
+
+export enum DepartmentRoleEnum {
+  Chief = 1,
+  Member,
+}

@@ -12,6 +12,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  DepartmentRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {
@@ -299,6 +300,19 @@ export const committeeRoleTagList: {
   },
   [CommitteeRoleEnum.Member]: {
     text: "위원",
+    color: "GREEN100",
+  },
+};
+
+export const committeeMemeberRoleTagList: {
+  [key in DepartmentRoleEnum]: StatusDetail;
+} = {
+  [DepartmentRoleEnum.Chief]: {
+    text: "부서장",
+    color: "GREEN600",
+  },
+  [DepartmentRoleEnum.Member]: {
+    text: "부원",
     color: "GREEN100",
   },
 };
