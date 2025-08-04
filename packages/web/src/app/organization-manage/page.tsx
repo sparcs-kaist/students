@@ -231,7 +231,10 @@ const OrganizationManage = () => {
         ))}
       </FlexWrapper>
       <ButtonWrapper>
-        <Button style={{ padding: "8px 16px" }} onClick={onConfirmModal}>
+        <Button
+          style={{ padding: "8px 16px", width: "100px" }}
+          onClick={onConfirmModal}
+        >
           제출
         </Button>
       </ButtonWrapper>
