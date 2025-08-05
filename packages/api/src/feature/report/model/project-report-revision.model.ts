@@ -2,17 +2,21 @@ import { MRevisionEntity } from "@sparcs-students/api/common/base/revision-entit
 import { IProjectReportRevision } from "@sparcs-students/interface/api/report/type/project-report.type";
 
 export interface IProjectReportRevisionCreate {
-  projectReportId: IProjectReportRevision["projectReportId"];
+  projectReport: IProjectReportRevision["projectReport"];
+
   name: IProjectReportRevision["name"];
+
   method: IProjectReportRevision["method"];
+
   prepareDuration: IProjectReportRevision["prepareDuration"];
+
   duration: IProjectReportRevision["duration"];
 
   timelines: IProjectReportRevision["timelines"];
 
-  teamId: IProjectReportRevision["teamId"];
+  team: IProjectReportRevision["team"];
 
-  managerId: IProjectReportRevision["managerId"];
+  manager: IProjectReportRevision["manager"];
 
   participation: IProjectReportRevision["participation"];
 
@@ -29,9 +33,9 @@ export class MProjectReportRevision
   extends MRevisionEntity
   implements IProjectReportRevision
 {
-  static modelName = "ProjectProposalRevision";
+  static modelName = "ProjectReportRevision";
 
-  projectReportId: IProjectReportRevision["projectReportId"];
+  projectReport: IProjectReportRevision["projectReport"];
 
   name: IProjectReportRevision["name"];
 
@@ -43,9 +47,9 @@ export class MProjectReportRevision
 
   timelines: IProjectReportRevision["timelines"];
 
-  teamId: IProjectReportRevision["teamId"];
+  team: IProjectReportRevision["team"];
 
-  managerId: IProjectReportRevision["managerId"];
+  manager: IProjectReportRevision["manager"];
 
   participation: IProjectReportRevision["participation"];
 

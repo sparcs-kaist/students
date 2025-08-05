@@ -17,7 +17,7 @@ export const BudgetReportIncome = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
-    projectReportId: int("project_report_id").notNull(),
+    // projectReportId: int("project_report_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -33,11 +33,11 @@ export const BudgetReportIncome = mysqlTable(
       foreignColumns: [Semester.id],
       name: "bud_rep_inc_sem_id_fk",
     }),
-    budgetReportIncomeProjectReportIdFk: foreignKey({
-      columns: [table.projectReportId],
-      foreignColumns: [ProjectReport.id],
-      name: "bud_rep_inc_pro_rep_id_fk",
-    }),
+    // budgetReportIncomeProjectReportIdFk: foreignKey({
+    //   columns: [table.projectReportId],
+    //   foreignColumns: [ProjectReport.id],
+    //   name: "bud_rep_inc_pro_rep_id_fk",
+    // }),
   }),
 );
 

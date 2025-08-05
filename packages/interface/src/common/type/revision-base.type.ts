@@ -26,10 +26,10 @@ export enum DocumentItemStatusEnum {
 
 export const zRevisionBase = z.object({
   submittedAt: z.date().optional(), // 제출
-  documentStatusEnum: z.nativeEnum(DocumentItemStatusEnum), // 상태
+  // documentStatusEnum: z.nativeEnum(DocumentItemStatusEnum), // 상태
   cogAgenda: zExtractId(zAgenda).optional(), // 중운위
   gsrcAgenda: zExtractId(zAgenda).optional(), // 전학대회
-  isRemoved: z.boolean().optional(), // true일 경우 해당 revision 부터 삭제라는 뜻 (!= deletedAt)
+  // isRemoved: z.boolean().optional(), // true일 경우 해당 revision 부터 삭제라는 뜻 (!= deletedAt)
 });
 
 export type IRevisionBase = z.infer<typeof zRevisionBase>;

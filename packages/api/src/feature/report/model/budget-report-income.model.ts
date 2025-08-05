@@ -17,8 +17,6 @@ export class MBudgetReportIncome
 
   semester: IBudgetReportIncome["semester"];
 
-  budgetProposalIncome: IBudgetReportIncome["budgetProposalIncome"];
-
   constructor(data: IBudgetReportIncome) {
     super();
     Object.assign(this, data);

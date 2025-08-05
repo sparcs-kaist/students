@@ -3,23 +3,23 @@ import { IBudgetReportExpense } from "@sparcs-students/interface/api/report/type
 
 export interface IBudgetReportExpenseCreate extends IBudgetReportExpense {
   organization: IBudgetReportExpense["organization"];
+
   semester: IBudgetReportExpense["semester"];
-  projectProposal: IBudgetReportExpense["projectReport"];
+
+  projectReport: IBudgetReportExpense["projectReport"];
 }
 
 export class MBudgetReportExpense
   extends MEntity
   implements IBudgetReportExpense
 {
-  static modelName = "BudgetProposalExpense";
+  static modelName = "BudgetReportExpense";
 
   organization: IBudgetReportExpense["organization"];
 
   semester: IBudgetReportExpense["semester"];
 
   projectReport: IBudgetReportExpense["projectReport"];
-
-  budgetProposalExpense: IBudgetReportExpense["budgetProposalExpense"];
 
   constructor(data: IBudgetReportExpense) {
     super();

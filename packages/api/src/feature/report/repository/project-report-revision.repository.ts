@@ -85,53 +85,39 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
   ): MProjectReportRevision {
     return new MProjectReportRevision({
       id: result.main.id,
-
       projectReport: { id: result.main.projectReportId },
-
       name: result.main.name,
-
       method: result.main.method,
-
       prepareDuration: {
         startTerm: result.main.prepareStartTerm,
         endTerm: result.main.prepareEndTerm,
       },
-
       duration: {
         startTerm: result.main.startTerm,
         endTerm: result.main.endTerm,
       },
-
       timelines: result.oneToMany.projectReportTimeline.map(timeline => ({
-        detail: timeline.detail,
         duration: {
           startTerm: timeline.startTerm,
           endTerm: timeline.endTerm,
         },
+        detail: timeline.detail,
         note: timeline.note,
       })),
-
       team: { id: result.main.teamId },
-
       manager: { id: result.main.managerId },
-
-      purpose: result.main.purpose,
-
-      target: result.main.target,
-
+      participation: result.main.participation,
+      // purpose: result.main.purpose,
+      // target: result.main.target,
+      result: result.main.result,
+      unmet: result.main.unmet,
       detail: result.main.detail,
-
       note: result.main.note,
-
-      documentStatusEnum: result.main.documentStatusEnum,
-
+      // documentStatusEnum: result.main.documentStatusEnum,
       submittedAt: result.main.submittedAt,
-
       cogAgenda: { id: result.main.cogAgendaId },
-
       gsrcAgenda: { id: result.main.gsrcAgendaId },
-
-      isRemoved: result.main.isRemoved,
+      // isRemoved: result.main.isRemoved,
     });
   }
 
@@ -141,18 +127,27 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
     return {
       main: {
         id: model.id,
+        projectReportId: model.projectReport.id,
         name: model.name,
+        method: model.method,
+        prepareStartTerm: model.prepareDuration.startTerm,
+        prepareEndTerm: model.prepareDuration.endTerm,
+        startTerm: model.duration.startTerm,
+        endTerm: model.duration.endTerm,
         teamId: model.team.id,
         managerId: model.manager.id,
-        purpose: model.purpose,
-        target: model.target,
+        participation: model.participation,
+        // purpose: model.purpose,
+        // target: model.target,
+        result: model.result,
+        unmet: model.unmet,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
+        // documentStatusEnum: model.documentStatusEnum,
         submittedAt: model.submittedAt,
         cogAgendaId: model.cogAgenda?.id,
         gsrcAgendaId: model.gsrcAgenda?.id,
-        isRemoved: model.isRemoved,
+        // isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -180,11 +175,15 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
         endTerm: model.duration.endTerm,
         teamId: model.team.id,
         managerId: model.manager.id,
-        purpose: model.purpose,
-        target: model.target,
+        participation: model.participation,
+        // purpose: model.purpose,
+        // target: model.target,
+        result: model.result,
+        unmet: model.unmet,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
+        // documentStatusEnum: model.documentStatusEnum,
+        // isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -205,14 +204,20 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
       ProjectReportRevisionFieldMapKeys,
       TableWithID | null
     > = {
-      id: ProjectReportRevision,
-      organizationId: ProjectReportRevision,
-      semesterId: ProjectReportRevision,
       projectReportId: ProjectReportRevision,
-      documentStatusEnum: ProjectReportRevision,
-      submittedAt: ProjectReportRevision,
-      cogAgendaId: ProjectReportRevision,
-      gsrcAgendaId: ProjectReportRevision,
+      name: ProjectReportRevision,
+      method: ProjectReportRevision,
+      prepareStartTerm: ProjectReportRevision,
+      prepareEndTerm: ProjectReportRevision,
+      startTerm: ProjectReportRevision,
+      endTerm: ProjectReportRevision,
+      teamId: ProjectReportRevision,
+      managerId: ProjectReportRevision,
+      participation: ProjectReportRevision,
+      result: ProjectReportRevision,
+      unmet: ProjectReportRevision,
+      detail: ProjectReportRevision,
+      note: ProjectReportRevision,
     };
 
     if (!(field in fieldMappings)) {

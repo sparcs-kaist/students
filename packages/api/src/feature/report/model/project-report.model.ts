@@ -5,6 +5,8 @@ export interface IProjectReportCreate extends IProjectReport {
   organization: IProjectReport["organization"];
 
   semester: IProjectReport["semester"];
+
+  projectProposal: IProjectReport["projectProposal"];
 }
 
 export class MProjectReport extends MEntity implements IProjectReport {
@@ -13,6 +15,8 @@ export class MProjectReport extends MEntity implements IProjectReport {
   organization: IProjectReport["organization"];
 
   semester: IProjectReport["semester"];
+
+  projectProposal: IProjectReport["projectProposal"];
 
   constructor(data: IProjectReport) {
     super();

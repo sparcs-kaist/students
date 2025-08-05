@@ -123,7 +123,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
 
       note: result.main.note,
 
-      documentStatusEnum: result.main.documentStatusEnum,
+      // documentStatusEnum: result.main.documentStatusEnum,
 
       submittedAt: result.main.submittedAt,
 
@@ -131,7 +131,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
 
-      isRemoved: result.main.isRemoved,
+      // isRemoved: result.main.isRemoved,
     });
   }
 
@@ -148,11 +148,11 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         target: model.target,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
+        // documentStatusEnum: model.documentStatusEnum,
         submittedAt: model.submittedAt,
         cogAgendaId: model.cogAgenda?.id,
         gsrcAgendaId: model.gsrcAgenda?.id,
-        isRemoved: model.isRemoved,
+        // isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -184,7 +184,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         target: model.target,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
+        // documentStatusEnum: model.documentStatusEnum,
       },
       oneToOne: {},
       oneToMany: {

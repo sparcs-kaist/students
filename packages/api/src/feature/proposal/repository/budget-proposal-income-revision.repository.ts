@@ -73,11 +73,11 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       amount: result.amount,
       detail: result.detail,
       note: result.note,
-      documentStatusEnum: result.documentStatusEnum,
+      // documentStatusEnum: result.documentStatusEnum,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
-      isRemoved: result.isRemoved,
+      // isRemoved: result.isRemoved,
     });
   }
 
@@ -94,11 +94,11 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       amount: model.amount,
       detail: model.detail,
       note: model.note,
-      documentStatusEnum: model.documentStatusEnum,
+      // documentStatusEnum: model.documentStatusEnum,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
-      isRemoved: model.isRemoved,
+      // isRemoved: model.isRemoved,
     };
   }
 
@@ -114,7 +114,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       amount: model.amount,
       detail: model.detail,
       note: model.note,
-      documentStatusEnum: model.documentStatusEnum,
+      // documentStatusEnum: model.documentStatusEnum,
     };
   }
 

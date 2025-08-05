@@ -17,9 +17,7 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetReportIncomeRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectReportId: number;
+  budgetReportIncomeId: number;
 };
 
 type BudgetReportIncomeRevisionOrderByKeys = "id";
@@ -65,7 +63,7 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
   ): MBudgetReportIncomeRevision {
     return new MBudgetReportIncomeRevision({
       id: result.id,
-      budgetReportIncome: { id: result.budgetReportId },
+      budgetReportIncome: { id: result.budgetReportIncomeId },
       amount: result.amount,
       note: result.note,
       submittedAt: result.submittedAt,
@@ -79,12 +77,8 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
   ): BudgetReportIncomeRevisionDbUpdate {
     return {
       id: model.id,
-      budgetReportId: model.budgetReportIncome.id,
-      budgetDomainEnum: model.budgetDomainEnum,
-      budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
-      name: model.name,
+      budgetReportIncomeId: model.budgetReportIncome.id,
       amount: model.amount,
-      detail: model.detail,
       note: model.note,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
@@ -96,8 +90,7 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
     model: IBudgetReportIncomeRevisionCreate,
   ): BudgetReportIncomeRevisionDbInsert {
     return {
-      budgetReportId: model.budgetReportIncome.id,
-      name: model.name,
+      budgetReportIncomeId: model.budgetReportIncome.id,
       amount: model.amount,
       note: model.note,
     };
@@ -111,9 +104,12 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
       TableWithID | null
     > = {
       id: BudgetReportIncomeRevision,
-      organizationId: BudgetReportIncomeRevision,
-      semesterId: BudgetReportIncomeRevision,
-      projectReportId: BudgetReportIncomeRevision,
+      budgetReportIncome: BudgetReportIncomeRevision,
+      amount: BudgetReportIncomeRevision,
+      note: BudgetReportIncomeRevision,
+      submittedAt: BudgetReportIncomeRevision,
+      cogAgendaId: BudgetReportIncomeRevision,
+      gsrcAgendaId: BudgetReportIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {

@@ -106,7 +106,7 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         description: operation.description,
       })),
 
-      documentStatusEnum: result.main.documentStatusEnum,
+      // documentStatusEnum: result.main.documentStatusEnum,
 
       submittedAt: result.main.submittedAt,
 
@@ -114,7 +114,7 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
 
-      isRemoved: result.main.isRemoved,
+      // isRemoved: result.main.isRemoved,
     });
   }
 
@@ -126,11 +126,9 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         id: model.id,
         operationProposalId: model.operationProposal.id,
         organizationDiagramId: model.organizationDiagramFile.id,
-        documentStatusEnum: model.documentStatusEnum,
         submittedAt: model.submittedAt,
         cogAgendaId: model.cogAgenda?.id,
         gsrcAgendaId: model.gsrcAgenda?.id,
-        isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -156,7 +154,7 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         operationProposalId: model.operationProposal.id,
         organizationDiagramId: model.organizationDiagramFile.id,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
+        // documentStatusEnum: model.documentStatusEnum,
       },
       oneToOne: {},
       oneToMany: {

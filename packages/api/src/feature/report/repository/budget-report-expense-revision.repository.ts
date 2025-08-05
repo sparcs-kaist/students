@@ -67,6 +67,7 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
       id: result.id,
       budgetReportExpense: { id: result.budgetReportExpenseId },
       amount: result.amount,
+      note: result.note,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
@@ -80,6 +81,7 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
       id: model.id,
       budgetReportExpenseId: model.budgetReportExpense.id,
       amount: model.amount,
+      note: model.note,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
@@ -92,6 +94,7 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
     return {
       budgetReportExpenseId: model.budgetReportExpense.id,
       amount: model.amount,
+      note: model.note,
     };
   }
 
@@ -102,10 +105,12 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
       BudgetReportExpenseRevisionFieldMapKeys,
       TableWithID | null
     > = {
-      id: BudgetReportExpenseRevision,
-      organizationId: BudgetReportExpenseRevision,
-      semesterId: BudgetReportExpenseRevision,
-      projectReportId: BudgetReportExpenseRevision,
+      budgetReportExpenseId: BudgetReportExpenseRevision,
+      note: BudgetReportExpenseRevision,
+      amount: BudgetReportExpenseRevision,
+      submittedAt: BudgetReportExpenseRevision,
+      cogAgendaId: BudgetReportExpenseRevision,
+      gsrcAgendaId: BudgetReportExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

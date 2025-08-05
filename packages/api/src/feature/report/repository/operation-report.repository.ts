@@ -62,6 +62,8 @@ export class OperationReportRepository extends BaseSingleTableRepository<
       id: result.id,
       organization: { id: result.organizationId },
       semester: { id: result.semesterId },
+      organizationDiagram: { id: result.organizationDiagramId },
+      note: result.note,
     });
   }
 
@@ -70,6 +72,8 @@ export class OperationReportRepository extends BaseSingleTableRepository<
       id: model.id,
       organizationId: model.organization.id,
       semesterId: model.semester.id,
+      organizationDiagramId: model.organizationDiagram.id,
+      note: model.note,
     };
   }
 
@@ -79,6 +83,8 @@ export class OperationReportRepository extends BaseSingleTableRepository<
     return {
       organizationId: model.organization.id,
       semesterId: model.semester.id,
+      organizationDiagramId: model.organizationDiagram.id,
+      note: model.note,
     };
   }
 
@@ -92,7 +98,8 @@ export class OperationReportRepository extends BaseSingleTableRepository<
       id: OperationReport,
       organizationId: OperationReport,
       semesterId: OperationReport,
-      projectReportId: OperationReport,
+      organizationDiagramId: OperationReport,
+      note: OperationReport,
     };
 
     if (!(field in fieldMappings)) {

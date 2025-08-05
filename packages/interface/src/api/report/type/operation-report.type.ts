@@ -8,7 +8,7 @@ export const zOperationReport = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
-  organizationDiagramId: zExtractId(zFile),
+  organizationDiagram: zExtractId(zFile),
   note: z.string(),
 });
 

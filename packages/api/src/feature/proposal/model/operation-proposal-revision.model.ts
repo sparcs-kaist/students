@@ -7,7 +7,6 @@ export interface IOperationProposalRevisionCreate {
   note: IOperationProposalRevision["note"];
   operatingCommitteeOperation: IOperationProposalRevision["operatingCommitteeOperation"];
   teamOperation: IOperationProposalRevision["teamOperation"];
-  documentStatusEnum: IOperationProposalRevision["documentStatusEnum"];
 }
 
 export class MOperationProposalRevision

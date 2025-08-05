@@ -156,6 +156,10 @@ export const OperationReport = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
+    organizationDiagramId: int("organization_diagram_id").notNull(),
+    note: text("note"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
   },
   table => ({
     operationReportOrganizationIdFk: foreignKey({
@@ -167,6 +171,11 @@ export const OperationReport = mysqlTable(
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
       name: "op_rep_sem_id_fk",
+    }),
+    operationReportOrganizationDiagramIdFk: foreignKey({
+      columns: [table.organizationDiagramId],
+      foreignColumns: [File.id],
+      name: "op_rep_org_diag_id_fk",
     }),
   }),
 );

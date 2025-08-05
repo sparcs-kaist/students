@@ -4,19 +4,9 @@ import { IBudgetReportIncomeRevision } from "@sparcs-students/interface/api/repo
 export interface IBudgetReportIncomeRevisionCreate {
   budgetReportIncome: IBudgetReportIncomeRevision["budgetReportIncome"];
 
-  budgetDomainEnum: IBudgetReportIncomeRevision["budgetDomainEnum"];
-
-  budgetDivisionIncomeEnum: IBudgetReportIncomeRevision["budgetDivisionIncomeEnum"];
-
-  name: IBudgetReportIncomeRevision["name"];
-
   amount: IBudgetReportIncomeRevision["amount"];
 
-  detail: IBudgetReportIncomeRevision["detail"];
-
   note: IBudgetReportIncomeRevision["note"];
-
-  documentStatusEnum: IBudgetReportIncomeRevision["documentStatusEnum"];
 }
 
 export class MBudgetReportIncomeRevision
@@ -27,15 +17,7 @@ export class MBudgetReportIncomeRevision
 
   budgetReportIncome: IBudgetReportIncomeRevision["budgetReportIncome"];
 
-  budgetDomainEnum: IBudgetReportIncomeRevision["budgetDomainEnum"];
-
-  budgetDivisionIncomeEnum: IBudgetReportIncomeRevision["budgetDivisionIncomeEnum"];
-
-  name: IBudgetReportIncomeRevision["name"];
-
   amount: IBudgetReportIncomeRevision["amount"];
-
-  detail: IBudgetReportIncomeRevision["detail"];
 
   note: IBudgetReportIncomeRevision["note"];
 

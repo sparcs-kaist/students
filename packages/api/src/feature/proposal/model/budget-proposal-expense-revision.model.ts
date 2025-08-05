@@ -16,7 +16,7 @@ export interface IBudgetProposalExpenseRevisionCreate {
 
   detail: IBudgetProposalExpenseRevision["detail"];
 
-  documentStatusEnum: IBudgetProposalExpenseRevision["documentStatusEnum"];
+  // documentStatusEnum: IBudgetProposalExpenseRevision["documentStatusEnum"];
 }
 
 export class MBudgetProposalExpenseRevision

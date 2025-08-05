@@ -19,6 +19,9 @@ export class ReportController {
       semester: {
         id: 1,
       },
+      projectProposal: {
+        id: 1,
+      },
     };
   }
 }

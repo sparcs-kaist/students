@@ -25,21 +25,21 @@ export type IProjectReport = z.infer<typeof zProjectReport>;
 export const zProjectReportRevision = z
   .object({
     id: zId,
-    projectReportId: zExtractId(zProjectReport),
+    projectReport: zExtractId(zProjectReport),
     name: zDocumentItemName,
     method: z.string(),
     prepareDuration: zDuration.optional(),
     duration: zDuration.optional(), // null: 반기 단위 상시 사업
     timelines: z.array(
       z.object({
-        name: z.string().max(255),
+        // name: z.string().max(255),
         duration: zDuration,
         detail: z.string(),
         note: z.string().optional(),
       }),
     ),
-    teamId: zExtractId(zTeam),
-    managerId: zExtractId(zStudent).nullable(),
+    team: zExtractId(zTeam),
+    manager: zExtractId(zStudent).nullable(),
     detail: z.string(),
     participation: z.string(),
     result: z.string(),

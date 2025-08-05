@@ -18,7 +18,7 @@ export interface IBudgetProposalIncomeRevisionCreate {
 
   note: IBudgetProposalIncomeRevision["note"];
 
-  documentStatusEnum: IBudgetProposalIncomeRevision["documentStatusEnum"];
+  // documentStatusEnum: IBudgetProposalIncomeRevision["documentStatusEnum"];
 }
 
 export class MBudgetProposalIncomeRevision
