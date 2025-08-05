@@ -107,7 +107,7 @@ export const OrganizationMember = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     studentId: int("student_id").notNull(),
-    startTerm: datetime("start_term").notNull(),
+    startTerm: datetime("start_term"),
     endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),

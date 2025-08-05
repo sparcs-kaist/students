@@ -34,6 +34,7 @@ export type IStudent = z.infer<typeof zStudent>;
 export const zMember = z.object({
   // 로그인 토큰 발급을 위한 Member.
   id: zId,
+  studentId: zId,
   organization: zOrganization.pick({ id: true }).optional(),
   user: zUser.pick({ id: true }),
   studentNumber: zStudent.shape.studentNumber.optional(),
