@@ -1,11 +1,27 @@
-import { Injectable, Inject } from "@nestjs/common";
-
-import { MySql2Database } from "drizzle-orm/mysql2";
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+import { Injectable, ConflictException } from "@nestjs/common";
+import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 
 @Injectable()
 export class ProposalService {
   constructor(
-    @Inject(DrizzleAsyncProvider) private readonly db: MySql2Database,
+    private readonly budgetProposalIncomeRepository: BudgetProposalIncomeRepository,
   ) {}
+
+  async createBudgetProposalIncome(body) {
+    // semester 중복 확인
+    const existing = await this.budgetProposalIncomeRepository.find({
+      organizationId: body.organization.id,
+      semesterId: body.semester.id,
+    });
+    if (existing.length > 0) {
+      throw new ConflictException("Already exists this semester.");
+    }
+
+    // 생성
+    const newBudgetProposalIncome =
+      await this.budgetProposalIncomeRepository.create(body);
+    return {
+      budgetProposalIncome: newBudgetProposalIncome,
+    };
+  }
 }

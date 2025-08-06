@@ -1,12 +1,12 @@
 import { Controller, Get } from "@nestjs/common";
 
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
-import { ProposalService } from "../service/proposal.service";
+import { ProposalPublicService } from "../service/proposal.public.service";
 import { MProjectProposal } from "../model/project-proposal.model";
 
 @Controller()
 export class ProposalController {
-  constructor(private readonly proposalService: ProposalService) {}
+  constructor(private readonly proposalService: ProposalPublicService) {}
 
   @Public()
   @Get("/proposal/hello")

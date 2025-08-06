@@ -22,7 +22,14 @@ export const zBudgetProposalIncome = z.object({
   semester: zExtractId(zSemester),
 });
 
+export const zBudgetProposalIncomeRequestCreate = zBudgetProposalIncome.omit({
+  id: true,
+});
+
 export type IBudgetProposalIncome = z.infer<typeof zBudgetProposalIncome>;
+export type IBudgetProposalIncomeRequestCreate = z.infer<
+  typeof zBudgetProposalIncomeRequestCreate
+>;
 
 export const zBudgetProposalIncomeRevision = z
   .object({
