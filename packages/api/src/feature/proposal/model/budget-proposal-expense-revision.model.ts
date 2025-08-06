@@ -10,13 +10,15 @@ export interface IBudgetProposalExpenseRevisionCreate {
 
   budgetDivisionExpenseEnum: IBudgetProposalExpenseRevision["budgetDivisionExpenseEnum"];
 
+  projectProposalRevision: IBudgetProposalExpenseRevision["projectProposalRevision"];
+
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
 
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
 
-  documentStatusEnum: IBudgetProposalExpenseRevision["documentStatusEnum"];
+  code: IBudgetProposalExpenseRevision["code"];
 }
 
 export class MBudgetProposalExpenseRevision
@@ -33,11 +35,15 @@ export class MBudgetProposalExpenseRevision
 
   budgetDivisionExpenseEnum: IBudgetProposalExpenseRevision["budgetDivisionExpenseEnum"];
 
+  projectProposalRevision: IBudgetProposalExpenseRevision["projectProposalRevision"];
+
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
 
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
+
+  code: IBudgetProposalExpenseRevision["code"];
 
   constructor(data: IBudgetProposalExpenseRevision) {
     super();
