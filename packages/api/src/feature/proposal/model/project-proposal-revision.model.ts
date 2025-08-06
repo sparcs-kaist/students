@@ -22,7 +22,6 @@ export interface IProjectProposalRevisionCreate {
 
   note: IProjectProposalRevision["note"];
 
-  // documentStatusEnum: IProjectProposalRevision["documentStatusEnum"];
 }
 
 export class MProjectProposalRevision

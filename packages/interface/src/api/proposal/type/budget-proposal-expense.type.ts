@@ -12,7 +12,10 @@ import { zMoney } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 // eslint-disable-next-line import/no-cycle
 import { zBudgetReportExpense } from "@sparcs-students/interface/api/report/type/budget-report-expense.type";
-import { zProjectProposal } from "./project-proposal.type";
+import {
+  zProjectProposal,
+  zProjectProposalRevision,
+} from "./project-proposal.type";
 
 // BudgetProposalExpense: 예산안 각 행 엔티티
 export const zBudgetProposalExpense = z.object({
@@ -32,9 +35,11 @@ export const zBudgetProposalExpenseRevision = z
     previousBudgetReportExpense: zExtractId(zBudgetReportExpense),
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
+    projectProposalRevision: zExtractId(zProjectProposalRevision),
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
     amount: zMoney,
     detail: z.string(),
+    code: z.coerce.number(),
   })
   .merge(zRevisionBase);
 

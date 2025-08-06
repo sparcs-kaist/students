@@ -16,9 +16,8 @@ export interface IBudgetProposalIncomeRevisionCreate {
 
   detail: IBudgetProposalIncomeRevision["detail"];
 
-  note: IBudgetProposalIncomeRevision["note"];
+  code: IBudgetProposalIncomeRevision["code"];
 
-  // documentStatusEnum: IBudgetProposalIncomeRevision["documentStatusEnum"];
 }
 
 export class MBudgetProposalIncomeRevision
@@ -41,7 +40,7 @@ export class MBudgetProposalIncomeRevision
 
   detail: IBudgetProposalIncomeRevision["detail"];
 
-  note: IBudgetProposalIncomeRevision["note"];
+  code: IBudgetProposalIncomeRevision["code"];
 
   constructor(data: IBudgetProposalIncomeRevision) {
     super();
