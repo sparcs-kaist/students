@@ -19,6 +19,7 @@ export interface IBudgetProposalExpenseRevisionCreate {
   detail: IBudgetProposalExpenseRevision["detail"];
 
   code: IBudgetProposalExpenseRevision["code"];
+
 }
 
 export class MBudgetProposalExpenseRevision

@@ -136,6 +136,7 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
     amount: int("amount"),
     detail: text("detail"),
+
     code: int("code").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),

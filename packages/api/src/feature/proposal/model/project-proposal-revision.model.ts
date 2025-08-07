@@ -21,6 +21,7 @@ export interface IProjectProposalRevisionCreate {
   detail: IProjectProposalRevision["detail"];
 
   note: IProjectProposalRevision["note"];
+
 }
 
 export class MProjectProposalRevision

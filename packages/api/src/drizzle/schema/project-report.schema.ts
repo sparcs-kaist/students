@@ -23,6 +23,7 @@ export const ProjectReport = mysqlTable(
     semesterId: int("semester_id").notNull(),
     projectProposalId: int("project_proposal_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -57,8 +58,8 @@ export const ProjectReportRevision = mysqlTable(
     endTerm: timestamp("end_term"),
     teamId: int("team_id"),
     managerId: int("manager_id"),
-    target: text("target"),
     detail: text("detail"),
+    participation: text("participation"),
     result: text("result"),
     unmet: text("unmet"),
     note: text("note"),
@@ -66,7 +67,7 @@ export const ProjectReportRevision = mysqlTable(
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow(),
+    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
     agendaId: int("agenda_id"),
   },
@@ -114,7 +115,7 @@ export const ProjectReportTimeline = mysqlTable(
     detail: text("detail").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow(),
+    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -155,6 +156,10 @@ export const OperationReport = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
+    organizationDiagramId: int("organization_diagram_id").notNull(),
+    note: text("note"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
   },
   table => ({
     operationReportOrganizationIdFk: foreignKey({
@@ -166,6 +171,11 @@ export const OperationReport = mysqlTable(
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
       name: "op_rep_sem_id_fk",
+    }),
+    operationReportOrganizationDiagramIdFk: foreignKey({
+      columns: [table.organizationDiagramId],
+      foreignColumns: [File.id],
+      name: "op_rep_org_diag_id_fk",
     }),
   }),
 );

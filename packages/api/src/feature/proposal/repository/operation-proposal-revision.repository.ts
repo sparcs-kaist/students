@@ -109,6 +109,7 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
       cogAgenda: { id: result.main.cogAgendaId },
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
+
     });
   }
 

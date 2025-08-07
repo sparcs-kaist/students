@@ -126,6 +126,7 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
       cogAgenda: { id: result.main.cogAgendaId },
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
+      
     });
   }
 
@@ -142,9 +143,6 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         target: model.target,
         detail: model.detail,
         note: model.note,
-        submittedAt: model.submittedAt,
-        cogAgendaId: model.cogAgenda?.id,
-        gsrcAgendaId: model.gsrcAgenda?.id,
       },
       oneToOne: {},
       oneToMany: {
