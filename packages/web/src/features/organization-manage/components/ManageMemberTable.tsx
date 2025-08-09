@@ -34,8 +34,8 @@ import NameSearchInput from "@sparcs-students/web/features/organization-manage/c
 import NameSearchModalContent from "@sparcs-students/web/features/organization-manage/components/NameSearchModalContent";
 import NameSearchResults from "@sparcs-students/web/features/organization-manage/components/NameSearchResults";
 import { overlay } from "overlay-kit";
-import { mockSearchMemberData } from "../services/_mock/mockOrganizationManageData";
-import DeleteModalContent from "./DeleteModalContent";
+import { mockSearchMemberData } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
+import DeleteModalContent from "@sparcs-students/web/features/organization-manage/components/DeleteModalContent";
 
 const TableWrapper = styled.table`
   position: relative;

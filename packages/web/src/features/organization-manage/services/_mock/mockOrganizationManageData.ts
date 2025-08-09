@@ -1,4 +1,3 @@
-import { OrganizationMemberProps } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
 import { CommitteeProps } from "@sparcs-students/web/features/organization-manage/components/ManageCommitteeTable";
 import {
   MemberRoleEnum,
