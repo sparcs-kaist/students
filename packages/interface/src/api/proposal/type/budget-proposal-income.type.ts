@@ -45,6 +45,15 @@ export const zBudgetProposalIncomeRevision = z
   })
   .merge(zRevisionBase);
 
+export const zBudgetProposalIncomeRevisionRequestCreate =
+  zBudgetProposalIncomeRevision.omit({
+    id: true,
+    previousBudgetReportIncome: true,
+  });
+
 export type IBudgetProposalIncomeRevision = z.infer<
   typeof zBudgetProposalIncomeRevision
+>;
+export type IBudgetProposalIncomeRevisionRequestCreate = z.infer<
+  typeof zBudgetProposalIncomeRevisionRequestCreate
 >;

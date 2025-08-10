@@ -49,7 +49,7 @@ export const BudgetProposalIncomeRevision = mysqlTable(
   "budget_proposal_income_revision",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    budgetProposalId: int("budget_proposal_id").notNull(),
+    budgetProposalIncomeId: int("budget_proposal_income_id").notNull(),
     previousBudgetReportIncomeId: int("previous_budget_report_income_id"),
     budgetDomainEnum: int("budget_domain_enum").notNull(),
     budgetDivisionIncomeEnum: int("budget_division_income_enum").notNull(),
@@ -66,7 +66,7 @@ export const BudgetProposalIncomeRevision = mysqlTable(
   },
   table => ({
     budgetProposalIncomeRevisionBudgetProposalIdFk: foreignKey({
-      columns: [table.budgetProposalId],
+      columns: [table.budgetProposalIncomeId],
       foreignColumns: [BudgetProposalIncome.id],
       name: "bud_prop_inc_rev_orig_id_fk",
     }),

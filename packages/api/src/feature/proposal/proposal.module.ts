@@ -12,6 +12,7 @@ import { ProposalController } from "./controller/proposal.controller";
 import { ProposalService } from "./service/proposal.service";
 import { ProposalPublicService } from "./service/proposal.public.service";
 import { ProposalPresidentController } from "./controller/proposal.president.controller";
+import { BudgetReportIncomeRepository } from "../report/repository/budget-report-income.repository";
 
 @Module({
   providers: [
@@ -21,6 +22,7 @@ import { ProposalPresidentController } from "./controller/proposal.president.con
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
     BudgetProposalIncomeRevisionRepository,
+    BudgetReportIncomeRepository,
     OperationProposalRepository,
     OperationProposalRevisionRepository,
     ProposalPublicService,
