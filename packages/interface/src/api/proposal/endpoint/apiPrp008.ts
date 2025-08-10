@@ -11,9 +11,10 @@ import {
  * @description 각 단체장단 권한으로 새로운 예산안(수입)을 생성합니다.
  */
 
-const url = () => `/president/budget-proposals/income`;
+const url = () => `/president/proposals/budget-proposals/income/create`;
 const method = "POST";
-export const ApiPrp008RequestUrl = "/president/budget-proposals/income";
+export const ApiPrp008RequestUrl =
+  "/president/proposals/budget-proposals/income/create";
 
 const requestParam = z.object({});
 

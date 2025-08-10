@@ -34,6 +34,9 @@ export { default as apiPrp008 } from "./endpoint/apiPrp008";
 export * from "./endpoint/apiPrp009";
 export { default as apiPrp009 } from "./endpoint/apiPrp009";
 
+export * from "./endpoint/apiPrp010";
+export { default as apiPrp010 } from "./endpoint/apiPrp010";
+
 export * from "./endpoint/apiPrp021";
 export { default as apiPrp021 } from "./endpoint/apiPrp021";
 

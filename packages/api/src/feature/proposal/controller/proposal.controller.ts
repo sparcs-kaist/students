@@ -1,24 +1,23 @@
-import { Controller, Get } from "@nestjs/common";
-
+import { Controller, Get, Param, UsePipes } from "@nestjs/common";
+import {
+  apiPrp010,
+  ApiPrp010RequestParam,
+} from "@sparcs-students/interface/api/proposal/index";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
+import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { ProposalPublicService } from "../service/proposal.public.service";
-import { MProjectProposal } from "../model/project-proposal.model";
 
-@Controller()
+@Controller("student/proposals/budget-proposals")
 export class ProposalController {
-  constructor(private readonly proposalService: ProposalPublicService) {}
+  constructor(private readonly proposalPublicService: ProposalPublicService) {}
 
+  // 예산안 revision 조회
   @Public()
-  @Get("/proposal/hello")
-  async hello(): Promise<MProjectProposal> {
-    return {
-      id: 1,
-      organization: {
-        id: 1,
-      },
-      semester: {
-        id: 1,
-      },
-    };
+  @Get("income-revision/read/:budgetProposalIncomeId")
+  @UsePipes(new ZodPipe(apiPrp010))
+  async readBudgetProposalIncomeRevision(
+    @Param() params: ApiPrp010RequestParam,
+  ) {
+    return this.proposalPublicService.readBudgetProposalIncomeRevision(params);
   }
 }

@@ -9,13 +9,13 @@ import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorat
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { ProposalService } from "../service/proposal.service";
 
-@Controller("president/budget-proposals")
+@Controller("president/proposals/budget-proposals")
 export class ProposalPresidentController {
   constructor(private readonly proposalService: ProposalService) {}
 
   // 각 단체장단 권한으로 예산안 생성
   @Public() // 임시로 로그인 없이 생성. 단체장단 데코레이터 추가 필요
-  @Post("income")
+  @Post("income/create")
   @UsePipes(new ZodPipe(apiPrp008))
   async createBudgetProposalIncome(@Body() body: ApiPrp008RequestBody) {
     return this.proposalService.createBudgetProposalIncome(
@@ -23,8 +23,9 @@ export class ProposalPresidentController {
     );
   }
 
+  // 각 단체장단 권한으로 예산안 revision 생성
   @Public() // 임시로 로그인 없이 생성. 단체장단 데코레이터 추가 필요
-  @Post("income-revision")
+  @Post("income-revision/create")
   @UsePipes(new ZodPipe(apiPrp009))
   async createBudgetProposalIncomeRevision(@Body() body: ApiPrp009RequestBody) {
     return this.proposalService.createBudgetProposalIncomeRevision(
