@@ -45,6 +45,12 @@ export class ProposalService {
       semesterId: prevSemesterId as unknown,
     });
 
+    // 동일 code의 revision을 soft delete
+    await this.budgetProposalIncomeRevisionRepository.delete({
+      budgetProposalIncomeId: body.budgetProposalIncome.id,
+      code: body.code,
+    });
+
     const budgetProposalIncomeRevisionCreateDto = {
       ...body,
       previousBudgetReportIncome: prevReport

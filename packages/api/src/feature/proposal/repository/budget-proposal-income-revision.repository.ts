@@ -18,7 +18,8 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 export type BudgetProposalIncomeRevisionQuery = {
   // id: number; // id 는 기본 내장
   budgetProposalIncomeId: number;
-  previousBudgetReportIncomeId;
+  previousBudgetReportIncomeId: number;
+  code: number;
 };
 
 type BudgetProposalIncomeRevisionOrderByKeys = "id";
@@ -124,6 +125,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       id: BudgetProposalIncomeRevision,
       budgetProposalIncomeId: BudgetProposalIncomeRevision,
       previousBudgetReportIncomeId: BudgetProposalIncomeRevision,
+      code: BudgetProposalIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {
