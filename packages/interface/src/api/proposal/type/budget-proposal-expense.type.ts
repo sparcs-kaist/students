@@ -8,7 +8,10 @@ import {
   BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum";
 
-import { zMoney } from "@sparcs-students/interface/common/stringLength";
+import {
+  zDocumentItemName,
+  zMoney,
+} from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 // eslint-disable-next-line import/no-cycle
 import { zBudgetReportExpense } from "@sparcs-students/interface/api/report/type/budget-report-expense.type";
@@ -38,6 +41,7 @@ export const zBudgetProposalExpenseRevision = z
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
+    name: zDocumentItemName,
     amount: zMoney,
     detail: z.string(),
     code: z.coerce.number(),

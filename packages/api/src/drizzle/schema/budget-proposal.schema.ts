@@ -123,6 +123,7 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     budgetDomainEnum: int("budget_domain_enum"),
     budgetDivisionExpenseEnum: int("budget_division_expense_enum"),
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
+    name: varchar("name", { length: 30 }).notNull(),
     amount: int("amount"),
     detail: text("detail"),
     code: int("code").notNull(),

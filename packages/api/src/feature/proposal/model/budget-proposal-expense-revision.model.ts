@@ -12,6 +12,8 @@ export interface IBudgetProposalExpenseRevisionCreate {
 
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
 
+  name: IBudgetProposalExpenseRevision["name"];
+
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
@@ -34,6 +36,8 @@ export class MBudgetProposalExpenseRevision
   budgetDivisionExpenseEnum: IBudgetProposalExpenseRevision["budgetDivisionExpenseEnum"];
 
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
+
+  name: IBudgetProposalExpenseRevision["name"];
 
   amount: IBudgetProposalExpenseRevision["amount"];
 
