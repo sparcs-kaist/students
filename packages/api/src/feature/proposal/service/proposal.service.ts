@@ -2,6 +2,7 @@ import { Injectable, ConflictException } from "@nestjs/common";
 import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/report/repository/budget-report-income.repository";
 import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 import { BudgetProposalIncomeRevisionRepository } from "../repository/budget-proposal-income-revision.repository";
+import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-expense.repository";
 
 @Injectable()
 export class ProposalService {
@@ -9,6 +10,7 @@ export class ProposalService {
     private readonly budgetProposalIncomeRepository: BudgetProposalIncomeRepository,
     private readonly budgetProposalIncomeRevisionRepository: BudgetProposalIncomeRevisionRepository,
     private readonly budgetReportIncomeRepository: BudgetReportIncomeRepository,
+    private readonly budgetProposalExpenseRepository: BudgetProposalExpenseRepository,
   ) {}
 
   async createBudgetProposalIncome(body) {
@@ -65,6 +67,24 @@ export class ProposalService {
       );
     return {
       budgetProposalIncomeRevision: newBudgetProposalIncomeRevision,
+    };
+  }
+
+  async createBudgetProposalExpense(body) {
+    // semester 중복 확인
+    const existing = await this.budgetProposalExpenseRepository.find({
+      organizationId: body.organization.id,
+      semesterId: body.semester.id,
+    });
+    if (existing.length > 0) {
+      throw new ConflictException("Already exists this semester.");
+    }
+
+    // 생성
+    const [newBudgetProposalExpense] =
+      await this.budgetProposalExpenseRepository.create(body);
+    return {
+      budgetProposalExpense: newBudgetProposalExpense,
     };
   }
 }

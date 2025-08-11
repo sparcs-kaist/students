@@ -8,10 +8,6 @@ import {
 } from "drizzle-orm/mysql-core";
 import { Organization } from "./organization.schema";
 import { Semester } from "./semester.schema";
-import {
-  ProjectProposal,
-  ProjectProposalRevision,
-} from "./project-proposal.schema";
 import { Student } from "./user.schema";
 
 // eslint-disable-next-line import/no-cycle
@@ -26,7 +22,7 @@ export const BudgetProposalIncome = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
-    semesterId: int("halfyear_id").notNull(),
+    semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -100,7 +96,6 @@ export const BudgetProposalExpense = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
-    projectProposalId: int("project_proposal_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -116,11 +111,6 @@ export const BudgetProposalExpense = mysqlTable(
       foreignColumns: [Semester.id],
       name: "bud_prop_exp_sem_id_fk",
     }),
-    budgetProposalExpenseProjectProposalIdFk: foreignKey({
-      columns: [table.projectProposalId],
-      foreignColumns: [ProjectProposal.id],
-      name: "bud_prop_exp_proj_id_fk",
-    }),
   }),
 );
 
@@ -132,11 +122,9 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     previousBudgetReportExpenseId: int("previous_budget_report_expense_id"),
     budgetDomainEnum: int("budget_domain_enum"),
     budgetDivisionExpenseEnum: int("budget_division_expense_enum"),
-    projectProposalRevisionId: int("project_proposal_revision_id"),
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
     amount: int("amount"),
     detail: text("detail"),
-
     code: int("code").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
@@ -155,11 +143,6 @@ export const BudgetProposalExpenseRevision = mysqlTable(
       columns: [table.previousBudgetReportExpenseId],
       foreignColumns: [BudgetReportExpense.id],
       name: "bud_prop_exp_rev_prev_id_fk",
-    }),
-    budgetProposalExpenseRevisionProjectProposalRevisionIdFk: foreignKey({
-      columns: [table.projectProposalRevisionId],
-      foreignColumns: [ProjectProposalRevision.id],
-      name: "bud_prop_exp_rev_proj_prop_rev_id_fk",
     }),
     budgetProposalExpenseRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],

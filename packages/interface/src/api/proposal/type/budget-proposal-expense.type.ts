@@ -12,20 +12,22 @@ import { zMoney } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 // eslint-disable-next-line import/no-cycle
 import { zBudgetReportExpense } from "@sparcs-students/interface/api/report/type/budget-report-expense.type";
-import {
-  zProjectProposal,
-  zProjectProposalRevision,
-} from "./project-proposal.type";
 
 // BudgetProposalExpense: 예산안 각 행 엔티티
 export const zBudgetProposalExpense = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
-  projectProposal: zExtractId(zProjectProposal),
+});
+
+export const zBudgetProposalExpenseRequestCreate = zBudgetProposalExpense.omit({
+  id: true,
 });
 
 export type IBudgetProposalExpense = z.infer<typeof zBudgetProposalExpense>;
+export type IBudgetProposalExpenseRequestCreate = z.infer<
+  typeof zBudgetProposalExpenseRequestCreate
+>;
 
 // BudgetProposalExpense: 예산안 각 행 엔티티
 export const zBudgetProposalExpenseRevision = z
@@ -35,7 +37,6 @@ export const zBudgetProposalExpenseRevision = z
     previousBudgetReportExpense: zExtractId(zBudgetReportExpense),
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
-    projectProposalRevision: zExtractId(zProjectProposalRevision),
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
     amount: zMoney,
     detail: z.string(),
@@ -43,6 +44,15 @@ export const zBudgetProposalExpenseRevision = z
   })
   .merge(zRevisionBase);
 
+export const zBudgetProposalExpenseRevisionRequestCreate =
+  zBudgetProposalExpenseRevision.omit({
+    id: true,
+    previousBudgetReportExpense: true,
+  });
+
 export type IBudgetProposalExpenseRevision = z.infer<
   typeof zBudgetProposalExpenseRevision
+>;
+export type IBudgetProposalExpenseRevisionRequestCreate = z.infer<
+  typeof zBudgetProposalExpenseRevisionRequestCreate
 >;

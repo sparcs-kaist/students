@@ -2,8 +2,10 @@ import { Body, Controller, Post, UsePipes } from "@nestjs/common";
 import {
   apiPrp008,
   apiPrp009,
+  apiPrp011,
   ApiPrp008RequestBody,
   ApiPrp009RequestBody,
+  ApiPrp011RequestBody,
 } from "@sparcs-students/interface/api/proposal/index";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -30,6 +32,15 @@ export class ProposalPresidentController {
   async createBudgetProposalIncomeRevision(@Body() body: ApiPrp009RequestBody) {
     return this.proposalService.createBudgetProposalIncomeRevision(
       body.budgetProposalIncomeRevision,
+    );
+  }
+
+  @Public() // 임시로 로그인 없이 생성. 단체장단 데코레이터 추가 필요
+  @Post("expense/create")
+  @UsePipes(new ZodPipe(apiPrp011))
+  async createBudgetProposalExpense(@Body() body: ApiPrp011RequestBody) {
+    return this.proposalService.createBudgetProposalExpense(
+      body.budgetProposalExpense,
     );
   }
 }

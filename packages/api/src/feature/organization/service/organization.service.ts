@@ -231,7 +231,7 @@ export class OrganizationService {
         );
 
         return {
-          halfYear: {
+          semester: {
             year: semester.year,
             name: semester.name,
           },
