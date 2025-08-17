@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zProjectReportRevisionRequestUpdate,
+  zProjectReportRevisionRequestCreate,
   zProjectReportRevisionResponse,
 } from "../type/project-report.type";
 
@@ -20,11 +20,11 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  projectReportRevision: zProjectReportRevisionRequestUpdate,
+  projectReportRevision: zProjectReportRevisionRequestCreate,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     projectReportRevision: zProjectReportRevisionResponse,
   }),
 };
@@ -44,7 +44,9 @@ const apiRpt006 = {
 type ApiRpt006RequestParam = z.infer<typeof apiRpt006.requestParam>;
 type ApiRpt006RequestQuery = z.infer<typeof apiRpt006.requestQuery>;
 type ApiRpt006RequestBody = z.infer<typeof apiRpt006.requestBody>;
-type ApiRpt006ResponseOk = z.infer<(typeof apiRpt006.responseBodyMap)[200]>;
+type ApiRpt006ResponseCreated = z.infer<
+  (typeof apiRpt006.responseBodyMap)[201]
+>;
 
 export default apiRpt006;
 
@@ -52,5 +54,5 @@ export type {
   ApiRpt006RequestParam,
   ApiRpt006RequestQuery,
   ApiRpt006RequestBody,
-  ApiRpt006ResponseOk,
+  ApiRpt006ResponseCreated,
 };

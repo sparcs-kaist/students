@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zBudgetReportIncomeRequestUpdate,
+  zBudgetReportIncomeRequestCreate,
   zBudgetReportIncomeResponse,
 } from "../type/budget-report-income.type";
 
@@ -20,11 +20,11 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  budgetReportIncome: zBudgetReportIncomeRequestUpdate,
+  budgetReportIncome: zBudgetReportIncomeRequestCreate,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     budgetReportIncome: zBudgetReportIncomeResponse,
   }),
 };
@@ -44,7 +44,9 @@ const apiRpt015 = {
 type ApiRpt015RequestParam = z.infer<typeof apiRpt015.requestParam>;
 type ApiRpt015RequestQuery = z.infer<typeof apiRpt015.requestQuery>;
 type ApiRpt015RequestBody = z.infer<typeof apiRpt015.requestBody>;
-type ApiRpt015ResponseOk = z.infer<(typeof apiRpt015.responseBodyMap)[200]>;
+type ApiRpt015ResponseCreated = z.infer<
+  (typeof apiRpt015.responseBodyMap)[201]
+>;
 
 export default apiRpt015;
 
@@ -52,5 +54,5 @@ export type {
   ApiRpt015RequestParam,
   ApiRpt015RequestQuery,
   ApiRpt015RequestBody,
-  ApiRpt015ResponseOk,
+  ApiRpt015ResponseCreated,
 };

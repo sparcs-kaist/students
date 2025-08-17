@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zProjectReportTimelineRequestUpdate,
+  zProjectReportTimelineRequestCreate,
   zProjectReportTimelineResponse,
 } from "../type/project-report-timeline.type";
 
@@ -20,11 +20,11 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  projectReportTimeline: zProjectReportTimelineRequestUpdate,
+  projectReportTimeline: zProjectReportTimelineRequestCreate,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     projectReportTimeline: zProjectReportTimelineResponse,
   }),
 };
@@ -44,7 +44,9 @@ const apiRpt009 = {
 type ApiRpt009RequestParam = z.infer<typeof apiRpt009.requestParam>;
 type ApiRpt009RequestQuery = z.infer<typeof apiRpt009.requestQuery>;
 type ApiRpt009RequestBody = z.infer<typeof apiRpt009.requestBody>;
-type ApiRpt009ResponseOk = z.infer<(typeof apiRpt009.responseBodyMap)[200]>;
+type ApiRpt009ResponseCreated = z.infer<
+  (typeof apiRpt009.responseBodyMap)[201]
+>;
 
 export default apiRpt009;
 
@@ -52,5 +54,5 @@ export type {
   ApiRpt009RequestParam,
   ApiRpt009RequestQuery,
   ApiRpt009RequestBody,
-  ApiRpt009ResponseOk,
+  ApiRpt009ResponseCreated,
 };

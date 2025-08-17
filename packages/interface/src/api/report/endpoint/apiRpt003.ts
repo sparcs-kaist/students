@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import {
   zProjectReportRevisionListRequestGet,
-  zProjectReportRevisionDetailResponse,
+  zProjectReportRevisionListResponse,
 } from "../type/project-report.type";
 
 /**
@@ -20,12 +20,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  projectReportRevisionInfo: zProjectReportRevisionListRequestGet,
+  projectReportId: zProjectReportRevisionListRequestGet,
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    projectReportRevision: zProjectReportRevisionDetailResponse,
+    projectReportRevisions: zProjectReportRevisionListResponse,
   }),
 };
 

@@ -2,8 +2,8 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zProjectReportSubmitRequestUpdate,
-  zProjectReportSubmitResponse,
+  zProjectReportRevisionRequestUpdate,
+  zProjectReportRevisionResponse,
 } from "../type/project-report.type";
 
 /**
@@ -20,12 +20,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  projectReportRevision: zProjectReportSubmitRequestUpdate,
+  projectReportRevision: zProjectReportRevisionRequestUpdate,
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    projectReportRevision: zProjectReportSubmitResponse,
+    projectReportRevision: zProjectReportRevisionResponse,
   }),
 };
 

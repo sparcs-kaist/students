@@ -2,8 +2,8 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  zBudgetReportIncomeSubmitRequestUpdate,
-  zBudgetReportIncomeSubmitResponse,
+  zBudgetReportIncomeRevisionRequestCreate,
+  zBudgetReportIncomeRevisionResponse,
 } from "../type/budget-report-income.type";
 
 /**
@@ -20,12 +20,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  budgetReportIncome: zBudgetReportIncomeSubmitRequestUpdate,
+  budgetReportIncomeRevision: zBudgetReportIncomeRevisionRequestCreate,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    budgetReportIncome: zBudgetReportIncomeSubmitResponse,
+  [HttpStatusCode.Created]: z.object({
+    budgetReportIncomeRevision: zBudgetReportIncomeRevisionResponse,
   }),
 };
 
@@ -44,7 +44,9 @@ const apiRpt016 = {
 type ApiRpt016RequestParam = z.infer<typeof apiRpt016.requestParam>;
 type ApiRpt016RequestQuery = z.infer<typeof apiRpt016.requestQuery>;
 type ApiRpt016RequestBody = z.infer<typeof apiRpt016.requestBody>;
-type ApiRpt016ResponseOk = z.infer<(typeof apiRpt016.responseBodyMap)[200]>;
+type ApiRpt016ResponseCreated = z.infer<
+  (typeof apiRpt016.responseBodyMap)[201]
+>;
 
 export default apiRpt016;
 
@@ -52,5 +54,5 @@ export type {
   ApiRpt016RequestParam,
   ApiRpt016RequestQuery,
   ApiRpt016RequestBody,
-  ApiRpt016ResponseOk,
+  ApiRpt016ResponseCreated,
 };

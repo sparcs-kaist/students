@@ -1,10 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  zBudgetReportExpenseRequestUpdate,
-  zBudgetReportExpenseResponse,
-} from "../type/budget-report-expense.type";
+import { zBudgetReportIncomeRequestDelete } from "../type/budget-report-income.type";
 
 /**
  * @version v0.1
@@ -20,13 +17,11 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  budgetReportExpense: zBudgetReportExpenseRequestUpdate,
+  budgetReportIncome: zBudgetReportIncomeRequestDelete,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    budgetReportExpense: zBudgetReportExpenseResponse,
-  }),
+  [HttpStatusCode.NoContent]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -44,7 +39,9 @@ const apiRpt019 = {
 type ApiRpt019RequestParam = z.infer<typeof apiRpt019.requestParam>;
 type ApiRpt019RequestQuery = z.infer<typeof apiRpt019.requestQuery>;
 type ApiRpt019RequestBody = z.infer<typeof apiRpt019.requestBody>;
-type ApiRpt019ResponseOk = z.infer<(typeof apiRpt019.responseBodyMap)[200]>;
+type ApiRpt019ResponseNoContent = z.infer<
+  (typeof apiRpt019.responseBodyMap)[204]
+>;
 
 export default apiRpt019;
 
@@ -52,5 +49,5 @@ export type {
   ApiRpt019RequestParam,
   ApiRpt019RequestQuery,
   ApiRpt019RequestBody,
-  ApiRpt019ResponseOk,
+  ApiRpt019ResponseNoContent,
 };
