@@ -31,19 +31,23 @@ export type IBudgetReportExpenseRevision = z.infer<
   typeof zBudgetReportExpenseRevision
 >;
 
-export const zBudgetReportExpenseRequestCreate = zBudgetReportExpense
-  .omit({ id: true })
-  .merge(
-    zBudgetReportExpenseRevision.omit({
-      id: true,
-    }),
-  );
+export const zBudgetReportExpenseRequestCreate = zBudgetReportExpense.omit({
+  id: true,
+});
 
 export const zBudgetReportExpenseRequestUpdate = zBudgetReportExpenseRevision;
 
 export const zBudgetReportExpenseResponse = zBudgetReportExpenseRevision.pick({
   id: true,
 });
+
+export const zBudgetReportExpenseRevisionRequestCreate =
+  zBudgetReportExpenseRevision.omit({ id: true });
+
+export const zBudgetReportExpenseRevisionResponse =
+  zBudgetReportExpenseRevision.pick({
+    id: true,
+  });
 
 export const zBudgetReportExpenseSubmitRequestUpdate =
   zBudgetReportExpenseRevision.pick({ id: true });
@@ -64,6 +68,12 @@ export type IBudgetReportExpenseRequestUpdate = z.infer<
 >;
 export type IBudgetReportExpenseResponse = z.infer<
   typeof zBudgetReportExpenseResponse
+>;
+export type IBudgetReportExpenseRevisionRequestCreate = z.infer<
+  typeof zBudgetReportExpenseRevisionRequestCreate
+>;
+export type IBudgetReportExpenseRevisionResponse = z.infer<
+  typeof zBudgetReportExpenseRevisionResponse
 >;
 export type IBudgetReportExpenseSubmitRequestUpdate = z.infer<
   typeof zBudgetReportExpenseSubmitRequestUpdate

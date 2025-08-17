@@ -28,15 +28,23 @@ export type IBudgetReportIncomeRevision = z.infer<
   typeof zBudgetReportIncomeRevision
 >;
 
-export const zBudgetReportIncomeRequestCreate = zBudgetReportIncome
-  .omit({ id: true })
-  .merge(zBudgetReportIncomeRevision.omit({ id: true }));
+export const zBudgetReportIncomeRequestCreate = zBudgetReportIncome.omit({
+  id: true,
+});
 
 export const zBudgetReportIncomeRequestUpdate = zBudgetReportIncomeRevision;
 
 export const zBudgetReportIncomeResponse = zBudgetReportIncomeRevision.pick({
   id: true,
 });
+
+export const zBudgetReportIncomeRevisionRequestCreate =
+  zBudgetReportIncomeRevision.omit({ id: true });
+
+export const zBudgetReportIncomeRevisionResponse =
+  zBudgetReportIncomeRevision.pick({
+    id: true,
+  });
 
 export const zBudgetReportIncomeSubmitRequestUpdate =
   zBudgetReportIncomeRevision.pick({ id: true });
@@ -57,6 +65,12 @@ export type IBudgetReportIncomeRequestUpdate = z.infer<
 >;
 export type IBudgetReportIncomeResponse = z.infer<
   typeof zBudgetReportIncomeResponse
+>;
+export type IBudgetReportIncomeRevisionRequestCreate = z.infer<
+  typeof zBudgetReportIncomeRevisionRequestCreate
+>;
+export type IBudgetReportIncomeRevisionResponse = z.infer<
+  typeof zBudgetReportIncomeRevisionResponse
 >;
 export type IBudgetReportIncomeSubmitRequestUpdate = z.infer<
   typeof zBudgetReportIncomeSubmitRequestUpdate

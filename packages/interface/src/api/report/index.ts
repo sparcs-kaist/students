@@ -28,8 +28,8 @@ export { default as apiRpt009 } from "./endpoint/apiRpt009";
 export * from "./endpoint/apiRpt010";
 export { default as apiRpt010 } from "./endpoint/apiRpt010";
 
-export * from "./endpoint/apiRpt013";
-export { default as apiRpt013 } from "./endpoint/apiRpt013";
+export * from "./endpoint/apiRpt011";
+export { default as apiRpt011 } from "./endpoint/apiRpt011";
 
 export * from "./endpoint/apiRpt014";
 export { default as apiRpt014 } from "./endpoint/apiRpt014";
@@ -54,3 +54,12 @@ export { default as apiRpt020 } from "./endpoint/apiRpt020";
 
 export * from "./endpoint/apiRpt021";
 export { default as apiRpt021 } from "./endpoint/apiRpt021";
+
+export * from "./endpoint/apiRpt022";
+export { default as apiRpt022 } from "./endpoint/apiRpt022";
+
+export * from "./endpoint/apiRpt023";
+export { default as apiRpt023 } from "./endpoint/apiRpt023";
+
+export * from "./endpoint/apiRpt024";
+export { default as apiRpt024 } from "./endpoint/apiRpt024";

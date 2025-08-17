@@ -88,27 +88,24 @@ export const zProjectReportDetailResponse = zProjectReport
   .pick({ projectProposal: true })
   .merge(zProjectReportRevision)
   .extend({
-    budgetExpenses: z.object({
-      id: zId,
-      name: zDocumentItemName,
-      budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
-      budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
-      budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
-      proposalAmount: zMoney,
-      reportAmount: zMoney,
-      detail: z.string(),
-      note: z.string(),
-    }),
+    budgetExpenses: z.array(
+      z.object({
+        id: zId,
+        name: zDocumentItemName,
+        budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
+        budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
+        budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
+        proposalAmount: zMoney,
+        reportAmount: zMoney,
+        detail: z.string(),
+        note: z.string(),
+      }),
+    ),
   });
 
-export const zProjectReportRequestCreate = zProjectReport
-  .omit({ id: true })
-  .merge(zProjectReportRevision.omit({ id: true, projectReport: true }));
+export const zProjectReportRequestCreate = zProjectReport.omit({ id: true });
 
-export const zProjectReportResponse = z.object({
-  projectReport: zExtractId(zProjectReport),
-  projectReportRevision: zExtractId(zProjectReportRevision),
-});
+export const zProjectReportResponse = zProjectReport.pick({ id: true });
 
 export const zProjectReportRevisionListRequestGet = zProjectReport.pick({
   id: true,
@@ -123,17 +120,19 @@ export const zProjectReportRevisionDetailRequestGet =
 
 export const zProjectReportRevisionDetailResponse = // Expense 추가
   zProjectReportRevision.extend({
-    budgetExpenses: z.object({
-      id: zId,
-      name: zDocumentItemName,
-      budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
-      budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
-      budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
-      proposalAmount: zMoney,
-      reportAmount: zMoney,
-      detail: z.string(),
-      note: z.string(),
-    }),
+    budgetExpenses: z.array(
+      z.object({
+        id: zId,
+        name: zDocumentItemName,
+        budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
+        budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
+        budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
+        proposalAmount: zMoney,
+        reportAmount: zMoney,
+        detail: z.string(),
+        note: z.string(),
+      }),
+    ),
   });
 
 export const zProjectReportSubmitRequestUpdate = zProjectReportRevision.pick({

@@ -37,6 +37,7 @@ export const zBudgetProposalExpenseRevision = z
     budgetDivisionExpenseEnum: z.nativeEnum(BudgetDivisionExpenseEnum),
     projectProposalRevision: zExtractId(zProjectProposalRevision),
     budgetClassExpenseEnum: z.nativeEnum(BudgetClassExpenseEnum),
+    name: z.string(),
     amount: zMoney,
     detail: z.string(),
     code: z.coerce.number(),
