@@ -1,15 +1,12 @@
+// packages\web\src\common\components\Calendar\_atomic\MonthNavigator.tsx
+
 import React from "react";
 import styled from "styled-components";
 import { addMonths, format, subMonths } from "date-fns";
 import { ko } from "date-fns/locale";
 import Icon from "@sparcs-students/web/common/components/Icon";
 import isPropValid from "@emotion/is-prop-valid";
-
-interface MonthNavigatorProps {
-  currentDate: Date;
-  onChange: (date: Date) => void;
-  small?: boolean;
-}
+import { MonthNavigatorProps } from "../types";
 
 const NavigatorWrapper = styled.div`
   display: flex;
@@ -36,6 +33,11 @@ const MonthDisplay = styled.div.withConfig({
     small ? theme.fonts.WEIGHT.MEDIUM : theme.fonts.WEIGHT.SEMIBOLD};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   color: ${({ theme }) => theme.colors.GRAY[900]};
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.GREEN[600]};
+  }
 `;
 
 const ChevronBlockWrapper = styled.div`
@@ -46,6 +48,12 @@ const ChevronBlockWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.GRAY[100]};
+    border-radius: 4px;
+  }
 `;
 
 const MonthNavigator: React.FC<MonthNavigatorProps> = ({
@@ -71,21 +79,21 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
 
   return (
     <NavigatorWrapper>
-      <ChevronBlockWrapper>
+      <ChevronBlockWrapper onClick={handlePrevious}>
         {small ? (
-          <Icon type="arrow_back_ios_new" size={18} onClick={handlePrevious} />
+          <Icon type="arrow_back_ios_new" size={18} />
         ) : (
-          <Icon type="arrow_back_ios_new" size={24} onClick={handlePrevious} />
+          <Icon type="arrow_back_ios_new" size={24} />
         )}
       </ChevronBlockWrapper>
       <MonthDisplay onClick={handleTodayClick} small={small}>
         {format(currentDate, "yyyy. MM.", { locale: ko })}
       </MonthDisplay>
-      <ChevronBlockWrapper>
+      <ChevronBlockWrapper onClick={handleNext}>
         {small ? (
-          <Icon type="arrow_forward_ios" size={18} onClick={handleNext} />
+          <Icon type="arrow_forward_ios" size={18} />
         ) : (
-          <Icon type="arrow_forward_ios" size={24} onClick={handleNext} />
+          <Icon type="arrow_forward_ios" size={24} />
         )}
       </ChevronBlockWrapper>
     </NavigatorWrapper>

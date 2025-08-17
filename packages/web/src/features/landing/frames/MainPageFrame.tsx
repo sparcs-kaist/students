@@ -2,7 +2,7 @@
 
 import Banner from "@sparcs-students/web/common/components/Banner/Banner";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import Calendar from "@sparcs-students/web/common/components/Calendar/Calendar";
+import Calendar from "@sparcs-students/web/common/components/Calendar";
 import SingleColumnTable from "@sparcs-students/web/common/components/Table/SingleColumnTable";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import colors from "@sparcs-students/web/styles/themes/colors";
