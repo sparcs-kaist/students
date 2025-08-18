@@ -7,54 +7,78 @@ import {
   Post,
   Put,
   Query,
+  UsePipes,
 } from "@nestjs/common";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import {
+  apiRpt001,
   ApiRpt001RequestQuery,
   ApiRpt001ResponseOk,
+  apiRpt002,
   ApiRpt002RequestParam,
   ApiRpt002ResponseOk,
+  apiRpt003,
   ApiRpt003RequestBody,
   ApiRpt003ResponseOk,
+  apiRpt004,
   ApiRpt004RequestBody,
   ApiRpt004ResponseOk,
+  apiRpt005,
   ApiRpt005RequestBody,
   ApiRpt005ResponseCreated,
+  apiRpt006,
   ApiRpt006RequestBody,
   ApiRpt006ResponseCreated,
+  apiRpt007,
   ApiRpt007RequestBody,
   ApiRpt007ResponseOk,
+  apiRpt008,
   ApiRpt008RequestBody,
   ApiRpt008ResponseOk,
+  apiRpt009,
   ApiRpt009RequestBody,
   ApiRpt009ResponseCreated,
+  apiRpt010,
   ApiRpt010RequestBody,
   ApiRpt010ResponseOk,
+  apiRpt011,
   ApiRpt011RequestBody,
   ApiRpt011ResponseNoContent,
+  apiRpt014,
   ApiRpt014RequestQuery,
   ApiRpt014ResponseOk,
+  apiRpt015,
   ApiRpt015RequestBody,
   ApiRpt015ResponseCreated,
+  apiRpt016,
   ApiRpt016RequestBody,
   ApiRpt016ResponseCreated,
+  apiRpt017,
   ApiRpt017RequestBody,
   ApiRpt017ResponseOk,
+  apiRpt018,
   ApiRpt018RequestBody,
   ApiRpt018ResponseOk,
+  apiRpt019,
   ApiRpt019RequestBody,
   ApiRpt019ResponseNoContent,
+  apiRpt020,
   ApiRpt020RequestBody,
   ApiRpt020ResponseCreated,
+  apiRpt021,
   ApiRpt021RequestBody,
   ApiRpt021ResponseCreated,
+  apiRpt022,
   ApiRpt022RequestBody,
   ApiRpt022ResponseOk,
+  apiRpt023,
   ApiRpt023RequestBody,
   ApiRpt023ResponseOk,
+  apiRpt024,
   ApiRpt024RequestBody,
   ApiRpt024ResponseNoContent,
 } from "@sparcs-students/interface/api/report/index";
+import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { ProjectReportService } from "../service/project-report.service";
 import { ProjectReportPublicService } from "../service/project-report.public.service";
 import { BudgetReportPublicService } from "../service/budget-report.public.service";
@@ -71,6 +95,7 @@ export class ReportController {
 
   @Public()
   @Get("apiRpt001")
+  @UsePipes(new ZodPipe(apiRpt001))
   async getProjectReportList(
     @Query() query: ApiRpt001RequestQuery,
   ): Promise<ApiRpt001ResponseOk> {
@@ -79,6 +104,7 @@ export class ReportController {
 
   @Public()
   @Get("apiRpt002")
+  @UsePipes(new ZodPipe(apiRpt002))
   async getProjectReportDetail(
     @Query() param: ApiRpt002RequestParam,
   ): Promise<ApiRpt002ResponseOk> {
@@ -87,6 +113,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt003")
+  @UsePipes(new ZodPipe(apiRpt003))
   async getProjectReportRevisionList(
     @Body() body: ApiRpt003RequestBody,
   ): Promise<ApiRpt003ResponseOk> {
@@ -95,6 +122,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt004")
+  @UsePipes(new ZodPipe(apiRpt004))
   async getProjectReportRevisionDetail(
     @Body() body: ApiRpt004RequestBody,
   ): Promise<ApiRpt004ResponseOk> {
@@ -103,6 +131,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt005")
+  @UsePipes(new ZodPipe(apiRpt005))
   async createProjectReport(
     @Body() body: ApiRpt005RequestBody,
   ): Promise<ApiRpt005ResponseCreated> {
@@ -111,6 +140,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt006")
+  @UsePipes(new ZodPipe(apiRpt006))
   async createProjectReportRevision(
     @Body() body: ApiRpt006RequestBody,
   ): Promise<ApiRpt006ResponseCreated> {
@@ -119,6 +149,7 @@ export class ReportController {
 
   @Public()
   @Put("apiRpt007")
+  @UsePipes(new ZodPipe(apiRpt007))
   async updateProjectReportRevision(
     @Body() body: ApiRpt007RequestBody,
   ): Promise<ApiRpt007ResponseOk> {
@@ -127,6 +158,7 @@ export class ReportController {
 
   @Public()
   @Patch("apiRpt008")
+  @UsePipes(new ZodPipe(apiRpt008))
   async updateSubmitProjectReport(
     @Body() body: ApiRpt008RequestBody,
   ): Promise<ApiRpt008ResponseOk> {
@@ -135,6 +167,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt009")
+  @UsePipes(new ZodPipe(apiRpt009))
   async createProjectReportTimeline(
     @Body() body: ApiRpt009RequestBody,
   ): Promise<ApiRpt009ResponseCreated> {
@@ -143,6 +176,7 @@ export class ReportController {
 
   @Public()
   @Put("apiRpt0010")
+  @UsePipes(new ZodPipe(apiRpt010))
   async updateProjectReportTimeline(
     @Body() body: ApiRpt010RequestBody,
   ): Promise<ApiRpt010ResponseOk> {
@@ -151,6 +185,7 @@ export class ReportController {
 
   @Public()
   @Delete("apiRpt011")
+  @UsePipes(new ZodPipe(apiRpt011))
   async deleteProjectReportTimeline(
     @Body() body: ApiRpt011RequestBody,
   ): Promise<ApiRpt011ResponseNoContent> {
@@ -159,6 +194,7 @@ export class ReportController {
 
   @Public()
   @Get("apiRpt014")
+  @UsePipes(new ZodPipe(apiRpt014))
   async getBudgetReport(
     @Query() query: ApiRpt014RequestQuery,
   ): Promise<ApiRpt014ResponseOk> {
@@ -167,6 +203,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt015")
+  @UsePipes(new ZodPipe(apiRpt015))
   async createBudgetReportIncome(
     @Body() body: ApiRpt015RequestBody,
   ): Promise<ApiRpt015ResponseCreated> {
@@ -175,6 +212,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt016")
+  @UsePipes(new ZodPipe(apiRpt016))
   async createBudgetReportIncomeRevision(
     @Body() body: ApiRpt016RequestBody,
   ): Promise<ApiRpt016ResponseCreated> {
@@ -183,6 +221,7 @@ export class ReportController {
 
   @Public()
   @Put("apiRpt017")
+  @UsePipes(new ZodPipe(apiRpt017))
   async updateBudgetReportIncome(
     @Body() body: ApiRpt017RequestBody,
   ): Promise<ApiRpt017ResponseOk> {
@@ -191,6 +230,7 @@ export class ReportController {
 
   @Public()
   @Patch("apiRpt018")
+  @UsePipes(new ZodPipe(apiRpt018))
   async updateSubmitBudgetReportIncome(
     @Body() body: ApiRpt018RequestBody,
   ): Promise<ApiRpt018ResponseOk> {
@@ -199,6 +239,7 @@ export class ReportController {
 
   @Public()
   @Delete("apiRpt019")
+  @UsePipes(new ZodPipe(apiRpt019))
   async deleteBudgetReportIncome(
     @Body() body: ApiRpt019RequestBody,
   ): Promise<ApiRpt019ResponseNoContent> {
@@ -207,6 +248,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt020")
+  @UsePipes(new ZodPipe(apiRpt020))
   async createBudgetReportExpense(
     @Body() body: ApiRpt020RequestBody,
   ): Promise<ApiRpt020ResponseCreated> {
@@ -215,6 +257,7 @@ export class ReportController {
 
   @Public()
   @Post("apiRpt021")
+  @UsePipes(new ZodPipe(apiRpt021))
   async createBudgetReportExpenseRevision(
     @Body() body: ApiRpt021RequestBody,
   ): Promise<ApiRpt021ResponseCreated> {
@@ -223,6 +266,7 @@ export class ReportController {
 
   @Public()
   @Put("apiRpt022")
+  @UsePipes(new ZodPipe(apiRpt022))
   async updateBudgetReportExpense(
     @Body() body: ApiRpt022RequestBody,
   ): Promise<ApiRpt022ResponseOk> {
@@ -231,6 +275,7 @@ export class ReportController {
 
   @Public()
   @Patch("apiRpt023")
+  @UsePipes(new ZodPipe(apiRpt023))
   async submitBudgetReportExpense(
     @Body() body: ApiRpt023RequestBody,
   ): Promise<ApiRpt023ResponseOk> {
@@ -239,6 +284,7 @@ export class ReportController {
 
   @Public()
   @Delete("apiRpt024")
+  @UsePipes(new ZodPipe(apiRpt024))
   async deleteBudgetReportExpense(
     @Body() body: ApiRpt024RequestBody,
   ): Promise<ApiRpt024ResponseNoContent> {
