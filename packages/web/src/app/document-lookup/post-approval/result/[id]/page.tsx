@@ -6,7 +6,7 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import BudgetReviewFrame from "@sparcs-students/web/features/document-lookup/budget-review/BudgetReviewFrame";
+import PostApprovalFrame from "@sparcs-students/web/features/document-lookup/budget-review/PostApprovalFrame";
 import {
   mockReviewPostApprovalResultData,
   mockViewBudgetReportResultData,
@@ -114,7 +114,7 @@ const Report = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
-        <BudgetReviewFrame isPostApproval />
+        <PostApprovalFrame />
       </FlexWrapper>
     </FlexWrapper>
   );
