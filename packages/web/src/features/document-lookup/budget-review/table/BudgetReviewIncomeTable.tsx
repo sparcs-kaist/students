@@ -53,7 +53,6 @@ import isEqual from "lodash/isEqual";
 
 interface BudgetReviewIncomeTableProps {
   formMethods: ReturnType<typeof useForm<FormValues>>;
-  isPostApproval: boolean;
   initialData: DBIncomeProps[];
   onDiffExtract?: (diff: {
     updatedRows: DBIncomeProps[];
@@ -373,7 +372,6 @@ const TableRow: React.FC<TableRowProps> = ({
 
 const BudgetReviewIncomeTable: React.FC<BudgetReviewIncomeTableProps> = ({
   formMethods,
-  isPostApproval,
   initialData,
   onDiffExtract = () => {},
 }) => {
@@ -552,7 +550,7 @@ const BudgetReviewIncomeTable: React.FC<BudgetReviewIncomeTableProps> = ({
                   </TableCell>
                   {/* TODO */}
                   <TableCell type="Header" width="130px">
-                    {isPostApproval ? "사후승인 " : "추경 "} 예산
+                    추경 예산
                   </TableCell>
                   <TableCell type="Header" width="110px">
                     비율
