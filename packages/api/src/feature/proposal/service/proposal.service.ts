@@ -1,6 +1,7 @@
 import { Injectable, ConflictException } from "@nestjs/common";
 import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "@sparcs-students/api/feature/report/repository/budget-report-expense.repository";
+import { OrganizationManagerRepository } from "@sparcs-students/api/feature/organization/repository/organization.manager.repository";
 import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 import { BudgetProposalIncomeRevisionRepository } from "../repository/budget-proposal-income-revision.repository";
 import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-expense.repository";
@@ -15,9 +16,28 @@ export class ProposalService {
     private readonly budgetProposalExpenseRepository: BudgetProposalExpenseRepository,
     private readonly budgetProposalExpenseRevisionRepository: BudgetProposalExpenseRevisionRepository,
     private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
+    private readonly organizationManagerRepository: OrganizationManagerRepository,
   ) {}
 
-  async createBudgetProposalIncome(body) {
+  async checkManager(studentId, organizationId) {
+    const isManager = await this.organizationManagerRepository.find({
+      studentId,
+      organizationId,
+      endTerm: null,
+    });
+    if (isManager.length === 0) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Not a manager of this organization",
+      });
+    }
+  }
+
+  async createBudgetProposalIncome(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    await this.checkManager(studentId, body.organization.id);
+
     // semester 중복 확인
     const existing = await this.budgetProposalIncomeRepository.find({
       organizationId: body.organization.id,
@@ -35,7 +55,11 @@ export class ProposalService {
     };
   }
 
-  async createBudgetProposalIncomeRevision(body) {
+  async createBudgetProposalIncomeRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    await this.checkManager(studentId, body.organization.id);
+
     // 지난 학기 report 확인
     const [budgetIncome] = await this.budgetProposalIncomeRepository.find({
       id: body.budgetProposalIncome.id,
@@ -74,7 +98,11 @@ export class ProposalService {
     };
   }
 
-  async createBudgetProposalExpense(body) {
+  async createBudgetProposalExpense(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    await this.checkManager(studentId, body.organization.id);
+
     // semester 중복 확인
     const existing = await this.budgetProposalExpenseRepository.find({
       organizationId: body.organization.id,
@@ -92,7 +120,11 @@ export class ProposalService {
     };
   }
 
-  async createBudgetProposalExpenseRevision(body) {
+  async createBudgetProposalExpenseRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    await this.checkManager(studentId, body.organization.id);
+
     // 지난 학기 report 확인
     const [budgetExpense] = await this.budgetProposalExpenseRepository.find({
       id: body.budgetProposalExpense.id,

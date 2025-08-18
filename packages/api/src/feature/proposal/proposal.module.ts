@@ -11,9 +11,10 @@ import { ProjectProposalRevisionRepository } from "./repository/project-proposal
 import { ProposalController } from "./controller/proposal.controller";
 import { ProposalService } from "./service/proposal.service";
 import { ProposalPublicService } from "./service/proposal.public.service";
-import { ProposalPresidentController } from "./controller/proposal.president.controller";
+import { ProposalManagerController } from "./controller/proposal.manager.controller";
 import { BudgetReportIncomeRepository } from "../report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "../report/repository/budget-report-expense.repository";
+import { OrganizationManagerRepository } from "../organization/repository/organization.manager.repository";
 
 @Module({
   providers: [
@@ -29,6 +30,7 @@ import { BudgetReportExpenseRepository } from "../report/repository/budget-repor
     OperationProposalRevisionRepository,
     ProposalPublicService,
     ProposalService,
+    OrganizationManagerRepository,
   ],
   imports: [DrizzleModule],
   exports: [
@@ -39,6 +41,6 @@ import { BudgetReportExpenseRepository } from "../report/repository/budget-repor
     BudgetProposalIncomeRepository,
     BudgetProposalIncomeRevisionRepository,
   ],
-  controllers: [ProposalController, ProposalPresidentController],
+  controllers: [ProposalController, ProposalManagerController],
 })
 export class ProposalModule {}

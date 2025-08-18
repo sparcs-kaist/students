@@ -8,14 +8,13 @@ import {
 
 /**
  * @version v0.1
- * @description 각 단체장단 권한으로 새로운 예산안(수입) Revision을 생성합니다.
+ * @description 각 매니저 권한으로 새로운 예산안(수입) Revision을 생성합니다.
  */
 
-const url = () =>
-  `/president/proposals/budget-proposals/income-revision/create`;
+const url = () => `/manager/proposals/budget-proposals/income-revision/create`;
 const method = "POST";
 export const ApiPrp009RequestUrl =
-  "/president/proposals/budget-proposals/income-revision/create";
+  "/manager/proposals/budget-proposals/income-revision/create";
 
 const requestParam = z.object({});
 
