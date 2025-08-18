@@ -16,6 +16,9 @@ import { BudgetProposalIncomeRepository } from "../proposal/repository/budget-pr
 import { BudgetProposalIncomeRevisionRepository } from "../proposal/repository/budget-proposal-income-revision.repository";
 import { ProjectReportPublicService } from "./service/project-report.public.service";
 import { BudgetReportPublicService } from "./service/budget-report.public.service";
+import { ProjectReportTimelineRepository } from "./repository/project-report-timeline.repository";
+import { OrganizationRepository } from "../organization/repository/organization.repository";
+import { OrganizationManagerRepository } from "../organization/repository/organization.manager.repository";
 
 @Module({
   imports: [DrizzleModule],
@@ -23,11 +26,14 @@ import { BudgetReportPublicService } from "./service/budget-report.public.servic
   providers: [
     ProjectReportRepository,
     ProjectReportRevisionRepository,
+    ProjectReportTimelineRepository,
     BudgetReportExpenseRepository,
     BudgetReportExpenseRevisionRepository,
     BudgetReportIncomeRepository,
     BudgetReportIncomeRevisionRepository,
     OperationReportRepository,
+    OrganizationRepository,
+    OrganizationManagerRepository,
     BudgetProposalExpenseRepository,
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
