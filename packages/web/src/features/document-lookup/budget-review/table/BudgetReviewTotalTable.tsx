@@ -20,7 +20,7 @@ import { useFormatter } from "next-intl";
 import { useTheme } from "styled-components";
 
 export interface TotalProps {
-  budgetDomain: BudgetDomainEnum;
+  budgetDomain?: BudgetDomainEnum;
   type: string;
   lastYear: number;
   thisYear: number;
