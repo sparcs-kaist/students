@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Put,
@@ -103,16 +104,16 @@ export class ReportController {
   }
 
   @Public()
-  @Get("apiRpt002")
+  @Get("apiRpt002/:projectReport")
   @UsePipes(new ZodPipe(apiRpt002))
   async getProjectReportDetail(
-    @Query() param: ApiRpt002RequestParam,
+    @Param() param: ApiRpt002RequestParam,
   ): Promise<ApiRpt002ResponseOk> {
     return this.projectReportPublicService.getProjectReportDetail(param);
   }
 
   @Public()
-  @Post("apiRpt003")
+  @Get("apiRpt003")
   @UsePipes(new ZodPipe(apiRpt003))
   async getProjectReportRevisionList(
     @Body() body: ApiRpt003RequestBody,
@@ -121,7 +122,7 @@ export class ReportController {
   }
 
   @Public()
-  @Post("apiRpt004")
+  @Get("apiRpt004")
   @UsePipes(new ZodPipe(apiRpt004))
   async getProjectReportRevisionDetail(
     @Body() body: ApiRpt004RequestBody,
@@ -159,10 +160,10 @@ export class ReportController {
   @Public()
   @Patch("apiRpt008")
   @UsePipes(new ZodPipe(apiRpt008))
-  async updateSubmitProjectReport(
+  async updateSubmitProjectReportRevision(
     @Body() body: ApiRpt008RequestBody,
   ): Promise<ApiRpt008ResponseOk> {
-    return this.projectReportService.updateSubmitProjectReport(body);
+    return this.projectReportService.updateSubmitProjectReportRevision(body);
   }
 
   @Public()
@@ -175,7 +176,7 @@ export class ReportController {
   }
 
   @Public()
-  @Put("apiRpt0010")
+  @Put("apiRpt010")
   @UsePipes(new ZodPipe(apiRpt010))
   async updateProjectReportTimeline(
     @Body() body: ApiRpt010RequestBody,
@@ -222,19 +223,21 @@ export class ReportController {
   @Public()
   @Put("apiRpt017")
   @UsePipes(new ZodPipe(apiRpt017))
-  async updateBudgetReportIncome(
+  async updateBudgetReportIncomeRevision(
     @Body() body: ApiRpt017RequestBody,
   ): Promise<ApiRpt017ResponseOk> {
-    return this.budgetReportService.updateBudgetReportIncome(body);
+    return this.budgetReportService.updateBudgetReportIncomeRevision(body);
   }
 
   @Public()
   @Patch("apiRpt018")
   @UsePipes(new ZodPipe(apiRpt018))
-  async updateSubmitBudgetReportIncome(
+  async updateSubmitBudgetReportIncomeRevision(
     @Body() body: ApiRpt018RequestBody,
   ): Promise<ApiRpt018ResponseOk> {
-    return this.budgetReportService.updateSubmitBudgetReportIncome(body);
+    return this.budgetReportService.updateSubmitBudgetReportIncomeRevision(
+      body,
+    );
   }
 
   @Public()
@@ -267,19 +270,19 @@ export class ReportController {
   @Public()
   @Put("apiRpt022")
   @UsePipes(new ZodPipe(apiRpt022))
-  async updateBudgetReportExpense(
+  async updateBudgetReportExpenseRevision(
     @Body() body: ApiRpt022RequestBody,
   ): Promise<ApiRpt022ResponseOk> {
-    return this.budgetReportService.updateBudgetReportExpense(body);
+    return this.budgetReportService.updateBudgetReportExpenseRevision(body);
   }
 
   @Public()
   @Patch("apiRpt023")
   @UsePipes(new ZodPipe(apiRpt023))
-  async submitBudgetReportExpense(
+  async submitBudgetReportExpenseRevision(
     @Body() body: ApiRpt023RequestBody,
   ): Promise<ApiRpt023ResponseOk> {
-    return this.budgetReportService.submitBudgetReportExpense(body);
+    return this.budgetReportService.submitBudgetReportExpenseRevision(body);
   }
 
   @Public()

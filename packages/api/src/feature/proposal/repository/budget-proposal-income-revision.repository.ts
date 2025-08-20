@@ -121,6 +121,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       TableWithID | null
     > = {
       id: BudgetProposalIncomeRevision,
+      previousBudgetReportIncomeId: BudgetProposalIncomeRevision,
       organizationId: BudgetProposalIncomeRevision,
       semesterId: BudgetProposalIncomeRevision,
       projectProposalId: BudgetProposalIncomeRevision,

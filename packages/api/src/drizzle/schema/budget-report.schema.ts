@@ -19,7 +19,7 @@ export const BudgetReportIncome = mysqlTable(
     semesterId: int("semester_id").notNull(),
     // projectReportId: int("project_report_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({

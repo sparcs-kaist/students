@@ -58,56 +58,56 @@ export class BudgetReportService {
     };
   }
 
-  async updateBudgetReportIncome(
+  async updateBudgetReportIncomeRevision(
     body: ApiRpt017RequestBody,
   ): Promise<ApiRpt017ResponseOk> {
     const target = await this.budgetReportIncomeReivisionRepository.find({
-      id: body.budgetReportIncome.id,
+      id: body.budgetReportIncomeRevision.id,
     } as any);
     if (target.length === 0) {
       throw new NotFoundException("No Budget Report Income Exists");
     }
     const newBudgetReportIncome =
       await this.budgetReportIncomeReivisionRepository.put(
-        body.budgetReportIncome as any,
+        body.budgetReportIncomeRevision as any,
       );
-    return { budgetReportIncome: { id: newBudgetReportIncome.id } };
+    return { budgetReportIncomeRevision: { id: newBudgetReportIncome.id } };
   }
 
-  async updateSubmitBudgetReportIncome(
+  async updateSubmitBudgetReportIncomeRevision(
     body: ApiRpt018RequestBody,
   ): Promise<ApiRpt018ResponseOk> {
     const existing = await this.budgetReportIncomeReivisionRepository.find({
-      id: body.budgetReportIncome.id,
+      id: body.budgetReportIncomeRevision.id,
     } as any);
     if (existing.length === 0) {
       throw new NotFoundException("No Budget Report Income Exists");
     }
     const newBudgetReportIncome =
       await this.budgetReportIncomeReivisionRepository.patch(
-        { id: body.budgetReportIncome.id } as any,
+        { id: body.budgetReportIncomeRevision.id } as any,
         revision => {
           const temp = revision;
           temp.submittedAt = new Date();
           return temp;
         },
       );
-    return { budgetReportIncome: { id: newBudgetReportIncome[0].id } };
+    return { budgetReportIncomeRevision: { id: newBudgetReportIncome[0].id } };
   }
 
   async deleteBudgetReportIncome(
     body: ApiRpt019RequestBody,
   ): Promise<ApiRpt019ResponseNoContent> {
     const existing = await this.budgetReportIncomeReivisionRepository.find({
-      id: body.budgetReportIncome.id,
+      budgetReportIncomeId: body.budgetReportIncome.id,
     } as any);
     if (existing.length === 0) {
-      throw new NotFoundException("No Budget Report Income Exists");
+      throw new NotFoundException("No Budget Report Income Revision Exists");
     }
-    this.budgetReportIncomeRepository.delete({
+    await this.budgetReportIncomeRepository.delete({
       id: body.budgetReportIncome.id,
     } as any);
-    this.budgetReportIncomeReivisionRepository.delete({
+    await this.budgetReportIncomeReivisionRepository.delete({
       budgetReportIncomeId: body.budgetReportIncome.id,
     } as any);
     return {};
@@ -134,56 +134,58 @@ export class BudgetReportService {
     };
   }
 
-  async updateBudgetReportExpense(
+  async updateBudgetReportExpenseRevision(
     body: ApiRpt022RequestBody,
   ): Promise<ApiRpt022ResponseOk> {
     const target = await this.budgetReportExpenseReivisionRepository.find({
-      id: body.budgetReportExpense.id,
+      id: body.budgetReportExpenseRevision.id,
     } as any);
     if (target.length === 0) {
       throw new NotFoundException("No Budget Report Expense Exists");
     }
     const newBudgetReportExpense =
       await this.budgetReportExpenseReivisionRepository.put(
-        body.budgetReportExpense as any,
+        body.budgetReportExpenseRevision as any,
       );
-    return { budgetReportExpense: { id: newBudgetReportExpense.id } };
+    return { budgetReportExpenseRevision: { id: newBudgetReportExpense.id } };
   }
 
-  async submitBudgetReportExpense(
+  async submitBudgetReportExpenseRevision(
     body: ApiRpt023RequestBody,
   ): Promise<ApiRpt023ResponseOk> {
     const existing = await this.budgetReportExpenseReivisionRepository.find({
-      id: body.budgetReportExpense.id,
+      id: body.budgetReportExpenseRevision.id,
     } as any);
     if (existing.length === 0) {
       throw new NotFoundException("No Budget Report Expense Exists");
     }
     const newBudgetReportExpense =
       await this.budgetReportExpenseReivisionRepository.patch(
-        { id: body.budgetReportExpense.id } as any,
+        { id: body.budgetReportExpenseRevision.id } as any,
         revision => {
           const temp = revision;
           temp.submittedAt = new Date();
           return temp;
         },
       );
-    return { budgetReportExpense: { id: newBudgetReportExpense[0].id } };
+    return {
+      budgetReportExpenseRevision: { id: newBudgetReportExpense[0].id },
+    };
   }
 
   async deleteBudgetReportExpense(
     body: ApiRpt024RequestBody,
   ): Promise<ApiRpt024ResponseNoContent> {
     const existing = await this.budgetReportExpenseReivisionRepository.find({
-      id: body.budgetReportExpense.id,
+      budgetReportExpenseId: body.budgetReportExpense.id,
     } as any);
     if (existing.length === 0) {
       throw new NotFoundException("No Budget Report Expense Exists");
     }
-    this.budgetReportExpenseRepository.delete({
+    await this.budgetReportExpenseRepository.delete({
       id: body.budgetReportExpense.id,
     } as any);
-    this.budgetReportExpenseReivisionRepository.delete({
+    await this.budgetReportExpenseReivisionRepository.delete({
       budgetReportExpenseId: body.budgetReportExpense.id,
     } as any);
     return {};

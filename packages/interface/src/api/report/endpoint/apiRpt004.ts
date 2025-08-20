@@ -20,7 +20,7 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  projectReportRevisionInfo: zProjectReportRevisionDetailRequestGet,
+  projectReportRevision: zProjectReportRevisionDetailRequestGet,
 });
 
 const responseBodyMap = {

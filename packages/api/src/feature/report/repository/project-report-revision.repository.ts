@@ -97,6 +97,7 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
         endTerm: result.main.endTerm,
       },
       timelines: result.oneToMany.projectReportTimeline.map(timeline => ({
+        projectReportRevision: { id: timeline.projectReportRevisionId },
         duration: {
           startTerm: timeline.startTerm,
           endTerm: timeline.endTerm,
@@ -156,6 +157,7 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
           endTerm: timeline.duration.endTerm,
           detail: timeline.detail,
           note: timeline.note,
+          projectReportRevisionId: timeline.projectReportRevision.id,
         })),
       },
     };
@@ -192,6 +194,7 @@ export class ProjectReportRevisionRepository extends BaseMultiTableRepository<
           endTerm: timeline.duration.endTerm,
           detail: timeline.detail,
           note: timeline.note,
+          projectReportRevisionId: timeline.projectReportRevision.id,
         })),
       },
     };

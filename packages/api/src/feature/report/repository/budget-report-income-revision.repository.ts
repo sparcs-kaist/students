@@ -104,7 +104,7 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
       TableWithID | null
     > = {
       id: BudgetReportIncomeRevision,
-      budgetReportIncome: BudgetReportIncomeRevision,
+      budgetReportIncomeId: BudgetReportIncomeRevision,
       amount: BudgetReportIncomeRevision,
       note: BudgetReportIncomeRevision,
       submittedAt: BudgetReportIncomeRevision,

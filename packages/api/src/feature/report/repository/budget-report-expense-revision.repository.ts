@@ -17,9 +17,7 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetReportExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectReportId: number;
+  budgetReportExpenseId: number;
 };
 
 type BudgetReportExpenseRevisionOrderByKeys = "id";
@@ -105,6 +103,7 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
       BudgetReportExpenseRevisionFieldMapKeys,
       TableWithID | null
     > = {
+      id: BudgetReportExpenseRevision,
       budgetReportExpenseId: BudgetReportExpenseRevision,
       note: BudgetReportExpenseRevision,
       amount: BudgetReportExpenseRevision,

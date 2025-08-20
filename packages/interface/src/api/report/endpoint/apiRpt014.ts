@@ -1,15 +1,13 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zExtractId } from "@sparcs-students/interface/common/type/ids";
+import { zExtractId, zId } from "@sparcs-students/interface/common/type/ids";
 import {
   BudgetClassExpenseEnum,
   BudgetDivisionExpenseEnum,
   BudgetDivisionIncomeEnum,
   BudgetDomainEnum,
 } from "@sparcs-students/interface/common/enum";
-import { zOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
-import { zSemester } from "@sparcs-students/interface/api/semester/";
 import { zBudgetReportIncomeRevision } from "../type/budget-report-income.type";
 import { zBudgetReportExpenseRevision } from "../type/budget-report-expense.type";
 
@@ -20,10 +18,8 @@ export const ApiRpt014RequestUrl = "";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  budgetReportInfo: z.object({
-    organization: zExtractId(zOrganization),
-    semester: zExtractId(zSemester),
-  }),
+  organization: zId,
+  semester: zId,
 });
 
 const requestBody = z.object({});

@@ -1,0 +1,407 @@
+
+### API MOCK DATA for report.controller.ts ###
+
+---
+
+### 1. GET /report/apiRpt001 - getProjectReportList
+- **Description**: 특정 기구의 특정 반기 사업보고서 목록을 조회합니다.
+- **Request Type**: Query
+
+#### Mock Query:
+```
+?projectReportInfo[organizationId]=1&projectReportInfo[semesterId]=1
+```
+
+---
+
+### 2. GET /report/apiRpt002 - getProjectReportDetail
+- **Description**: 사업보고서 상세 정보를 조회합니다.
+- **Request Type**: Query
+
+#### Mock Query:
+```
+?projectReportInfo[id]=1
+```
+
+---
+
+### 3. POST /report/apiRpt003 - getProjectReportRevisionList
+- **Description**: 사업보고서의 리비전 목록을 조회합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportId": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 4. POST /report/apiRpt004 - getProjectReportRevisionDetail
+- **Description**: 사업보고서의 특정 리비전 상세 정보를 조회합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportRevisionInfo": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 5. POST /report/apiRpt005 - createProjectReport
+- **Description**: 새로운 사업보고서를 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReport": {
+    "organization": {"id": 1},
+    "semester": {"id": 1},
+    "projectProposal": {"id": 1}
+  }
+}
+```
+
+---
+
+### 6. POST /report/apiRpt006 - createProjectReportRevision
+- **Description**: 사업보고서의 새로운 리비전을 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportRevision": {
+    "projectReport": {"id": 2},
+    "name": "2025asd",
+    "method": "asdasd",
+    "prepareDuration": { "startTerm": "2025-07-01", "endTerm": "2025-07-10" },
+    "duration": { "startTerm": "2025-07-11", "endTerm": "2025-7-30" },
+    "team": {"id": 4},
+    "manager": {"id": 1},
+    "timelines" : [
+        {
+        "detail":"TEST!",     
+        "duration": { 
+            "startTerm": "2025-07-11", 
+            "endTerm": "2025-7-15" 
+        },
+        "note": "TEST1"
+        },
+        {
+        "detail":"TEST@",     
+        "duration": { 
+            "startTerm": "2025-07-16", 
+            "endTerm": "2025-7-30" 
+        },
+        "note": "TEST2"
+        }],
+    "detail": "qwe",
+    "participation": "dfdf",
+    "result": "asfa",
+    "unmet": "qwe12",
+    "note": "qe1e2",
+    "status": "123e"
+  }
+}
+```
+
+---
+
+### 7. PUT /report/apiRpt007 - updateProjectReportRevision
+- **Description**: 사업보고서 리비전을 수정합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportRevision": {
+    "id": 5,
+    "projectReport": {"id": 2},
+    "name": "2025asd",
+    "method": "asdasd",
+    "prepareDuration": { "startTerm": "2025-07-01", "endTerm": "2025-07-10" },
+    "duration": { "startTerm": "2025-07-11", "endTerm": "2025-7-30" },
+    "team": {"id": 4},
+    "manager": {"id": 1},
+    "timelines" : [
+        {
+        "detail":"TEST!",     
+        "duration": { 
+            "startTerm": "2025-07-11", 
+            "endTerm": "2025-7-15" 
+        },
+        "projectReportRevision":{"id": 5},
+        "note": "TEST1"
+        },
+        {
+        "detail":"TEST@",     
+        "duration": { 
+            "startTerm": "2025-07-16", 
+            "endTerm": "2025-7-30" 
+        },
+        "projectReportRevision":{"id": 5},
+        "note": "TEST2"
+        }],
+    "detail": "qwe",
+    "participation": "dfdf",
+    "result": "asfa",
+    "unmet": "qwe12",
+    "note": "qe1e2",
+    "status": "123e"
+  }
+}
+```
+
+---
+
+### 8. PATCH /report/apiRpt008 - updateSubmitProjectReport
+- **Description**: 사업보고서를 제출 상태로 변경합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportRevision": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 9. POST /report/apiRpt009 - createProjectReportTimeline
+- **Description**: 사업보고서 타임라인을 추가합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportTimeline": {
+    "projectReportRevision": {"id":5},
+    "duration": { "startTerm": "2025-10-01T00:00:00Z", "endTerm": "2025-10-07T23:59:59Z" },
+    "detail": "중간 설문조사 진행",
+    "note": "설문조사 플랫폼: 구글 폼"
+  }
+}
+```
+
+---
+
+### 10. PUT /report/apiRpt010 - updateProjectReportTimeline
+- **Description**: 사업보고서 타임라인을 수정합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportTimeline": {
+    "id": 1,
+    "projectReportRevisionId": 1,
+    "duration": { "start": "2025-10-01T00:00:00Z", "end": "2025-10-08T23:59:59Z" },
+    "detail": "중간 설문조사 및 1차 인터뷰 진행",
+    "note": "설문조사 플랫폼: 서베이몽키"
+  }
+}
+```
+
+---
+
+### 11. DELETE /report/apiRpt011 - deleteProjectReportTimeline
+- **Description**: 사업보고서 타임라인을 삭제합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "projectReportTimeline": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 12. GET /report/apiRpt014 - getBudgetReport
+- **Description**: 결산안을 조회합니다.
+- **Request Type**: Query
+
+#### Mock Query:
+```
+?budgetReportInfo[organizationId]=1&budgetReportInfo[semesterId]=1
+```
+
+---
+
+### 13. POST /report/apiRpt015 - createBudgetReportIncome
+- **Description**: 결산안 수입 항목을 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportIncome": {
+    "organization": {"id":1},
+    "semester": {"id":1}
+  }
+}
+```
+
+---
+
+### 14. POST /report/apiRpt016 - createBudgetReportIncomeRevision
+- **Description**: 결산안 수입 리비전을 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportIncomeRevision": {
+    "budgetReportIncome": {"id": 1},
+    "amount": "500000",
+    "note": "학생회비 지원금",
+    "status": "작성 중"
+  }
+}
+```
+
+---
+
+### 15. PUT /report/apiRpt017 - updateBudgetReportIncome
+- **Description**: 결산안 수입 항목을 수정합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportIncome": {
+    "id": 1,
+    "budgetReportIncome": {"id": 1},
+    "amount": "550000",
+    "note": "학생회비 지원금 (증액)",
+    "status": "수정 중",
+  }
+}
+```
+
+---
+
+### 16. PATCH /report/apiRpt018 - updateSubmitBudgetReportIncome
+- **Description**: 결산안 수입 항목을 제출 상태로 변경합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportIncome": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 17. DELETE /report/apiRpt019 - deleteBudgetReportIncome
+- **Description**: 결산안 수입 항목을 삭제합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportIncome": {
+    "id": 1
+  }
+}
+```
+
+---
+
+### 18. POST /report/apiRpt020 - createBudgetReportExpense
+- **Description**: 결산안 지출 항목을 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportExpense": {
+    "organization": {"id": 1},
+    "semester": {"id": 1},
+    "projectReport": {"id": 2}
+  }
+}
+```
+
+---
+
+### 19. POST /report/apiRpt021 - createBudgetReportExpenseRevision
+- **Description**: 결산안 지출 리비전을 생성합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportExpenseRevision": {
+    "budgetReportExpense": {"id": 1},
+    "amount": "120000",
+    "note": "행사 비품 구매",
+  }
+}
+```
+
+---
+
+### 20. PUT /report/apiRpt022 - updateBudgetReportExpense
+- **Description**: 결산안 지출 항목을 수정합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportExpense": {
+    "id": 1,
+    "budgetReportExpenseId": 1,
+    "amount": "125000",
+    "note": "행사 비품 및 간식 구매",
+    "status": "수정 중",
+    "feedback": "영수증 첨부 필요"
+  }
+}
+```
+
+---
+
+### 21. PATCH /report/apiRpt023 - submitBudgetReportExpense
+- **Description**: 결산안 지출 항목을 제출 상태로 변경합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportExpense": {
+    "id": 7
+  }
+}
+```
+
+---
+
+### 22. DELETE /report/apiRpt024 - deleteBudgetReportExpense
+- **Description**: 결산안 지출 항목을 삭제합니다.
+- **Request Type**: Body
+
+#### Mock Body:
+```json
+{
+  "budgetReportExpense": {
+    "id": 1
+  }
+}
+```

@@ -41,6 +41,7 @@ export const zProjectReportRevision = z
     timelines: z.array(
       z.object({
         // name: z.string().max(255),
+        projectReportRevision: z.object({ id: zId }).optional(),
         duration: zDuration,
         detail: z.string(),
         note: z.string().optional(),
@@ -58,9 +59,9 @@ export const zProjectReportRevision = z
 
 export type IProjectReportRevision = z.infer<typeof zProjectReportRevision>;
 
-export const zProjectReportListRequestGet = zProjectReport.pick({
-  organization: true,
-  semester: true,
+export const zProjectReportListRequestGet = z.object({
+  organization: zId,
+  semester: zId,
 });
 
 export const zProjectReportListResponse = z.object({
@@ -80,9 +81,7 @@ export const zProjectReportListResponse = z.object({
   ),
 });
 
-export const zProjectReportDetailRequestGet = zProjectReport.pick({
-  id: true,
-});
+export const zProjectReportDetailRequestGet = z.object({ projectReport: zId });
 
 export const zProjectReportDetailResponse = zProjectReport
   .pick({ projectProposal: true })
@@ -147,9 +146,7 @@ export const zProjectReportRevisionRequestCreate = zProjectReportRevision.omit({
   id: true,
 });
 
-export const zProjectReportRevisionRequestUpdate = zProjectReportRevision.omit({
-  timelines: true,
-});
+export const zProjectReportRevisionRequestUpdate = zProjectReportRevision;
 
 export const zProjectReportRevisionResponse = zProjectReportRevision.pick({
   id: true,

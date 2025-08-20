@@ -26,6 +26,7 @@ import { ProjectReportRepository } from "../repository/project-report.repository
 import { ProjectReportRevisionRepository } from "../repository/project-report-revision.repository";
 import { BudgetReportExpenseRevisionRepository } from "../repository/budget-report-expense-revision.repository";
 import { ProjectReportTimelineRepository } from "../repository/project-report-timeline.repository";
+import { BudgetReportExpenseRepository } from "../repository/budget-report-expense.repository";
 
 @Injectable()
 export class ProjectReportService {
@@ -33,6 +34,7 @@ export class ProjectReportService {
     private readonly projectReportRevisionRepository: ProjectReportRevisionRepository,
     private readonly projectReportTimelineRepository: ProjectReportTimelineRepository,
     private readonly projectReportRepository: ProjectReportRepository,
+    private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
     private readonly budgetReportExpenseReivisionRepository: BudgetReportExpenseRevisionRepository,
     private readonly budgetProposalExpenseRepositoryRevision: BudgetProposalExpenseRevisionRepository,
   ) {}
@@ -42,7 +44,7 @@ export class ProjectReportService {
   ): Promise<ApiRpt003ResponseOk> {
     const projectReportRevisions = (
       await this.projectReportRevisionRepository.find({
-        projectReportId: body.projectReportId.id,
+        projectReportId: body.projectReport.id,
       } as any)
     ).map(revision => ({
       id: revision.id,
@@ -55,39 +57,79 @@ export class ProjectReportService {
   ): Promise<ApiRpt004ResponseOk> {
     const projectReportRevision = (
       await this.projectReportRevisionRepository.find({
-        projectReportId: body.projectReportRevisionInfo.id,
+        id: body.projectReportRevision.id,
       } as any)
     ).reduce((a, b) => (a.submittedAt > b.submittedAt ? a : b));
-    const budgetReports =
-      await this.budgetReportExpenseReivisionRepository.find({
-        projectReportId: projectReportRevision.projectReport.id,
-      } as any);
+    const projectReports = await this.projectReportRepository.find({
+      id: projectReportRevision.projectReport.id,
+    } as any);
+    const budgetReports = await this.budgetReportExpenseRepository.find({
+      projectReportId: projectReportRevision.projectReport.id,
+    } as any);
     const budgetReportIds = budgetReports.map(budgetReport => budgetReport.id);
+    const budgetReportRevisions =
+      await this.budgetReportExpenseReivisionRepository.find({
+        budgetReportExpenseId: budgetReportIds,
+      } as any);
+    const budgetReportInfoMap = new Map();
+    budgetReportRevisions.forEach(revision => {
+      const existing = budgetReportInfoMap.get(revision.budgetReportExpense.id);
+      if (
+        !existing ||
+        (existing && existing.reportSubmittedAt < revision.submittedAt)
+      ) {
+        budgetReportInfoMap.set(revision.budgetReportExpense.id, {
+          reportSubmittedAt: revision.submittedAt,
+          proposalSubmittedAt: null,
+          name: null,
+          budgetDomainEnum: null,
+          budgetDivisionExpenseEnum: null,
+          budgetClassExpenseEnum: null,
+          proposalAmount: null,
+          reportAmount: revision.amount,
+          detail: null,
+          note: revision.note,
+        });
+      }
+    });
     const budgetProposals =
       await this.budgetProposalExpenseRepositoryRevision.find({
-        previousBudgetReportExpenseId: budgetReportIds,
+        previousBudgetReportExpenseId: [...budgetReportInfoMap.keys()],
       } as any);
-    const budgetReportsInfo = budgetProposals.map(proposal => {
-      // proposal - report 가 항상 1:1인지 확인
-      const report = budgetReports.find(
-        budgetReport =>
-          budgetReport.id === proposal.previousBudgetReportExpense.id,
+    budgetProposals.forEach(proposal => {
+      const existing = budgetReportInfoMap.get(
+        proposal.previousBudgetReportExpense.id,
       );
-      return {
-        id: proposal.previousBudgetReportExpense.id,
-        name: proposal.name,
-        budgetDomainEnum: proposal.budgetDomainEnum,
-        budgetDivisionExpenseEnum: proposal.budgetDivisionExpenseEnum,
-        budgetClassExpenseEnum: proposal.budgetClassExpenseEnum,
-        proposalAmount: proposal.amount,
-        reportAmount: report.amount,
-        detail: proposal.detail,
-        note: report.note,
-      };
+      if (
+        !existing ||
+        (existing && existing.proposalSubmittedAt < proposal.submittedAt)
+      ) {
+        budgetReportInfoMap.set(proposal.previousBudgetReportExpense.id, {
+          reportSubmittedAt: existing.submittedAt,
+          proposalSubmittedAt: proposal.submittedAt,
+          name: proposal.name,
+          budgetDomainEnum: proposal.budgetDomainEnum,
+          budgetDivisionExpenseEnum: proposal.budgetDivisionExpenseEnum,
+          budgetClassExpenseEnum: proposal.budgetClassExpenseEnum,
+          proposalAmount: proposal.amount,
+          reportAmount: existing.amount,
+          detail: proposal.detail,
+          note: existing.note,
+        });
+      }
     });
+    const budgetReportsInfo = Array.from(
+      budgetReportInfoMap,
+      ([key, value]) => {
+        // eslint-disable-next-line
+        const { reportSubmittedAt, proposalSubmittedAt, ...info } = value;
+        return { id: key, ...info };
+      },
+    );
     const projectReport = {
+      projectProposal: { id: projectReports[0].projectProposal.id },
+      projectReport: { id: projectReports[0].id },
       id: projectReportRevision.id,
-      projectReport: { id: projectReportRevision.projectReport.id },
       name: projectReportRevision.name,
       method: projectReportRevision.method,
       prepareDuration: projectReportRevision.prepareDuration,
@@ -135,20 +177,24 @@ export class ProjectReportService {
     if (projectReportRevisions.length === 0) {
       throw new NotFoundException("No Revision Exists");
     }
-    const projectReportRevision = projectReportRevisions.reduce((a, b) =>
-      a.submittedAt > b.submittedAt ? a : b,
-    );
-    if (!projectReportRevision.submittedAt) {
-      const creation = projectReportRevision;
+    const projectReportRevision = projectReportRevisions[0];
+    if (projectReportRevision.submittedAt) {
+      const creation = body.projectReportRevision;
       delete creation.id;
-      this.projectReportRevisionRepository.create(creation);
+      await this.projectReportRevisionRepository.create(creation as any);
     } else {
-      this.projectReportRevisionRepository.put(projectReportRevision); // Test
+      await this.projectReportRevisionRepository.put({
+        ...body.projectReportRevision,
+        timelines: body.projectReportRevision.timelines.map(timeline => ({
+          ...timeline,
+          projectReportRevision: { id: body.projectReportRevision.id },
+        })),
+      } as any);
     }
     return { projectReportRevision: { id: projectReportRevision.id } };
   }
 
-  async updateSubmitProjectReport(
+  async updateSubmitProjectReportRevision(
     body: ApiRpt008RequestBody,
   ): Promise<ApiRpt008ResponseOk> {
     const projectReportRevisions =
@@ -205,7 +251,7 @@ export class ProjectReportService {
     if (existing.length === 0) {
       throw new NotFoundException("No Timeline Exists");
     }
-    this.projectReportTimelineRepository.delete({
+    await this.projectReportTimelineRepository.delete({
       id: body.projectReportTimeline.id,
     } as any);
     return {};

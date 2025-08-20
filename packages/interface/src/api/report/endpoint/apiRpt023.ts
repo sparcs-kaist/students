@@ -20,12 +20,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  budgetReportExpense: zBudgetReportExpenseSubmitRequestUpdate,
+  budgetReportExpenseRevision: zBudgetReportExpenseSubmitRequestUpdate,
 });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    budgetReportExpense: zBudgetReportExpenseSubmitResponse,
+    budgetReportExpenseRevision: zBudgetReportExpenseSubmitResponse,
   }),
 };
 

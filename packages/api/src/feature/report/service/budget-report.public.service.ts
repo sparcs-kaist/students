@@ -28,15 +28,14 @@ export class BudgetReportPublicService {
   ): Promise<ApiRpt014ResponseOk> {
     const [budgetReportIncomes, budgetReportExpenses] = await Promise.all([
       this.budgetReportIncomeRepository.find({
-        organizationId: query.budgetReportInfo.organization.id,
-        semesterId: query.budgetReportInfo.semester.id,
+        organizationId: query.organization,
+        semesterId: query.semester,
       } as any),
       this.budgetReportExpenseRepository.find({
-        organizationId: query.budgetReportInfo.organization.id,
-        semesterId: query.budgetReportInfo.semester.id,
+        organizationId: query.organization,
+        semesterId: query.semester,
       } as any),
     ]);
-
     const budgetReportIncomeIds = budgetReportIncomes.map(
       budgetReportIncome => budgetReportIncome.id,
     );
@@ -97,14 +96,14 @@ export class BudgetReportPublicService {
     const latestBudgetProposalExpenseRevisions = new Map();
     budgetProposalIncomeRevisions.forEach(revision => {
       const existing = latestBudgetProposalIncomeRevisions.get(
-        revision.previousBudgetReportIncome,
+        revision.previousBudgetReportIncome.id,
       );
       if (
         !existing ||
         (existing && existing.submittedAt < revision.submittedAt)
       ) {
         latestBudgetProposalIncomeRevisions.set(
-          revision.previousBudgetReportIncome,
+          revision.previousBudgetReportIncome.id,
           {
             domain: revision.budgetDomainEnum,
             division: revision.budgetDivisionIncomeEnum,
@@ -117,14 +116,14 @@ export class BudgetReportPublicService {
     });
     budgetProposalExpenseRevisions.forEach(revision => {
       const existing = latestBudgetProposalExpenseRevisions.get(
-        revision.previousBudgetReportExpense,
+        revision.previousBudgetReportExpense.id,
       );
       if (
         !existing ||
         (existing && existing.submittedAt < revision.submittedAt)
       ) {
         latestBudgetProposalExpenseRevisions.set(
-          revision.previousBudgetReportExpense,
+          revision.previousBudgetReportExpense.id,
           {
             domain: revision.budgetDomainEnum,
             division: revision.budgetDivisionExpenseEnum,
@@ -136,7 +135,6 @@ export class BudgetReportPublicService {
         );
       }
     });
-
     const budgetReportIncomesInfo = Array.from(
       latestBudgetReportIncomeRevisions,
       ([key, value]) => {

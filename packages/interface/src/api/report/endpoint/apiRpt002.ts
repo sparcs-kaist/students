@@ -15,9 +15,7 @@ const url = () => ``;
 const method = "";
 export const ApiRpt002RequestUrl = "";
 
-const requestParam = z.object({
-  projectReportInfo: zProjectReportDetailRequestGet,
-});
+const requestParam = zProjectReportDetailRequestGet;
 
 const requestQuery = z.object({});
 

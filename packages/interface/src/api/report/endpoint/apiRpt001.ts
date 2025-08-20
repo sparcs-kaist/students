@@ -17,10 +17,8 @@ const method = "GET";
 export const ApiRpt001RequestUrl = "";
 
 const requestParam = z.object({});
-// TODO: 따로 스키마를 감쌀지 그대로 할 지 결정 (requset: zProject..로 할 지 그냥 아래처럼 할 지)
-const requestQuery = z.object({
-  projectReportInfo: zProjectReportListRequestGet,
-});
+
+const requestQuery = zProjectReportListRequestGet;
 
 const requestBody = z.object({});
 
