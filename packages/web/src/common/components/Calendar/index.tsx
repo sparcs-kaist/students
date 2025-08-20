@@ -100,8 +100,8 @@ const HoverModal = styled.div<{ position?: { x: number; y: number } }>`
     position &&
     `
     position: fixed;
-    left: ${position.x + 10}px;
-    top: ${position.y - 10}px;
+    left: ${position.x - 210}px;
+    top: ${position.y + 10}px;
   `}
 `;
 
@@ -174,7 +174,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
 };
 
 const Calendar: React.FC<CalendarProps> = ({
-  title = "이학생회 일정표",
+  title = "학생회 일정표",
   width = undefined,
   height = undefined,
   small = false,
