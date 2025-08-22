@@ -55,78 +55,23 @@ export class ProjectReportService {
   async getProjectReportRevisionDetail(
     body: ApiRpt004RequestBody,
   ): Promise<ApiRpt004ResponseOk> {
-    const projectReportRevision = (
+    const projectReportRevisions =
       await this.projectReportRevisionRepository.find({
         id: body.projectReportRevision.id,
-      } as any)
-    ).reduce((a, b) => (a.submittedAt > b.submittedAt ? a : b));
+      } as any);
+    if (projectReportRevisions.length === 0) {
+      throw new NotFoundException("No Project Report Revision Exists");
+    }
+    const projectReportRevision = projectReportRevisions.reduce((a, b) =>
+      a.submittedAt > b.submittedAt ? a : b,
+    );
     const projectReports = await this.projectReportRepository.find({
       id: projectReportRevision.projectReport.id,
     } as any);
-    const budgetReports = await this.budgetReportExpenseRepository.find({
-      projectReportId: projectReportRevision.projectReport.id,
-    } as any);
-    const budgetReportIds = budgetReports.map(budgetReport => budgetReport.id);
-    const budgetReportRevisions =
-      await this.budgetReportExpenseReivisionRepository.find({
-        budgetReportExpenseId: budgetReportIds,
-      } as any);
-    const budgetReportInfoMap = new Map();
-    budgetReportRevisions.forEach(revision => {
-      const existing = budgetReportInfoMap.get(revision.budgetReportExpense.id);
-      if (
-        !existing ||
-        (existing && existing.reportSubmittedAt < revision.submittedAt)
-      ) {
-        budgetReportInfoMap.set(revision.budgetReportExpense.id, {
-          reportSubmittedAt: revision.submittedAt,
-          proposalSubmittedAt: null,
-          name: null,
-          budgetDomainEnum: null,
-          budgetDivisionExpenseEnum: null,
-          budgetClassExpenseEnum: null,
-          proposalAmount: null,
-          reportAmount: revision.amount,
-          detail: null,
-          note: revision.note,
-        });
-      }
-    });
-    const budgetProposals =
-      await this.budgetProposalExpenseRepositoryRevision.find({
-        previousBudgetReportExpenseId: [...budgetReportInfoMap.keys()],
-      } as any);
-    budgetProposals.forEach(proposal => {
-      const existing = budgetReportInfoMap.get(
-        proposal.previousBudgetReportExpense.id,
-      );
-      if (
-        !existing ||
-        (existing && existing.proposalSubmittedAt < proposal.submittedAt)
-      ) {
-        budgetReportInfoMap.set(proposal.previousBudgetReportExpense.id, {
-          reportSubmittedAt: existing.submittedAt,
-          proposalSubmittedAt: proposal.submittedAt,
-          name: proposal.name,
-          budgetDomainEnum: proposal.budgetDomainEnum,
-          budgetDivisionExpenseEnum: proposal.budgetDivisionExpenseEnum,
-          budgetClassExpenseEnum: proposal.budgetClassExpenseEnum,
-          proposalAmount: proposal.amount,
-          reportAmount: existing.amount,
-          detail: proposal.detail,
-          note: existing.note,
-        });
-      }
-    });
-    const budgetReportsInfo = Array.from(
-      budgetReportInfoMap,
-      ([key, value]) => {
-        // eslint-disable-next-line
-        const { reportSubmittedAt, proposalSubmittedAt, ...info } = value;
-        return { id: key, ...info };
-      },
-    );
-    const projectReport = {
+    if (projectReports.length === 0) {
+      throw new NotFoundException("No Project Report Exists");
+    }
+    const projectReportInfo = {
       projectProposal: { id: projectReports[0].projectProposal.id },
       projectReport: { id: projectReports[0].id },
       id: projectReportRevision.id,
@@ -142,7 +87,84 @@ export class ProjectReportService {
       result: projectReportRevision.result,
       unmet: projectReportRevision.unmet,
       note: projectReportRevision.note,
-      budgetExpenses: budgetReportsInfo,
+    };
+    const budgetReports = await this.budgetReportExpenseRepository.find({
+      projectReportId: projectReportRevision.projectReport.id,
+    } as any);
+    const budgetExpenses =
+      budgetReports.length === 0
+        ? []
+        : await (async () => {
+            const budgetReportIds = budgetReports.map(
+              budgetReport => budgetReport.id,
+            );
+            const budgetReportRevisions =
+              await this.budgetReportExpenseReivisionRepository.find({
+                budgetReportExpenseId: budgetReportIds,
+              } as any);
+            const budgetReportInfoMap = new Map();
+            budgetReportRevisions.forEach(revision => {
+              const existing = budgetReportInfoMap.get(
+                revision.budgetReportExpense.id,
+              );
+              if (
+                !existing ||
+                (existing && existing.reportSubmittedAt < revision.submittedAt)
+              ) {
+                budgetReportInfoMap.set(revision.budgetReportExpense.id, {
+                  reportSubmittedAt: revision.submittedAt,
+                  proposalSubmittedAt: null,
+                  name: null,
+                  budgetDomainEnum: null,
+                  budgetDivisionExpenseEnum: null,
+                  budgetClassExpenseEnum: null,
+                  proposalAmount: null,
+                  reportAmount: revision.amount,
+                  detail: null,
+                  note: revision.note,
+                });
+              }
+            });
+            const budgetProposals =
+              await this.budgetProposalExpenseRepositoryRevision.find({
+                previousBudgetReportExpenseId: [...budgetReportInfoMap.keys()],
+              } as any);
+            budgetProposals.forEach(proposal => {
+              const existing = budgetReportInfoMap.get(
+                proposal.previousBudgetReportExpense.id,
+              );
+              if (
+                !existing ||
+                (existing &&
+                  existing.proposalSubmittedAt < proposal.submittedAt)
+              ) {
+                budgetReportInfoMap.set(
+                  proposal.previousBudgetReportExpense.id,
+                  {
+                    reportSubmittedAt: existing.reportSubmittedAt,
+                    proposalSubmittedAt: proposal.submittedAt,
+                    name: proposal.name,
+                    budgetDomainEnum: proposal.budgetDomainEnum,
+                    budgetDivisionExpenseEnum:
+                      proposal.budgetDivisionExpenseEnum,
+                    budgetClassExpenseEnum: proposal.budgetClassExpenseEnum,
+                    proposalAmount: proposal.amount,
+                    reportAmount: existing.reportAmount,
+                    detail: proposal.detail,
+                    note: existing.note,
+                  },
+                );
+              }
+            });
+            return Array.from(budgetReportInfoMap, ([key, value]) => {
+              // eslint-disable-next-line
+              const { reportSubmittedAt, proposalSubmittedAt, ...info } = value;
+              return { id: key.id, ...info };
+            });
+          })();
+    const projectReport = {
+      ...projectReportInfo,
+      budgetExpenses,
     };
     return { projectReportRevision: projectReport };
   }

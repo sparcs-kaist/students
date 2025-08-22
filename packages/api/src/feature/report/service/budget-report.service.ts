@@ -83,6 +83,9 @@ export class BudgetReportService {
     if (existing.length === 0) {
       throw new NotFoundException("No Budget Report Income Exists");
     }
+    if (existing[0].submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
+    }
     const newBudgetReportIncome =
       await this.budgetReportIncomeReivisionRepository.patch(
         { id: body.budgetReportIncomeRevision.id } as any,
@@ -158,6 +161,9 @@ export class BudgetReportService {
     } as any);
     if (existing.length === 0) {
       throw new NotFoundException("No Budget Report Expense Exists");
+    }
+    if (existing[0].submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
     }
     const newBudgetReportExpense =
       await this.budgetReportExpenseReivisionRepository.patch(
