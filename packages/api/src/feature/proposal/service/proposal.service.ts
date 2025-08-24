@@ -2,10 +2,13 @@ import { Injectable, ConflictException } from "@nestjs/common";
 import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "@sparcs-students/api/feature/report/repository/budget-report-expense.repository";
 import { OrganizationManagerRepository } from "@sparcs-students/api/feature/organization/repository/organization.manager.repository";
+import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 import { BudgetProposalIncomeRevisionRepository } from "../repository/budget-proposal-income-revision.repository";
 import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-expense.repository";
 import { BudgetProposalExpenseRevisionRepository } from "../repository/budget-proposal-expense-revision.repository";
+import { BudgetProposalIncomeDocumentReviewRepository } from "../repository/budget-proposal-income-document-review.repository";
+import { BudgetProposalExpenseDocumentReviewRepository } from "../repository/budget-proposal-expense-document-review.repository";
 
 @Injectable()
 export class ProposalService {
@@ -17,6 +20,8 @@ export class ProposalService {
     private readonly budgetProposalExpenseRevisionRepository: BudgetProposalExpenseRevisionRepository,
     private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
     private readonly organizationManagerRepository: OrganizationManagerRepository,
+    private readonly budgetProposalIncomeDocumentReviewRepository: BudgetProposalIncomeDocumentReviewRepository,
+    private readonly budgetProposalExpenseDocumentReviewRepository: BudgetProposalExpenseDocumentReviewRepository,
   ) {}
 
   async checkManager(studentId, organizationId) {
@@ -161,5 +166,183 @@ export class ProposalService {
     return {
       budgetProposalExpenseRevision: newBudgetProposalExpenseRevision,
     };
+  }
+
+  async readBudgetProposalIncomeRevision(param) {
+    const revisions = await this.budgetProposalIncomeRevisionRepository.find({
+      budgetProposalIncomeId: param.budgetProposalIncomeId,
+    });
+
+    return { budgetProposalIncomeRevisions: revisions };
+  }
+
+  async readBudgetProposalExpenseRevision(param) {
+    const revisions = await this.budgetProposalExpenseRevisionRepository.find({
+      budgetProposalExpenseId: param.budgetProposalExpenseId,
+    });
+
+    return { budgetProposalExpenseRevisions: revisions };
+  }
+
+  async deleteBudgetProposalIncomeRevision(param) {
+    const existing = await this.budgetProposalIncomeRevisionRepository.find({
+      id: param.budgetProposalIncomeRevisionId,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalIncomeRevision does not exist.",
+      );
+    }
+
+    await this.budgetProposalIncomeRevisionRepository.delete({
+      id: param.budgetProposalIncomeRevisionId,
+    });
+  }
+
+  async deleteBudgetProposalExpenseRevision(param) {
+    const existing = await this.budgetProposalExpenseRevisionRepository.find({
+      id: param.budgetProposalExpenseRevisionId,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalExpenseRevision does not exist.",
+      );
+    }
+
+    await this.budgetProposalExpenseRevisionRepository.delete({
+      id: param.budgetProposalExpenseRevisionId,
+    });
+  }
+
+  async createBudgetProposalIncomeDocumentReview(student, body) {
+    const existing = await this.budgetProposalIncomeRevisionRepository.find({
+      id: body.budgetProposalIncomeRevision.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalIncomeRevision does not exist.",
+      );
+    }
+
+    // 동일 revisionId의 documentReview을 soft delete
+    await this.budgetProposalIncomeDocumentReviewRepository.delete({
+      budgetProposalIncomeRevisionId: body.budgetProposalIncomeRevision.id,
+    });
+
+    const { studentId } = student;
+
+    // 승인, 사후 승인일 때 detail = null
+    const detail =
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.Accepted ||
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.LateAccepted
+        ? null
+        : (body.detail ?? null);
+
+    const budgetProposalIncomeDocumentReviewCreateDto = {
+      ...body,
+      detail,
+      student: { id: studentId },
+    };
+
+    // 생성
+    const [newBudgetProposalIncomeDocumentReview] =
+      await this.budgetProposalIncomeDocumentReviewRepository.create(
+        budgetProposalIncomeDocumentReviewCreateDto,
+      );
+    return {
+      budgetProposalIncomeDocumentReview: newBudgetProposalIncomeDocumentReview,
+    };
+  }
+
+  async createBudgetProposalExpenseDocumentReview(student, body) {
+    const existing = await this.budgetProposalExpenseRevisionRepository.find({
+      id: body.budgetProposalExpenseRevision.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalExpenseRevision does not exist.",
+      );
+    }
+
+    // 동일 revisionId의 documentReview을 soft delete
+    await this.budgetProposalExpenseDocumentReviewRepository.delete({
+      budgetProposalExpenseRevisionId: body.budgetProposalExpenseRevision.id,
+    });
+
+    const { studentId } = student;
+
+    // 승인, 사후 승인일 때 detail = null
+    const detail =
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.Accepted ||
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.LateAccepted
+        ? null
+        : (body.detail ?? null);
+
+    const budgetProposalExpenseDocumentReviewCreateDto = {
+      ...body,
+      detail,
+      student: { id: studentId },
+    };
+
+    // 생성
+    const [newBudgetProposalExpenseDocumentReview] =
+      await this.budgetProposalExpenseDocumentReviewRepository.create(
+        budgetProposalExpenseDocumentReviewCreateDto,
+      );
+    return {
+      budgetProposalExpenseDocumentReview:
+        newBudgetProposalExpenseDocumentReview,
+    };
+  }
+
+  async readBudgetProposalIncomeDocumentReview(param) {
+    const review = await this.budgetProposalIncomeDocumentReviewRepository.find(
+      {
+        budgetProposalIncomeRevisionId: param.budgetProposalIncomeRevisionId,
+      },
+    );
+
+    return { budgetProposalIncomeDocumentReview: review };
+  }
+
+  async readBudgetProposalExpenseDocumentReview(param) {
+    const review =
+      await this.budgetProposalExpenseDocumentReviewRepository.find({
+        budgetProposalExpenseRevisionId: param.budgetProposalExpenseRevisionId,
+      });
+
+    return { budgetProposalExpenseDocumentReview: review };
+  }
+
+  async deleteBudgetProposalIncomeDocumentReview(param) {
+    const existing =
+      await this.budgetProposalIncomeDocumentReviewRepository.find({
+        id: param.budgetProposalIncomeDocumentReviewId,
+      });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalIncomeDocumentReview does not exist.",
+      );
+    }
+
+    await this.budgetProposalIncomeDocumentReviewRepository.delete({
+      id: param.budgetProposalIncomeDocumentReviewId,
+    });
+  }
+
+  async deleteBudgetProposalExpenseDocumentReview(param) {
+    const existing =
+      await this.budgetProposalExpenseDocumentReviewRepository.find({
+        id: param.budgetProposalExpenseDocumentReviewId,
+      });
+    if (!existing.length) {
+      throw new ConflictException(
+        "BudgetProposalExpenseDocumentReview does not exist.",
+      );
+    }
+
+    await this.budgetProposalExpenseDocumentReviewRepository.delete({
+      id: param.budgetProposalExpenseDocumentReviewId,
+    });
   }
 }

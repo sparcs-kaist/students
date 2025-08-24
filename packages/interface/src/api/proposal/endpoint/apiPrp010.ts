@@ -5,13 +5,13 @@ import { zBudgetProposalIncomeRevision } from "../type/budget-proposal-income.ty
 
 /**
  * @version v0.1
- * @description 예산안(수입) Revision을 조회합니다.
+ * @description 각 매니저 권한으로 예산안(수입) Revision을 조회합니다.
  */
 
-const url = () => `/president/proposals/budget-proposals/income-revision/read`;
+const url = () => `/manager/proposals/budget-proposals/income-revision/read`;
 const method = "GET";
 export const ApiPrp010RequestUrl =
-  "/president/proposals/budget-proposals/income-revision/read";
+  "/manager/proposals/budget-proposals/income-revision/read";
 
 const requestParam = z.object({
   budgetProposalIncomeId: z.coerce.number(),

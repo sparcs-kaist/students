@@ -8,13 +8,14 @@ import { ProjectProposalRepository } from "./repository/project-proposal.reposit
 import { BudgetProposalIncomeRevisionRepository } from "./repository/budget-proposal-income-revision.repository";
 import { OperationProposalRevisionRepository } from "./repository/operation-proposal-revision.repository";
 import { ProjectProposalRevisionRepository } from "./repository/project-proposal-revision.repository";
-import { ProposalController } from "./controller/proposal.controller";
+import { ProposalStaffController } from "./controller/proposal.staff.controller";
 import { ProposalService } from "./service/proposal.service";
-import { ProposalPublicService } from "./service/proposal.public.service";
 import { ProposalManagerController } from "./controller/proposal.manager.controller";
 import { BudgetReportIncomeRepository } from "../report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "../report/repository/budget-report-expense.repository";
 import { OrganizationManagerRepository } from "../organization/repository/organization.manager.repository";
+import { BudgetProposalExpenseDocumentReviewRepository } from "./repository/budget-proposal-expense-document-review.repository";
+import { BudgetProposalIncomeDocumentReviewRepository } from "./repository/budget-proposal-income-document-review.repository";
 
 @Module({
   providers: [
@@ -24,11 +25,12 @@ import { OrganizationManagerRepository } from "../organization/repository/organi
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
     BudgetProposalIncomeRevisionRepository,
+    BudgetProposalExpenseDocumentReviewRepository,
+    BudgetProposalIncomeDocumentReviewRepository,
     BudgetReportIncomeRepository,
     BudgetReportExpenseRepository,
     OperationProposalRepository,
     OperationProposalRevisionRepository,
-    ProposalPublicService,
     ProposalService,
     OrganizationManagerRepository,
   ],
@@ -40,7 +42,9 @@ import { OrganizationManagerRepository } from "../organization/repository/organi
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
     BudgetProposalIncomeRevisionRepository,
+    BudgetProposalExpenseDocumentReviewRepository,
+    BudgetProposalIncomeDocumentReviewRepository,
   ],
-  controllers: [ProposalController, ProposalManagerController],
+  controllers: [ProposalStaffController, ProposalManagerController],
 })
 export class ProposalModule {}

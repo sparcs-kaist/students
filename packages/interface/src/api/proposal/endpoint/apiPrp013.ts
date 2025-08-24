@@ -5,13 +5,13 @@ import { zBudgetProposalExpenseRevision } from "../type/budget-proposal-expense.
 
 /**
  * @version v0.1
- * @description 예산안(수출) Revision을 조회합니다.
+ * @description 각 매니저 권한으로 예산안(수출) Revision을 조회합니다.
  */
 
-const url = () => `/president/proposals/budget-proposals/expense-revision/read`;
+const url = () => `/manager/proposals/budget-proposals/expense-revision/read`;
 const method = "GET";
 export const ApiPrp013RequestUrl =
-  "/president/proposals/budget-proposals/expense-revision/read";
+  "/manager/proposals/budget-proposals/expense-revision/read";
 
 const requestParam = z.object({
   budgetProposalExpenseId: z.coerce.number(),
