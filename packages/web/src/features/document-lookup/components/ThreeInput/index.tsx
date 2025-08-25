@@ -38,6 +38,7 @@ interface ThreeInputProps {
   setSelectedValue: (value: string | null) => void;
   // selectedId: number | null;
   setSelectedId?: (value: number) => void;
+  isBudgetReview?: boolean;
 }
 
 const OuterWrapper = styled.div`
@@ -77,6 +78,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
   selectedValue,
   setSelectedValue,
   setSelectedId = () => {},
+  isBudgetReview = false,
 }: ThreeInputProps) => {
   // CHACHA: 학기 선택에 쓰임
   const selectItems = useMemo(() => {
@@ -122,6 +124,7 @@ const ThreeInput: React.FC<ThreeInputProps> = ({
           type={type}
           setType={setType}
           disabled={year === null || isSpring === null}
+          isBudgetReview={isBudgetReview}
         />
       </InnerWrapper>
       <OrganizationSelectCard
