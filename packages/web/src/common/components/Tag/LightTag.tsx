@@ -4,6 +4,7 @@ import styled from "styled-components";
 export type LightTagColor =
   | "GREEN800"
   | "GREEN600"
+  | "GREEN300"
   | "GREEN100"
   | "BLUE"
   | "PINK"
@@ -44,6 +45,9 @@ const TagInner = styled.div<{ color: LightTagColor; width: string }>`
     if (color === "GREEN100") {
       return theme.colors.GREEN[700];
     }
+    if (color === "GREEN300") {
+      return theme.colors.WHITE;
+    }
     if (color === "GREEN600") {
       return theme.colors.WHITE;
     }
@@ -73,6 +77,9 @@ const TagInner = styled.div<{ color: LightTagColor; width: string }>`
     }
     if (color === "GREEN100") {
       return theme.colors.GREEN[100];
+    }
+    if (color === "GREEN300") {
+      return theme.colors.GREEN[300];
     }
     if (color === "GREEN600") {
       return theme.colors.GREEN[600];

@@ -3,26 +3,39 @@
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
+
 import { mockViewBudgetReportResultData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewResultData";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import { DocumentType } from "@sparcs-students/web/common/components/SelectCard/DocumentTypeSelectCard";
 import { mockData } from "@sparcs-students/web/features/document-lookup/components/ThreeInput/mock";
+
+import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
+import { UserPermission } from "@sparcs-students/web/constants/userPermission";
+
+import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetReportFrame";
+import { useRouter, useSearchParams } from "next/navigation";
 import ThreeInput, {
   ThreeInputItem,
 } from "@sparcs-students/web/features/document-lookup/components/ThreeInput";
-import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
-import { UserPermission } from "@sparcs-students/web/constants/userPermission";
-// import ManagerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ManagerBudgetReportFrame";
-import ReviewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ReviewerBudgetReportFrame";
-// import ViewerBudgetReportFrame from "@sparcs-students/web/features/budget/frames/ViewerBudgetReportFrame";
-import { useRouter, useSearchParams } from "next/navigation";
 import getMockUserPermission from "@sparcs-students/web/features/document-lookup/project/services/getMockUserPermission";
 import ViewerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ViewerBudgetReportFrame";
+import ManagerBudgetReportFrame from "@sparcs-students/web/features/document-lookup/budget/frames/ManagerBudgetReportFrame";
+import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 
-const Report = () => {
-  // const { id } = useParams();
+// 결산용 ExcelDownloadButton import
+import BudgetReportExcelDownloadButton from "@sparcs-students/web/features/document-lookup/budget/components/BudgetReportExcelDownloadButton";
+
+// 실제 mock 데이터 import (결산용)
+import {
+  mockDBIncomeData,
+  mockDBExpenditureData,
+} from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
+
+// TotalTable용 mock 데이터는 별도로 import (결산용)
+import { mockTotalData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewerReviewerBudgetData";
+
+const BudgetReport = () => {
   const items: ThreeInputItem[] = mockData;
   const searchParams = useSearchParams();
   const queryYear = parseInt(searchParams.get("year") || "") || items[0].year;
@@ -36,10 +49,10 @@ const Report = () => {
   const [year, setYear] = useState<number>(queryYear);
   const [isSpring, setIsSpring] = useState<boolean | null>(queryIsSpring);
   const [type, setType] = useState<DocumentType | null>(queryType);
-  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey); // TODO: enum으로 변경
-  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue); // TODO: enum으로 변경
+  const [selectedKey, setSelectedKey] = useState<string | null>(queryKey);
+  const [selectedValue, setSelectedValue] = useState<string | null>(queryValue);
   const [selectedId, setSelectedId] = useState<number | null>(queryId);
-  const userPermission = getMockUserPermission(); // 1: viewer, 2: reviewer, 3: manager TODO: 실제 권한으로 변경
+  const userPermission = getMockUserPermission();
 
   const router = useRouter();
 
@@ -78,11 +91,10 @@ const Report = () => {
         <BreadCrumb
           items={[
             { name: "예결산 조회", path: "/document-lookup" },
-            { name: "결산안", path: "/budget-report" },
+            { name: "결산", path: "/budget-report" },
           ]}
         />
       </FlexWrapper>
-
       <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
         <FlexWrapper direction="column" gap={32}>
           <FlexWrapper direction="column" gap={16}>
@@ -105,7 +117,7 @@ const Report = () => {
             />
           </FlexWrapper>
           <FlexWrapper direction="row" gap={8}>
-            <Button
+            <ModalTableButton
               buttonText="조회"
               style={{ marginLeft: "auto" }}
               onClick={() => lookUp(selectedId as number)}
@@ -117,17 +129,36 @@ const Report = () => {
           submitDate={date}
           handleDateChange={setDate}
         />
+
+        {/* 결산용 엑셀 다운로드 버튼 추가 */}
+        <FlexWrapper
+          direction="row"
+          gap={8}
+          style={{ justifyContent: "flex-end" }}
+        >
+          <BudgetReportExcelDownloadButton
+            totalData={mockTotalData}
+            expenditureData={mockDBExpenditureData}
+            incomeData={mockDBIncomeData}
+            year={year}
+            semester={isSpring ? "상반기" : "하반기"}
+            organization="전산학부"
+            submitter="김스튜"
+          />
+        </FlexWrapper>
+
         {userPermission === UserPermission.Viewer && (
           <ViewerBudgetReportFrame />
         )}
         {userPermission === UserPermission.Reviewer && (
           <ReviewerBudgetReportFrame />
         )}
-        {/* {userPermission === UserPermission.Manager && ( */}
-        {/*   <ManagerBudgetReportFrame /> */}
-        {/* )} */}
+        {userPermission === UserPermission.Manager && (
+          <ManagerBudgetReportFrame />
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );
 };
-export default Report;
+
+export default BudgetReport;

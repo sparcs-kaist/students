@@ -59,7 +59,8 @@ export class OrganizationPresidentRepository extends BaseSingleTableRepository<
   OrganizationPresidentTable,
   OrganizationPresidentQuery,
   OrganizationPresidentOrderByKeys,
-  OrganizationPresidentQuerySupport
+  OrganizationPresidentQuerySupport,
+  number
 > {
   constructor() {
     super(OrganizationPresident, MOrganizationPresident);

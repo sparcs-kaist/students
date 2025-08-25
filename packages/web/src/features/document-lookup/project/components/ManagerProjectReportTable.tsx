@@ -20,7 +20,7 @@ import HoverClickText from "@sparcs-students/web/common/components/HoverClickTex
 import LightTag, {
   LightTagColor,
 } from "@sparcs-students/web/common/components/Tag/LightTag";
-import { getbudgetStatusTag } from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+import { getbudgetStatusTag } from "@sparcs-students/web/common/util/tableTagList";
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";

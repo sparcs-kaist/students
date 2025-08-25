@@ -5,12 +5,14 @@ import {
   foreignKey,
   timestamp,
   text,
-  boolean,
 } from "drizzle-orm/mysql-core";
 import { Organization } from "./organization.schema";
 import { Semester } from "./semester.schema";
-import { ProjectProposal } from "./project-proposal.schema";
-import { User } from "./user.schema";
+import {
+  ProjectProposal,
+  ProjectProposalRevision,
+} from "./project-proposal.schema";
+import { Student } from "./user.schema";
 
 // eslint-disable-next-line import/no-cycle
 import {
@@ -26,6 +28,7 @@ export const BudgetProposalIncome = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("halfyear_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -53,12 +56,10 @@ export const BudgetProposalIncomeRevision = mysqlTable(
     name: varchar("name", { length: 30 }).notNull(),
     amount: int("amount").notNull(),
     detail: text("detail").notNull(),
-    note: text("note").notNull(),
-    documentStatusEnum: int("document_status_enum").notNull(),
+    code: int("code").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -101,6 +102,7 @@ export const BudgetProposalExpense = mysqlTable(
     semesterId: int("semester_id").notNull(),
     projectProposalId: int("project_proposal_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -130,14 +132,15 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     previousBudgetReportExpenseId: int("previous_budget_report_expense_id"),
     budgetDomainEnum: int("budget_domain_enum"),
     budgetDivisionExpenseEnum: int("budget_division_expense_enum"),
+    projectProposalRevisionId: int("project_proposal_revision_id"),
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
     amount: int("amount"),
     detail: text("detail"),
-    documentStatusEnum: int("document_status_enum").notNull(),
+
+    code: int("code").notNull(),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -153,6 +156,11 @@ export const BudgetProposalExpenseRevision = mysqlTable(
       foreignColumns: [BudgetReportExpense.id],
       name: "bud_prop_exp_rev_prev_id_fk",
     }),
+    budgetProposalExpenseRevisionProjectProposalRevisionIdFk: foreignKey({
+      columns: [table.projectProposalRevisionId],
+      foreignColumns: [ProjectProposalRevision.id],
+      name: "bud_prop_exp_rev_proj_prop_rev_id_fk",
+    }),
     budgetProposalExpenseRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
@@ -166,14 +174,14 @@ export const BudgetProposalExpenseRevision = mysqlTable(
   }),
 );
 
-// TODO: Review 관련
-
-export const BudgetProposalIncomeReview = mysqlTable(
+export const BudgetProposalIncomeDocumentReview = mysqlTable(
   "budget_proposal_income_document_review",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    budgetProposalId: int("budget_proposal_id").notNull(),
-    userId: int("user_id").notNull(),
+    budgetProposalIncomeRevisionId: int(
+      "budget_proposal_income_revision_id",
+    ).notNull(),
+    studentId: int("student_id").notNull(),
     documentReviewStatusEnum: int("document_review_status_enum").notNull(),
     detail: text("detail"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -181,25 +189,28 @@ export const BudgetProposalIncomeReview = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    budgetProposalIncomeReviewBudgetProposalIdFk: foreignKey({
-      columns: [table.budgetProposalId],
-      foreignColumns: [BudgetProposalIncome.id],
-      name: "bud_prop_inc_rev_prop_id_fk",
-    }),
-    budgetProposalIncomeReviewUserIdFk: foreignKey({
-      columns: [table.userId],
-      foreignColumns: [User.id],
-      name: "bud_prop_inc_rev_usr_id_fk",
+    budgetProposalIncomeDocumentReviewBudgetProposalIncomeRevisionIdFk:
+      foreignKey({
+        columns: [table.budgetProposalIncomeRevisionId],
+        foreignColumns: [BudgetProposalIncomeRevision.id],
+        name: "bud_prop_inc_rev_prop_id_fk",
+      }),
+    budgetProposalIncomeDocumentReviewStudentIdFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "bud_prop_inc_rev_student_id_fk",
     }),
   }),
 );
 
-export const BudgetProposalExpenseReview = mysqlTable(
-  "budget_proposal_expense_review",
+export const BudgetProposalExpenseDocumentReview = mysqlTable(
+  "budget_proposal_expense_document_review",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    budgetProposalExpenseId: int("budget_proposal_expense_id").notNull(),
-    userId: int("user_id").notNull(),
+    budgetProposalExpenseRevisionId: int(
+      "budget_proposal_expense_revision_id",
+    ).notNull(),
+    studentId: int("student_id").notNull(),
     documentReviewStatusEnum: int("document_review_status_enum").notNull(),
     detail: text("detail"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -207,15 +218,16 @@ export const BudgetProposalExpenseReview = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    budgetProposalExpenseReviewBudgetProposalExpenseIdFk: foreignKey({
-      columns: [table.budgetProposalExpenseId],
-      foreignColumns: [BudgetProposalExpense.id],
-      name: "bud_prop_exp_review_prop_id_fk",
-    }),
-    budgetProposalExpenseReviewUserIdFk: foreignKey({
-      columns: [table.userId],
-      foreignColumns: [User.id],
-      name: "bud_prop_exp_rev_usr_id_fk",
+    budgetProposalExpenseDocumentReviewBudgetProposalExpenseRevisionIdFk:
+      foreignKey({
+        columns: [table.budgetProposalExpenseRevisionId],
+        foreignColumns: [BudgetProposalExpense.id],
+        name: "bud_prop_exp_review_prop_id_fk",
+      }),
+    budgetProposalExpenseDocuemntReviewStudentIdFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "bud_prop_exp_rev_student_id_fk",
     }),
   }),
 );

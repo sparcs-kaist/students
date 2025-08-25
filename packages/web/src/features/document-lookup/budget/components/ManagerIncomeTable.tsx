@@ -27,7 +27,7 @@ import {
   getbudgetCodeTag,
   getbudgetRatioTag,
   getbudgetStatusTag,
-} from "@sparcs-students/web/features/document-lookup/util/tableTagList";
+} from "@sparcs-students/web/common/util/tableTagList";
 import {
   BudgetDivisionIncomeEnum,
   BudgetDomainEnum,
@@ -448,6 +448,19 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
     onDiffExtract({ updatedRows, createdRows, deletedRows });
   }, [incomes, onDiffExtract]);
 
+  const sortIncomesByCode = () => {
+    const currentIncomes = getValues("incomes");
+    const sortedIncomes = [...currentIncomes].sort((a, b) => {
+      // 코드가 0인 경우는 항상 맨 위에
+      if (a.code === 0) return -1;
+      if (b.code === 0) return -1;
+      return a.code - b.code;
+    });
+
+    // 정렬된 데이터로 폼 전체 업데이트
+    setValue("incomes", sortedIncomes);
+  };
+
   const changeCode = () => {
     let studentsFeeCount = 100;
     let schoolFeeCount = 200;
@@ -480,7 +493,19 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
         shouldValidate: true,
       });
     });
+
+    // 코드 업데이트 후 정렬
+    setTimeout(() => {
+      sortIncomesByCode();
+    }, 0);
   };
+
+  // 초기 로드 시 정렬
+  useEffect(() => {
+    if (incomes.length > 0) {
+      sortIncomesByCode();
+    }
+  }, []); // 빈 배열로 초기 한 번만 실행
 
   const defaultNewRow = [
     {
@@ -517,11 +542,10 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
     remove(rowIndex);
     const length = incomes.length - 1;
 
-    setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
+    setDynamicHeight(36 + length * 48 + 250);
 
     setTimeout(() => {
-      // CHACHA: remove is async. Ensure that changeCode is executed after remove.
-      changeCode();
+      changeCode(); // 이미 정렬 로직이 포함된 changeCode 호출
     }, 0);
   };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -12,6 +12,7 @@ import OperatingCommitteeMemberTable from "@sparcs-students/web/features/documen
 import MemberTable, {
   MemberProps,
 } from "@sparcs-students/web/features/document-lookup/project/components/MemberTable";
+import CompButton from "@sparcs-students/web/common/components/Buttons/CompButton";
 
 export interface ManageOperationPlanProps {
   memberData: MemberProps[];
@@ -26,6 +27,7 @@ export interface ManageOperationPlanProps {
 const StyledImage = styled(Image)`
   width: 70%;
   height: auto;
+  margin: 0 auto;
 `;
 const DividerWrapper = styled.div`
   display: flex;
@@ -45,49 +47,102 @@ const ManagerOperationPlan: React.FC<ManageOperationPlanProps> = ({
   imagePath,
   isProposal = true,
   handleNoteChange = () => {},
-}) => (
-  <FlexWrapper direction="column" gap={60}>
-    <FlexWrapper direction="column" gap={16}>
-      <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-        {isProposal ? "운영계획" : "운영보고"}
-      </Typography>
-      {/* <ManagerProjectReportMemberTable data={memberData} /> */}
-      {/* 부서 변경은 회원 등록에서 일괄 처리하기로 변경 */}
-      {mockOperatingCommitteeMemberTableListData.map(
-        mockOperatingCommitteeMemberTableData => (
-          <OperatingCommitteeMemberTable
-            data={mockOperatingCommitteeMemberTableData}
+}) => {
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("uploadedImage");
+    if (stored) setUploadedImage(stored);
+  }, []);
+
+  const handleImageUpload = () => {
+    inputFileRef.current?.click();
+  };
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setUploadedImage(dataUrl);
+        try {
+          localStorage.setItem("uploadedImage", dataUrl);
+        } catch (err) {
+          console.error("Failed to save image to localStorage:", err);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <>
+      <input
+        type="file"
+        accept="image/png, image/jpeg"
+        style={{ display: "none" }}
+        ref={inputFileRef}
+        onChange={onFileChange}
+      />
+      <FlexWrapper direction="column" gap={60}>
+        <FlexWrapper direction="column" gap={16}>
+          <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
+            {isProposal ? "운영계획" : "운영보고"}
+          </Typography>
+          {mockOperatingCommitteeMemberTableListData.map(
+            mockOperatingCommitteeMemberTableData => (
+              <OperatingCommitteeMemberTable
+                data={mockOperatingCommitteeMemberTableData}
+              />
+            ),
+          )}
+          <MemberTable title="집행위원 명단" data={memberData} />
+        </FlexWrapper>
+
+        <FlexWrapper direction="column" gap={16}>
+          <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
+            비고
+          </Typography>
+          <TextInput
+            placeholder="비고를 입력하세요."
+            value={note}
+            handleChange={handleNoteChange}
           />
-        ),
-      )}
-      <MemberTable title="집행위원 명단" data={memberData} />
-    </FlexWrapper>
-    <FlexWrapper direction="column" gap={16}>
-      <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
-        비고
-      </Typography>
-      <TextInput
-        placeholder="비고를 입력하세요."
-        value={note}
-        handleChange={handleNoteChange}
-      />
-    </FlexWrapper>
-    <DividerWrapper />
-    <GroupList data={groupList} setData={setGroupList} isEditable />
-    <FlexWrapper direction="column" gap={16}>
-      <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
-        조직도
-      </Typography>
-      <StyledImage
-        src={`/${imagePath}`}
-        alt="조직도"
-        width={0}
-        height={0}
-        sizes="100vw"
-      />
-      {/* TODO Presigned URL 이미지 삽입 기능 */}
-    </FlexWrapper>
-  </FlexWrapper>
-);
+        </FlexWrapper>
+
+        <DividerWrapper />
+        <GroupList data={groupList} setData={setGroupList} isEditable />
+
+        <FlexWrapper direction="column" gap={16}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
+              조직도
+            </Typography>
+            <CompButton
+              type="default"
+              buttonText="파일 찾기"
+              onClick={handleImageUpload}
+            />
+          </div>
+          <StyledImage
+            src={uploadedImage || `/${imagePath}`}
+            alt="조직도"
+            width={0}
+            height={0}
+            sizes="100vw"
+          />
+        </FlexWrapper>
+      </FlexWrapper>
+    </>
+  );
+};
 
 export default ManagerOperationPlan;

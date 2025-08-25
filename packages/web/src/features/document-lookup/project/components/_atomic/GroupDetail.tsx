@@ -18,6 +18,10 @@ const CardWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   border-radius: 4px;
   padding: 28px 32px;
+
+  &:hover {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const FoldableInner = styled.div`
@@ -53,21 +57,14 @@ const GroupList: React.FC<
   };
 
   return (
-    <CardWrapper>
+    <CardWrapper
+      style={{ cursor: "pointer" }}
+      onClick={() => setFolded(!folded)}
+    >
       <FlexWrapper direction="column" gap={10}>
         <FoldableInner>
           <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
             국서/TF 명
-          </Typography>
-          <Typography
-            fs={12}
-            lh={12}
-            color="BLACK"
-            fw="REGULAR"
-            style={{ textDecorationLine: "underline", cursor: "pointer" }}
-            onClick={() => setFolded(!folded)}
-          >
-            {folded ? "펼치기" : "접기"}
           </Typography>
         </FoldableInner>
         <TextInput placeholder="국서명" value={name} constant isGroup />
