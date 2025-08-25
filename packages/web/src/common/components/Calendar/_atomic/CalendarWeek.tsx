@@ -1,18 +1,9 @@
+// packages\web\src\common\components\Calendar\_atomic\CalendarWeek.tsx
+
 import React from "react";
 import styled from "styled-components";
-import CalendarDate, { CalendarDateProps } from "./CalendarDate";
-
-interface CalendarWeekProps {
-  week: {
-    date: Date;
-    exist: boolean;
-    type?: CalendarDateProps["type"];
-  }[];
-  small?: boolean;
-  onDateClick: (date: Date) => void;
-}
-
-export interface CalendarSizeProps {}
+import CalendarDate from "./CalendarDate";
+import { CalendarWeekProps } from "../types";
 
 const WeekWrapper = styled.div`
   display: flex;
@@ -34,6 +25,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
   week,
   small = false,
   onDateClick,
+  onDateHover,
 }) =>
   small ? (
     <SmallWeekWrapper>
@@ -44,6 +36,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
           exist={day.exist}
           type={day.type}
           onDateClick={onDateClick}
+          onDateHover={onDateHover}
         />
       ))}
     </SmallWeekWrapper>
@@ -56,6 +49,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
           exist={day.exist}
           type={day.type}
           onDateClick={onDateClick}
+          onDateHover={onDateHover}
         />
       ))}
     </WeekWrapper>
