@@ -23,7 +23,7 @@ import {
 import { OrganizationService } from "../service/organization.service";
 
 @Controller("president/organizations")
-export class OrganizationpresidentController {
+export class OrganizationPresidentController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   // 단체장단 권한으로 단체 멤버 정보를 불러옵니다.

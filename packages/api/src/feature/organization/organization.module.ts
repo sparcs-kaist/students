@@ -3,8 +3,8 @@ import { Module } from "@nestjs/common";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 import { SemesterModule } from "src/feature/semester/semester.module";
 import { OrganizationService } from "./service/organization.service";
-import { OrganizationuapresidentController } from "./controller/organization.uapresident.controller";
-import { OrganizationpresidentController } from "./controller/organization.president.controller";
+import { OrganizationUapresidentController } from "./controller/organization.uapresident.controller";
+import { OrganizationPresidentController } from "./controller/organization.president.controller";
 import { OrganizationController } from "./controller/organization.controller";
 import { OrganizationPublicService } from "./service/organization.public.service";
 import { OrganizationRepository } from "./repository/organization.repository";
@@ -18,8 +18,8 @@ import { TeamLeaderRepository } from "./repository/organization.team.leader.repo
 @Module({
   imports: [DrizzleModule, SemesterModule],
   controllers: [
-    OrganizationuapresidentController,
-    OrganizationpresidentController,
+    OrganizationUapresidentController,
+    OrganizationPresidentController,
     OrganizationController,
   ],
   providers: [

@@ -15,7 +15,7 @@ import {} from // GetUser,
 import { OrganizationService } from "../service/organization.service";
 
 @Controller("uapresident/organizations")
-export class OrganizationuapresidentController {
+export class OrganizationUapresidentController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   // 총학생회장 권한으로 단체 생성

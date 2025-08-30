@@ -17,9 +17,9 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetProposalIncomeRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectProposalId: number;
+  budgetProposalIncomeId: number;
+  previousBudgetReportIncomeId: number;
+  code: number;
 };
 
 type BudgetProposalIncomeRevisionOrderByKeys = "id";
@@ -65,8 +65,10 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
   ): MBudgetProposalIncomeRevision {
     return new MBudgetProposalIncomeRevision({
       id: result.id,
-      budgetProposalIncome: { id: result.budgetProposalId },
-      previousBudgetReportIncome: { id: result.previousBudgetReportIncomeId },
+      budgetProposalIncome: { id: result.budgetProposalIncomeId },
+      previousBudgetReportIncome: result.previousBudgetReportIncomeId
+        ? { id: result.previousBudgetReportIncomeId }
+        : null,
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionIncomeEnum: result.budgetDivisionIncomeEnum,
       name: result.name,
@@ -84,8 +86,8 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
   ): BudgetProposalIncomeRevisionDbUpdate {
     return {
       id: model.id,
-      budgetProposalId: model.budgetProposalIncome.id,
-      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id,
+      budgetProposalIncomeId: model.budgetProposalIncome.id,
+      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id ?? null,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
       name: model.name,
@@ -102,8 +104,8 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
     model: IBudgetProposalIncomeRevisionCreate,
   ): BudgetProposalIncomeRevisionDbInsert {
     return {
-      budgetProposalId: model.budgetProposalIncome.id,
-      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id,
+      budgetProposalIncomeId: model.budgetProposalIncome.id,
+      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id ?? null,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
       name: model.name,
@@ -121,9 +123,9 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       TableWithID | null
     > = {
       id: BudgetProposalIncomeRevision,
-      organizationId: BudgetProposalIncomeRevision,
-      semesterId: BudgetProposalIncomeRevision,
-      projectProposalId: BudgetProposalIncomeRevision,
+      budgetProposalIncomeId: BudgetProposalIncomeRevision,
+      previousBudgetReportIncomeId: BudgetProposalIncomeRevision,
+      code: BudgetProposalIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {

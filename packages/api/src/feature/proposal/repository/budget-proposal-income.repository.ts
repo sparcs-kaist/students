@@ -19,6 +19,7 @@ export type BudgetProposalIncomeQuery = {
   // id: number; // id 는 기본 내장
   organizationId: number;
   semesterId: number;
+  projectProposalId: number;
 };
 
 type BudgetProposalIncomeOrderByKeys = "id";
