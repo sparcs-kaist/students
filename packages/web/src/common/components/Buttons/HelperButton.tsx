@@ -20,7 +20,7 @@ const ToolTipWrapper = styled.div`
   transform: translateY(-60%) translateX(32px);
 `;
 
-const ExpenditureHelpButton = () => {
+const HelpButton = ({ tooltip }: { tooltip: string }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const handleMouseEnter = () => {
     setShowTooltip(true);
@@ -38,11 +38,16 @@ const ExpenditureHelpButton = () => {
       />
       {showTooltip && (
         <ToolTipWrapper>
-          사업명을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다.
+          {tooltip.split("\n").map(line => (
+            <React.Fragment key={line}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
         </ToolTipWrapper>
       )}
     </FlexWrapper>
   );
 };
 
-export default ExpenditureHelpButton;
+export default HelpButton;
