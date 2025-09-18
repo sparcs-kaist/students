@@ -7,14 +7,20 @@ import {
   apiOrg007,
   apiOrg008,
   apiOrg009,
+  apiOrg012,
+  apiOrg013,
   ApiOrg005RequestBody,
   ApiOrg006RequestBody,
   ApiOrg007RequestBody,
   ApiOrg008RequestBody,
   ApiOrg009RequestBody,
+  ApiOrg012RequestBody,
+  ApiOrg013RequestBody,
   ApiOrg007ResponseCreated,
   ApiOrg008ResponseCreated,
   ApiOrg009ResponseCreated,
+  ApiOrg012ResponseCreated,
+  ApiOrg013ResponseCreated,
 } from "@sparcs-students/interface/api/organization/index";
 import {
   GetStudent,
@@ -77,6 +83,28 @@ export class OrganizationPresidentController {
   ): Promise<ApiOrg009ResponseCreated> {
     return this.organizationService.postOrganizationTeamLeaderForPresident(
       body.teamLeader,
+    );
+  }
+
+  @Public() // 임시로 로그인 없이 생성. 총학생회장 데코레이터 추가 필요
+  @Post("operating-committee")
+  @UsePipes(new ZodPipe(apiOrg012))
+  async createOperatingCommittee(
+    @Body() body: ApiOrg012RequestBody,
+  ): Promise<ApiOrg012ResponseCreated> {
+    return this.organizationService.createOperatingCommittee(
+      body.operatingCommittee,
+    );
+  }
+
+  @Public() // 임시. 단체장단 데코레이터 추가 필요
+  @Post("operating-committee/member")
+  @UsePipes(new ZodPipe(apiOrg013))
+  async createOperatingCommitteeMember(
+    @Body() body: ApiOrg013RequestBody,
+  ): Promise<ApiOrg013ResponseCreated> {
+    return this.organizationService.createOperatingCommitteeMember(
+      body.operatingCommitteeMember,
     );
   }
 }

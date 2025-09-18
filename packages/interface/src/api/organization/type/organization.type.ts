@@ -1,6 +1,7 @@
 import {
   OrganizationStateEnum,
   OrganizationTypeEnum,
+  CommitteeTypeEnum,
 } from "@sparcs-students/interface/common/enum";
 import { zId } from "@sparcs-students/interface/common/type/ids";
 import { z } from "zod";
@@ -40,8 +41,9 @@ export const zOperatingCommittee = z.object({
   organization: zOrganization.pick({ id: true }),
   name: zName,
   nameEng: zNameEng,
-  startTerm: z.date(),
-  endTerm: z.date().nullable(),
+  committeeTypeEnum: z.nativeEnum(CommitteeTypeEnum),
+  startTerm: z.coerce.date(),
+  endTerm: z.coerce.date().nullable(),
 });
 
 export const zOperatingCommitteeResponse = zOperatingCommittee.extend({
@@ -54,7 +56,7 @@ export const zOperatingCommitteeRequestCreate = zOperatingCommittee
     startTerm: true,
     endTerm: true,
   })
-  .extend({ startTerm: z.date(), endTerm: z.date().nullable() });
+  .extend({ startTerm: z.coerce.date(), endTerm: z.coerce.date().nullable() });
 
 export type IOperatingCommittee = z.infer<typeof zOperatingCommittee>;
 export type IOperatingCommitteeResponse = z.infer<
