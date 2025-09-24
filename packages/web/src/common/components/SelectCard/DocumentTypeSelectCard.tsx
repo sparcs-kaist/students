@@ -11,6 +11,9 @@ export enum DocumentType {
   BudgetReport = "결산",
   ProjectProposal = "사업 계획서",
   ProjectReport = "사업 보고서",
+  PreExecution = "선집행",
+  AdditionalRevision = "추가경정",
+  PostApproval = "사후승인",
   None = "", // 문서 유형 선택 안함
 }
 
@@ -24,6 +27,12 @@ const enumToString = (docType: DocumentType): string => {
       return "사업 계획서";
     case DocumentType.ProjectReport:
       return "사업 보고서";
+    case DocumentType.PreExecution:
+      return "선집행";
+    case DocumentType.AdditionalRevision:
+      return "추가경정";
+    case DocumentType.PostApproval:
+      return "사후승인";
     default:
       return "";
   }
@@ -33,6 +42,7 @@ interface DocumentTypeSelectCardProps {
   type: DocumentType | null;
   setType: (value: DocumentType | null) => void;
   disabled: boolean;
+  isBudgetReview: boolean;
 }
 
 const CardWrapper = styled.div`
@@ -73,9 +83,12 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
   type,
   setType,
   disabled,
+  isBudgetReview,
 }) => {
-  const documentTypes = Object.values(DocumentType);
-
+  const documentTypeArray = Object.values(DocumentType);
+  const documentTypes = isBudgetReview
+    ? documentTypeArray.slice(4, 7)
+    : documentTypeArray.slice(0, 4);
   return (
     <CardWrapper>
       <CardHeaderWrapper disabled={disabled}>
@@ -92,7 +105,7 @@ const DocumentTypeSelectCard: React.FC<DocumentTypeSelectCardProps> = ({
           value={type ?? DocumentType.None}
           onChange={(val: DocumentType) => setType(val)}
         >
-          {documentTypes.slice(0, 4).map(e => (
+          {documentTypes.map(e => (
             <RadioOption
               key={e}
               value={e}

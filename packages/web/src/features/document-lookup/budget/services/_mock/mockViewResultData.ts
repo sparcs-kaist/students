@@ -51,3 +51,42 @@ export const mockViewProjectReportResultData: ViewResultProps = {
     new Date(2025, 0, 26),
   ],
 };
+
+export const mockReviewPreExecutionResultData: ViewResultProps = {
+  fileName: "전산학부 24년도 하반기 선집행",
+  organization: "전산학부",
+  period: "2024년도 하반기",
+  headPerson: "김스튜",
+  submitDate: new Date(),
+  dateList: [
+    new Date(2025, 0, 24),
+    new Date(2025, 0, 25),
+    new Date(2025, 0, 26),
+  ],
+};
+
+export const mockReviewAddtionalRevisionResultData: ViewResultProps = {
+  fileName: "전산학부 24년도 하반기 추가경정",
+  organization: "전산학부",
+  period: "2024년도 하반기",
+  headPerson: "김스튜",
+  submitDate: new Date(),
+  dateList: [
+    new Date(2025, 0, 24),
+    new Date(2025, 0, 25),
+    new Date(2025, 0, 26),
+  ],
+};
+
+export const mockReviewPostApprovalResultData: ViewResultProps = {
+  fileName: "전산학부 24년도 하반기 사후승인",
+  organization: "전산학부",
+  period: "2024년도 하반기",
+  headPerson: "김스튜",
+  submitDate: new Date(),
+  dateList: [
+    new Date(2025, 0, 24),
+    new Date(2025, 0, 25),
+    new Date(2025, 0, 26),
+  ],
+};

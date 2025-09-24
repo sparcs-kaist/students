@@ -19,7 +19,7 @@ export type BudgetProposalExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
   budgetProposalExpenseId: number;
   previousBudgetReportExpenseId: number;
-  projectProposalRevisionId: number;
+  code: number;
 };
 
 type BudgetProposalExpenseRevisionOrderByKeys = "id";
@@ -69,7 +69,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpense: { id: result.previousBudgetReportExpenseId },
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionExpenseEnum: result.budgetDivisionExpenseEnum,
-      projectProposalRevision: { id: result.projectProposalRevisionId },
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
       name: result.name,
       amount: result.amount,
@@ -90,7 +89,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
-      projectProposalRevisionId: model.projectProposalRevision.id,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       name: model.name,
       amount: model.amount,
@@ -110,7 +108,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
-      projectProposalRevisionId: model.projectProposalRevision.id,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
       name: model.name,
       amount: model.amount,
@@ -129,7 +126,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       id: BudgetProposalExpenseRevision,
       budgetProposalExpenseId: BudgetProposalExpenseRevision,
       previousBudgetReportExpenseId: BudgetProposalExpenseRevision,
-      projectProposalRevisionId: BudgetProposalExpenseRevision,
+      code: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

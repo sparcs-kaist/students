@@ -225,17 +225,19 @@ const TableRow: React.FC<TableRowProps> = ({
               items={budgetDomainList.slice(0, 3)}
               value={field.value || "-"}
               onChange={newValue => {
-                if (rowIndex === 0) return;
                 setValue(`expenditures.${rowIndex}.budgetDomain`, newValue);
                 field.onChange(newValue);
-                changeCode();
                 setValue(`expenditures.${rowIndex}.projectName`, "");
                 setProjectNameListInputItem(getProjectNameCandidateList());
+
+                // 구분 변경 시 정렬 및 코드 할당 트리거
+                setTimeout(() => {
+                  changeCode();
+                }, 0);
               }}
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="65px"
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -248,7 +250,6 @@ const TableRow: React.FC<TableRowProps> = ({
               items={divisionItemsList.slice(0, 3)}
               value={field.value || divisionItemsList[0].value}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 setValue(
                   `expenditures.${rowIndex}.item`,
                   BudgetClassExpenseEnum.Undefined,
@@ -256,11 +257,15 @@ const TableRow: React.FC<TableRowProps> = ({
                 field.onChange(newVal);
                 setValue(`expenditures.${rowIndex}.projectName`, "");
                 setProjectNameListInputItem(getProjectNameCandidateList());
+
+                // 예산 분류 변경 시 정렬 및 코드 할당 트리거
+                setTimeout(() => {
+                  changeCode();
+                }, 0);
               }}
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="90px"
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -273,11 +278,9 @@ const TableRow: React.FC<TableRowProps> = ({
               items={setProjectNameListInputItem(getProjectNameCandidateList())}
               value={field.value}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               errorMessage="필수 항목입니다."
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -290,14 +293,12 @@ const TableRow: React.FC<TableRowProps> = ({
               items={divisionItemsClassList.slice(0, 16)}
               value={field.value || divisionItemsClassList[0]}
               onChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="-"
               errorMessage="필수 항목입니다."
               width="90px"
               isLight={false} // DarkTag is used.
-              disabled={rowIndex === 0}
             />
           </TableCell>
         )}
@@ -309,7 +310,6 @@ const TableRow: React.FC<TableRowProps> = ({
             <TableTextInput
               value={field.value}
               handleChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="금액 입력"
@@ -325,7 +325,6 @@ const TableRow: React.FC<TableRowProps> = ({
             <TableTextInput
               value={field.value}
               handleChange={newVal => {
-                if (rowIndex === 0) return;
                 field.onChange(newVal);
               }}
               placeholder="금액 입력"
@@ -400,10 +399,9 @@ const TableRow: React.FC<TableRowProps> = ({
           type="delete"
           size={16}
           onClick={() => {
-            if (rowIndex === 0) return;
             deleteRow(rowIndex);
           }}
-          color={rowIndex === 0 ? colors.GRAY["50"] : colors.BLACK}
+          color={colors.BLACK}
         />
       </TableCell>
     </TableRowWrapper>
@@ -429,6 +427,139 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
   });
   const initialDataRef = useRef<DBExpenditureProps[]>(initialData); // CHACHA: 백엔드에 diff만 넘겨주기 위함
   const nextIdRef = useRef<number>(initialData.length); // CHACHA: Table 전체의 변경 이력을 반영하여 새로운 rowId를 부여하기 위함
+
+  // 구분별 우선순위 정의 (학생회비 > 본회계 > 자치)
+  const getDomainPriority = (domain: BudgetDomainEnum) => {
+    switch (domain) {
+      case BudgetDomainEnum.Student: // 학생회비 = 1
+        return 1;
+      case BudgetDomainEnum.School: // 본회계 = 2
+        return 2;
+      case BudgetDomainEnum.Autonomous: // 자치 = 3
+        return 3;
+      case BudgetDomainEnum.Undefined: // Undefined = 4
+        return 4;
+      default:
+        return 999;
+    }
+  };
+
+  // 예산 분류 우선순위 정의 (운영비 > 정기사업비 > 비정기사업비)
+  const getDivisionPriority = (
+    division: BudgetDivisionExpenseEnum | undefined,
+  ) => {
+    if (division === undefined) return 4;
+
+    switch (division) {
+      case BudgetDivisionExpenseEnum.Operating: // 운영비 = 1
+        return 1;
+      case BudgetDivisionExpenseEnum.Regular: // 정기사업비 = 2
+        return 2;
+      case BudgetDivisionExpenseEnum.New: // 비정기사업비 = 3
+        return 3;
+      case BudgetDivisionExpenseEnum.Undefined: // Undefined = 4
+        return 4;
+      default:
+        return 999;
+    }
+  };
+
+  // 정렬 로직을 별도 함수로 분리
+  const sortExpenditures = () => {
+    const updatedExpenditures = getValues("expenditures");
+
+    // 정렬 실행
+    const sortedExpenditures = [...updatedExpenditures].sort((a, b) => {
+      // 1순위: 구분(budgetDomain)으로 정렬
+      const aDomainPriority = getDomainPriority(a.budgetDomain);
+      const bDomainPriority = getDomainPriority(b.budgetDomain);
+
+      if (aDomainPriority !== bDomainPriority) {
+        return aDomainPriority - bDomainPriority;
+      }
+
+      // 2순위: 같은 구분 내에서는 예산 분류(budgetDivisionExpenditure) 우선순위로 정렬
+      const aDivisionPriority = getDivisionPriority(
+        a.budgetDivisionExpenditure,
+      );
+      const bDivisionPriority = getDivisionPriority(
+        b.budgetDivisionExpenditure,
+      );
+
+      return aDivisionPriority - bDivisionPriority;
+    });
+
+    // 현재 순서와 다른 경우에만 재정렬 실행
+    const needsReorder = !sortedExpenditures.every(
+      (item, index) => item.id === updatedExpenditures[index]?.id,
+    );
+
+    if (needsReorder) {
+      // useFieldArray를 사용하여 전체 배열을 정렬된 순서로 재설정
+      const currentLength = updatedExpenditures.length;
+      for (let i = currentLength - 1; i >= 0; i -= 1) {
+        remove(i);
+      }
+
+      // 정렬된 항목들을 다시 추가
+      sortedExpenditures.forEach(item => {
+        append(item);
+      });
+    }
+  };
+
+  // 코드 할당 함수
+  const assignCodes = () => {
+    // setTimeout 내에서 최신 값을 다시 가져오기
+    setTimeout(() => {
+      const currentExpenditures = getValues("expenditures");
+      let studentCode = 400;
+      let schoolCode = 500;
+      let autonomousCode = 600;
+
+      currentExpenditures.forEach((expenditure, index) => {
+        let newCode = 0;
+
+        switch (expenditure.budgetDomain) {
+          case BudgetDomainEnum.Student: // 학생회비
+            studentCode += 1;
+            newCode = studentCode;
+            break;
+          case BudgetDomainEnum.School: // 본회계
+            schoolCode += 1;
+            newCode = schoolCode;
+            break;
+          case BudgetDomainEnum.Autonomous: // 자치
+            autonomousCode += 1;
+            newCode = autonomousCode;
+            break;
+          default:
+            newCode = 0;
+            break;
+        }
+
+        setValue(`expenditures.${index}.code`, newCode, {
+          shouldValidate: true,
+          shouldDirty: false,
+          shouldTouch: false,
+        });
+      });
+    }, 50); // 약간의 지연을 두어 정렬이 완료된 후 실행
+  };
+
+  // 정렬 및 코드 할당을 함께 수행하는 함수
+  const sortAndAssignCodes = () => {
+    // 먼저 정렬 수행
+    sortExpenditures();
+
+    // 정렬 후 코드 재할당 (비동기 처리로 정렬 완료 후 실행)
+    setTimeout(() => {
+      assignCodes();
+    }, 100); // 시간을 늘려서 정렬이 완전히 완료된 후 코드 할당
+  };
+
+  // changeCode 함수를 sortAndAssignCodes로 대체
+  const changeCode = sortAndAssignCodes;
 
   useEffect(() => {
     const initialMap = new Map(
@@ -498,42 +629,16 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
     onDiffExtract({ updatedRows, createdRows, deletedRows });
   }, [expenditures, onDiffExtract]);
 
+  // 초기 데이터 로딩 시 정렬 및 코드 할당 (필요한 경우)
+  useEffect(() => {
+    if (expenditures.length > 0) {
+      sortAndAssignCodes();
+    }
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
     36 + (expenditures.length + 1) * 48 + 250, // TODO: magic number 36 + 48 + 250
   );
-
-  const changeCode = () => {
-    let studentsFeeCount = 400;
-    let schoolFeeCount = 500;
-    let autonomousFeeCount = 600;
-
-    const updatedExpenditures = getValues("expenditures");
-    updatedExpenditures.forEach((expenditure, index) => {
-      let newCode = expenditure.code;
-
-      switch (expenditure.budgetDomain) {
-        case 1:
-          studentsFeeCount += 1;
-          newCode = studentsFeeCount;
-          break;
-        case 2:
-          schoolFeeCount += 1;
-          newCode = schoolFeeCount;
-          break;
-        case 3:
-          autonomousFeeCount += 1;
-          newCode = autonomousFeeCount;
-          break;
-        default:
-          newCode = 0;
-          break;
-      }
-
-      setValue(`expenditures.${index}.code`, newCode, {
-        shouldValidate: true,
-      });
-    });
-  };
 
   const defaultNewRow = [
     {
@@ -562,8 +667,14 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
 
     const length = expenditures.length + 1;
     setDynamicHeight(36 + length * 48 + 250);
+
+    // 새 행 추가 후 정렬 및 코드 할당
+    setTimeout(() => {
+      sortAndAssignCodes();
+    }, 0);
   };
 
+  // deleteRow 함수 수정 - 삭제 후 정렬
   const deleteRow = (rowIndex: number) => {
     if (expenditures.length === 1) {
       return;
@@ -573,9 +684,9 @@ const ManagerExpenditureTable: React.FC<ManagerExpenditureTableProps> = ({
 
     setDynamicHeight(36 + length * 48 + 250); // TODO: magic number
 
+    // 삭제 후 정렬 및 코드 할당
     setTimeout(() => {
-      // CHACHA: remove is async. Ensure that changeCode is executed after remove.
-      changeCode();
+      sortAndAssignCodes();
     }, 0);
   };
 

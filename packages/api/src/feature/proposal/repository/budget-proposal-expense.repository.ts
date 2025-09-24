@@ -19,7 +19,6 @@ export type BudgetProposalExpenseQuery = {
   // id: number; // id 는 기본 내장
   organizationId: number;
   semesterId: number;
-  projectProposalId: number;
 };
 
 type BudgetProposalExpenseOrderByKeys = "id";
@@ -65,7 +64,6 @@ export class BudgetProposalExpenseRepository extends BaseSingleTableRepository<
       id: result.id,
       organization: { id: result.organizationId },
       semester: { id: result.semesterId },
-      projectProposal: { id: result.projectProposalId },
     });
   }
 
@@ -76,7 +74,6 @@ export class BudgetProposalExpenseRepository extends BaseSingleTableRepository<
       id: model.id,
       organizationId: model.organization.id,
       semesterId: model.semester.id,
-      projectProposalId: model.projectProposal.id,
     };
   }
 
@@ -86,7 +83,6 @@ export class BudgetProposalExpenseRepository extends BaseSingleTableRepository<
     return {
       organizationId: model.organization.id,
       semesterId: model.semester.id,
-      projectProposalId: model.projectProposal.id,
     };
   }
 
@@ -100,7 +96,6 @@ export class BudgetProposalExpenseRepository extends BaseSingleTableRepository<
       id: BudgetProposalExpense,
       organizationId: BudgetProposalExpense,
       semesterId: BudgetProposalExpense,
-      projectProposalId: BudgetProposalExpense,
     };
 
     if (!(field in fieldMappings)) {

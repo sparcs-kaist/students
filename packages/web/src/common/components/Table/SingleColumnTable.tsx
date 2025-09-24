@@ -153,7 +153,8 @@ const SingleColumnTable: React.FC<TableProps> = ({
 
   const handleRowClick = (link: string) => {
     if (link) {
-      router.push(link);
+      // router.push(link); 나중에 실제 공지사항 탭이 생기면 이걸로 변경하기!
+      window.open(link, "_blank", "noopener,noreferrer");
     }
   };
 
