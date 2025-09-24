@@ -45,6 +45,27 @@ export const getMemberRoleEnum = (type: MemberRoleEnum | undefined) => {
   }
 };
 
+export enum MemberRegistrationEnum {
+  NotReviewed = 1,
+  Approved,
+  Rejected,
+}
+
+export const getMemberRegistrationEnum = (
+  type: MemberRegistrationEnum | undefined,
+) => {
+  switch (type) {
+    case MemberRegistrationEnum.NotReviewed:
+      return "미검토";
+    case MemberRegistrationEnum.Approved:
+      return "승인됨";
+    case MemberRegistrationEnum.Rejected:
+      return "반려됨";
+    default:
+      return "";
+  }
+};
+
 // OrganizationTypeE
 export const getDisplayNameOrganizationTypeEnum = (
   type: OrganizationTypeEnum | undefined,

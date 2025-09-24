@@ -6,6 +6,7 @@ export type LightTagColor =
   | "GREEN600"
   | "GREEN300"
   | "GREEN100"
+  | "RED"
   | "BLUE"
   | "PINK"
   | "YELLOW"
@@ -86,6 +87,9 @@ const TagInner = styled.div<{ color: LightTagColor; width: string }>`
     }
     if (color === "GREEN800") {
       return theme.colors.GREEN[800];
+    }
+    if (color === "RED") {
+      return theme.colors.RED[50];
     }
     if (color === "THISTLE") {
       return theme.colors.THISTLE[100];
