@@ -2,17 +2,28 @@ import { CommitteeProps } from "@sparcs-students/web/features/organization-manag
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  DepartmentRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
-type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+export type RoleEnumType =
+  | MemberRoleEnum
+  | CommitteeRoleEnum
+  | DepartmentRoleEnum;
 
-interface OrganizationMemberProps {
+export interface OrganizationMemberProps {
   id: number;
   studentId: string;
   name: string;
   role: RoleEnumType; // TODO: change to real enum
   startDate: string;
   endDate: string;
+}
+
+export interface DepartmentMemberProps {
+  id: number;
+  studentId: string;
+  name: string;
+  role: RoleEnumType; // TODO: change to real enum
 }
 
 export const mockOrganizationMemberData: OrganizationMemberProps[] = [
@@ -144,6 +155,21 @@ export const mockCommitteeMemberTableData: OrganizationMemberTableType[] = [
     id: 2,
     name: "확대운영위원회",
     OrganizationMember: mockAnotherCommitteeMemberData,
+  },
+];
+
+export const mockDepartmentMemberData: DepartmentMemberProps[] = [
+  {
+    id: 1,
+    studentId: "20210000",
+    name: "박정민",
+    role: DepartmentRoleEnum.Chief,
+  },
+  {
+    id: 2,
+    studentId: "20210000",
+    name: "박정민",
+    role: DepartmentRoleEnum.Member,
   },
 ];
 

@@ -8,12 +8,10 @@ import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import Table from "@sparcs-students/web/common/components/Table/Table";
 import LightTag from "@sparcs-students/web/common/components/Tag/LightTag";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import { committeeMemeberRoleTagList } from "@sparcs-students/web/common/util/tableTagList";
+import { committeeMemberRoleTagList } from "@sparcs-students/web/common/util/tableTagList";
+import { RoleEnumType } from "@sparcs-students/web/features/organization-manage/components/NameSearchResults";
 import {
-  OrganizationMemberProps,
-  RoleEnumType,
-} from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
-import {
+  DepartmentMemberProps,
   mockCommitteeListData,
   mockDepartmentMemberData,
 } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
@@ -42,10 +40,10 @@ const roleTag = ({ role }: { role: RoleEnumType }) => {
   const departmentRole = role as DepartmentRoleEnum;
   return (
     <LightTag
-      color={committeeMemeberRoleTagList[departmentRole].color}
+      color={committeeMemberRoleTagList[departmentRole].color}
       width="96px"
     >
-      {committeeMemeberRoleTagList[departmentRole].text}
+      {committeeMemberRoleTagList[departmentRole].text}
     </LightTag>
   );
 };
@@ -58,7 +56,7 @@ const OrganizationManage = () => {
     mockCommitteeDatum => mockCommitteeDatum.id === Number(params.teamId),
   );
 
-  const columnHelper = createColumnHelper<OrganizationMemberProps>();
+  const columnHelper = createColumnHelper<DepartmentMemberProps>();
 
   const columns = [
     columnHelper.display({
