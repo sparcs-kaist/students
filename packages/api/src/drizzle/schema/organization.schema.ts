@@ -31,6 +31,7 @@ export const OperatingCommittee = mysqlTable(
     organizationId: int("organization_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     nameEng: varchar("name_eng", { length: 255 }).notNull(),
+    committeeTypeEnum: int("committee_type_enum").notNull(),
     startTerm: datetime("start_term").notNull(),
     endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),

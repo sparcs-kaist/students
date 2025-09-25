@@ -19,13 +19,11 @@ import {
   MProjectProposalRevision,
 } from "@sparcs-students/api/feature/proposal/model/project-proposal-revision.model";
 import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
-import { DocumentItemStatusEnum } from "@sparcs-students/interface/common/type/revision-base.type";
 
 export type ProjectProposalRevisionQuery = {
   organizationId: number;
   semesterId: number;
   projectProposalId: number;
-  documentStatusEnum: DocumentItemStatusEnum;
   submittedAt: Date;
   cogAgendaId: number;
   gsrcAgendaId: number;
@@ -123,15 +121,12 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
 
       note: result.main.note,
 
-      documentStatusEnum: result.main.documentStatusEnum,
-
       submittedAt: result.main.submittedAt,
 
       cogAgenda: { id: result.main.cogAgendaId },
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
-
-      isRemoved: result.main.isRemoved,
+      
     });
   }
 
@@ -148,11 +143,6 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         target: model.target,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
-        submittedAt: model.submittedAt,
-        cogAgendaId: model.cogAgenda?.id,
-        gsrcAgendaId: model.gsrcAgenda?.id,
-        isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -184,7 +174,6 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
         target: model.target,
         detail: model.detail,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
       },
       oneToOne: {},
       oneToMany: {
@@ -209,7 +198,6 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
       organizationId: ProjectProposalRevision,
       semesterId: ProjectProposalRevision,
       projectProposalId: ProjectProposalRevision,
-      documentStatusEnum: ProjectProposalRevision,
       submittedAt: ProjectProposalRevision,
       cogAgendaId: ProjectProposalRevision,
       gsrcAgendaId: ProjectProposalRevision,

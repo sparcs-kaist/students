@@ -35,7 +35,7 @@ import DarkTag, {
   isDarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { budgetExpenseToString } from "@sparcs-students/web/common/util/enumToItem";
-import ExpenditureHelpButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ExpenditureHelpButton";
+import HelpButton from "@sparcs-students/web/common/components/Buttons/HelperButton";
 import { useRouter } from "next/navigation";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
@@ -228,7 +228,9 @@ const ViewerExpenditureTable: React.FC<ExpenditureTableProps> = ({
         <Typography fs={24} lh={30} color="BLACK" fw="SEMIBOLD">
           {title}
         </Typography>
-        {!isInsideDetailPage && <ExpenditureHelpButton />}
+        {!isInsideDetailPage && (
+          <HelpButton tooltip="사업명을 클릭하면 각 사업의 상세 설명을 확인할 수 있습니다." />
+        )}
       </FlexWrapper>
       {loaded && <Table table={table} emptyMessage="테이블 정보가 없습니다." />}
     </FlexWrapper>

@@ -5,11 +5,10 @@ import {
   foreignKey,
   timestamp,
   text,
-  boolean,
 } from "drizzle-orm/mysql-core";
 import { Semester } from "./semester.schema";
 import { OperatingCommittee, Organization, Team } from "./organization.schema";
-import { User } from "./user.schema";
+import { Student } from "./user.schema";
 import { File } from "./file.schema";
 import { Agenda } from "./meeting.schema";
 
@@ -20,6 +19,7 @@ export const ProjectProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -42,7 +42,7 @@ export const ProjectProposalRevision = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     projectProposalId: int("project_proposal_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
-    method: text("method"), // TEXT 처리
+    method: text("method"),
     prepareStartTerm: timestamp("prepare_start_term"),
     prepareEndTerm: timestamp("prepare_end_term"),
     startTerm: timestamp("start_term"),
@@ -56,9 +56,8 @@ export const ProjectProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -74,7 +73,7 @@ export const ProjectProposalRevision = mysqlTable(
     }),
     projectProposalRevisionManagerIdFk: foreignKey({
       columns: [table.managerId],
-      foreignColumns: [User.id],
+      foreignColumns: [Student.id],
       name: "project_proposal_revision_manager_id_fk",
     }),
     projectProposalRevisionCogAgendaIdFk: foreignKey({
@@ -100,6 +99,7 @@ export const ProjectProposalTimeline = mysqlTable(
     detail: text("detail").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -118,6 +118,7 @@ export const OperationProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -144,9 +145,8 @@ export const OperationProposalRevision = mysqlTable(
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
-    isRemoved: boolean("is_removed"),
-    documentStatusEnum: int("document_status_enum").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -183,6 +183,7 @@ export const OperatingCommitteeProposal = mysqlTable(
     operatingCommitteeId: int("operating_committee_id").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -211,6 +212,7 @@ export const TeamOperationProposal = mysqlTable(
     teamId: int("team_id").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -227,13 +229,12 @@ export const TeamOperationProposal = mysqlTable(
   }),
 );
 
-// TODO: Review는 나중에
 export const ProjectProposalDocumentReview = mysqlTable(
   "project_proposal_document_review",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    projectProposalId: int("project_proposal_id").notNull(),
-    userId: int("user_id").notNull(),
+    projectProposalRevisionId: int("project_proposal_revision_id").notNull(),
+    studentId: int("student_id").notNull(),
     documentReviewStatusEnum: int("document_review_status_enum").notNull(),
     detail: text("detail"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -241,15 +242,15 @@ export const ProjectProposalDocumentReview = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectProposalDocumentReviewProjectProposalIdFk: foreignKey({
-      columns: [table.projectProposalId],
-      foreignColumns: [ProjectProposal.id],
-      name: "proj_prop_doc_rev_orig_id_fk",
+    projectProposalDocumentReviewProjectProposalRevisionIdFk: foreignKey({
+      columns: [table.projectProposalRevisionId],
+      foreignColumns: [ProjectProposalRevision.id],
+      name: "proj_prop_doc_review_proj_prop_rev_id_fk",
     }),
-    projectProposalDocumentReviewUserIdFk: foreignKey({
-      columns: [table.userId],
-      foreignColumns: [User.id],
-      name: "project_proposal_document_review_user_id_fk",
+    projectProposalDocumentReviewStudentIdFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "proj_prop_doc_review_student_id_fk",
     }),
   }),
 );

@@ -33,7 +33,7 @@ export class OrganizationPublicService {
       });
 
       return {
-        halfYear: {
+        semester: {
           year: semester.year,
           name: semester.name,
         },

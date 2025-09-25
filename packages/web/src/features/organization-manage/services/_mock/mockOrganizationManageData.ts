@@ -1,9 +1,19 @@
-import { OrganizationMemberProps } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
 import { CommitteeProps } from "@sparcs-students/web/features/organization-manage/components/ManageCommitteeTable";
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
+
+type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+
+interface OrganizationMemberProps {
+  id: number;
+  studentId: string;
+  name: string;
+  role: RoleEnumType; // TODO: change to real enum
+  startDate: string;
+  endDate: string;
+}
 
 export const mockOrganizationMemberData: OrganizationMemberProps[] = [
   {

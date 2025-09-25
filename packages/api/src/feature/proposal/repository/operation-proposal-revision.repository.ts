@@ -20,13 +20,11 @@ import {
   MOperationProposalRevision,
 } from "@sparcs-students/api/feature/proposal/model/operation-proposal-revision.model";
 import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
-import { DocumentItemStatusEnum } from "@sparcs-students/interface/common/type/revision-base.type";
 
 export type OperationProposalRevisionQuery = {
   organizationId: number;
   semesterId: number;
   projectProposalId: number;
-  documentStatusEnum: DocumentItemStatusEnum;
   submittedAt: Date;
   cogAgendaId: number;
   gsrcAgendaId: number;
@@ -106,15 +104,12 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         description: operation.description,
       })),
 
-      documentStatusEnum: result.main.documentStatusEnum,
-
       submittedAt: result.main.submittedAt,
 
       cogAgenda: { id: result.main.cogAgendaId },
 
       gsrcAgenda: { id: result.main.gsrcAgendaId },
 
-      isRemoved: result.main.isRemoved,
     });
   }
 
@@ -126,11 +121,9 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         id: model.id,
         operationProposalId: model.operationProposal.id,
         organizationDiagramId: model.organizationDiagramFile.id,
-        documentStatusEnum: model.documentStatusEnum,
         submittedAt: model.submittedAt,
         cogAgendaId: model.cogAgenda?.id,
         gsrcAgendaId: model.gsrcAgenda?.id,
-        isRemoved: model.isRemoved,
       },
       oneToOne: {},
       oneToMany: {
@@ -156,7 +149,6 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
         operationProposalId: model.operationProposal.id,
         organizationDiagramId: model.organizationDiagramFile.id,
         note: model.note,
-        documentStatusEnum: model.documentStatusEnum,
       },
       oneToOne: {},
       oneToMany: {
@@ -185,7 +177,6 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
       organizationId: OperationProposalRevision,
       semesterId: OperationProposalRevision,
       operationProposalId: OperationProposalRevision,
-      documentStatusEnum: OperationProposalRevision,
       submittedAt: OperationProposalRevision,
       cogAgendaId: OperationProposalRevision,
       gsrcAgendaId: OperationProposalRevision,
