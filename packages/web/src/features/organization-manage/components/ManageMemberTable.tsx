@@ -1,8 +1,4 @@
 import isPropValid from "@emotion/is-prop-valid";
-import {
-  CommitteeRoleEnum,
-  MemberRoleEnum,
-} from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
@@ -19,7 +15,6 @@ import {
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
-  DepartmentRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import isEqual from "lodash/isEqual";
 import React, { useEffect, useRef, useState } from "react";
@@ -37,7 +32,9 @@ import styled from "styled-components";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import NameSearchInput from "@sparcs-students/web/features/organization-manage/components/NameSearchInput";
 import NameSearchModalContent from "@sparcs-students/web/features/organization-manage/components/NameSearchModalContent";
-import NameSearchResults from "@sparcs-students/web/features/organization-manage/components/NameSearchResults";
+import NameSearchResults, {
+  OrganizationMemberProps,
+} from "@sparcs-students/web/features/organization-manage/components/NameSearchResults";
 import { overlay } from "overlay-kit";
 import { mockSearchMemberData } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
 import DeleteModalContent from "@sparcs-students/web/features/organization-manage/components/DeleteModalContent";
@@ -88,24 +85,12 @@ const TitleWrapper = styled.div`
 `;
 
 type RoleType = "member" | "committee";
-export type RoleEnumType =
-  | MemberRoleEnum
-  | CommitteeRoleEnum
-  | DepartmentRoleEnum;
+type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
 type RoleCellInfo = {
   label: string;
   value: RoleEnumType;
   color: LightTagColor | DarkTagColor;
 };
-
-export interface OrganizationMemberProps {
-  id: number;
-  studentId: string;
-  name: string;
-  role: RoleEnumType; // TODO: change to real enum
-  startDate?: string;
-  endDate?: string;
-}
 
 export interface ManageMemberTableProps {
   formMethods: ReturnType<typeof useForm<MemberFormValues>>;

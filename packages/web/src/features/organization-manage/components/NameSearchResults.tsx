@@ -9,11 +9,11 @@ import Icon from "@sparcs-students/web/common/components/Icon";
 
 type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
 
-interface OrganizationMemberProps {
+export interface OrganizationMemberProps {
   id: number;
   studentId: string;
   name: string;
-  role: RoleEnumType; // TODO: change to real enum
+  role: RoleEnumType;
   startDate: string;
   endDate: string;
 }
