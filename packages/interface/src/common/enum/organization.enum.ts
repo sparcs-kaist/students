@@ -23,6 +23,23 @@ export enum OrganizationStateEnum {
   Emergency, // 비대위
 }
 
+export enum OrganizationRoleTypeEnum {
+  Chief = 1, // 대표자
+  Vice, // 부대표자
+  BudgetManager, // 예결산편집자
+  Member, // 부원
+  Commissioner, // 위원
+  Director, // 부서장
+  Chair, // 위원장
+}
+
+export enum OrganizationRegisterStatusEnum {
+  Progress = 1, // 임기 진행 중
+  Rejected, // 등록 거절
+  Pending, // 등록 대기 중
+  Completed, // 임기 종료
+}
+
 export enum MemberRoleEnum {
   Chief = 1,
   Vice,
@@ -89,6 +106,46 @@ export const getDisplayNameOrganizationPresidentTypeEnum = (
   }
 };
 
+export const getDisplayNameOrganizationRegisterStatusEnum = (
+  type: OrganizationRegisterStatusEnum | undefined,
+) => {
+  switch (type) {
+    case OrganizationRegisterStatusEnum.Progress:
+      return "임기 진행 중";
+    case OrganizationRegisterStatusEnum.Rejected:
+      return "등록 거절";
+    case OrganizationRegisterStatusEnum.Pending:
+      return "등록 대기 중";
+    case OrganizationRegisterStatusEnum.Completed:
+      return "임기 종료";
+    default:
+      return "";
+  }
+};
+
+export const getDisplayNameOrganizationRoleTypeEnum = (
+  type: OrganizationRoleTypeEnum | undefined,
+) => {
+  switch (type) {
+    case OrganizationRoleTypeEnum.Chief:
+      return "대표자";
+    case OrganizationRoleTypeEnum.Vice:
+      return "부대표자";
+    case OrganizationRoleTypeEnum.BudgetManager:
+      return "예결산 편집자";
+    case OrganizationRoleTypeEnum.Member:
+      return "부원";
+    case OrganizationRoleTypeEnum.Commissioner:
+      return "위원";
+    case OrganizationRoleTypeEnum.Director:
+      return "부서장";
+    case OrganizationRoleTypeEnum.Chair:
+      return "위원장";
+    default:
+      return "";
+  }
+};
+
 export enum CommitteeTypeEnum {
   Operating = 1,
   ExtendedOperating,
@@ -113,6 +170,7 @@ export const getDisplayNameCommitteeTypeEnum = (
       return "전체동아리대표자회의";
     case CommitteeTypeEnum.FreshmanCouncil:
       return "새내기학생대표자회의";
+
     default:
       return "";
   }

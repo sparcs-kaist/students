@@ -1,3 +1,5 @@
+/* eslint-disable import/no-relative-packages */
+/* eslint-disable no-restricted-imports */
 import {
   BudgetClassExpenseEnum,
   BudgetDivisionExpenseEnum,
@@ -12,6 +14,8 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  OrganizationRegisterStatusEnum,
+  OrganizationRoleTypeEnum
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {
@@ -252,6 +256,44 @@ export const getbudgetCodeTag = (code: number) => {
       return { color: "PINK", text: code };
     default:
       return { color: "GRAY", text: "-" };
+  }
+};
+
+export const getOrgainizationRoleTag = (type: OrganizationRoleTypeEnum) => {
+  switch (type) {
+    case OrganizationRoleTypeEnum.Chief:
+      return { color: "GREEN800", text: "대표자" };
+    case OrganizationRoleTypeEnum.Vice:
+      return { color: "GREEN600", text: "부대표자" };
+    case OrganizationRoleTypeEnum.BudgetManager:
+      return { color: "GREEN300", text: "예결산 편집자" };
+    case OrganizationRoleTypeEnum.Member:
+      return { color: "GREEN100", text: "부원" };
+    case OrganizationRoleTypeEnum.Commissioner:
+      return { color: "GREEN100", text: "위원" };
+    case OrganizationRoleTypeEnum.Director:
+      return { color: "GREEN600", text: "부서장" };
+    case OrganizationRoleTypeEnum.Chair:
+      return { color: "GREEN600", text: "위원장" };
+    default:
+      return { color: "GRAY", text: type };
+  }
+};
+
+export const getOrganizationRegisterStatusTag = (
+  type: OrganizationRegisterStatusEnum,
+) => {
+  switch (type) {
+    case OrganizationRegisterStatusEnum.Progress:
+      return { color: "MELON", text: "임기 진행 중" };
+    case OrganizationRegisterStatusEnum.Rejected:
+      return { color: "MAROON", text: "등록 거절" };
+    case OrganizationRegisterStatusEnum.Pending:
+      return { color: "LEMON", text: "등록 대기 중" };
+    case OrganizationRegisterStatusEnum.Completed:
+      return { color: "CYAN", text: "임기 종료" };
+    default:
+      return { color: "GRAY", text: type };
   }
 };
 
