@@ -23,12 +23,12 @@ import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
-import useOrganizationStore from "@sparcs-students/web/stores/useOrganizationStore";
+import useOrganizationStore from "@sparcs-students/web/features/organization-manage/stores/useOrganizationStore";
 import {
   createOrganizationMember,
   createTeamMember,
   createTeamLeader,
-} from "@sparcs-students/web/lib/api/organizationApi";
+} from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 import { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
 import { ApiOrg008RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
 import { ApiOrg009RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";

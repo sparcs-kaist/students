@@ -17,7 +17,7 @@ import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import styled from "styled-components";
-import { getOrganizationLookup } from "@sparcs-students/web/lib/api/organizationApi";
+import { getOrganizationLookup } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 import apiOrg011, {
   ApiOrg011RequestBody,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
