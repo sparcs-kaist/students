@@ -11,12 +11,19 @@ import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
 import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 import styled from "styled-components";
 import Select from "@sparcs-students/web/common/components/Selects/Select";
+import isPropValid from "@emotion/is-prop-valid";
 
 interface RowProps {
   tag?: string;
   content: string;
   date?: Date;
   link?: string;
+}
+
+interface WrapperProps {
+  width: number;
+  height?: string;
+  justify?: string;
 }
 
 // Example data
@@ -50,24 +57,17 @@ const allNotice = Array.from({ length: 100 }, () => [...noticeExample])
   .flat()
   .sort((a, b) => b.date!.getTime() - a.date!.getTime());
 
-const SearchBarWrapper = styled.div`
+const HorizontalWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<WrapperProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
-  width: 408px;
-  min-width: 408px;
-  max-width: 408px;
-`;
-
-const PageSizeSettingWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  width: 113px;
-  min-width: 113px;
-  max-width: 113px;
+  justify-content: ${({ justify }) => justify ?? "flex-start"};
+  min-width: ${({ width }) => width}px;
+  max-width: ${({ width }) => width}px;
+  min-height: ${({ height }) => height ?? 36}px;
+  max-height: ${({ height }) => height ?? 36}px;
 `;
 
 const SearchBar = ({
@@ -112,7 +112,7 @@ const PageSizeSetting = ({
   const [pageSize, setPageSize] = useState(10);
 
   return (
-    <PageSizeSettingWrapper>
+    <HorizontalWrapper width={113}>
       <Select
         items={PageSizeItems}
         value={pageSize.toString()}
@@ -123,7 +123,7 @@ const PageSizeSetting = ({
         }}
         textWidth="50px"
       />
-    </PageSizeSettingWrapper>
+    </HorizontalWrapper>
   );
 };
 
@@ -136,7 +136,9 @@ const SmallFrame = ({
 }) => (
   <FlexWrapper direction="column" gap={20}>
     <SearchBar handleSearch={handleSearch} />
-    <PageSizeSetting handlePageSizeChange={handlePageSizeChange} />
+    <FlexWrapper direction="row" gap={20} justify="flex-end">
+      <PageSizeSetting handlePageSizeChange={handlePageSizeChange} />
+    </FlexWrapper>
   </FlexWrapper>
 );
 
@@ -154,9 +156,9 @@ const LargeFrame = ({
     alignItems="center"
   >
     <PageSizeSetting handlePageSizeChange={handlePageSizeChange} />
-    <SearchBarWrapper>
+    <HorizontalWrapper width={408} justify="flex-end">
       <SearchBar handleSearch={handleSearch} />
-    </SearchBarWrapper>
+    </HorizontalWrapper>
   </FlexWrapper>
 );
 
