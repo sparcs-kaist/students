@@ -26,8 +26,8 @@ export enum OrganizationStateEnum {
 export enum OrganizationRoleTypeEnum {
   Chief = 1, // 대표자
   Vice, // 부대표자
-  BudgetManager, // 예결산편집자,
-  Member, // 부원,
+  BudgetManager, // 예결산편집자
+  Member, // 부원
   Commissioner, // 위원
   Director, // 부서장
   Chair, // 위원장
@@ -36,8 +36,8 @@ export enum OrganizationRoleTypeEnum {
 export enum OrganizationRegisterStatusEnum {
   Progress = 1, // 임기 진행 중
   Rejected, // 등록 거절
-  Pending, // 등록 대기 중,
-  Completed, // 임기 종료,
+  Pending, // 등록 대기 중
+  Completed, // 임기 종료
 }
 
 export enum MemberRoleEnum {
