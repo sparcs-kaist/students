@@ -178,8 +178,10 @@ const Notice = () => {
   };
 
   const handleSearch = (searchText: string) => {
-    const filtered = allNotice.filter(notice =>
-      notice.content.toLowerCase().includes(searchText.toLowerCase()),
+    const filtered = allNotice.filter(
+      notice =>
+        notice.content.toLowerCase().includes(searchText.toLowerCase()) ||
+        notice.tag?.toLowerCase().includes(searchText.toLowerCase()),
     );
     setSearchedNotice(filtered);
     setPageIndex(1);
