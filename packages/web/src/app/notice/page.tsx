@@ -11,7 +11,6 @@ import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
 import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
 import styled from "styled-components";
 import Select from "@sparcs-students/web/common/components/Selects/Select";
-// import colors from "@sparcs-students/web/styles/themes/colors";
 
 interface RowProps {
   tag?: string;
@@ -66,9 +65,9 @@ const PageSizeSettingWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  width: 151px;
-  min-width: 151px;
-  max-width: 151px;
+  width: 113px;
+  min-width: 113px;
+  max-width: 113px;
 `;
 
 const SearchBar = ({
@@ -122,6 +121,7 @@ const PageSizeSetting = ({
           setPageSize(size);
           handlePageSizeChange(size);
         }}
+        textWidth="50px"
       />
     </PageSizeSettingWrapper>
   );
