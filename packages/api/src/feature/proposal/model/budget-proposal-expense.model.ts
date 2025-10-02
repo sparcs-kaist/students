@@ -4,7 +4,6 @@ import { IBudgetProposalExpense } from "@sparcs-students/interface/api/proposal/
 export interface IBudgetProposalExpenseCreate extends IBudgetProposalExpense {
   organization: IBudgetProposalExpense["organization"];
   semester: IBudgetProposalExpense["semester"];
-  projectProposal: IBudgetProposalExpense["projectProposal"];
 }
 
 export class MBudgetProposalExpense
@@ -16,8 +15,6 @@ export class MBudgetProposalExpense
   organization: IBudgetProposalExpense["organization"];
 
   semester: IBudgetProposalExpense["semester"];
-
-  projectProposal: IBudgetProposalExpense["projectProposal"];
 
   constructor(data: IBudgetProposalExpense) {
     super();

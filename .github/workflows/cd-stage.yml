@@ -1,4 +1,4 @@
-name: AR-007 Dev Push Stage
+name: Students Dev Push Stage
 
 permissions:
   contents: read
@@ -24,9 +24,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./.docker/dockerfile/web.Dockerfile
-            image: ghcr.io/academic-relations/ar-007-students-stage-web
+            image: ghcr.io/sparcs-kaist/students-stage-web
           - dockerfile: ./.docker/dockerfile/api.Dockerfile
-            image: ghcr.io/academic-relations/ar-007-students-stage-api
+            image: ghcr.io/sparcs-kaist/students-stage-api
 
     steps:
       - name: Checkout code

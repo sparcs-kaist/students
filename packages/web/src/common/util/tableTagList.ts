@@ -11,11 +11,11 @@ import {
   StatusDetail,
 } from "@sparcs-students/web/utils/getTagDetail";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
-
 import {
   MemberRoleEnum,
+  CommitteeRoleEnum,
   OrganizationRegisterStatusEnum,
-  OrganizationRoleTypeEnum,
+  OrganizationRoleTypeEnum
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {
@@ -330,4 +330,17 @@ export const getMemberTag = (role: number) => {
     default: // 부원
       return { color: "GREEN100", text: "부원" };
   }
+};
+
+export const committeeRoleTagList: {
+  [key in CommitteeRoleEnum]: StatusDetail;
+} = {
+  [CommitteeRoleEnum.Chief]: {
+    text: "위원장",
+    color: "GREEN600",
+  },
+  [CommitteeRoleEnum.Member]: {
+    text: "위원",
+    color: "GREEN100",
+  },
 };

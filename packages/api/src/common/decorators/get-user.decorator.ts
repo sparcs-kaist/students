@@ -17,6 +17,7 @@ export interface StudentProfile {
   type: string;
   studentId: number;
   studentNumber: number;
+  departmentId: number;
 }
 export const GetUser = createParamDecorator((data, ctx: ExecutionContext) =>
   (({ id, sid, name, email }) => ({
@@ -28,7 +29,7 @@ export const GetUser = createParamDecorator((data, ctx: ExecutionContext) =>
 );
 
 export const GetStudent = createParamDecorator((data, ctx: ExecutionContext) =>
-  (({ id, sid, name, email, type, studentId, studentNumber }) => ({
+  (({
     id,
     sid,
     name,
@@ -36,5 +37,15 @@ export const GetStudent = createParamDecorator((data, ctx: ExecutionContext) =>
     type,
     studentId,
     studentNumber,
+    departmentId,
+  }) => ({
+    id,
+    sid,
+    name,
+    email,
+    type,
+    studentId,
+    studentNumber,
+    departmentId,
   }))(ctx.switchToHttp().getRequest().user),
 );

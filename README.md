@@ -1,4 +1,4 @@
-# [ Academic Relations #007 ] SPARCS Students
+# SPARCS Students
 
 ## How to run (as of 24.09.23)
 

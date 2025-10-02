@@ -5,7 +5,8 @@ export interface IOperationProposalRevisionCreate {
   operationProposal: IOperationProposalRevision["operationProposal"];
   organizationDiagramFile: IOperationProposalRevision["organizationDiagramFile"];
   note: IOperationProposalRevision["note"];
-  documentStatusEnum: IOperationProposalRevision["documentStatusEnum"];
+  operatingCommitteeOperation: IOperationProposalRevision["operatingCommitteeOperation"];
+  teamOperation: IOperationProposalRevision["teamOperation"];
 }
 
 export class MOperationProposalRevision
@@ -19,6 +20,10 @@ export class MOperationProposalRevision
   organizationDiagramFile: IOperationProposalRevision["organizationDiagramFile"];
 
   note: IOperationProposalRevision["note"];
+
+  operatingCommitteeOperation: IOperationProposalRevision["operatingCommitteeOperation"];
+
+  teamOperation: IOperationProposalRevision["teamOperation"];
 
   constructor(data: IOperationProposalRevision) {
     super();

@@ -12,6 +12,7 @@ import { DrizzleModule } from "./drizzle/drizzle.module";
 import { OrganizationModule } from "./feature/organization/organization.module";
 import { SemesterModule } from "./feature/semester/semester.module";
 import FileModule from "./feature/file/file.module";
+import { ProposalModule } from "./feature/proposal/proposal.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import FileModule from "./feature/file/file.module";
     AuthModule,
     SemesterModule,
     FileModule,
+    ProposalModule,
   ],
   controllers: [AppController],
   providers: [

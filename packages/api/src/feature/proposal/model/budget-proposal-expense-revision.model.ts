@@ -12,11 +12,13 @@ export interface IBudgetProposalExpenseRevisionCreate {
 
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
 
+  name: IBudgetProposalExpenseRevision["name"];
+
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
 
-  documentStatusEnum: IBudgetProposalExpenseRevision["documentStatusEnum"];
+  code: IBudgetProposalExpenseRevision["code"];
 }
 
 export class MBudgetProposalExpenseRevision
@@ -35,9 +37,13 @@ export class MBudgetProposalExpenseRevision
 
   budgetClassExpenseEnum: IBudgetProposalExpenseRevision["budgetClassExpenseEnum"];
 
+  name: IBudgetProposalExpenseRevision["name"];
+
   amount: IBudgetProposalExpenseRevision["amount"];
 
   detail: IBudgetProposalExpenseRevision["detail"];
+
+  code: IBudgetProposalExpenseRevision["code"];
 
   constructor(data: IBudgetProposalExpenseRevision) {
     super();

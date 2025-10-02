@@ -17,9 +17,9 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetProposalExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectProposalId: number;
+  budgetProposalExpenseId: number;
+  previousBudgetReportExpenseId: number;
+  code: number;
 };
 
 type BudgetProposalExpenseRevisionOrderByKeys = "id";
@@ -70,13 +70,13 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionExpenseEnum: result.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
+      name: result.name,
       amount: result.amount,
       detail: result.detail,
-      documentStatusEnum: result.documentStatusEnum,
+      code: result.code,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
-      isRemoved: result.isRemoved,
     });
   }
 
@@ -90,13 +90,13 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
+      name: model.name,
       amount: model.amount,
       detail: model.detail,
-      documentStatusEnum: model.documentStatusEnum,
+      code: model.code,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
-      isRemoved: model.isRemoved,
     };
   }
 
@@ -109,9 +109,10 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
+      name: model.name,
       amount: model.amount,
       detail: model.detail,
-      documentStatusEnum: model.documentStatusEnum,
+      code: model.code,
     };
   }
 
@@ -123,9 +124,9 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       TableWithID | null
     > = {
       id: BudgetProposalExpenseRevision,
-      organizationId: BudgetProposalExpenseRevision,
-      semesterId: BudgetProposalExpenseRevision,
-      projectProposalId: BudgetProposalExpenseRevision,
+      budgetProposalExpenseId: BudgetProposalExpenseRevision,
+      previousBudgetReportExpenseId: BudgetProposalExpenseRevision,
+      code: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

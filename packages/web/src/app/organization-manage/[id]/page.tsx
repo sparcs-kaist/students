@@ -7,7 +7,10 @@ import ManageMemberTable, {
   OrganizationMemberProps,
 } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
 import { useForm } from "react-hook-form";
-import { mockOrganizationMemberData } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
+import {
+  mockOrganizationMemberData,
+  mockCommitteeMemberData,
+} from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
 
 const OrganizationManage = () => {
   // TODO: remove esline disable (임시라서 넣어놓음)
@@ -17,18 +20,30 @@ const OrganizationManage = () => {
     createdRows: OrganizationMemberProps[];
     deletedRows: OrganizationMemberProps[];
   }>({ updatedRows: [], createdRows: [], deletedRows: [] });
-  const formMethods = useForm<MemberFormValues>({
+  const formMemberMethods = useForm<MemberFormValues>({
     defaultValues: {
       members: mockOrganizationMemberData,
+    },
+  });
+  const formCommitteeMethods = useForm<MemberFormValues>({
+    defaultValues: {
+      members: mockCommitteeMemberData,
     },
   });
 
   return (
     <FlexWrapper direction="column" gap={10}>
       <ManageMemberTable
-        formMethods={formMethods}
+        formMethods={formMemberMethods}
         initialData={mockOrganizationMemberData}
         onDiffExtract={setDirtyMemberData}
+        roleType="member"
+      />
+      <ManageMemberTable
+        formMethods={formCommitteeMethods}
+        initialData={mockCommitteeMemberData}
+        onDiffExtract={setDirtyMemberData}
+        roleType="committee"
       />
     </FlexWrapper>
   );

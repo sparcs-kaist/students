@@ -145,3 +145,33 @@ export const getDisplayNameOrganizationRoleTypeEnum = (
       return "";
   }
 };
+
+export enum CommitteeTypeEnum {
+  Operating = 1,
+  ExtendedOperating,
+  ClubGeneral,
+  FreshmanCouncil,
+}
+
+export enum CommitteeRoleEnum {
+  Chief = 1,
+  Member,
+}
+
+export const getDisplayNameCommitteeTypeEnum = (
+  type: CommitteeTypeEnum | undefined,
+) => {
+  switch (type) {
+    case CommitteeTypeEnum.Operating:
+      return "운영위원회";
+    case CommitteeTypeEnum.ExtendedOperating:
+      return "확대운영위원회";
+    case CommitteeTypeEnum.ClubGeneral:
+      return "전체동아리대표자회의";
+    case CommitteeTypeEnum.FreshmanCouncil:
+      return "새내기학생대표자회의";
+
+    default:
+      return "";
+  }
+};

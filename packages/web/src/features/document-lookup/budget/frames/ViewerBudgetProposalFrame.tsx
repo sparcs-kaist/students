@@ -1,33 +1,31 @@
-"use client";
-
 import React from "react";
-import { useParams } from "next/navigation";
-
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-
+import TotalTable from "@sparcs-students/web/features/document-lookup/budget/components/TotalTable";
 import ViewerIncomeTable from "@sparcs-students/web/features/document-lookup/budget/components/ViewerIncomeTable";
 import ViewerExpenditureTable from "@sparcs-students/web/features/document-lookup/budget/components/ViewerExpenditureTable";
-import TotalTable from "@sparcs-students/web/features/document-lookup/budget/components/TotalTable";
 
-import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
+// 실제 mock 데이터 import
 import {
-  mockDBExpenditureData,
   mockDBIncomeData,
+  mockDBExpenditureData,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
 
-const ViewerBudgetProposalFrame = () => {
-  const { id } = useParams();
+import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
 
-  return (
-    <FlexWrapper direction="column" gap={60} style={{ padding: "20 0px" }}>
-      <ViewerIncomeTable data={mockDBIncomeData} />
-      <ViewerExpenditureTable
-        data={mockDBExpenditureData}
-        type="proposal"
-        pageId={id}
-      />
-      <TotalTable data={dataToTotal(mockDBIncomeData, mockDBExpenditureData)} />
-    </FlexWrapper>
-  );
-};
+const ViewerBudgetProposalFrame = () => (
+  <FlexWrapper direction="column" gap={48}>
+    {/* 수입 테이블 */}
+    <ViewerIncomeTable data={mockDBIncomeData} />
+
+    {/* 지출 테이블 */}
+    <ViewerExpenditureTable
+      data={mockDBExpenditureData}
+      type="proposal"
+      pageId="1"
+    />
+    {/* 통합 테이블 */}
+    <TotalTable data={dataToTotal(mockDBIncomeData, mockDBExpenditureData)} />
+  </FlexWrapper>
+);
+
 export default ViewerBudgetProposalFrame;

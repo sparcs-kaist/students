@@ -2,7 +2,7 @@
 
 import Banner from "@sparcs-students/web/common/components/Banner/Banner";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import Calendar from "@sparcs-students/web/common/components/Calendar/Calendar";
+import Calendar from "@sparcs-students/web/common/components/Calendar";
 import SingleColumnTable from "@sparcs-students/web/common/components/Table/SingleColumnTable";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import colors from "@sparcs-students/web/styles/themes/colors";
@@ -175,33 +175,29 @@ const MainPageFrame: React.FC = () => {
   }, []);
 
   const notice: RowProps[] = [
-    { tag: "공지", content: "링크 없음", date: new Date("2025-01-01") },
     {
-      tag: "공지",
-      content: "링크 있음",
-      date: new Date("2025-01-22"),
-      link: "/detailpage1",
+      tag: "총학",
+      content: "2025년 가을학기 예결산안 매뉴얼",
+      date: new Date("2025-08-20"),
+      link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
     },
-    { tag: "공지", content: "링크 없음", date: new Date("2025-01-01") },
     {
-      tag: "공지",
-      content: "링크 있음",
-      date: new Date("2025-01-22"),
-      link: "/detailpage1",
+      tag: "총학",
+      content: "2025년 가을학기 예결산안 양식",
+      date: new Date("2025-08-18"),
+      link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
     },
-    { tag: "공지", content: "링크 없음", date: new Date("2025-01-01") },
     {
-      tag: "공지",
-      content: "링크 있음",
-      date: new Date("2025-01-22"),
-      link: "/detailpage1",
+      tag: "감사원",
+      content: "2025년 가을학기 예결산 제출 파일 양식",
+      date: new Date("2025-08-18"),
+      link: "https://linktr.ee/kaistbai",
     },
-    { tag: "공지", content: "링크 없음", date: new Date("2025-01-01") },
     {
-      tag: "공지",
-      content: "링크 있음",
-      date: new Date("2025-01-22"),
-      link: "/detailpage1",
+      tag: "감사원",
+      content: "2025년 가을학기 감사 매뉴얼",
+      date: new Date("2025-08-10"),
+      link: "https://linktr.ee/kaistbai",
     },
   ];
 
