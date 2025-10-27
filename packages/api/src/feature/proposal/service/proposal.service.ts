@@ -1,4 +1,9 @@
-import { Injectable, ConflictException } from "@nestjs/common";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from "@nestjs/common";
 import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "@sparcs-students/api/feature/report/repository/budget-report-expense.repository";
 import { OrganizationManagerRepository } from "@sparcs-students/api/feature/organization/repository/organization.manager.repository";
@@ -38,6 +43,10 @@ export class ProposalService {
     }
   }
 
+  async getBudgetProposal(query) {
+    return { query };
+  }
+
   async createBudgetProposalIncome(student, body) {
     // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
@@ -49,7 +58,7 @@ export class ProposalService {
       semesterId: body.semester.id,
     });
     if (existing.length > 0) {
-      throw new ConflictException("Already exists this semester.");
+      throw new NotFoundException("Already exists this semester.");
     }
 
     // 생성
@@ -63,27 +72,20 @@ export class ProposalService {
   async createBudgetProposalIncomeRevision(student, body) {
     // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
-    await this.checkManager(studentId, body.organization.id);
-
-    // 지난 학기 report 확인
     const [budgetIncome] = await this.budgetProposalIncomeRepository.find({
       id: body.budgetProposalIncome.id,
     });
     if (!budgetIncome) {
-      throw new ConflictException("BudgetProposalIncome does not exist.");
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
     }
+    await this.checkManager(studentId, budgetIncome.organization.id);
+
     const orgId = budgetIncome.organization.id;
     const prevSemesterId = budgetIncome.semester.id - 1;
 
     const [prevReport] = await this.budgetReportIncomeRepository.find({
       organizationId: orgId as unknown,
       semesterId: prevSemesterId as unknown,
-    });
-
-    // 동일 code의 revision을 soft delete
-    await this.budgetProposalIncomeRevisionRepository.delete({
-      budgetProposalIncomeId: body.budgetProposalIncome.id,
-      code: body.code,
     });
 
     const budgetProposalIncomeRevisionCreateDto = {
@@ -101,6 +103,104 @@ export class ProposalService {
     return {
       budgetProposalIncomeRevision: newBudgetProposalIncomeRevision,
     };
+  }
+
+  async updateBudgetProposalIncomeRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetProposalIncome] =
+      await this.budgetProposalIncomeRepository.find({
+        id: body.budgetProposalIncome.id,
+      });
+    if (!budgetProposalIncome) {
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
+    }
+    await this.checkManager(studentId, budgetProposalIncome.organization.id);
+
+    const [target] = await this.budgetProposalIncomeRevisionRepository.find({
+      id: body.budgetProposalIncomeRevision.id,
+    });
+    if (!target) {
+      throw new NotFoundException("No Budget Proposal Income Exists");
+    }
+
+    // revision이 제출 상태라면 새 revision 생성. 이외에는 수정.
+    const newBudgetProposalIncome = await (target.submittedAt !== null
+      ? this.budgetProposalIncomeRevisionRepository.create(
+          body.budgetProposalIncomeRevision,
+        )
+      : this.budgetProposalIncomeRevisionRepository.patch(
+          { id: body.budgetProposalIncomeRevision.id },
+          body.budgetProposalIncomeRevision,
+        ));
+
+    return { budgetProposalIncomeRevision: newBudgetProposalIncome };
+  }
+
+  async submitBudgetProposalIncomeRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetProposalIncome] =
+      await this.budgetProposalIncomeRepository.find({
+        id: body.budgetProposalIncome.id,
+      });
+    if (!budgetProposalIncome) {
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
+    }
+    await this.checkManager(studentId, budgetProposalIncome.organization.id);
+
+    // revision 존재 확인 및 제출 여부 확인
+    const existing = await this.budgetProposalIncomeRevisionRepository.find({
+      id: body.id,
+    });
+    if (existing.length === 0) {
+      throw new NotFoundException("No Budget Proposal Income Exists");
+    }
+    if (existing[0].submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
+    }
+
+    // 제출
+    const newBudgetProposalIncome =
+      await this.budgetProposalIncomeRevisionRepository.patch(
+        { id: body.budgetProposalIncomeRevision.id },
+        revision => {
+          const temp = revision;
+          temp.submittedAt = new Date();
+          return temp;
+        },
+      );
+    return { budgetProposalIncomeRevision: newBudgetProposalIncome };
+  }
+
+  async deleteBudgetProposalIncome(student, query) {
+    const [existing] = await this.budgetProposalIncomeRepository.find({
+      organizationId: query.organization,
+      semesterId: query.semester,
+    });
+    if (!existing) {
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
+    }
+
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetProposalIncome] =
+      await this.budgetProposalIncomeRepository.find({
+        id: existing.id,
+      } as any);
+    if (!budgetProposalIncome) {
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
+    }
+    await this.checkManager(studentId, budgetProposalIncome.organization.id);
+
+    // 삭제
+    await this.budgetProposalIncomeRepository.delete({
+      id: existing.id,
+    } as any);
+    await this.budgetProposalIncomeRevisionRepository.delete({
+      budgetProposalIncomeId: existing.id,
+    } as any);
+    return {};
   }
 
   async createBudgetProposalExpense(student, body) {
@@ -128,27 +228,20 @@ export class ProposalService {
   async createBudgetProposalExpenseRevision(student, body) {
     // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
-    await this.checkManager(studentId, body.organization.id);
-
-    // 지난 학기 report 확인
     const [budgetExpense] = await this.budgetProposalExpenseRepository.find({
       id: body.budgetProposalExpense.id,
     });
     if (!budgetExpense) {
-      throw new ConflictException("BudgetProposalExpense does not exist.");
+      throw new NotFoundException("BudgetProposalIncome does not exist.");
     }
+    await this.checkManager(studentId, budgetExpense.organization.id);
+
     const orgId = budgetExpense.organization.id;
     const prevSemesterId = budgetExpense.semester.id - 1;
 
     const [prevReport] = await this.budgetReportExpenseRepository.find({
       organizationId: orgId as unknown,
       semesterId: prevSemesterId as unknown,
-    });
-
-    // 동일 code의 revision을 soft delete
-    await this.budgetProposalExpenseRevisionRepository.delete({
-      budgetProposalExpenseId: body.budgetProposalExpense.id,
-      code: body.code,
     });
 
     const budgetProposalExpenseRevisionCreateDto = {
@@ -168,51 +261,106 @@ export class ProposalService {
     };
   }
 
-  async readBudgetProposalIncomeRevision(param) {
-    const revisions = await this.budgetProposalIncomeRevisionRepository.find({
-      budgetProposalIncomeId: param.budgetProposalIncomeId,
+  async updateBudgetProposalExpenseRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetExpense] = await this.budgetProposalExpenseRepository.find({
+      id: body.budgetProposalExpense.id,
     });
+    if (!budgetExpense) {
+      throw new NotFoundException("BudgetProposalExpense does not exist.");
+    }
+    await this.checkManager(studentId, budgetExpense.organization.id);
 
-    return { budgetProposalIncomeRevisions: revisions };
-  }
-
-  async readBudgetProposalExpenseRevision(param) {
-    const revisions = await this.budgetProposalExpenseRevisionRepository.find({
-      budgetProposalExpenseId: param.budgetProposalExpenseId,
+    const [target] = await this.budgetProposalExpenseRevisionRepository.find({
+      id: body.budgetProposalExpenseRevision.id,
     });
-
-    return { budgetProposalExpenseRevisions: revisions };
-  }
-
-  async deleteBudgetProposalIncomeRevision(param) {
-    const existing = await this.budgetProposalIncomeRevisionRepository.find({
-      id: param.budgetProposalIncomeRevisionId,
-    });
-    if (!existing.length) {
-      throw new ConflictException(
-        "BudgetProposalIncomeRevision does not exist.",
-      );
+    if (!target) {
+      throw new NotFoundException("No Budget Proposal Expense Exists");
     }
 
-    await this.budgetProposalIncomeRevisionRepository.delete({
-      id: param.budgetProposalIncomeRevisionId,
-    });
+    // revision이 제출 상태라면 새 revision 생성. 이외에는 수정.
+    const newBudgetProposalExpense = await (target.submittedAt !== null
+      ? this.budgetProposalExpenseRevisionRepository.create(
+          body.budgetProposalExpenseRevision,
+        )
+      : this.budgetProposalExpenseRevisionRepository.patch(
+          { id: body.budgetProposalExpenseRevision.id },
+          body.budgetProposalExpenseRevision,
+        ));
+
+    return {
+      budgetProposalExpenseRevision: newBudgetProposalExpense,
+    };
   }
 
-  async deleteBudgetProposalExpenseRevision(param) {
+  async submitBudgetProposalExpenseRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetProposalExpense] =
+      await this.budgetProposalExpenseRepository.find({
+        id: body.budgetProposalExpense.id,
+      });
+    if (!budgetProposalExpense) {
+      throw new NotFoundException("BudgetProposalExpense does not exist.");
+    }
+    await this.checkManager(studentId, budgetProposalExpense.organization.id);
+
+    // revision 존재 확인 및 제출 여부 확인
     const existing = await this.budgetProposalExpenseRevisionRepository.find({
-      id: param.budgetProposalExpenseRevisionId,
+      id: body.id,
     });
-    if (!existing.length) {
-      throw new ConflictException(
-        "BudgetProposalExpenseRevision does not exist.",
-      );
+    if (existing.length === 0) {
+      throw new NotFoundException("No Budget Proposal Expense Exists");
+    }
+    if (existing[0].submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
     }
 
-    await this.budgetProposalExpenseRevisionRepository.delete({
-      id: param.budgetProposalExpenseRevisionId,
-    });
+    // 제출
+    const newBudgetProposalExpense =
+      await this.budgetProposalExpenseRevisionRepository.patch(
+        { id: body.budgetProposalExpenseRevision.id },
+        revision => {
+          const temp = revision;
+          temp.submittedAt = new Date();
+          return temp;
+        },
+      );
+    return { budgetProposalExpenseRevision: newBudgetProposalExpense };
   }
+
+  async deleteBudgetProposalExpense(student, query) {
+    const [existing] = await this.budgetProposalExpenseRepository.find({
+      organizationId: query.organization,
+      semesterId: query.semester,
+    });
+    if (!existing) {
+      throw new NotFoundException("BudgetProposalExpense does not exist.");
+    }
+
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [budgetProposalExpense] =
+      await this.budgetProposalExpenseRepository.find({
+        id: existing.id,
+      } as any);
+    if (!budgetProposalExpense) {
+      throw new NotFoundException("BudgetProposalExpense does not exist.");
+    }
+    await this.checkManager(studentId, budgetProposalExpense.organization.id);
+
+    // 삭제
+    await this.budgetProposalExpenseRepository.delete({
+      id: existing.id,
+    } as any);
+    await this.budgetProposalExpenseRevisionRepository.delete({
+      budgetProposalExpenseId: existing.id,
+    } as any);
+    return {};
+  }
+
+  // 하단은 staff 서비스
 
   async createBudgetProposalIncomeDocumentReview(student, body) {
     const existing = await this.budgetProposalIncomeRevisionRepository.find({

@@ -12,8 +12,6 @@ import {
   zMoney,
 } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
-// eslint-disable-next-line import/no-cycle
-import { zBudgetReportIncome } from "@sparcs-students/interface/api/report/type/budget-report-income.type";
 
 // BudgetProposalIncome: 예산안 수입 각 행 엔티티
 export const zBudgetProposalIncome = z.object({
@@ -34,7 +32,6 @@ export type IBudgetProposalIncomeRequestCreate = z.infer<
 export const zBudgetProposalIncomeRevision = z
   .object({
     id: zId,
-    previousBudgetReportIncome: zExtractId(zBudgetReportIncome),
     budgetProposalIncome: zExtractId(zBudgetProposalIncome),
     budgetDomainEnum: z.nativeEnum(BudgetDomainEnum),
     budgetDivisionIncomeEnum: z.nativeEnum(BudgetDivisionIncomeEnum),
@@ -48,12 +45,27 @@ export const zBudgetProposalIncomeRevision = z
 export const zBudgetProposalIncomeRevisionRequestCreate =
   zBudgetProposalIncomeRevision.omit({
     id: true,
-    previousBudgetReportIncome: true,
   });
+
+export const zBudgetProposalIncomeRequestUpdate = zBudgetProposalIncomeRevision;
+
+export const zBudgetProposalIncomeResponse = zBudgetProposalIncomeRevision.pick(
+  {
+    id: true,
+  },
+);
 
 export type IBudgetProposalIncomeRevision = z.infer<
   typeof zBudgetProposalIncomeRevision
 >;
 export type IBudgetProposalIncomeRevisionRequestCreate = z.infer<
   typeof zBudgetProposalIncomeRevisionRequestCreate
+>;
+
+export type IBudgetProposalIncomeRequestUpdate = z.infer<
+  typeof zBudgetProposalIncomeRequestUpdate
+>;
+
+export type IBudgetProposalIncomeResponse = z.infer<
+  typeof zBudgetProposalIncomeResponse
 >;
