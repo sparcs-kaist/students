@@ -8,6 +8,7 @@ import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/repor
 import { BudgetReportExpenseRepository } from "@sparcs-students/api/feature/report/repository/budget-report-expense.repository";
 import { OrganizationManagerRepository } from "@sparcs-students/api/feature/organization/repository/organization.manager.repository";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
+import { OrderByTypeEnum } from "@sparcs-students/api/common/enums";
 import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 import { BudgetProposalIncomeRevisionRepository } from "../repository/budget-proposal-income-revision.repository";
 import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-expense.repository";
@@ -41,10 +42,6 @@ export class ProposalService {
         message: "Not a manager of this organization",
       });
     }
-  }
-
-  async getBudgetProposal(query) {
-    return { query };
   }
 
   async createBudgetProposalIncome(student, body) {
@@ -358,6 +355,48 @@ export class ProposalService {
       budgetProposalExpenseId: existing.id,
     } as any);
     return {};
+  }
+
+  async getRecentBudgetProposalIncome(query) {
+    const [budgetProposalIncome] =
+      await this.budgetProposalIncomeRepository.find({
+        organizationId: query.organization.id,
+        semesterId: query.semester.id,
+      });
+
+    const butgetProposalIncomeRevision =
+      await this.budgetProposalIncomeRevisionRepository.find({
+        budgetProposalIncomeId: budgetProposalIncome.id,
+        orderBy: {
+          createdAt: OrderByTypeEnum.DESC,
+        },
+        pagination: { offset: 0, itemCount: 1 },
+      } as any);
+
+    return {
+      budgetProposalIncomeRevision: butgetProposalIncomeRevision,
+    };
+  }
+
+  async getRecentBudgetProposalExpense(query) {
+    const [budgetProposalExpense] =
+      await this.budgetProposalExpenseRepository.find({
+        organizationId: query.organization.id,
+        semesterId: query.semester.id,
+      });
+
+    const butgetProposalExpenseRevision =
+      await this.budgetProposalExpenseRevisionRepository.find({
+        budgetProposalExpenseId: budgetProposalExpense.id,
+        orderBy: {
+          createdAt: OrderByTypeEnum.DESC,
+        },
+        pagination: { offset: 0, itemCount: 1 },
+      } as any);
+
+    return {
+      budgetProposalExpenseRevision: butgetProposalExpenseRevision,
+    };
   }
 
   // 하단은 staff 서비스
