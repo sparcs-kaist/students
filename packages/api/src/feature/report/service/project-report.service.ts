@@ -35,7 +35,7 @@ export class ProjectReportService {
     private readonly projectReportTimelineRepository: ProjectReportTimelineRepository,
     private readonly projectReportRepository: ProjectReportRepository,
     private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
-    private readonly budgetReportExpenseReivisionRepository: BudgetReportExpenseRevisionRepository,
+    private readonly budgetReportExpenseRevisionRepository: BudgetReportExpenseRevisionRepository,
     private readonly budgetProposalExpenseRepositoryRevision: BudgetProposalExpenseRevisionRepository,
   ) {}
 
@@ -99,7 +99,7 @@ export class ProjectReportService {
               budgetReport => budgetReport.id,
             );
             const budgetReportRevisions =
-              await this.budgetReportExpenseReivisionRepository.find({
+              await this.budgetReportExpenseRevisionRepository.find({
                 budgetReportExpenseId: budgetReportIds,
               } as any);
             const budgetReportInfoMap = new Map();
@@ -224,7 +224,7 @@ export class ProjectReportService {
         id: body.projectReportRevision.id,
       } as any);
     if (projectReportRevisions.length === 0) {
-      throw new NotFoundException("No Projcet Report Exists");
+      throw new NotFoundException("No Project Report Exists");
     }
     const newProjectReportRevision =
       await this.projectReportRevisionRepository.patch(

@@ -22,7 +22,7 @@ export class ProjectReportPublicService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly organizationManagerRepository: OrganizationManagerRepository,
     private readonly projectReportRevisionRepository: ProjectReportRevisionRepository,
-    private readonly budgetReportExpenseReivisionRepository: BudgetReportExpenseRevisionRepository,
+    private readonly budgetReportExpenseRevisionRepository: BudgetReportExpenseRevisionRepository,
     private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
     private readonly budgetProposalExpenseRepositoryRevision: BudgetProposalExpenseRevisionRepository,
     // private readonly semesterPublicService: SemesterPublicService,
@@ -147,7 +147,7 @@ export class ProjectReportPublicService {
               budgetReport => budgetReport.id,
             );
             const budgetReportRevisions =
-              await this.budgetReportExpenseReivisionRepository.find({
+              await this.budgetReportExpenseRevisionRepository.find({
                 budgetReportExpenseId: budgetReportIds,
               } as any);
             const budgetReportInfoMap = new Map();

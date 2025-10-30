@@ -32,9 +32,9 @@ import { BudgetReportIncomeRevisionRepository } from "../repository/budget-repor
 export class BudgetReportService {
   constructor(
     private readonly budgetReportExpenseRepository: BudgetReportExpenseRepository,
-    private readonly budgetReportExpenseReivisionRepository: BudgetReportExpenseRevisionRepository,
+    private readonly budgetReportExpenseRevisionRepository: BudgetReportExpenseRevisionRepository,
     private readonly budgetReportIncomeRepository: BudgetReportIncomeRepository,
-    private readonly budgetReportIncomeReivisionRepository: BudgetReportIncomeRevisionRepository,
+    private readonly budgetReportIncomeRevisionRepository: BudgetReportIncomeRevisionRepository,
   ) {}
 
   async createBudgetReportIncome(
@@ -50,7 +50,7 @@ export class BudgetReportService {
     body: ApiRpt016RequestBody,
   ): Promise<ApiRpt016ResponseCreated> {
     const budgetReportIncomeRevision =
-      await this.budgetReportIncomeReivisionRepository.create(
+      await this.budgetReportIncomeRevisionRepository.create(
         body.budgetReportIncomeRevision as any,
       );
     return {
@@ -61,14 +61,14 @@ export class BudgetReportService {
   async updateBudgetReportIncomeRevision(
     body: ApiRpt017RequestBody,
   ): Promise<ApiRpt017ResponseOk> {
-    const target = await this.budgetReportIncomeReivisionRepository.find({
+    const target = await this.budgetReportIncomeRevisionRepository.find({
       id: body.budgetReportIncomeRevision.id,
     } as any);
     if (target.length === 0) {
       throw new NotFoundException("No Budget Report Income Exists");
     }
     const newBudgetReportIncome =
-      await this.budgetReportIncomeReivisionRepository.put(
+      await this.budgetReportIncomeRevisionRepository.put(
         body.budgetReportIncomeRevision as any,
       );
     return { budgetReportIncomeRevision: { id: newBudgetReportIncome.id } };
@@ -77,7 +77,7 @@ export class BudgetReportService {
   async updateSubmitBudgetReportIncomeRevision(
     body: ApiRpt018RequestBody,
   ): Promise<ApiRpt018ResponseOk> {
-    const existing = await this.budgetReportIncomeReivisionRepository.find({
+    const existing = await this.budgetReportIncomeRevisionRepository.find({
       id: body.budgetReportIncomeRevision.id,
     } as any);
     if (existing.length === 0) {
@@ -87,7 +87,7 @@ export class BudgetReportService {
       throw new NotFoundException("Already Submitted");
     }
     const newBudgetReportIncome =
-      await this.budgetReportIncomeReivisionRepository.patch(
+      await this.budgetReportIncomeRevisionRepository.patch(
         { id: body.budgetReportIncomeRevision.id } as any,
         revision => {
           const temp = revision;
@@ -101,7 +101,7 @@ export class BudgetReportService {
   async deleteBudgetReportIncome(
     body: ApiRpt019RequestBody,
   ): Promise<ApiRpt019ResponseNoContent> {
-    const existing = await this.budgetReportIncomeReivisionRepository.find({
+    const existing = await this.budgetReportIncomeRevisionRepository.find({
       budgetReportIncomeId: body.budgetReportIncome.id,
     } as any);
     if (existing.length === 0) {
@@ -110,7 +110,7 @@ export class BudgetReportService {
     await this.budgetReportIncomeRepository.delete({
       id: body.budgetReportIncome.id,
     } as any);
-    await this.budgetReportIncomeReivisionRepository.delete({
+    await this.budgetReportIncomeRevisionRepository.delete({
       budgetReportIncomeId: body.budgetReportIncome.id,
     } as any);
     return {};
@@ -129,7 +129,7 @@ export class BudgetReportService {
     body: ApiRpt021RequestBody,
   ): Promise<ApiRpt021ResponseCreated> {
     const budgetReportExpenseRevision =
-      await this.budgetReportExpenseReivisionRepository.create(
+      await this.budgetReportExpenseRevisionRepository.create(
         body.budgetReportExpenseRevision as any,
       );
     return {
@@ -140,14 +140,14 @@ export class BudgetReportService {
   async updateBudgetReportExpenseRevision(
     body: ApiRpt022RequestBody,
   ): Promise<ApiRpt022ResponseOk> {
-    const target = await this.budgetReportExpenseReivisionRepository.find({
+    const target = await this.budgetReportExpenseRevisionRepository.find({
       id: body.budgetReportExpenseRevision.id,
     } as any);
     if (target.length === 0) {
       throw new NotFoundException("No Budget Report Expense Exists");
     }
     const newBudgetReportExpense =
-      await this.budgetReportExpenseReivisionRepository.put(
+      await this.budgetReportExpenseRevisionRepository.put(
         body.budgetReportExpenseRevision as any,
       );
     return { budgetReportExpenseRevision: { id: newBudgetReportExpense.id } };
@@ -156,7 +156,7 @@ export class BudgetReportService {
   async submitBudgetReportExpenseRevision(
     body: ApiRpt023RequestBody,
   ): Promise<ApiRpt023ResponseOk> {
-    const existing = await this.budgetReportExpenseReivisionRepository.find({
+    const existing = await this.budgetReportExpenseRevisionRepository.find({
       id: body.budgetReportExpenseRevision.id,
     } as any);
     if (existing.length === 0) {
@@ -166,7 +166,7 @@ export class BudgetReportService {
       throw new NotFoundException("Already Submitted");
     }
     const newBudgetReportExpense =
-      await this.budgetReportExpenseReivisionRepository.patch(
+      await this.budgetReportExpenseRevisionRepository.patch(
         { id: body.budgetReportExpenseRevision.id } as any,
         revision => {
           const temp = revision;
@@ -182,7 +182,7 @@ export class BudgetReportService {
   async deleteBudgetReportExpense(
     body: ApiRpt024RequestBody,
   ): Promise<ApiRpt024ResponseNoContent> {
-    const existing = await this.budgetReportExpenseReivisionRepository.find({
+    const existing = await this.budgetReportExpenseRevisionRepository.find({
       budgetReportExpenseId: body.budgetReportExpense.id,
     } as any);
     if (existing.length === 0) {
@@ -191,7 +191,7 @@ export class BudgetReportService {
     await this.budgetReportExpenseRepository.delete({
       id: body.budgetReportExpense.id,
     } as any);
-    await this.budgetReportExpenseReivisionRepository.delete({
+    await this.budgetReportExpenseRevisionRepository.delete({
       budgetReportExpenseId: body.budgetReportExpense.id,
     } as any);
     return {};

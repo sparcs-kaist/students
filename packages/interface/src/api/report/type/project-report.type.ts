@@ -155,7 +155,7 @@ export const zProjectReportRevisionResponse = zProjectReportRevision.pick({
 export type IProjectReportListRequestGet = z.infer<
   typeof zProjectReportListRequestGet
 >;
-export type IProjectReportListReponse = z.infer<
+export type IProjectReportListResponse = z.infer<
   typeof zProjectReportListResponse
 >;
 export type IProjectReportDetailRequestGet = z.infer<

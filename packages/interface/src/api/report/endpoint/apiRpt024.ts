@@ -8,8 +8,11 @@ import { zBudgetReportExpenseRequestDelete } from "../type/budget-report-expense
  * @description
  */
 
+// TODO: Set the correct API endpoint URL
 const url = () => ``;
+// TODO: Set the correct HTTP method (e.g., "DELETE", "POST", etc.)
 const method = "";
+// TODO: Set the correct request URL string
 export const ApiRpt024RequestUrl = "";
 
 const requestParam = z.object({});
