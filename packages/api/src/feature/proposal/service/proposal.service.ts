@@ -399,6 +399,87 @@ export class ProposalService {
     };
   }
 
+  async getBudgetProposalIncomeDateList(query) {
+    const [income] = await this.budgetProposalIncomeRepository.find({
+      organizationId: query.organization,
+      semesterId: query.semester,
+    } as any);
+
+    if (!income) return [];
+
+    const rows = await this.budgetProposalIncomeRevisionRepository.find({
+      budgetProposalIncomeId: income.id,
+      submittedAt: { isNotNull: true },
+      orderBy: { submittedAt: OrderByTypeEnum.ASC },
+    } as any);
+
+    return rows.map(r => r.submittedAt as unknown as string);
+  }
+
+  async getBudgetProposalExpenseDateList(query) {
+    const [expense] = await this.budgetProposalExpenseRepository.find({
+      organizationId: query.organization.id,
+      semesterId: query.semester.id,
+    } as any);
+
+    if (!expense) return [];
+
+    const rows = await this.budgetProposalExpenseRevisionRepository.find({
+      budgetProposalExpenseId: expense.id,
+      submittedAt: { isNotNull: true },
+      orderBy: { submittedAt: OrderByTypeEnum.ASC },
+    } as any);
+
+    return rows.map(r => r.submittedAt as unknown as string);
+  }
+
+  async getBudgetProposalIncomeRevisionsByDate(query) {
+    const start = new Date(`${query.date}T00:00:00`);
+    const end = new Date(`${query.date}T23:59:59.999`);
+
+    const Parents = await this.budgetProposalIncomeRepository.find({
+      organizationId: query.organization.id,
+    } as any);
+
+    if (!Parents.length) {
+      return { budgetProposalIncomeRevisions: [] };
+    }
+
+    const parentIds = Parents.map(p => p.id);
+    const rows = await this.budgetProposalIncomeRevisionRepository.find({
+      budgetProposalIncomeId: parentIds,
+      submittedAt: { isNotNull: true, between: [start, end] },
+      orderBy: {
+        submittedAt: OrderByTypeEnum.ASC,
+      },
+    } as any);
+
+    return { budgetProposalIncomeRevisions: rows };
+  }
+
+  async getBudgetProposalExpenseRevisionsByDate(query) {
+    const start = new Date(`${query.date}T00:00:00`);
+    const end = new Date(`${query.date}T23:59:59.999`);
+
+    const Parents = await this.budgetProposalExpenseRepository.find({
+      organizationId: query.organization.id,
+    } as any);
+
+    if (!Parents.length) {
+      return { budgetProposalExpenseRevisions: [] };
+    }
+
+    const parentIds = Parents.map(p => p.id);
+    const rows = await this.budgetProposalExpenseRevisionRepository.find({
+      budgetProposalExpenseId: parentIds,
+      submittedAt: { isNotNull: true, between: [start, end] },
+      orderBy: {
+        submittedAt: OrderByTypeEnum.ASC,
+      },
+    } as any);
+
+    return { budgetProposalExpenseRevisions: rows };
+  }
   // 하단은 staff 서비스
 
   async createBudgetProposalIncomeDocumentReview(student, body) {

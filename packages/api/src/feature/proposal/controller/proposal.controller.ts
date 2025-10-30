@@ -2,8 +2,16 @@ import { Controller, Get, Query, UsePipes } from "@nestjs/common";
 import {
   apiBudPrp012,
   apiBudPrp013,
+  apiBudPrp014,
+  apiBudPrp015,
+  apiBudPrp016,
+  apiBudPrp017,
   ApiBudPrp012RequestQuery,
   ApiBudPrp013RequestQuery,
+  ApiBudPrp014RequestQuery,
+  ApiBudPrp015RequestQuery,
+  ApiBudPrp016RequestQuery,
+  ApiBudPrp017RequestQuery,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -29,5 +37,41 @@ export class ProposalController {
     @Query() query: ApiBudPrp013RequestQuery,
   ) {
     return this.proposalService.getRecentBudgetProposalExpense(query);
+  }
+
+  // 수입 제출본 날짜 목록 조회
+  @Get("income/getDateList")
+  @UsePipes(new ZodPipe(apiBudPrp014))
+  async getBudgetProposalIncomeDateList(
+    @Query() query: ApiBudPrp014RequestQuery,
+  ) {
+    return this.proposalService.getBudgetProposalIncomeDateList(query);
+  }
+
+  // 지출 제출본 날짜 목록 조회
+  @Get("expense/getDateList")
+  @UsePipes(new ZodPipe(apiBudPrp015))
+  async getBudgetProposalExpenseDateList(
+    @Query() query: ApiBudPrp015RequestQuery,
+  ) {
+    return this.proposalService.getBudgetProposalExpenseDateList(query);
+  }
+
+  // 해당 날짜의 수입 제출본 조회
+  @Get("income/getRevisionsByDate")
+  @UsePipes(new ZodPipe(apiBudPrp016))
+  async getBudgetProposalIncomeRevisionsByDate(
+    @Query() query: ApiBudPrp016RequestQuery,
+  ) {
+    return this.proposalService.getBudgetProposalIncomeRevisionsByDate(query);
+  }
+
+  // 해당 날짜의 지출 제출본 조회
+  @Get("expense/getRevisionsByDate")
+  @UsePipes(new ZodPipe(apiBudPrp017))
+  async getBudgetProposalExpenseRevisionsByDate(
+    @Query() query: ApiBudPrp017RequestQuery,
+  ) {
+    return this.proposalService.getBudgetProposalExpenseRevisionsByDate(query);
   }
 }
