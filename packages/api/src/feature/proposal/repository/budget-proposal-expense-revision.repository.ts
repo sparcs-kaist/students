@@ -122,6 +122,7 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
       id: BudgetProposalExpenseRevision,
       budgetProposalExpenseId: BudgetProposalExpenseRevision,
       code: BudgetProposalExpenseRevision,
+      submittedAt: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

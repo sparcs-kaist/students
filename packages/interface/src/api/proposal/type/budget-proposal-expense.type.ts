@@ -50,8 +50,14 @@ export const zBudgetProposalExpenseRevisionRequestCreate =
     id: true,
   });
 
-export const zBudgetProposalExpenseRequestUpdate =
-  zBudgetProposalExpenseRevision;
+export const zBudgetProposalExpenseRequestUpdate = z.object({ id: zId }).merge(
+  zBudgetProposalExpenseRevision
+    .omit({
+      id: true,
+      budgetProposalExpense: true,
+    })
+    .partial(),
+);
 
 export const zBudgetProposalExpenseResponse =
   zBudgetProposalExpenseRevision.pick({

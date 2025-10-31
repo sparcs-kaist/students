@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
   UsePipes,
 } from "@nestjs/common";
@@ -72,7 +72,7 @@ export class ProposalManagerController {
   }
 
   // 각 매니저 권한으로 예산안 수입 revision 수정
-  @Put("income-revision/update")
+  @Patch("income-revision/update")
   @UsePipes(new ZodPipe(apiBudPrp004))
   async updateBudgetProposalIncomeRevision(
     @GetStudent() student: StudentProfile,
@@ -85,7 +85,7 @@ export class ProposalManagerController {
   }
 
   // 각 매니저 권한으로 예산안 수입 revision 제출
-  @Put("income-revision/submit")
+  @Patch("income-revision/submit")
   @UsePipes(new ZodPipe(apiBudPrp005))
   async submitBudgetProposalIncomeRevision(
     @GetStudent() student: StudentProfile,
@@ -93,7 +93,7 @@ export class ProposalManagerController {
   ) {
     return this.proposalService.submitBudgetProposalIncomeRevision(
       student,
-      body.budgetProposalIncomeRevision,
+      body,
     );
   }
 
@@ -134,7 +134,7 @@ export class ProposalManagerController {
   }
 
   // 각 매니저 권한으로 예산안 지출 revision 수정
-  @Put("expense-revision/update")
+  @Patch("expense-revision/update")
   @UsePipes(new ZodPipe(apiBudPrp009))
   async updateBudgetProposalExpenseRevision(
     @GetStudent() student: StudentProfile,
@@ -147,7 +147,7 @@ export class ProposalManagerController {
   }
 
   // 각 매니저 권한으로 예산안 지출 revision 제출
-  @Put("expense-revision/submit")
+  @Patch("expense-revision/submit")
   @UsePipes(new ZodPipe(apiBudPrp010))
   async submitBudgetProposalExpenseRevision(
     @GetStudent() student: StudentProfile,
@@ -155,7 +155,7 @@ export class ProposalManagerController {
   ) {
     return this.proposalService.submitBudgetProposalExpenseRevision(
       student,
-      body.budgetProposalExpenseRevision,
+      body,
     );
   }
 

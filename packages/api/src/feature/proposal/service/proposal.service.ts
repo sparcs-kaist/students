@@ -105,17 +105,25 @@ export class ProposalService {
   async updateBudgetProposalIncomeRevision(student, body) {
     // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
+
+    const [budgetProposalIncomeRevision] =
+      await this.budgetProposalIncomeRevisionRepository.find({
+        id: body.id,
+      });
+    const budgetProposalIncomeId =
+      budgetProposalIncomeRevision.budgetProposalIncome.id;
+
     const [budgetProposalIncome] =
       await this.budgetProposalIncomeRepository.find({
-        id: body.budgetProposalIncome.id,
-      });
+        id: budgetProposalIncomeId,
+      } as any);
     if (!budgetProposalIncome) {
       throw new NotFoundException("BudgetProposalIncome does not exist.");
     }
     await this.checkManager(studentId, budgetProposalIncome.organization.id);
 
     const [target] = await this.budgetProposalIncomeRevisionRepository.find({
-      id: body.budgetProposalIncomeRevision.id,
+      id: body.id,
     });
     if (!target) {
       throw new NotFoundException("No Budget Proposal Income Exists");
@@ -123,44 +131,71 @@ export class ProposalService {
 
     // revision이 제출 상태라면 새 revision 생성. 이외에는 수정.
     const newBudgetProposalIncome = await (target.submittedAt !== null
-      ? this.budgetProposalIncomeRevisionRepository.create(
-          body.budgetProposalIncomeRevision,
-        )
+      ? this.budgetProposalIncomeRevisionRepository.create({
+          budgetProposalIncome: { id: budgetProposalIncome.id },
+          budgetDomainEnum: body.budgetDomainEnum ?? target.budgetDomainEnum,
+          budgetDivisionIncomeEnum:
+            body.budgetDivisionIncomeEnum ?? target.budgetDivisionIncomeEnum,
+          name: body.name ?? target.name,
+          amount: body.amount ?? target.amount,
+          detail: body.detail ?? target.detail,
+          code: body.code ?? target.code,
+        })
       : this.budgetProposalIncomeRevisionRepository.patch(
-          { id: body.budgetProposalIncomeRevision.id },
-          body.budgetProposalIncomeRevision,
+          { id: body.id },
+          model => {
+            const partial: any = {};
+            if (body.budgetDomainEnum !== undefined) {
+              partial.budgetDomainEnum = body.budgetDomainEnum;
+            }
+            if (body.budgetDivisionIncomeEnum !== undefined) {
+              partial.budgetDivisionIncomeEnum = body.budgetDivisionIncomeEnum;
+            }
+            if (body.name !== undefined) partial.name = body.name;
+            if (body.amount !== undefined) partial.amount = body.amount;
+            if (body.detail !== undefined) partial.detail = body.detail;
+            if (body.code !== undefined) partial.code = body.code;
+            return {
+              ...model,
+              ...partial,
+              id: model.id,
+            };
+          },
         ));
 
     return { budgetProposalIncomeRevision: newBudgetProposalIncome };
   }
 
   async submitBudgetProposalIncomeRevision(student, body) {
-    // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
+
+    const [budgetProposalIncomeRevision] =
+      await this.budgetProposalIncomeRevisionRepository.find({
+        id: body.budgetProposalIncomeRevisionId,
+      });
+    if (!budgetProposalIncomeRevision) {
+      throw new NotFoundException("No Budget Proposal Income Exists");
+    }
+    if (budgetProposalIncomeRevision.submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
+    }
+
+    // 단체의 매니저가 맞는지 확인
+    const budgetProposalIncomeId =
+      budgetProposalIncomeRevision.budgetProposalIncome.id;
     const [budgetProposalIncome] =
       await this.budgetProposalIncomeRepository.find({
-        id: body.budgetProposalIncome.id,
-      });
+        id: budgetProposalIncomeId,
+      } as any);
     if (!budgetProposalIncome) {
       throw new NotFoundException("BudgetProposalIncome does not exist.");
     }
     await this.checkManager(studentId, budgetProposalIncome.organization.id);
 
-    // revision 존재 확인 및 제출 여부 확인
-    const existing = await this.budgetProposalIncomeRevisionRepository.find({
-      id: body.id,
-    });
-    if (existing.length === 0) {
-      throw new NotFoundException("No Budget Proposal Income Exists");
-    }
-    if (existing[0].submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
-    }
-
     // 제출
     const newBudgetProposalIncome =
       await this.budgetProposalIncomeRevisionRepository.patch(
-        { id: body.budgetProposalIncomeRevision.id },
+        { id: body.budgetProposalIncomeRevisionId },
         revision => {
           const temp = revision;
           temp.submittedAt = new Date();
@@ -261,16 +296,24 @@ export class ProposalService {
   async updateBudgetProposalExpenseRevision(student, body) {
     // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
-    const [budgetExpense] = await this.budgetProposalExpenseRepository.find({
-      id: body.budgetProposalExpense.id,
-    });
-    if (!budgetExpense) {
+    const [budgetProposalExpenseRevision] =
+      await this.budgetProposalExpenseRevisionRepository.find({
+        id: body.id,
+      });
+    const budgetProposalExpenseId =
+      budgetProposalExpenseRevision.budgetProposalExpense.id;
+
+    const [budgetProposalExpense] =
+      await this.budgetProposalExpenseRepository.find({
+        id: budgetProposalExpenseId,
+      } as any);
+    if (!budgetProposalExpense) {
       throw new NotFoundException("BudgetProposalExpense does not exist.");
     }
-    await this.checkManager(studentId, budgetExpense.organization.id);
+    await this.checkManager(studentId, budgetProposalExpense.organization.id);
 
     const [target] = await this.budgetProposalExpenseRevisionRepository.find({
-      id: body.budgetProposalExpenseRevision.id,
+      id: body.id,
     });
     if (!target) {
       throw new NotFoundException("No Budget Proposal Expense Exists");
@@ -278,12 +321,42 @@ export class ProposalService {
 
     // revision이 제출 상태라면 새 revision 생성. 이외에는 수정.
     const newBudgetProposalExpense = await (target.submittedAt !== null
-      ? this.budgetProposalExpenseRevisionRepository.create(
-          body.budgetProposalExpenseRevision,
-        )
+      ? this.budgetProposalExpenseRevisionRepository.create({
+          budgetProposalExpense: { id: budgetProposalExpense.id },
+          budgetDomainEnum: body.budgetDomainEnum ?? target.budgetDomainEnum,
+          budgetDivisionExpenseEnum:
+            body.budgetDivisionExpenseEnum ?? target.budgetDivisionExpenseEnum,
+          budgetClassExpenseEnum:
+            body.budgetClassExpenseEnum ?? target.budgetClassExpenseEnum,
+          name: body.name ?? target.name,
+          amount: body.amount ?? target.amount,
+          detail: body.detail ?? target.detail,
+          code: body.code ?? target.code,
+        })
       : this.budgetProposalExpenseRevisionRepository.patch(
-          { id: body.budgetProposalExpenseRevision.id },
-          body.budgetProposalExpenseRevision,
+          { id: body.id },
+          model => {
+            const partial: any = {};
+            if (body.budgetDomainEnum !== undefined) {
+              partial.budgetDomainEnum = body.budgetDomainEnum;
+            }
+            if (body.budgetDivisionExpenseEnum !== undefined) {
+              partial.budgetDivisionExpenseEnum =
+                body.budgetDivisionExpenseEnum;
+            }
+            if (body.budgetClassExpenseEnum !== undefined) {
+              partial.budgetClassExpenseEnum = body.budgetClassExpenseEnum;
+            }
+            if (body.name !== undefined) partial.name = body.name;
+            if (body.amount !== undefined) partial.amount = body.amount;
+            if (body.detail !== undefined) partial.detail = body.detail;
+            if (body.code !== undefined) partial.code = body.code;
+            return {
+              ...model,
+              ...partial,
+              id: model.id,
+            };
+          },
         ));
 
     return {
@@ -292,32 +365,35 @@ export class ProposalService {
   }
 
   async submitBudgetProposalExpenseRevision(student, body) {
-    // 단체의 매니저가 맞는지 확인
     const { studentId } = student;
+
+    const [budgetProposalExpenseRevision] =
+      await this.budgetProposalExpenseRevisionRepository.find({
+        id: body.budgetProposalExpenseRevisionId,
+      });
+    if (!budgetProposalExpenseRevision) {
+      throw new NotFoundException("No Budget Proposal Expense Exists");
+    }
+    if (budgetProposalExpenseRevision.submittedAt !== null) {
+      throw new NotFoundException("Already Submitted");
+    }
+
+    // 단체의 매니저가 맞는지 확인
+    const budgetProposalExpenseId =
+      budgetProposalExpenseRevision.budgetProposalExpense.id;
     const [budgetProposalExpense] =
       await this.budgetProposalExpenseRepository.find({
-        id: body.budgetProposalExpense.id,
-      });
+        id: budgetProposalExpenseId,
+      } as any);
     if (!budgetProposalExpense) {
       throw new NotFoundException("BudgetProposalExpense does not exist.");
     }
     await this.checkManager(studentId, budgetProposalExpense.organization.id);
 
-    // revision 존재 확인 및 제출 여부 확인
-    const existing = await this.budgetProposalExpenseRevisionRepository.find({
-      id: body.id,
-    });
-    if (existing.length === 0) {
-      throw new NotFoundException("No Budget Proposal Expense Exists");
-    }
-    if (existing[0].submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
-    }
-
     // 제출
     const newBudgetProposalExpense =
       await this.budgetProposalExpenseRevisionRepository.patch(
-        { id: body.budgetProposalExpenseRevision.id },
+        { id: body.budgetProposalExpenseRevisionId },
         revision => {
           const temp = revision;
           temp.submittedAt = new Date();
@@ -360,17 +436,21 @@ export class ProposalService {
   async getRecentBudgetProposalIncome(query) {
     const [budgetProposalIncome] =
       await this.budgetProposalIncomeRepository.find({
-        organizationId: query.organization.id,
-        semesterId: query.semester.id,
+        organizationId: query.organization,
+        semesterId: query.semester,
       });
 
-    const butgetProposalIncomeRevision =
+    if (!budgetProposalIncome) {
+      return [];
+    }
+
+    const [butgetProposalIncomeRevision] =
       await this.budgetProposalIncomeRevisionRepository.find({
         budgetProposalIncomeId: budgetProposalIncome.id,
         orderBy: {
-          createdAt: OrderByTypeEnum.DESC,
+          id: OrderByTypeEnum.DESC,
         },
-        pagination: { offset: 0, itemCount: 1 },
+        pagination: { offset: 1, itemCount: 1 },
       } as any);
 
     return {
@@ -381,17 +461,21 @@ export class ProposalService {
   async getRecentBudgetProposalExpense(query) {
     const [budgetProposalExpense] =
       await this.budgetProposalExpenseRepository.find({
-        organizationId: query.organization.id,
-        semesterId: query.semester.id,
+        organizationId: query.organization,
+        semesterId: query.semester,
       });
 
-    const butgetProposalExpenseRevision =
+    if (!budgetProposalExpense) {
+      return [];
+    }
+
+    const [butgetProposalExpenseRevision] =
       await this.budgetProposalExpenseRevisionRepository.find({
         budgetProposalExpenseId: budgetProposalExpense.id,
         orderBy: {
-          createdAt: OrderByTypeEnum.DESC,
+          id: OrderByTypeEnum.DESC,
         },
-        pagination: { offset: 0, itemCount: 1 },
+        pagination: { offset: 1, itemCount: 1 },
       } as any);
 
     return {
@@ -410,7 +494,7 @@ export class ProposalService {
     const rows = await this.budgetProposalIncomeRevisionRepository.find({
       budgetProposalIncomeId: income.id,
       submittedAt: { isNotNull: true },
-      orderBy: { submittedAt: OrderByTypeEnum.ASC },
+      orderBy: { id: OrderByTypeEnum.ASC },
     } as any);
 
     return rows.map(r => r.submittedAt as unknown as string);
@@ -418,8 +502,8 @@ export class ProposalService {
 
   async getBudgetProposalExpenseDateList(query) {
     const [expense] = await this.budgetProposalExpenseRepository.find({
-      organizationId: query.organization.id,
-      semesterId: query.semester.id,
+      organizationId: query.organization,
+      semesterId: query.semester,
     } as any);
 
     if (!expense) return [];
@@ -427,18 +511,18 @@ export class ProposalService {
     const rows = await this.budgetProposalExpenseRevisionRepository.find({
       budgetProposalExpenseId: expense.id,
       submittedAt: { isNotNull: true },
-      orderBy: { submittedAt: OrderByTypeEnum.ASC },
+      orderBy: { id: OrderByTypeEnum.ASC },
     } as any);
 
     return rows.map(r => r.submittedAt as unknown as string);
   }
 
   async getBudgetProposalIncomeRevisionsByDate(query) {
-    const start = new Date(`${query.date}T00:00:00`);
-    const end = new Date(`${query.date}T23:59:59.999`);
+    const start = new Date(`${query.date}T00:00:00.000Z`);
+    const end = new Date(`${query.date}T23:59:59.999Z`);
 
     const Parents = await this.budgetProposalIncomeRepository.find({
-      organizationId: query.organization.id,
+      organizationId: query.organization,
     } as any);
 
     if (!Parents.length) {
@@ -450,7 +534,7 @@ export class ProposalService {
       budgetProposalIncomeId: parentIds,
       submittedAt: { isNotNull: true, between: [start, end] },
       orderBy: {
-        submittedAt: OrderByTypeEnum.ASC,
+        id: OrderByTypeEnum.ASC,
       },
     } as any);
 
@@ -458,11 +542,11 @@ export class ProposalService {
   }
 
   async getBudgetProposalExpenseRevisionsByDate(query) {
-    const start = new Date(`${query.date}T00:00:00`);
-    const end = new Date(`${query.date}T23:59:59.999`);
+    const start = new Date(`${query.date}T00:00:00.000Z`);
+    const end = new Date(`${query.date}T23:59:59.999Z`);
 
     const Parents = await this.budgetProposalExpenseRepository.find({
-      organizationId: query.organization.id,
+      organizationId: query.organization,
     } as any);
 
     if (!Parents.length) {
@@ -474,7 +558,7 @@ export class ProposalService {
       budgetProposalExpenseId: parentIds,
       submittedAt: { isNotNull: true, between: [start, end] },
       orderBy: {
-        submittedAt: OrderByTypeEnum.ASC,
+        id: OrderByTypeEnum.ASC,
       },
     } as any);
 

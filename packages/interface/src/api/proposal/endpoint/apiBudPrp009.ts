@@ -13,7 +13,7 @@ import {
  */
 
 const url = () => `/manager/proposals/budget-proposals/expense-revision/update`;
-const method = "PUT";
+const method = "PATCH";
 export const ApiBudPrp009RequestUrl =
   "/manager/proposals/budget-proposals/expense-revision/update";
 

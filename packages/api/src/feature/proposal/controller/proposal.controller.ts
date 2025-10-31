@@ -15,8 +15,10 @@ import {
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
+import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ProposalService } from "../service/proposal.service";
 
+@Public()
 @Controller("student/proposals/budget-proposals")
 export class ProposalController {
   constructor(private readonly proposalService: ProposalService) {}

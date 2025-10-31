@@ -47,7 +47,14 @@ export const zBudgetProposalIncomeRevisionRequestCreate =
     id: true,
   });
 
-export const zBudgetProposalIncomeRequestUpdate = zBudgetProposalIncomeRevision;
+export const zBudgetProposalIncomeRequestUpdate = z.object({ id: zId }).merge(
+  zBudgetProposalIncomeRevision
+    .omit({
+      id: true,
+      budgetProposalIncome: true,
+    })
+    .partial(),
+);
 
 export const zBudgetProposalIncomeResponse = zBudgetProposalIncomeRevision.pick(
   {

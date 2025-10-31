@@ -119,6 +119,7 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
       id: BudgetProposalIncomeRevision,
       budgetProposalIncomeId: BudgetProposalIncomeRevision,
       code: BudgetProposalIncomeRevision,
+      submittedAt: BudgetProposalIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {

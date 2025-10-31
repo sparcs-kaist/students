@@ -1,10 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  zBudgetProposalIncomeRequestUpdate,
-  zBudgetProposalIncomeResponse,
-} from "../type/budget-proposal-income.type";
+import { zId } from "@sparcs-students/interface/common/type/ids";
+import { zBudgetProposalIncomeResponse } from "../type/budget-proposal-income.type";
 
 /**
  * @version v0.1
@@ -20,9 +18,7 @@ const requestParam = z.object({});
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  budgetProposalIncomeRevision: zBudgetProposalIncomeRequestUpdate,
-});
+const requestBody = z.object({ budgetProposalIncomeRevisionId: zId });
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
