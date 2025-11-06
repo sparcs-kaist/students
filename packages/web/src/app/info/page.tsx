@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-students/web/common/components/PageHead";
 import mockInfo from "@sparcs-students/web/features/info/mock";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Content from "@sparcs-students/web/features/info/components/Content";
 import styled from "styled-components";
 import Typography from "@sparcs-students/web/common/components/Typography";
@@ -45,6 +45,18 @@ const Info = () => {
     // subContent 파라미터가 없거나 메인 항목에 subContent 배열이 없는 경우 메인 항목 반환
     return mainItem;
   }, [content, subContent]);
+
+  useEffect(() => {
+    if (!content) {
+      router.replace(`/info?content=${mockInfo[0].category}`);
+      return;
+    }
+
+    const mainItem = mockInfo.find(item => item.category === content);
+    if (!mainItem) {
+      router.replace(`/info?content=${mockInfo[0].category}`);
+    }
+  }, [content, router]);
 
   return (
     <FlexWrapper direction="column" gap={48}>
