@@ -8,6 +8,7 @@ interface FlexWrapperProps {
   padding?: string;
   height?: string;
   xOverflow?: boolean;
+  alignItems?: string;
 }
 
 const FlexWrapper = styled.div.withConfig({
@@ -21,6 +22,7 @@ const FlexWrapper = styled.div.withConfig({
   justify-content: ${({ justify }) => justify ?? "flex-start"};
   padding: ${({ padding }) => padding ?? 0};
   height: ${({ height }) => height ?? "fit-content"};
+  align-items: ${({ alignItems }) => alignItems ?? "stretch"};
   ${({ xOverflow }) => (xOverflow ? "overflow-x: auto" : null)};
 `;
 
