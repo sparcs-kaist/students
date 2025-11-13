@@ -18,7 +18,6 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 export type BudgetProposalIncomeRevisionQuery = {
   // id: number; // id 는 기본 내장
   budgetProposalIncomeId: number;
-  previousBudgetReportIncomeId: number;
   code: number;
 };
 
@@ -66,9 +65,6 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
     return new MBudgetProposalIncomeRevision({
       id: result.id,
       budgetProposalIncome: { id: result.budgetProposalIncomeId },
-      previousBudgetReportIncome: result.previousBudgetReportIncomeId
-        ? { id: result.previousBudgetReportIncomeId }
-        : null,
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionIncomeEnum: result.budgetDivisionIncomeEnum,
       name: result.name,
@@ -87,7 +83,6 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
     return {
       id: model.id,
       budgetProposalIncomeId: model.budgetProposalIncome.id,
-      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id ?? null,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
       name: model.name,
@@ -105,7 +100,6 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
   ): BudgetProposalIncomeRevisionDbInsert {
     return {
       budgetProposalIncomeId: model.budgetProposalIncome.id,
-      previousBudgetReportIncomeId: model.previousBudgetReportIncome.id ?? null,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
       name: model.name,
@@ -124,8 +118,8 @@ export class BudgetProposalIncomeRevisionRepository extends BaseSingleTableRepos
     > = {
       id: BudgetProposalIncomeRevision,
       budgetProposalIncomeId: BudgetProposalIncomeRevision,
-      previousBudgetReportIncomeId: BudgetProposalIncomeRevision,
       code: BudgetProposalIncomeRevision,
+      submittedAt: BudgetProposalIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {

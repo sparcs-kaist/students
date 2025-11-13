@@ -11,6 +11,7 @@ import { ProjectProposalRevisionRepository } from "./repository/project-proposal
 import { ProposalStaffController } from "./controller/proposal.staff.controller";
 import { ProposalService } from "./service/proposal.service";
 import { ProposalManagerController } from "./controller/proposal.manager.controller";
+import { ProposalController } from "./controller/proposal.controller";
 import { BudgetReportIncomeRepository } from "../report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "../report/repository/budget-report-expense.repository";
 import { OrganizationManagerRepository } from "../organization/repository/organization.manager.repository";
@@ -45,6 +46,10 @@ import { BudgetProposalIncomeDocumentReviewRepository } from "./repository/budge
     BudgetProposalExpenseDocumentReviewRepository,
     BudgetProposalIncomeDocumentReviewRepository,
   ],
-  controllers: [ProposalStaffController, ProposalManagerController],
+  controllers: [
+    ProposalStaffController,
+    ProposalManagerController,
+    ProposalController,
+  ],
 })
 export class ProposalModule {}

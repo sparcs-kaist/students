@@ -11,10 +11,6 @@ import { Semester } from "./semester.schema";
 import { Student } from "./user.schema";
 
 // eslint-disable-next-line import/no-cycle
-import {
-  BudgetReportExpense,
-  BudgetReportIncome,
-} from "./budget-report.schema";
 import { Agenda } from "./meeting.schema";
 
 export const BudgetProposalIncome = mysqlTable(
@@ -46,7 +42,6 @@ export const BudgetProposalIncomeRevision = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     budgetProposalIncomeId: int("budget_proposal_income_id").notNull(),
-    previousBudgetReportIncomeId: int("previous_budget_report_income_id"),
     budgetDomainEnum: int("budget_domain_enum").notNull(),
     budgetDivisionIncomeEnum: int("budget_division_income_enum").notNull(),
     name: varchar("name", { length: 30 }).notNull(),
@@ -65,11 +60,6 @@ export const BudgetProposalIncomeRevision = mysqlTable(
       columns: [table.budgetProposalIncomeId],
       foreignColumns: [BudgetProposalIncome.id],
       name: "bud_prop_inc_rev_orig_id_fk",
-    }),
-    budgetProposalIncomeRevisionPreviousBudgetReportIncomeIdFk: foreignKey({
-      columns: [table.previousBudgetReportIncomeId],
-      foreignColumns: [BudgetReportIncome.id],
-      name: "bud_prop_inc_rev_prev_id_fk",
     }),
     budgetProposalIncomeRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
@@ -119,7 +109,6 @@ export const BudgetProposalExpenseRevision = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     budgetProposalExpenseId: int("budget_proposal_expense_id").notNull(),
-    previousBudgetReportExpenseId: int("previous_budget_report_expense_id"),
     budgetDomainEnum: int("budget_domain_enum"),
     budgetDivisionExpenseEnum: int("budget_division_expense_enum"),
     budgetClassExpenseEnum: int("budget_class_expense_enum"),
@@ -139,11 +128,6 @@ export const BudgetProposalExpenseRevision = mysqlTable(
       columns: [table.budgetProposalExpenseId],
       foreignColumns: [BudgetProposalExpense.id],
       name: "bud_prop_exp_rev_prop_id_fk",
-    }),
-    budgetProposalExpenseRevisionPreviousBudgetReportExpenseIdFk: foreignKey({
-      columns: [table.previousBudgetReportExpenseId],
-      foreignColumns: [BudgetReportExpense.id],
-      name: "bud_prop_exp_rev_prev_id_fk",
     }),
     budgetProposalExpenseRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],

@@ -13,7 +13,7 @@ import {
 
 const url = () => `/manager/proposals/budget-proposals/income/create`;
 const method = "POST";
-export const ApiPrp008RequestUrl =
+export const ApiBudPrp002RequestUrl =
   "/manager/proposals/budget-proposals/income/create";
 
 const requestParam = z.object({});
@@ -41,7 +41,7 @@ const responseErrorMap = {
   }),
 };
 
-const apiPrp008 = {
+const apiBudPrp002 = {
   url,
   method,
   requestParam,
@@ -51,18 +51,18 @@ const apiPrp008 = {
   responseErrorMap,
 };
 
-type ApiPrp008RequestParam = z.infer<typeof apiPrp008.requestParam>;
-type ApiPrp008RequestQuery = z.infer<typeof apiPrp008.requestQuery>;
-type ApiPrp008RequestBody = z.infer<typeof apiPrp008.requestBody>;
-type ApiPrp008ResponseCreated = z.infer<
-  (typeof apiPrp008.responseBodyMap)[201]
+type ApiBudPrp002RequestParam = z.infer<typeof apiBudPrp002.requestParam>;
+type ApiBudPrp002RequestQuery = z.infer<typeof apiBudPrp002.requestQuery>;
+type ApiBudPrp002RequestBody = z.infer<typeof apiBudPrp002.requestBody>;
+type ApiBudPrp002ResponseCreated = z.infer<
+  (typeof apiBudPrp002.responseBodyMap)[201]
 >;
 
-export default apiPrp008;
+export default apiBudPrp002;
 
 export type {
-  ApiPrp008RequestParam,
-  ApiPrp008RequestQuery,
-  ApiPrp008RequestBody,
-  ApiPrp008ResponseCreated,
+  ApiBudPrp002RequestParam,
+  ApiBudPrp002RequestQuery,
+  ApiBudPrp002RequestBody,
+  ApiBudPrp002ResponseCreated,
 };

@@ -127,6 +127,7 @@ const mysqlQueryConditionOperators = [
   "startsWith",
   "endsWith",
   "isNotNull",
+  "between",
 ] as const;
 
 // 타입으로 변환

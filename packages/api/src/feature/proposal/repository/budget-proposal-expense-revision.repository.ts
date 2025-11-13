@@ -18,7 +18,6 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 export type BudgetProposalExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
   budgetProposalExpenseId: number;
-  previousBudgetReportExpenseId: number;
   code: number;
 };
 
@@ -66,7 +65,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
     return new MBudgetProposalExpenseRevision({
       id: result.id,
       budgetProposalExpense: { id: result.budgetProposalExpenseId },
-      previousBudgetReportExpense: { id: result.previousBudgetReportExpenseId },
       budgetDomainEnum: result.budgetDomainEnum,
       budgetDivisionExpenseEnum: result.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: result.budgetClassExpenseEnum,
@@ -86,7 +84,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
     return {
       id: model.id,
       budgetProposalExpenseId: model.budgetProposalExpense.id,
-      previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
@@ -105,7 +102,6 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
   ): BudgetProposalExpenseRevisionDbInsert {
     return {
       budgetProposalExpenseId: model.budgetProposalExpense.id,
-      previousBudgetReportExpenseId: model.previousBudgetReportExpense.id,
       budgetDomainEnum: model.budgetDomainEnum,
       budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
       budgetClassExpenseEnum: model.budgetClassExpenseEnum,
@@ -125,8 +121,8 @@ export class BudgetProposalExpenseRevisionRepository extends BaseSingleTableRepo
     > = {
       id: BudgetProposalExpenseRevision,
       budgetProposalExpenseId: BudgetProposalExpenseRevision,
-      previousBudgetReportExpenseId: BudgetProposalExpenseRevision,
       code: BudgetProposalExpenseRevision,
+      submittedAt: BudgetProposalExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

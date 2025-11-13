@@ -2,8 +2,6 @@ import { MRevisionEntity } from "@sparcs-students/api/common/base/revision-entit
 import { IBudgetProposalIncomeRevision } from "@sparcs-students/interface/api/proposal/type/budget-proposal-income.type";
 
 export interface IBudgetProposalIncomeRevisionCreate {
-  previousBudgetReportIncome: IBudgetProposalIncomeRevision["previousBudgetReportIncome"];
-
   budgetProposalIncome: IBudgetProposalIncomeRevision["budgetProposalIncome"];
 
   budgetDomainEnum: IBudgetProposalIncomeRevision["budgetDomainEnum"];
@@ -17,7 +15,6 @@ export interface IBudgetProposalIncomeRevisionCreate {
   detail: IBudgetProposalIncomeRevision["detail"];
 
   code: IBudgetProposalIncomeRevision["code"];
-
 }
 
 export class MBudgetProposalIncomeRevision
@@ -25,8 +22,6 @@ export class MBudgetProposalIncomeRevision
   implements IBudgetProposalIncomeRevision
 {
   static modelName = "BudgetProposalIncomeRevision";
-
-  previousBudgetReportIncome: IBudgetProposalIncomeRevision["previousBudgetReportIncome"];
 
   budgetProposalIncome: IBudgetProposalIncomeRevision["budgetProposalIncome"];
 
