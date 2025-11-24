@@ -64,6 +64,19 @@ const paths = {
     name: "단체 관리",
     path: "/organization-manage",
   },
+  UAPRESIDENT: {
+    name: "총학생회장",
+    sub: [
+      {
+        name: "기구 관리",
+        path: "/manage",
+      },
+      {
+        name: "예/결산 최종 승인",
+        path: "/approval",
+      },
+    ],
+  },
 
   MADE_BY: { name: "만든 사람들", path: "/credits" },
   LICENSE: { name: "라이센스", path: "/" },
