@@ -69,11 +69,11 @@ const paths = {
     sub: [
       {
         name: "기구 관리",
-        path: "/manage",
+        path: "/uapresident/manage",
       },
       {
         name: "예/결산 최종 승인",
-        path: "/approval",
+        path: "/uapresident/approval",
       },
     ],
   },
