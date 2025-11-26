@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Patch, Post, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+} from "@nestjs/common";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
@@ -9,6 +17,8 @@ import {
   apiOrg004,
   ApiOrg004RequestParam,
   ApiOrg004RequestBody,
+  apiOrg014,
+  ApiOrg014RequestParam,
 } from "@sparcs-students/interface/api/organization/index";
 import {} from // GetUser,
 "@sparcs-students/api/common/decorators/get-user.decorator";
@@ -24,6 +34,14 @@ export class OrganizationUapresidentController {
   @UsePipes(new ZodPipe(apiOrg002))
   async createOrganization(@Body() body: ApiOrg002RequestBody) {
     return this.organizationService.createOrganization(body);
+  }
+
+  // 총학생회장 권한으로 단체 삭제
+  @Public()
+  @Delete("organization/:id/delete")
+  @UsePipes(new ZodPipe(apiOrg014))
+  async deleteOrganization(@Param() param: ApiOrg014RequestParam) {
+    return this.organizationService.deleteOrganization(param);
   }
 
   // 총학생회장 권한으로 단체 회장/부회장 임명
