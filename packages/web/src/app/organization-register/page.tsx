@@ -17,11 +17,12 @@ import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import styled from "styled-components";
-import { getOrganizationLookup } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
-import apiOrg011, {
-  ApiOrg011RequestBody,
-} from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
-import { axiosClientWithAuth } from "@sparcs-students/web/lib/axios";
+import {
+  applyOrganization,
+  getOrganizationLookup,
+} from "@sparcs-students/web/features/organization-register/api/organizationApi";
+import { ApiOrg011RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
+import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
 import { SelectItem } from "@sparcs-students/web/common/components/Selects/Select";
 
 const CenterWrapper = styled(FlexWrapper)`
@@ -33,34 +34,8 @@ const ApplyButton = styled(Button)`
   padding: 8 16px;
 `;
 
-interface Organization {
-  id: number;
-  name: string;
-  nameEng: string;
-  organizationTypeEnum: unknown;
-  foundingYear: number;
-  startTerm: Date;
-  endTerm: Date | null;
-  organizationStateEnum: unknown;
-}
-
-interface OrganizationResponseData {
-  organizationLists: Array<{
-    semester: {
-      id: number;
-      name: string;
-      year: number;
-      semesterEnum: unknown;
-      startTerm: Date;
-      endTerm: Date;
-    };
-    organizationTypes: Array<{
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      organizationTypeEnum: any;
-      organizations: Organization[];
-    }>;
-  }>;
-}
+type Organization =
+  ApiOrg001ResponseOK["organizationLists"][0]["organizationTypes"][0]["organizations"][0];
 
 interface OrganizationItem {
   key: SelectItem<string>;
@@ -72,7 +47,7 @@ const OrganizationRegister = () => {
   const searchParams = useSearchParams();
 
   const [organizationData, setOrganizationData] =
-    useState<OrganizationResponseData | null>(null);
+    useState<ApiOrg001ResponseOK | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>(
     searchParams.get("key") || "",
@@ -113,8 +88,9 @@ const OrganizationRegister = () => {
 
     organizationData.organizationLists.forEach(semesterData => {
       semesterData.organizationTypes.forEach(typeData => {
-        const existing = groupedByType.get(typeData.organizationTypeEnum) || [];
-        groupedByType.set(typeData.organizationTypeEnum, [
+        const existing =
+          groupedByType.get(String(typeData.organizationTypeEnum)) || [];
+        groupedByType.set(String(typeData.organizationTypeEnum), [
           ...existing,
           ...typeData.organizations,
         ]);
@@ -156,9 +132,9 @@ const OrganizationRegister = () => {
         OrganizationMember: {
           organization: { id: selectedId },
         },
-      };
+      } as unknown as ApiOrg011RequestBody;
 
-      await axiosClientWithAuth.post(apiOrg011.url(), requestBody);
+      await applyOrganization(requestBody);
 
       overlay.open(({ isOpen, close }) => (
         <Modal isOpen={isOpen} width="400px">
@@ -204,9 +180,10 @@ const OrganizationRegister = () => {
     if (selectedOrgName) {
       setOrgData({
         label: selectedOrgName,
-        head: "단체장 정보", // TODO: Get actual data from API
-        people: 999999, // TODO: Get actual data from API
-        description: "단체 설명", // TODO: Get actual data from API
+        // TODO: Update when API provides these fields (apiOrg001 currently lacks head, people, description)
+        head: "정보 없음",
+        people: 0,
+        description: "설명이 없습니다.",
       });
     } else {
       setOrgData(null);

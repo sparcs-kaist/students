@@ -1,37 +1,43 @@
 "use client";
 
-// students/packages/web/src/app/organization-manage/page.tsx
-
-import React, { useState } from "react";
-import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import ManageMemberTable, {
-  MemberFormValues,
-  OrganizationMemberProps,
-} from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
+import React, { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import {
-  mockOrganizationMemberData,
-  mockCommitteeMemberTableData,
-} from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
+import { overlay } from "overlay-kit";
+
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Notice from "@sparcs-students/web/common/components/Notice";
-import styled from "styled-components";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import { useRouter } from "next/navigation";
-import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import OrganizationSelectCard from "@sparcs-students/web/common/components/SelectCard/OrganizationSelectCard";
+
+import ManageMemberTable, {
+  MemberFormValues,
+  OrganizationMemberProps,
+} from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
 import useOrganizationStore from "@sparcs-students/web/features/organization-manage/stores/useOrganizationStore";
 import {
   createOrganizationMember,
   createTeamMember,
   createTeamLeader,
 } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
+import { getOrganizationLookup } from "@sparcs-students/web/features/organization-register/api/organizationApi";
+
+import {
+  mockOrganizationMemberData,
+  mockCommitteeMemberTableData,
+} from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
+
 import { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
 import { ApiOrg008RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
 import { ApiOrg009RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";
+import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
+import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { CommitteeRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 const BoxWrapper = styled.div`
@@ -95,6 +101,12 @@ const OrganizationManage = () => {
   const router = useRouter();
   const { currentOrganizationId } = useOrganizationStore();
 
+  const [organizationData, setOrganizationData] =
+    useState<ApiOrg001ResponseOK | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const [dirtyMemberData, setDirtyMemberData] =
     useState<DirtyCommitteeMemberData>({
       updatedRows: [],
@@ -104,6 +116,8 @@ const OrganizationManage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // TODO: Replace with real API when available (e.g., GET /organizations/{id}/members)
+  // Currently, there is no API to fetch organization members, so we use mock data.
   const formMemberMethods = useForm<MemberFormValues>({
     defaultValues: {
       members: mockOrganizationMemberData,
@@ -141,6 +155,60 @@ const OrganizationManage = () => {
     },
   );
 
+  useEffect(() => {
+    if (!currentOrganizationId) {
+      const fetchOrganizations = async () => {
+        try {
+          const data = await getOrganizationLookup();
+          setOrganizationData(data);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to fetch organizations:", error);
+        }
+      };
+      fetchOrganizations();
+    }
+  }, [currentOrganizationId]);
+
+  const totalList = useMemo(() => {
+    if (!organizationData?.organizationLists) return [];
+    const groupedByType = new Map<string, IOrganization[]>();
+    organizationData.organizationLists.forEach(semesterData => {
+      semesterData.organizationTypes.forEach(typeData => {
+        const existing =
+          groupedByType.get(String(typeData.organizationTypeEnum)) || [];
+        groupedByType.set(String(typeData.organizationTypeEnum), [
+          ...existing,
+          ...typeData.organizations,
+        ]);
+      });
+    });
+    const result: {
+      key: { value: string; label: string };
+      values: { value: string; label: string; id: number }[];
+    }[] = [];
+    groupedByType.forEach((organizations, typeEnum) => {
+      result.push({
+        key: { value: typeEnum, label: typeEnum },
+        values: organizations.map(org => ({
+          value: org.name,
+          label: org.name,
+          id: org.id,
+        })),
+      });
+    });
+    return result;
+  }, [organizationData]);
+
+  const keyList = useMemo(() => totalList.map(item => item.key), [totalList]);
+
+  const handleSelectOrganization = () => {
+    if (selectedId) {
+      useOrganizationStore.getState().setCurrentOrganizationId(selectedId);
+      window.location.reload();
+    }
+  };
+
   const handleSubmitChanges = async () => {
     if (!currentOrganizationId) {
       alert("조직 ID를 찾을 수 없습니다. 조직을 선택해주세요.");
@@ -168,11 +236,15 @@ const OrganizationManage = () => {
         }),
       );
 
-      // TODO: 멤버 수정 처리 (PATCH API 필요)
-      // await Promise.all(dirtyMemberData.updatedRows.map(async (member) => { ... }));
+      // 멤버 수정 처리 (PATCH API 필요)
+      if (dirtyMemberData.updatedRows.length > 0) {
+        alert("멤버 수정 기능은 아직 지원되지 않습니다.");
+      }
 
-      // TODO: 멤버 삭제 처리 (DELETE API 필요)
-      // await Promise.all(dirtyMemberData.deletedRows.map(async (member) => { ... }));
+      // 멤버 삭제 처리 (DELETE API 필요)
+      if (dirtyMemberData.deletedRows.length > 0) {
+        alert("멤버 삭제 기능은 아직 지원되지 않습니다.");
+      }
 
       // 팀 멤버/리더 추가 처리
       await Promise.all(
@@ -216,14 +288,22 @@ const OrganizationManage = () => {
         }),
       );
 
-      // TODO: 팀 멤버/리더 수정 처리 (PATCH API 필요)
-      // TODO: 팀 멤버/리더 삭제 처리 (DELETE API 필요)
+      // 팀 멤버/리더 수정/삭제 처리 (PATCH/DELETE API 필요)
+      const hasCommitteeUpdates = dirtyCommitteeMemberDataList.some(
+        d =>
+          d.dirtyData.updatedRows.length > 0 ||
+          d.dirtyData.deletedRows.length > 0,
+      );
+      if (hasCommitteeUpdates) {
+        alert("팀 멤버 수정/삭제 기능은 아직 지원되지 않습니다.");
+      }
 
       alert("변경사항이 성공적으로 저장되었습니다.");
 
-      // TODO: 페이지 새로고침 또는 데이터 재조회
-      // router.refresh();
+      // 페이지 새로고침
+      window.location.reload();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("제출 중 오류 발생:", error);
       alert("변경사항 저장 중 오류가 발생했습니다.");
     } finally {
@@ -256,6 +336,40 @@ const OrganizationManage = () => {
       </Modal>
     ));
   };
+
+  if (!currentOrganizationId) {
+    return (
+      <FlexWrapper direction="column" gap={40}>
+        <FlexWrapper direction="column" gap={10}>
+          <PageTitle>단체 관리</PageTitle>
+          <BreadCrumb
+            items={[{ name: "단체 관리", path: "/organization-manage" }]}
+          />
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16} padding="0 20px">
+          <Typography fs={20} lh={24} color="BLACK" fw="BOLD">
+            관리할 단체를 선택해주세요
+          </Typography>
+          <OrganizationSelectCard
+            totalList={totalList}
+            keyList={keyList}
+            selectedKey={selectedKey}
+            setSelectedKey={setSelectedKey}
+            selectedValue={selectedValue}
+            setSelectedValue={setSelectedValue}
+            setSelectedId={setSelectedId}
+          />
+          <Button
+            onClick={handleSelectOrganization}
+            type={selectedId ? "default" : "disabled"}
+            style={{ width: "120px", alignSelf: "flex-end" }}
+          >
+            선택 완료
+          </Button>
+        </FlexWrapper>
+      </FlexWrapper>
+    );
+  }
 
   return (
     <FlexWrapper direction="column" gap={40}>

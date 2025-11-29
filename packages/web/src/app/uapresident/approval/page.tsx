@@ -27,6 +27,8 @@ const ApprovalPage = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   // Mock data for the table
+  // TODO: Replace with real API when available (e.g., GET /uapresident/approvals)
+  // Currently, there is no API to fetch approval items.
   const mockApprovalData: ApprovalItem[] = Array.from({ length: 10 }).map(
     (_, i) => ({
       id: i + 1,
@@ -107,6 +109,7 @@ const ApprovalPage = () => {
               onClick={() => {
                 // eslint-disable-next-line no-console
                 console.log("Save clicked");
+                alert("저장 기능은 아직 구현되지 않았습니다.");
               }}
               style={{ width: "120px" }}
             >

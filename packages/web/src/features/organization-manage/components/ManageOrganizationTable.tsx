@@ -49,6 +49,9 @@ export interface OrganizationProps {
 export interface ManageOrganizationTableProps {
   data: OrganizationProps[];
   title: string;
+  onAppointPresident?: (id: number) => void;
+  onRetirePresident?: (id: number) => void;
+  onAddOrganization?: () => void;
 }
 
 const COL_WIDTHS = {
@@ -65,7 +68,15 @@ const OrganizationRow: React.FC<{
   row: OrganizationProps;
   rowIndex: number;
   isLast: boolean;
-}> = ({ row, rowIndex, isLast }) => (
+  onAppointPresident?: (id: number) => void;
+  onRetirePresident?: (id: number) => void;
+}> = ({
+  row,
+  rowIndex,
+  isLast,
+  onAppointPresident = undefined,
+  onRetirePresident = undefined,
+}) => (
   <TableRowWrapper isLast={isLast}>
     <TableCell type="Default" width={COL_WIDTHS.idx}>
       {rowIndex + 1}
@@ -87,8 +98,7 @@ const OrganizationRow: React.FC<{
         type="subdirectory_arrow_left" // Using a similar icon for "Change" or "Return"
         size={16}
         onClick={() => {
-          // TODO: Handle change rep
-          console.log("Change rep for", row.id);
+          if (onAppointPresident) onAppointPresident(row.id);
         }}
         color="BLACK"
       />
@@ -98,8 +108,7 @@ const OrganizationRow: React.FC<{
         type="delete"
         size={16}
         onClick={() => {
-          // TODO: Handle delete
-          console.log("Delete org", row.id);
+          if (onRetirePresident) onRetirePresident(row.id);
         }}
         color="BLACK"
       />
@@ -110,6 +119,9 @@ const OrganizationRow: React.FC<{
 const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
   data,
   title,
+  onAppointPresident = undefined,
+  onRetirePresident = undefined,
+  onAddOrganization = undefined,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dynamicHeight, setDynamicHeight] = useState<number>(
@@ -127,15 +139,14 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
         <Typography fs={20} lh={20} color="BLACK" fw="BOLD">
           {title}
         </Typography>
-        <Button
-          onClick={() => {
-            // TODO: Add Org
-            console.log("Add Org");
-          }}
-          style={{ width: "80px", padding: "8px", fontSize: "14px" }}
-        >
-          기구 추가
-        </Button>
+        {onAddOrganization && (
+          <Button
+            onClick={onAddOrganization}
+            style={{ width: "80px", padding: "8px", fontSize: "14px" }}
+          >
+            기구 추가
+          </Button>
+        )}
       </FlexWrapper>
       <FlexWrapper
         direction="column"
@@ -176,6 +187,8 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
                 row={row}
                 rowIndex={idx}
                 isLast={idx === data.length - 1}
+                onAppointPresident={onAppointPresident}
+                onRetirePresident={onRetirePresident}
               />
             ))}
           </TableContentWrapper>
