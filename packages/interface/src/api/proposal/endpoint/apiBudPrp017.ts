@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zId } from "@sparcs-students/interface/common/type/ids";
-import { zBudgetProposalIncomeRevision } from "../type/budget-proposal-income.type";
+import { zBudgetProposalExpenseRevision } from "../type/budget-proposal-expense.type";
 
 /**
  * @version v0.1
@@ -26,7 +26,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    budgetProposalIncomeRevisions: z.array(zBudgetProposalIncomeRevision),
+    budgetProposalExpenseRevisions: z.array(zBudgetProposalExpenseRevision),
   }),
 };
 
