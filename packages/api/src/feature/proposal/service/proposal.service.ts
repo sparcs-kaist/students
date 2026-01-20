@@ -77,26 +77,9 @@ export class ProposalService {
     }
     await this.checkManager(studentId, budgetIncome.organization.id);
 
-    const orgId = budgetIncome.organization.id;
-    const prevSemesterId = budgetIncome.semester.id - 1;
-
-    const [prevReport] = await this.budgetReportIncomeRepository.find({
-      organizationId: orgId as unknown,
-      semesterId: prevSemesterId as unknown,
-    });
-
-    const budgetProposalIncomeRevisionCreateDto = {
-      ...body,
-      previousBudgetReportIncome: prevReport
-        ? { id: prevReport.id }
-        : { id: null },
-    };
-
     // 생성
     const [newBudgetProposalIncomeRevision] =
-      await this.budgetProposalIncomeRevisionRepository.create(
-        budgetProposalIncomeRevisionCreateDto,
-      );
+      await this.budgetProposalIncomeRevisionRepository.create(body);
     return {
       budgetProposalIncomeRevision: newBudgetProposalIncomeRevision,
     };
@@ -268,26 +251,9 @@ export class ProposalService {
     }
     await this.checkManager(studentId, budgetExpense.organization.id);
 
-    const orgId = budgetExpense.organization.id;
-    const prevSemesterId = budgetExpense.semester.id - 1;
-
-    const [prevReport] = await this.budgetReportExpenseRepository.find({
-      organizationId: orgId as unknown,
-      semesterId: prevSemesterId as unknown,
-    });
-
-    const budgetProposalExpenseRevisionCreateDto = {
-      ...body,
-      previousBudgetReportExpense: prevReport
-        ? { id: prevReport.id }
-        : { id: null },
-    };
-
     // 생성
     const [newBudgetProposalExpenseRevision] =
-      await this.budgetProposalExpenseRevisionRepository.create(
-        budgetProposalExpenseRevisionCreateDto,
-      );
+      await this.budgetProposalExpenseRevisionRepository.create(body);
     return {
       budgetProposalExpenseRevision: newBudgetProposalExpenseRevision,
     };
