@@ -22,8 +22,10 @@ import {
   GetStudent,
   StudentProfile,
 } from "@sparcs-students/api/common/decorators/get-user.decorator";
+import { StaffOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { ProposalService } from "../service/proposal.service";
 
+@StaffOnly()
 @Controller("staff/proposals/budget-proposals")
 export class ProposalStaffController {
   constructor(private readonly proposalService: ProposalService) {}

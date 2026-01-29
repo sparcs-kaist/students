@@ -8,8 +8,10 @@ import { AuthConfig } from "@sparcs-students/api/feature/auth/guard/auth.config"
 import { JwtCookieCommand } from "@sparcs-students/api/feature/auth/guard/command/jwt.cookie.command";
 import { JwtHeaderCommand } from "@sparcs-students/api/feature/auth/guard/command/jwt.header.command";
 import { SidCommand } from "@sparcs-students/api/feature/auth/guard/command/sid.command";
+import { RequirePositionCommand } from "./guard/command/requirePosition.command";
 
 import { AuthService } from "./service/auth.service";
+import { PositionCheckerService } from "./service/position-checker.service";
 import { AuthRepository } from "./repository/auth.repository";
 import { AuthController } from "./controller/auth.controller";
 
@@ -33,6 +35,8 @@ import { AuthController } from "./controller/auth.controller";
     JwtCookieCommand,
     JwtHeaderCommand,
     SidCommand,
+    PositionCheckerService,
+    RequirePositionCommand,
   ],
   exports: [AuthService, AuthConfig, AuthChain],
 })
