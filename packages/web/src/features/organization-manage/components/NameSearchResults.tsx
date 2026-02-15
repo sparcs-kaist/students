@@ -3,17 +3,21 @@ import styled from "styled-components";
 import {
   MemberRoleEnum,
   CommitteeRoleEnum,
+  DepartmentRoleEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Icon from "@sparcs-students/web/common/components/Icon";
 
-type RoleEnumType = MemberRoleEnum | CommitteeRoleEnum;
+export type RoleEnumType =
+  | MemberRoleEnum
+  | CommitteeRoleEnum
+  | DepartmentRoleEnum;
 
-interface OrganizationMemberProps {
+export interface OrganizationMemberProps {
   id: number;
   studentId: string;
   name: string;
-  role: RoleEnumType; // TODO: change to real enum
+  role: RoleEnumType;
   startDate: string;
   endDate: string;
 }

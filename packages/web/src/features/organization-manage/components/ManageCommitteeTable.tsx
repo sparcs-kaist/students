@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from "react";
+import Button from "@sparcs-students/web/common/components/Buttons/Button";
+import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
+import Icon from "@sparcs-students/web/common/components/Icon";
+import Modal from "@sparcs-students/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
+import Typography from "@sparcs-students/web/common/components/Typography";
+import CommitteeNameButton from "@sparcs-students/web/features/organization-manage/components/_atomic/CommitteeNameButton";
 import {
+  Row,
   createColumnHelper,
+  flexRender,
   getCoreRowModel,
   useReactTable,
-  flexRender,
-  Row,
 } from "@tanstack/react-table";
+import { useParams, useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Icon from "@sparcs-students/web/common/components/Icon";
-import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
-import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
-import Typography from "@sparcs-students/web/common/components/Typography";
-import Button from "@sparcs-students/web/common/components/Buttons/Button";
-import CommitteeNameButton from "@sparcs-students/web/features/organization-manage/components/_atomic/CommitteeNameButton";
 
 export interface CommitteeProps {
-  id: string;
+  id: number;
   name: string;
   leader: string;
   headcount: number;
+  description: string;
 }
 
 interface ManageCommitteeTableProps {
@@ -76,31 +81,77 @@ const ContentRow = styled.tr`
   height: 50px;
 `;
 
-const NameCell: React.FC<{ name: string }> = ({ name }) => (
-  <CommitteeNameButton
-    text={name}
-    onClick={() => {
-      // TODO: endpoint로 redirect
-    }}
-  />
-);
+const ButtonWrapper = styled.div`
+  padding-top: 32px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`;
 
-const DeleteCell: React.FC<{ id: string; onDelete: (id: string) => void }> = ({
-  id,
-  onDelete,
-}) => (
-  <Icon type="delete" size={16} onClick={() => onDelete(id)} color="BLACK" />
-);
+const DeleteCell: React.FC<{
+  id: number;
+  name: string;
+  onDelete: (id: number) => void;
+}> = ({ id, name, onDelete }) => {
+  const openDeleteModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <CancellableModalContent
+          onConfirm={() => {
+            onDelete(id);
+            close();
+          }}
+          onClose={() => close()}
+        >
+          <Typography fs={20} lh={28} color="BLACK" fw="SEMIBOLD">
+            <b>{name}</b>
+          </Typography>
+          <Typography fs={20} lh={28} color="BLACK" fw="REGULAR">
+            부서/TF를 삭제하시겠습니까?
+          </Typography>
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  return (
+    <Icon type="delete" size={16} onClick={openDeleteModal} color="BLACK" />
+  );
+};
 
 const renderDeleteCell =
-  (onDelete: (id: string) => void) =>
+  (onDelete: (id: number) => void) =>
   ({ row }: { row: Row<CommitteeProps> }) => (
-    <DeleteCell id={row.original.id} onDelete={onDelete} />
+    <DeleteCell
+      id={row.original.id}
+      onDelete={onDelete}
+      name={row.original.name}
+    />
   );
 
-const renderNameCell = ({ getValue }: { getValue: () => string }) => (
-  <NameCell name={getValue()} />
-);
+const NameCell: React.FC<{ id: number; departmentName: string }> = ({
+  id,
+  departmentName,
+}) => {
+  const router = useRouter();
+  const params = useParams();
+  return (
+    <CommitteeNameButton
+      text={departmentName}
+      onClick={() => {
+        router.push(`/organization-manage/${params.id}/departments/${id}`);
+      }}
+    />
+  );
+};
+
+const renderNameCell = ({
+  id,
+  departmentName,
+}: {
+  id: number;
+  departmentName: string;
+}) => <NameCell id={id} departmentName={departmentName} />;
 
 const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
   name,
@@ -115,7 +166,7 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
   // TODO: back 구현되면, 저장 버튼 클릭시 editData 이용해서 data update하기
   const [editData, setEditData] = useState<CommitteeProps[]>(data);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     setEditData(prevData => prevData.filter(item => item.id !== id));
   };
 
@@ -131,7 +182,11 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
     columnHelper.accessor("name", {
       id: "name",
       header: "부서명",
-      cell: renderNameCell,
+      cell: info =>
+        renderNameCell({
+          id: info.row.original.id,
+          departmentName: info.row.original.name,
+        }),
       size: 0,
     }),
     columnHelper.accessor("leader", {
@@ -226,6 +281,16 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
           </TableInner>
         </TableWrapper>
       )}
+      <ButtonWrapper>
+        <Button
+          style={{ padding: "8px 16px", width: "100px" }}
+          onClick={() => {
+            console.log(editData);
+          }}
+        >
+          저장
+        </Button>
+      </ButtonWrapper>
     </FlexWrapper>
   );
 };

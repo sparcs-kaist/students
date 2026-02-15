@@ -344,3 +344,16 @@ export const committeeRoleTagList: {
     color: "GREEN100",
   },
 };
+
+export const committeeMemberRoleTagList: {
+  [key in CommitteeRoleEnum]: StatusDetail;
+} = {
+  [CommitteeRoleEnum.Chief]: {
+    text: "부서장",
+    color: "GREEN600",
+  },
+  [CommitteeRoleEnum.Member]: {
+    text: "부원",
+    color: "GREEN100",
+  },
+};

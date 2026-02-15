@@ -158,6 +158,11 @@ export enum CommitteeRoleEnum {
   Member,
 }
 
+export enum DepartmentRoleEnum {
+  Chief = 1,
+  Member,
+}
+
 export const getDisplayNameCommitteeTypeEnum = (
   type: CommitteeTypeEnum | undefined,
 ) => {
