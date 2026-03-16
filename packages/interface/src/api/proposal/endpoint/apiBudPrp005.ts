@@ -6,7 +6,7 @@ import { zBudgetProposalIncomeResponse } from "../type/budget-proposal-income.ty
 
 /**
  * @version v0.1
- * @description 각 매니저의 권한으로 예산 수입을 제출합니다
+ * @description 매니저(manager) 권한으로 예산안 수입 revision(budgetProposalIncomeRevision)을 제출합니다.
  */
 
 const url = () => `/manager/proposals/budget-proposals/income-revision/submit`;

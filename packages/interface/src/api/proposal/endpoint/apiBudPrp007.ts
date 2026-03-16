@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 각 매니저 권한으로 새로운 예산안(수출)을 생성합니다.
+ * @description 매니저(organizationManager) 권한으로 새로운 예산안 지출(budgetProposalExpense)을 생성합니다.
  */
 
 const url = () => `/manager/proposals/budget-proposals/expense/create`;

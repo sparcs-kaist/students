@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 각 단체장단 권한으로, 새로운 운영위원회를 생성합니다.
+ * @description 단체장(president) 권한으로, 운영위원회(organizationCommittee)를 생성합니다.
  */
 
 const url = () => `/president/organizations/operating-committee`;

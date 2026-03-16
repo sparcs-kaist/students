@@ -5,7 +5,7 @@ import { zOrganizationPresident } from "../type/organization.student.type";
 
 /**
  * @version v0.1
- * @description 총학생회장 권한으로 단체장(부회장)을 임명합니다.
+ * @description 총학생회장(uapresident) 권한으로 단체장(president)을 임명합니다.
  */
 
 export const zOrganizationPresidentRequestCreate = zOrganizationPresident
