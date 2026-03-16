@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
-import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
   apiOrg005,
@@ -26,21 +25,21 @@ import {
   GetStudent,
   StudentProfile,
 } from "@sparcs-students/api/common/decorators/get-user.decorator";
+import { PresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { OrganizationService } from "../service/organization.service";
 
+@PresidentOnly()
 @Controller("president/organizations")
 export class OrganizationPresidentController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   // 단체장단 권한으로 단체 멤버 정보를 불러옵니다.
-  @Public() // 임시. 단체장단 데코레이터 추가 필요
   @Get("get-applying")
   async getApplying(@GetStudent() student: StudentProfile) {
     return this.organizationService.getApplying(student);
   }
 
   // 단체장단 권한으로 단체 멤버 임명
-  @Public() // 임시. 단체장단 데코레이터 추가 필요
   @Post("member")
   @UsePipes(new ZodPipe(apiOrg005))
   async createMember(@Body() body: ApiOrg005RequestBody) {
@@ -48,14 +47,13 @@ export class OrganizationPresidentController {
   }
 
   // 단체장단 권한으로 단체 매니저 임명
-  @Public() // 임시. 단체장단 데코레이터 추가 필요
   @Post("manager")
   @UsePipes(new ZodPipe(apiOrg006))
   async createManager(@Body() body: ApiOrg006RequestBody) {
     return this.organizationService.createManager(body);
   }
 
-  @Public() // TODO: 유저 데코레이터 추가
+  // 단체장단 권한으로 팀 생성
   @Post("teams/team")
   @UsePipes(new ZodPipe(apiOrg007))
   async postOrganizationTeamForPresident(
@@ -64,7 +62,7 @@ export class OrganizationPresidentController {
     return this.organizationService.postOrganizationTeamForPresident(body.team);
   }
 
-  @Public() // TODO: 유저 데코레이터 추가
+  // 단체장단 권한으로 팀 멤버 생성
   @Post("teams/member")
   @UsePipes(new ZodPipe(apiOrg008))
   async postOrganizationTeamMemberForPresident(
@@ -75,7 +73,7 @@ export class OrganizationPresidentController {
     );
   }
 
-  @Public() // TODO: 유저 데코레이터 추가
+  // 단체장단 권한으로 팀 리더 생성
   @Post("teams/leader")
   @UsePipes(new ZodPipe(apiOrg009))
   async postOrganizationTeamLeaderForPresident(
@@ -86,7 +84,7 @@ export class OrganizationPresidentController {
     );
   }
 
-  @Public() // 임시로 로그인 없이 생성. 총학생회장 데코레이터 추가 필요
+  // 단체장단 권한으로 운영위원회 생성
   @Post("operating-committee")
   @UsePipes(new ZodPipe(apiOrg012))
   async createOperatingCommittee(
@@ -97,7 +95,7 @@ export class OrganizationPresidentController {
     );
   }
 
-  @Public() // 임시. 단체장단 데코레이터 추가 필요
+  // 단체장단 권한으로 운영위원회 멤버 생성
   @Post("operating-committee/member")
   @UsePipes(new ZodPipe(apiOrg013))
   async createOperatingCommitteeMember(

@@ -6,6 +6,7 @@ import { AuthChain } from "./auth.chain";
 import { IsPublicCommand } from "./command/isPublic.command";
 import { JwtCookieCommand } from "./command/jwt.cookie.command";
 import { SidCommand } from "./command/sid.command";
+import { RequirePositionCommand } from "./command/requirePosition.command";
 
 @Injectable()
 export class AuthConfig {
@@ -15,6 +16,7 @@ export class AuthConfig {
     private readonly jwtHeaderCommand: JwtHeaderCommand,
     private readonly sidCommand: SidCommand,
     private readonly isPublicCommand: IsPublicCommand,
+    private readonly requirePositionCommand: RequirePositionCommand,
   ) {}
 
   public async config(env: string) {
@@ -29,18 +31,21 @@ export class AuthConfig {
       .register(this.isPublicCommand)
       .register(this.sidCommand)
       .register(this.jwtHeaderCommand)
-      .register(this.jwtCookieCommand);
+      .register(this.jwtCookieCommand)
+      .register(this.requirePositionCommand);
 
   private getDevGuardConfig = () =>
     this.authChain
       .register(this.isPublicCommand)
       .register(this.sidCommand)
       .register(this.jwtHeaderCommand)
-      .register(this.jwtCookieCommand);
+      .register(this.jwtCookieCommand)
+      .register(this.requirePositionCommand);
 
   private getProdGuardConfig = () =>
     this.authChain
       .register(this.jwtHeaderCommand)
       .register(this.jwtCookieCommand)
-      .register(this.isPublicCommand);
+      .register(this.isPublicCommand)
+      .register(this.requirePositionCommand);
 }
