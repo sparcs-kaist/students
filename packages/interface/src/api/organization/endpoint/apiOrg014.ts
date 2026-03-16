@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 총 학생회장 권한으로 단체를 삭제합니다.
+ * @description 총학생회장(uapresident) 권한으로 단체(organization)를 삭제합니다.
  */
 
 const url = (id: number) =>

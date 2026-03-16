@@ -70,9 +70,12 @@ export class OrganizationPublicService {
         org.startTerm <= semester.endTerm,
     );
 
-    const organizationsOfType = organizationsInSemester.filter(
-      org => org.organizationTypeEnum === organizationTypeEnum,
-    );
+    const organizationsOfType =
+      organizationTypeEnum !== undefined
+        ? organizationsInSemester.filter(
+            org => org.organizationTypeEnum === organizationTypeEnum,
+          )
+        : organizationsInSemester;
 
     return {
       organizationLists: organizationsOfType,

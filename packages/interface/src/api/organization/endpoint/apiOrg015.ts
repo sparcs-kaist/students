@@ -6,7 +6,7 @@ import { zOrganization } from "../type/organization.type";
 
 /**
  * @version v0.1
- * @description 특정 semester, 특정 집단의 단체 목록을 불러옵니다.
+ * @description 특정 semester, organizationTypeEnum의 단체 목록을 불러옵니다.
  */
 
 const url = () => `/organizations/getbytype`;
@@ -18,8 +18,8 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  semesterId: zId,
-  organizationTypeEnum: z.coerce.number(),
+  semesterId: zId.optional(),
+  organizationTypeEnum: z.coerce.number().optional(),
 });
 
 const responseBodyMap = {

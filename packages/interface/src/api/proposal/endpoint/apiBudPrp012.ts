@@ -6,7 +6,7 @@ import { zBudgetProposalIncomeRevision } from "@sparcs-students/interface/api/pr
 
 /**
  * @version v0.1
- * @description 예산안 수입 revision 최신본을 조회합니다.
+ * @description 예산안 수입 revision(budgetProposalIncomeRevision) 최신본을 조회합니다.
  */
 
 const url = () => `student/proposals/budget-proposals/income/getRecent`;

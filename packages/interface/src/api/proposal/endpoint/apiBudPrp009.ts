@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 각 매니저 권한으로 예산 지출을 수정합니다.
+ * @description 매니저(manager) 권한으로 예산안 지출 revision(budgetProposalExpenseRevision)을 수정합니다.
  * 만약 가장 최신의 revision이 submit되어있는 상태라면, 새로운 revision을 생성합니다
  */
 

@@ -6,7 +6,7 @@ import { zBudgetProposalExpenseRevision } from "@sparcs-students/interface/api/p
 
 /**
  * @version v0.1
- * @description 예산안 지출 revision 최신본을 조회합니다.
+ * @description 예산안 지출 revision(budgetProposalExpenseRevision) 최신본을 조회합니다.
  */
 
 const url = () => `student/proposals/budget-proposals/expense/getRecent`;

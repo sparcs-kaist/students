@@ -4,7 +4,7 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
 
 /**
  * @version v0.1
- * @description 예산안 수입을 삭제합니다.
+ * @description 매니저(manager) 권한으로 예산안 수입(budgetProposalIncome)을 삭제합니다.
  */
 
 const url = () => `/manager/proposals/budget-proposals/income/delete`;

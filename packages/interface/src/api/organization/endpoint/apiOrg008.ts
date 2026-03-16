@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 각 단체장단의 권한으로, teamMember를 임명합니다.
+ * @description 단체장(president) 권한으로, 팀 멤버(teamMember)를 임명합니다.
  */
 
 const url = () => `/president/organizations/teams/member`;

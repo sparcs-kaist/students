@@ -5,7 +5,7 @@ import { zBudgetProposalIncomeDocumentReview } from "../type/budget-proposal-inc
 
 /**
  * @version v0.1
- * @description 각 매니저 권한으로 IncomeDocumentReview를 조회합니다.
+ * @description 매니저(manager) 권한으로 IncomeDocumentReview를 조회합니다.
  */
 
 const url = () =>
