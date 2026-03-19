@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UsePipes } from "@nestjs/common";
+import { Controller, Get, Query, UsePipes } from "@nestjs/common";
 import {
   apiBudPrp012,
   apiBudPrp013,
@@ -6,16 +6,12 @@ import {
   apiBudPrp015,
   apiBudPrp016,
   apiBudPrp017,
-  apiPrp017,
-  apiPrp020,
   ApiBudPrp012RequestQuery,
   ApiBudPrp013RequestQuery,
   ApiBudPrp014RequestQuery,
   ApiBudPrp015RequestQuery,
   ApiBudPrp016RequestQuery,
   ApiBudPrp017RequestQuery,
-  ApiPrp017RequestParam,
-  ApiPrp020RequestParam,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -79,25 +75,5 @@ export class ProposalController {
     @Query() query: ApiBudPrp017RequestQuery,
   ) {
     return this.proposalService.getBudgetProposalExpenseRevisionsByDate(query);
-  }
-
-  // 하단은 DocumentReview 관련.
-
-  // IncomeDocumentReview 조회
-  @Get("income-document-review/read/:budgetProposalIncomeRevisionId")
-  @UsePipes(new ZodPipe(apiPrp017))
-  async readBudgetProposalIncomeDocumentReview(
-    @Param() params: ApiPrp017RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalIncomeDocumentReview(params);
-  }
-
-  // ExpenseDocumentReview 조회
-  @Get("expense-document-review/read/:budgetProposalExpenseRevisionId")
-  @UsePipes(new ZodPipe(apiPrp020))
-  async readBudgetProposalExpenseDocumentReview(
-    @Param() params: ApiPrp020RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalExpenseDocumentReview(params);
   }
 }
