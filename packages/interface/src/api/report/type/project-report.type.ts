@@ -10,14 +10,11 @@ import { zDuration } from "@sparcs-students/interface/common/type/time.type";
 import { zDocumentItemName } from "@sparcs-students/interface/common/stringLength";
 import { zRevisionBase } from "@sparcs-students/interface/common/type/revision-base.type";
 
-import { zProjectProposal } from "@sparcs-students/interface/api/proposal/type/project-proposal.type";
-
 // ProjectReport: 사업계획서 각 행 엔티티
 export const zProjectReport = z.object({
   id: zId,
   organization: zExtractId(zOrganization),
   semester: zExtractId(zSemester),
-  projectProposal: zExtractId(zProjectProposal),
 });
 
 export type IProjectReport = z.infer<typeof zProjectReport>;
@@ -32,7 +29,6 @@ export const zProjectReportRevision = z
     duration: zDuration.optional(), // null: 반기 단위 상시 사업
     timelines: z.array(
       z.object({
-        // name: z.string().max(255),
         duration: zDuration,
         detail: z.string(),
         note: z.string().optional(),
@@ -40,10 +36,9 @@ export const zProjectReportRevision = z
     ),
     team: zExtractId(zTeam),
     manager: zExtractId(zStudent).nullable(),
+    purpose: z.string(),
+    target: z.string(),
     detail: z.string(),
-    participation: z.string(),
-    result: z.string(),
-    unmet: z.string(),
     note: z.string(),
   })
   .merge(zRevisionBase);
