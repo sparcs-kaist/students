@@ -109,7 +109,12 @@ const LargeFrame: React.FC<MainPageFrameProps> = ({
     <MainPageWrapper>
       <LeftWrapper>
         <Banner />
-        <SingleColumnTable header="공지사항" rows={notice} mini />
+        <SingleColumnTable
+          header="공지사항"
+          rows={notice}
+          mini
+          moreLink="/notice"
+        />
       </LeftWrapper>
       <RightWrapper>
         <Calendar title="학사일정" existDates={[]} selectedDates={[]} />
@@ -143,7 +148,12 @@ const SmallFrame: React.FC<MainPageFrameProps> = ({
     </PageTitleWrapper>
     <Banner />
     <Calendar title="학사일정" existDates={[]} selectedDates={[]} />
-    <SingleColumnTable header="공지사항" rows={notice} mini={_isMobile} />
+    <SingleColumnTable
+      header="공지사항"
+      rows={notice}
+      mini={_isMobile}
+      moreLink="/notice"
+    />
   </VerticalWrapper>
 );
 

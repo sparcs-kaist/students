@@ -33,8 +33,8 @@ export const dataToTotal = (
         ...acc,
         [budgetDomain]: {
           ...prev,
-          incomeLastYear: prev.incomeLastYear + (lastYear as number),
-          incomeThisYear: prev.incomeThisYear + (thisYear as number),
+          incomeLastYear: prev.incomeLastYear + Number(lastYear),
+          incomeThisYear: prev.incomeThisYear + Number(thisYear),
         },
       };
     },
@@ -57,8 +57,8 @@ export const dataToTotal = (
       ...acc,
       [budgetDomain]: {
         ...prev,
-        expenditureLastYear: prev.expenditureLastYear + (lastYear as number),
-        expenditureThisYear: prev.expenditureThisYear + (thisYear as number),
+        expenditureLastYear: prev.expenditureLastYear + Number(lastYear),
+        expenditureThisYear: prev.expenditureThisYear + Number(thisYear),
       },
     };
   }, incomeMap);

@@ -2,32 +2,30 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
-  Param,
+  Patch,
   Post,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 import {
-  apiPrp008,
-  apiPrp009,
-  apiPrp010,
-  apiPrp011,
-  apiPrp012,
-  apiPrp013,
-  apiPrp014,
-  apiPrp015,
-  apiPrp017,
-  apiPrp020,
-  ApiPrp008RequestBody,
-  ApiPrp009RequestBody,
-  ApiPrp010RequestParam,
-  ApiPrp011RequestBody,
-  ApiPrp012RequestBody,
-  ApiPrp013RequestParam,
-  ApiPrp014RequestParam,
-  ApiPrp015RequestParam,
-  ApiPrp017RequestParam,
-  ApiPrp020RequestParam,
+  apiBudPrp002,
+  apiBudPrp003,
+  apiBudPrp004,
+  apiBudPrp005,
+  apiBudPrp006,
+  apiBudPrp007,
+  apiBudPrp008,
+  apiBudPrp009,
+  apiBudPrp010,
+  apiBudPrp011,
+  ApiBudPrp002RequestBody,
+  ApiBudPrp003RequestBody,
+  ApiBudPrp004RequestBody,
+  ApiBudPrp005RequestBody,
+  ApiBudPrp007RequestBody,
+  ApiBudPrp008RequestBody,
+  ApiBudPrp009RequestBody,
+  ApiBudPrp010RequestBody,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -35,18 +33,20 @@ import {
   GetStudent,
   StudentProfile,
 } from "@sparcs-students/api/common/decorators/get-user.decorator";
+import { ManagerOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { ProposalService } from "../service/proposal.service";
 
+@ManagerOnly()
 @Controller("manager/proposals/budget-proposals")
 export class ProposalManagerController {
   constructor(private readonly proposalService: ProposalService) {}
 
   // 각 매니저 권한으로 예산안 수입 생성
   @Post("income/create")
-  @UsePipes(new ZodPipe(apiPrp008))
+  @UsePipes(new ZodPipe(apiBudPrp002))
   async createBudgetProposalIncome(
     @GetStudent() student: StudentProfile,
-    @Body() body: ApiPrp008RequestBody,
+    @Body() body: ApiBudPrp002RequestBody,
   ) {
     return this.proposalService.createBudgetProposalIncome(
       student,
@@ -56,10 +56,10 @@ export class ProposalManagerController {
 
   // 각 매니저 권한으로 예산안 수입 revision 생성
   @Post("income-revision/create")
-  @UsePipes(new ZodPipe(apiPrp009))
+  @UsePipes(new ZodPipe(apiBudPrp003))
   async createBudgetProposalIncomeRevision(
     @GetStudent() student: StudentProfile,
-    @Body() body: ApiPrp009RequestBody,
+    @Body() body: ApiBudPrp003RequestBody,
   ) {
     return this.proposalService.createBudgetProposalIncomeRevision(
       student,
@@ -67,12 +67,48 @@ export class ProposalManagerController {
     );
   }
 
-  // 각 매니저 권한으로 예산안 수출 생성
+  // 각 매니저 권한으로 예산안 수입 revision 수정
+  @Patch("income-revision/update")
+  @UsePipes(new ZodPipe(apiBudPrp004))
+  async updateBudgetProposalIncomeRevision(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiBudPrp004RequestBody,
+  ) {
+    return this.proposalService.updateBudgetProposalIncomeRevision(
+      student,
+      body.budgetProposalIncomeRevision,
+    );
+  }
+
+  // 각 매니저 권한으로 예산안 수입 revision 제출
+  @Patch("income-revision/submit")
+  @UsePipes(new ZodPipe(apiBudPrp005))
+  async submitBudgetProposalIncomeRevision(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiBudPrp005RequestBody,
+  ) {
+    return this.proposalService.submitBudgetProposalIncomeRevision(
+      student,
+      body,
+    );
+  }
+
+  // 예산안 수입 삭제
+  @Delete("income/delete")
+  @UsePipes(new ZodPipe(apiBudPrp006))
+  async deleteBudgetProposalIncome(
+    @GetStudent() student: StudentProfile,
+    @Query() query,
+  ) {
+    return this.proposalService.deleteBudgetProposalIncome(student, query);
+  }
+
+  // 각 매니저 권한으로 예산안 지출 생성
   @Post("expense/create")
-  @UsePipes(new ZodPipe(apiPrp011))
+  @UsePipes(new ZodPipe(apiBudPrp007))
   async createBudgetProposalExpense(
     @GetStudent() student: StudentProfile,
-    @Body() body: ApiPrp011RequestBody,
+    @Body() body: ApiBudPrp007RequestBody,
   ) {
     return this.proposalService.createBudgetProposalExpense(
       student,
@@ -80,12 +116,12 @@ export class ProposalManagerController {
     );
   }
 
-  // 각 매니저 권한으로 예산안 수출 revision 생성
+  // 각 매니저 권한으로 예산안 지출 revision 생성
   @Post("expense-revision/create")
-  @UsePipes(new ZodPipe(apiPrp012))
+  @UsePipes(new ZodPipe(apiBudPrp008))
   async createBudgetProposalExpenseRevision(
     @GetStudent() student: StudentProfile,
-    @Body() body: ApiPrp012RequestBody,
+    @Body() body: ApiBudPrp008RequestBody,
   ) {
     return this.proposalService.createBudgetProposalExpenseRevision(
       student,
@@ -93,57 +129,39 @@ export class ProposalManagerController {
     );
   }
 
-  // 예산안 수입 revision 조회
-  @Get("income-revision/read/:budgetProposalIncomeId")
-  @UsePipes(new ZodPipe(apiPrp010))
-  async readBudgetProposalIncomeRevision(
-    @Param() params: ApiPrp010RequestParam,
+  // 각 매니저 권한으로 예산안 지출 revision 수정
+  @Patch("expense-revision/update")
+  @UsePipes(new ZodPipe(apiBudPrp009))
+  async updateBudgetProposalExpenseRevision(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiBudPrp009RequestBody,
   ) {
-    return this.proposalService.readBudgetProposalIncomeRevision(params);
+    return this.proposalService.updateBudgetProposalExpenseRevision(
+      student,
+      body.budgetProposalExpenseRevision,
+    );
   }
 
-  // 예산안 수출 revision 조회
-  @Get("expense-revision/read/:budgetProposalExpenseId")
-  @UsePipes(new ZodPipe(apiPrp013))
-  async readBudgetProposalExpenseRevision(
-    @Param() params: ApiPrp013RequestParam,
+  // 각 매니저 권한으로 예산안 지출 revision 제출
+  @Patch("expense-revision/submit")
+  @UsePipes(new ZodPipe(apiBudPrp010))
+  async submitBudgetProposalExpenseRevision(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiBudPrp010RequestBody,
   ) {
-    return this.proposalService.readBudgetProposalExpenseRevision(params);
+    return this.proposalService.submitBudgetProposalExpenseRevision(
+      student,
+      body,
+    );
   }
 
-  // 예산안 수입 revision 삭제
-  @Delete("income-revision/delete/:budgetProposalIncomeRevisionId")
-  @UsePipes(new ZodPipe(apiPrp014))
-  async deleteBudgetProposalIncomeRevision(
-    @Param() params: ApiPrp014RequestParam,
+  // 예산안 지출 삭제
+  @Delete("expense/delete")
+  @UsePipes(new ZodPipe(apiBudPrp011))
+  async deleteBudgetProposalExpense(
+    @GetStudent() student: StudentProfile,
+    @Query() query,
   ) {
-    return this.proposalService.deleteBudgetProposalIncomeRevision(params);
-  }
-
-  // 예산안 수출 revision 삭제
-  @Delete("expense-revision/delete/:budgetProposalExpenseRevisionId")
-  @UsePipes(new ZodPipe(apiPrp015))
-  async deleteBudgetProposalExpenseRevision(
-    @Param() params: ApiPrp015RequestParam,
-  ) {
-    return this.proposalService.deleteBudgetProposalExpenseRevision(params);
-  }
-
-  // 각 매니저 권한으로 IncomeDocumentReview 조회
-  @Get("income-document-review/read/:budgetProposalIncomeRevisionId")
-  @UsePipes(new ZodPipe(apiPrp017))
-  async readBudgetProposalIncomeDocumentReview(
-    @Param() params: ApiPrp017RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalIncomeDocumentReview(params);
-  }
-
-  // 각 매니저 권한으로 ExpenseDocumentReview 조회
-  @Get("expense-document-review/read/:budgetProposalExpenseRevisionId")
-  @UsePipes(new ZodPipe(apiPrp020))
-  async readBudgetProposalExpenseDocumentReview(
-    @Param() params: ApiPrp020RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalExpenseDocumentReview(params);
+    return this.proposalService.deleteBudgetProposalExpense(student, query);
   }
 }

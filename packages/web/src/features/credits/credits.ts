@@ -21,6 +21,60 @@ export interface SemesterCredit {
 
 const credits: SemesterCredit[] = [
   {
+    semester: "2025년 가을",
+    members: [
+      {
+        nickname: "malloc",
+        name: "최지윤",
+        role: "PM",
+        roleType: RoleType.PM,
+        comment: "malloc",
+      },
+      {
+        nickname: "casio",
+        name: "임가은",
+        role: "FE/BE",
+        roleType: RoleType.member,
+        comment: "casio",
+      },
+      {
+        nickname: "dori",
+        name: "송진형",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "dori",
+      },
+      {
+        nickname: "fi",
+        name: "김도현",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "fi",
+      },
+      {
+        nickname: "siwon",
+        name: "박정원",
+        role: "FE/Designer",
+        roleType: RoleType.member,
+        comment: "siwon",
+      },
+      {
+        nickname: "somato",
+        name: "장성원",
+        role: "Designer",
+        roleType: RoleType.member,
+        comment: "somato",
+      },
+      {
+        nickname: "thxx",
+        name: "강태현",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "thxx",
+      },
+    ],
+  },
+  {
     semester: "2025년 봄",
     members: [
       {

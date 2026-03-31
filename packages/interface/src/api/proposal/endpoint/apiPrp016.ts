@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 각 집행부원 권한으로 IncomeDocumentReview를 생성합니다.
+ * @description 집행부원(staff) 권한으로 IncomeDocumentReview를 생성합니다.
  */
 
 const url = () =>

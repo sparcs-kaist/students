@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
 
 import { OrganizationRepository } from "../repository/organization.repository";
@@ -47,6 +51,35 @@ export class OrganizationPublicService {
     });
 
     return { organizationLists };
+  }
+
+  async getOrganizationListByType(body) {
+    const allOrganizations = await this.organizationRepository.find({});
+    const semesters = await this.semesterPublicService.fetchSemesterAll();
+
+    const { semesterId, organizationTypeEnum } = body;
+
+    const semester = semesters.find(s => s.id === semesterId);
+    if (!semester) {
+      throw new NotFoundException("Semester not found");
+    }
+
+    const organizationsInSemester = allOrganizations.filter(
+      org =>
+        org.startTerm >= semester.startTerm &&
+        org.startTerm <= semester.endTerm,
+    );
+
+    const organizationsOfType =
+      organizationTypeEnum !== undefined
+        ? organizationsInSemester.filter(
+            org => org.organizationTypeEnum === organizationTypeEnum,
+          )
+        : organizationsInSemester;
+
+    return {
+      organizationLists: organizationsOfType,
+    };
   }
 
   async applyMember(student, body) {

@@ -4,8 +4,6 @@ import { IBudgetProposalExpenseRevision } from "@sparcs-students/interface/api/p
 export interface IBudgetProposalExpenseRevisionCreate {
   budgetProposalExpense: IBudgetProposalExpenseRevision["budgetProposalExpense"];
 
-  previousBudgetReportExpense: IBudgetProposalExpenseRevision["previousBudgetReportExpense"];
-
   budgetDomainEnum: IBudgetProposalExpenseRevision["budgetDomainEnum"];
 
   budgetDivisionExpenseEnum: IBudgetProposalExpenseRevision["budgetDivisionExpenseEnum"];
@@ -28,8 +26,6 @@ export class MBudgetProposalExpenseRevision
   static modelName = "BudgetProposalExpense";
 
   budgetProposalExpense: IBudgetProposalExpenseRevision["budgetProposalExpense"];
-
-  previousBudgetReportExpense: IBudgetProposalExpenseRevision["previousBudgetReportExpense"];
 
   budgetDomainEnum: IBudgetProposalExpenseRevision["budgetDomainEnum"];
 

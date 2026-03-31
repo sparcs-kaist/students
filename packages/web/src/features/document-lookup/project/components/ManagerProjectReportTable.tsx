@@ -27,7 +27,7 @@ import DarkTag, {
 import { ReadOnlyReviewButton } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum";
 import { useRouter } from "next/navigation";
-import ProjectHelpButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ProjectHelpButton";
+import HelpButton from "@sparcs-students/web/common/components/Buttons/HelperButton";
 import { ProjectReportTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
 
@@ -273,7 +273,9 @@ const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
                   사업 보고서
                 </Typography>
               </TitleWrapper>
-              <ProjectHelpButton />
+              <HelpButton
+                tooltip={`항목을 클릭하면 \n상세 페이지로 이동하여 수정할 수 있습니다.`}
+              />
             </TitleWithToolTipWrapper>
             <Button type="default" onClick={addNewRow}>
               추가

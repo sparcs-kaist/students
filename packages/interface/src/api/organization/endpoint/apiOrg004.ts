@@ -4,7 +4,7 @@ import { zOrganizationPresident } from "../type/organization.student.type";
 
 /**
  * @version v0.1
- * @description 총학생회장의 권한으로 기구장의 임기를 종료합니다.
+ * @description 총학생회장(uapresident)의 권한으로 단체장(president)의 임기를 종료합니다.
  */
 
 const url = (id: number) => `/uapresident/organizations/president/${id}/retire`;

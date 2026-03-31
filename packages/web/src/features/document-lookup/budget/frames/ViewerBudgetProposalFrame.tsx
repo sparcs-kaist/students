@@ -10,8 +10,7 @@ import {
   mockDBExpenditureData,
 } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockManagerFormData";
 
-// TotalTable용 mock 데이터는 별도로 import
-import { mockTotalData } from "@sparcs-students/web/features/document-lookup/budget/services/_mock/mockViewerReviewerBudgetData";
+import { dataToTotal } from "@sparcs-students/web/features/document-lookup/budget/util/dataToTotal";
 
 const ViewerBudgetProposalFrame = () => (
   <FlexWrapper direction="column" gap={48}>
@@ -25,7 +24,7 @@ const ViewerBudgetProposalFrame = () => (
       pageId="1"
     />
     {/* 통합 테이블 */}
-    <TotalTable data={mockTotalData} />
+    <TotalTable data={dataToTotal(mockDBIncomeData, mockDBExpenditureData)} />
   </FlexWrapper>
 );
 

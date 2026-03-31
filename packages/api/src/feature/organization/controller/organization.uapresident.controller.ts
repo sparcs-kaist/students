@@ -1,5 +1,12 @@
-import { Body, Controller, Param, Patch, Post, UsePipes } from "@nestjs/common";
-import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+} from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
   apiOrg002,
@@ -9,25 +16,34 @@ import {
   apiOrg004,
   ApiOrg004RequestParam,
   ApiOrg004RequestBody,
+  apiOrg014,
+  ApiOrg014RequestParam,
 } from "@sparcs-students/interface/api/organization/index";
-import {} from // GetUser,
-"@sparcs-students/api/common/decorators/get-user.decorator";
+// import {} from // GetUser,
+// "@sparcs-students/api/common/decorators/get-user.decorator";
+import { UapresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { OrganizationService } from "../service/organization.service";
 
+@UapresidentOnly()
 @Controller("uapresident/organizations")
 export class OrganizationUapresidentController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   // 총학생회장 권한으로 단체 생성
-  @Public() // 임시로 로그인 없이 생성. 총학생회장 데코레이터 추가 필요
   @Post("organization")
   @UsePipes(new ZodPipe(apiOrg002))
   async createOrganization(@Body() body: ApiOrg002RequestBody) {
     return this.organizationService.createOrganization(body);
   }
 
+  // 총학생회장 권한으로 단체 삭제
+  @Delete("organization/:id/delete")
+  @UsePipes(new ZodPipe(apiOrg014))
+  async deleteOrganization(@Param() param: ApiOrg014RequestParam) {
+    return this.organizationService.deleteOrganization(param);
+  }
+
   // 총학생회장 권한으로 단체 회장/부회장 임명
-  @Public() // 임시 "
   @Post("president")
   @UsePipes(new ZodPipe(apiOrg003))
   async createPresident(@Body() body: ApiOrg003RequestBody) {
@@ -35,7 +51,6 @@ export class OrganizationUapresidentController {
   }
 
   // 총학생회장 권한으로 단체장 임기 종료
-  @Public() // 임시 ""
   @Patch("president/:id/retire")
   @UsePipes(new ZodPipe(apiOrg004))
   async retirePresident(

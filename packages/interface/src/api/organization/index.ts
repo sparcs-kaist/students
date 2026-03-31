@@ -16,9 +16,6 @@ export { default as apiOrg005 } from "./endpoint/apiOrg005"; // default export �
 export * from "./endpoint/apiOrg006";
 export { default as apiOrg006 } from "./endpoint/apiOrg006"; // default export 추가
 
-export * from "./endpoint/apiOrg011";
-export { default as apiOrg011 } from "./endpoint/apiOrg011"; // default export 추가
-
 export * from "./endpoint/apiOrg007";
 export { default as apiOrg007 } from "./endpoint/apiOrg007"; // default export 추가
 
@@ -27,3 +24,18 @@ export { default as apiOrg008 } from "./endpoint/apiOrg008"; // default export �
 
 export * from "./endpoint/apiOrg009";
 export { default as apiOrg009 } from "./endpoint/apiOrg009"; // default export 추가
+
+export * from "./endpoint/apiOrg011";
+export { default as apiOrg011 } from "./endpoint/apiOrg011"; // default export 추가
+
+export * from "./endpoint/apiOrg012";
+export { default as apiOrg012 } from "./endpoint/apiOrg012"; // default export 추가
+
+export * from "./endpoint/apiOrg013";
+export { default as apiOrg013 } from "./endpoint/apiOrg013"; // default export 추가
+
+export * from "./endpoint/apiOrg014";
+export { default as apiOrg014 } from "./endpoint/apiOrg014"; // default export 추가
+
+export * from "./endpoint/apiOrg015";
+export { default as apiOrg015 } from "./endpoint/apiOrg015"; // default export 추가

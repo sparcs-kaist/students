@@ -5,7 +5,7 @@ import { zOrganizationMember } from "../type/organization.student.type";
 
 /**
  * @version v0.1
- * @description 특정 단체에 멤버가 되기를 신청합니다.
+ * @description 멤버(organizationMember)가 되기를 신청합니다.
  */
 
 export const zOrganizationMemberApplyRequestCreate = zOrganizationMember
