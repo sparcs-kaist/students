@@ -8,6 +8,7 @@ const headerPaths: (keyof Paths)[] = [
   "ACTIVITY_CERTIFICATE",
   "PETITION",
   "ORGANIZATION_MANAGE",
+  "UAPRESIDENT",
 ];
 const footerPaths: (keyof Paths)[] = ["MADE_BY", "LICENSE", "TERMS_OF_SERVICE"];
 

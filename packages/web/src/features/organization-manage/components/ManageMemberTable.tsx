@@ -94,7 +94,7 @@ export interface OrganizationMemberProps {
   id: number;
   studentId: string;
   name: string;
-  role: RoleEnumType; // TODO: change to real enum
+  role: RoleEnumType;
   startDate: string;
   endDate: string;
 }
@@ -122,6 +122,10 @@ const COL_WIDTHS = {
   date: "168px",
   delete: "80px",
 };
+
+const TABLE_HEADER_HEIGHT = 36;
+const TABLE_ROW_HEIGHT = 48;
+const TABLE_EXTRA_HEIGHT = 125;
 
 interface MemberRowProps {
   getValues: UseFormGetValues<MemberFormValues>;
@@ -363,7 +367,9 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   }, [members, onDiffExtract]);
 
   const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
-    36 + (members.length + 1) * 48 + 125, // TODO: magic number 36 + 48 + 250
+    TABLE_HEADER_HEIGHT +
+      (members.length + 1) * TABLE_ROW_HEIGHT +
+      TABLE_EXTRA_HEIGHT,
   );
 
   const onSubmit = (data: MemberFormValues) => {
@@ -380,14 +386,22 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
     remove(rowIndex);
     const length = members.length - 1;
 
-    setDynamicHeight(36 + length * 48 + 125); // TODO: magic number
+    setDynamicHeight(
+      TABLE_HEADER_HEIGHT +
+        (length + 1) * TABLE_ROW_HEIGHT +
+        TABLE_EXTRA_HEIGHT,
+    );
   };
 
   const addNewRow = (newRow: OrganizationMemberProps) => {
     append(newRow);
 
     const length = members.length + 1;
-    setDynamicHeight(36 + length * 48 + 125);
+    setDynamicHeight(
+      TABLE_HEADER_HEIGHT +
+        (length + 1) * TABLE_ROW_HEIGHT +
+        TABLE_EXTRA_HEIGHT,
+    );
   };
 
   const openAddMemberModal = () => {
@@ -399,10 +413,13 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
       >([]);
 
       const onSearch = (text: string) => {
-        // TODO: add search logic
         console.log("search name: ", text);
         setSearchText(text);
-        setSearchResults(mockSearchMemberData);
+        // Simple filter logic on mock data
+        const filtered = mockSearchMemberData.filter(member =>
+          member.name.includes(text),
+        );
+        setSearchResults(filtered);
       };
 
       return (

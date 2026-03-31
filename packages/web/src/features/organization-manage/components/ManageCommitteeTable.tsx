@@ -13,6 +13,12 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import CommitteeNameButton from "@sparcs-students/web/features/organization-manage/components/_atomic/CommitteeNameButton";
+import { overlay } from "overlay-kit";
+import Modal from "@sparcs-students/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
+import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
+import useOrganizationStore from "@sparcs-students/web/features/organization-manage/stores/useOrganizationStore";
+import { createTeam } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 
 export interface CommitteeProps {
   id: string;
@@ -168,6 +174,58 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
     column.minSize = 0;
   });
 
+  const handleAddDepartment = () => {
+    overlay.open(({ isOpen, close }) => {
+      let teamName = "";
+      return (
+        <Modal isOpen={isOpen} width="400px">
+          <CancellableModalContent
+            onConfirm={async () => {
+              try {
+                // Assuming currentOrganizationId is available in context or store, but here we might need to pass it or get it.
+                // Since this component is used in organization-manage page, we can use the store.
+                const { currentOrganizationId } =
+                  useOrganizationStore.getState();
+                if (!currentOrganizationId) {
+                  alert("조직이 선택되지 않았습니다.");
+                  return;
+                }
+
+                await createTeam({
+                  team: {
+                    organization: { id: currentOrganizationId },
+                    name: teamName,
+                    startTerm: new Date(),
+                    endTerm: null,
+                  },
+                });
+                close();
+                window.location.reload(); // Reload to show new team
+              } catch (e) {
+                console.error(e);
+                alert("부서 추가 실패");
+              }
+            }}
+            onClose={close}
+          >
+            <FlexWrapper direction="column" gap={16}>
+              <Typography fs={20} lh={24} fw="BOLD" color="BLACK">
+                부서 추가
+              </Typography>
+              <TableTextInput
+                value={teamName}
+                handleChange={v => {
+                  teamName = v;
+                }}
+                placeholder="부서명 입력"
+              />
+            </FlexWrapper>
+          </CancellableModalContent>
+        </Modal>
+      );
+    });
+  };
+
   return (
     <FlexWrapper direction="column" gap={16}>
       <FlexWrapper direction="row" gap={12}>
@@ -178,9 +236,7 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
           <Button
             buttonText="부서 추가"
             style={{ width: "80px", padding: "8px", fontSize: "14px" }}
-            onClick={() => {
-              // TODO: endpoint로 redirect
-            }}
+            onClick={handleAddDepartment}
           />
         </FlexWrapper>
       </FlexWrapper>

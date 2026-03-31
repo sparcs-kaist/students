@@ -1,11 +1,9 @@
 "use client";
 
+// students/packages/web/src/app/organization-register/page.tsx
+
 import OrganizationSelectCard from "@sparcs-students/web/common/components/SelectCard/OrganizationSelectCard";
-import {
-  mockOrganizationData,
-  mockOrganizationDescriptionData,
-} from "@sparcs-students/web/features/organization-register/services/_mock/mockOrganizationData";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -19,6 +17,13 @@ import { overlay } from "overlay-kit";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-students/web/common/components/Modal/ConfirmModalContent";
 import styled from "styled-components";
+import {
+  applyOrganization,
+  getOrganizationLookup,
+} from "@sparcs-students/web/features/organization-register/api/organizationApi";
+import { ApiOrg011RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
+import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
+import { SelectItem } from "@sparcs-students/web/common/components/Selects/Select";
 
 const CenterWrapper = styled(FlexWrapper)`
   justify-content: center;
@@ -29,17 +34,26 @@ const ApplyButton = styled(Button)`
   padding: 8 16px;
 `;
 
-const OrganizationRegister = () => {
-  const totalList = mockOrganizationData.organizations;
-  const router = useRouter();
-  const keyList = useMemo(() => totalList.map(e => e.key), [totalList]);
+type Organization =
+  ApiOrg001ResponseOK["organizationLists"][0]["organizationTypes"][0]["organizations"][0];
 
+interface OrganizationItem {
+  key: SelectItem<string>;
+  values: SelectItem<string>[];
+}
+
+const OrganizationRegister = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedKey, setSelectedKey] = useState<string | null>(
-    searchParams.get("key"),
+
+  const [organizationData, setOrganizationData] =
+    useState<ApiOrg001ResponseOK | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedKey, setSelectedKey] = useState<string>(
+    searchParams.get("key") || "",
   );
-  const [selectedValue, setSelectedValue] = useState<string | null>(
-    searchParams.get("value"),
+  const [selectedValue, setSelectedValue] = useState<string>(
+    searchParams.get("value") || "",
   );
   const idParam = searchParams.get("id");
   const [selectedId, setSelectedId] = useState<number | null>(
@@ -48,47 +62,139 @@ const OrganizationRegister = () => {
   const [isApplied, setIsApplied] = useState(false);
   const [orgData, setOrgData] = useState<DescriptionProps | null>(null);
 
-  const openApplyModal = () => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} width="400px">
-        <ConfirmModalContent
-          onConfirm={() => {
-            setIsApplied(true);
-            close();
-          }}
-        >
-          신청 완료되었습니다.
-        </ConfirmModalContent>
-      </Modal>
-    ));
+  // API 001로 단체 목록 조회
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getOrganizationLookup();
+        setOrganizationData(data);
+      } catch (error) {
+        console.error("Failed to fetch organizations:", error);
+        alert("단체 목록을 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrganizations();
+  }, []);
+
+  const totalList = useMemo((): OrganizationItem[] => {
+    if (!organizationData?.organizationLists) return [];
+
+    // Group organizations by type
+    const groupedByType = new Map<string, Organization[]>();
+
+    organizationData.organizationLists.forEach(semesterData => {
+      semesterData.organizationTypes.forEach(typeData => {
+        const existing =
+          groupedByType.get(String(typeData.organizationTypeEnum)) || [];
+        groupedByType.set(String(typeData.organizationTypeEnum), [
+          ...existing,
+          ...typeData.organizations,
+        ]);
+      });
+    });
+
+    // Convert to OrganizationItem format
+    const result: OrganizationItem[] = [];
+    groupedByType.forEach((organizations, typeEnum) => {
+      result.push({
+        key: {
+          value: typeEnum,
+          label: typeEnum,
+        },
+        values: organizations.map(org => ({
+          value: org.name,
+          label: org.name,
+          id: org.id,
+        })),
+      });
+    });
+
+    return result;
+  }, [organizationData]);
+
+  const keyList = useMemo(
+    (): SelectItem<string>[] => totalList.map(item => item.key),
+    [totalList],
+  );
+
+  const handleApply = async () => {
+    if (!selectedId) {
+      alert("단체를 선택해주세요.");
+      return;
+    }
+
+    try {
+      const requestBody: ApiOrg011RequestBody = {
+        OrganizationMember: {
+          organization: { id: selectedId },
+        },
+      } as unknown as ApiOrg011RequestBody;
+
+      await applyOrganization(requestBody);
+
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen} width="400px">
+          <ConfirmModalContent
+            onConfirm={() => {
+              setIsApplied(true);
+              close();
+            }}
+          >
+            신청 완료되었습니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+    } catch (error) {
+      console.error("Failed to apply:", error);
+      alert("신청 중 오류가 발생했습니다.");
+    }
   };
 
-  const lookUp = (id: number) => {
+  const lookUp = (id: number | null) => {
+    if (id === null) return;
+
     const query = new URLSearchParams({
-      key: selectedKey ?? "",
-      value: selectedValue ?? "",
-      id: selectedId?.toString() ?? "",
+      key: selectedKey,
+      value: selectedValue,
+      id: id.toString(),
     }).toString();
 
-    // TODO: connect with backend
-    const tmpData = mockOrganizationDescriptionData.data.find(
-      item => item.id === id,
-    );
-    if (tmpData) {
-      setOrgData(
-        (({ label, head, people, description }) => ({
-          label,
-          head,
-          people,
-          description,
-        }))(tmpData),
-      );
+    let selectedOrgName = "";
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of totalList) {
+      if (item.key.value === selectedKey) {
+        const foundValue = item.values.find(
+          val => val.id === id && val.value === selectedValue,
+        );
+        if (foundValue) {
+          selectedOrgName = foundValue.value;
+        }
+        break;
+      }
+    }
+
+    if (selectedOrgName) {
+      setOrgData({
+        label: selectedOrgName,
+        // TODO: Update when API provides these fields (apiOrg001 currently lacks head, people, description)
+        head: "정보 없음",
+        people: 0,
+        description: "설명이 없습니다.",
+      });
     } else {
       setOrgData(null);
     }
 
-    router.push(`/organization-register?${query.toString()}`);
+    router.push(`/organization-register?${query}`);
   };
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <FlexWrapper direction="column" gap={48}>
@@ -105,9 +211,9 @@ const OrganizationRegister = () => {
         <OrganizationSelectCard
           totalList={totalList}
           keyList={keyList}
-          selectedKey={selectedKey ?? ""}
+          selectedKey={selectedKey}
           setSelectedKey={setSelectedKey}
-          selectedValue={selectedValue ?? ""}
+          selectedValue={selectedValue}
           setSelectedValue={setSelectedValue}
           setSelectedId={setSelectedId}
         />
@@ -115,14 +221,15 @@ const OrganizationRegister = () => {
           <Button
             buttonText="조회"
             style={{ marginLeft: "auto", width: "80px" }}
-            onClick={() => lookUp(selectedId as number)}
+            onClick={() => lookUp(selectedId)}
+            type={!selectedId ? "disabled" : "default"}
           />
         </FlexWrapper>
         {orgData !== null && <OrganizationDescription {...orgData} />}
         {orgData !== null && (
           <CenterWrapper direction="row" gap={8}>
             {!isApplied ? (
-              <ApplyButton buttonText="신청" onClick={openApplyModal} />
+              <ApplyButton buttonText="신청" onClick={handleApply} />
             ) : (
               <ApplyButton buttonText="신청 완료" type="disabled" />
             )}
