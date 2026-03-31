@@ -77,19 +77,16 @@ export class ProposalService {
     }
     await this.checkManager(studentId, budgetIncome.organization.id);
 
-    const orgId = budgetIncome.organization.id;
-    const prevSemesterId = budgetIncome.semester.id - 1;
+    // const orgId = budgetIncome.organization.id;
+    // const prevSemesterId = budgetIncome.semester.id - 1;
 
-    const [prevReport] = await this.budgetReportIncomeRepository.find({
-      organizationId: orgId as unknown,
-      semesterId: prevSemesterId as unknown,
-    });
+    // const [prevReport] = await this.budgetReportIncomeRepository.find({
+    //   organizationId: orgId as unknown,
+    //   semesterId: prevSemesterId as unknown,
+    // });
 
     const budgetProposalIncomeRevisionCreateDto = {
       ...body,
-      previousBudgetReportIncome: prevReport
-        ? { id: prevReport.id }
-        : { id: null },
     };
 
     // 생성
@@ -268,19 +265,16 @@ export class ProposalService {
     }
     await this.checkManager(studentId, budgetExpense.organization.id);
 
-    const orgId = budgetExpense.organization.id;
-    const prevSemesterId = budgetExpense.semester.id - 1;
+    // const orgId = budgetExpense.organization.id;
+    // const prevSemesterId = budgetExpense.semester.id - 1;
 
-    const [prevReport] = await this.budgetReportExpenseRepository.find({
-      organizationId: orgId as unknown,
-      semesterId: prevSemesterId as unknown,
-    });
+    // const [prevReport] = await this.budgetReportExpenseRepository.find({
+    //   organizationId: orgId as unknown,
+    //   semesterId: prevSemesterId as unknown,
+    // });
 
     const budgetProposalExpenseRevisionCreateDto = {
       ...body,
-      previousBudgetReportExpense: prevReport
-        ? { id: prevReport.id }
-        : { id: null },
     };
 
     // 생성

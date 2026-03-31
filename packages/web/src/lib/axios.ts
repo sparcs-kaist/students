@@ -81,8 +81,8 @@ axiosClient.interceptors.request.use(
   mockInterceptor.onRejected,
 );
 
-axiosClient.interceptors.request.use(
-  errorInterceptor.onFulfilled,
+axiosClient.interceptors.response.use(
+  response => response,
   errorInterceptor.onRejected,
 );
 
@@ -115,8 +115,8 @@ axiosClientWithAuth.interceptors.request.use(
   tokenInterceptor.onRejected,
 );
 
-axiosClientWithAuth.interceptors.request.use(
-  errorInterceptor.onFulfilled,
+axiosClientWithAuth.interceptors.response.use(
+  response => response,
   errorInterceptor.onRejected,
 );
 
