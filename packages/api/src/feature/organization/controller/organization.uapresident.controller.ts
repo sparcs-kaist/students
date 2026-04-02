@@ -18,9 +18,14 @@ import {
   ApiOrg004RequestBody,
   apiOrg014,
   ApiOrg014RequestParam,
+  apiOrg023,
+  ApiOrg023RequestBody,
+  apiOrg024,
+  ApiOrg024RequestParam,
+  ApiOrg024RequestBody,
+  ApiOrg024ResponseOk,
 } from "@sparcs-students/interface/api/organization/index";
-import {} from // GetUser,
-"@sparcs-students/api/common/decorators/get-user.decorator";
+
 import { UapresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { OrganizationService } from "../service/organization.service";
 
@@ -58,5 +63,21 @@ export class OrganizationUapresidentController {
     @Body() body: ApiOrg004RequestBody,
   ) {
     return this.organizationService.retirePresident(param.id, body);
+  }
+
+  // 총학생회자 권한으로 집행부원 임명 todo
+  @Post("staff")
+  @UsePipes(new ZodPipe(apiOrg023))
+  async createStaff(@Body() body: ApiOrg023RequestBody) {
+    return this.organizationService.createStaff(body);
+  }
+
+  @Patch("staff/:id/retire")
+  @UsePipes(new ZodPipe(apiOrg024))
+  async retireStaff(
+    @Param() param: ApiOrg024RequestParam,
+    @Body() body: ApiOrg024RequestBody,
+  ): Promise<ApiOrg024ResponseOk> {
+    return this.organizationService.retireStaff(param.id, body);
   }
 }
