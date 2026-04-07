@@ -25,7 +25,8 @@ import {
   ApiOrg024RequestBody,
   ApiOrg024ResponseOk,
 } from "@sparcs-students/interface/api/organization/index";
-
+// import {} from // GetUser,
+// "@sparcs-students/api/common/decorators/get-user.decorator";
 import { UapresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { OrganizationService } from "../service/organization.service";
 

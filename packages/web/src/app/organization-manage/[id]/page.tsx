@@ -1,5 +1,7 @@
 "use client";
 
+// students/packages/web/src/app/organization-manage/[id]/page.tsx
+
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import ManageMemberTable, {
