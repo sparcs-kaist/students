@@ -65,13 +65,14 @@ export class OrganizationUapresidentController {
     return this.organizationService.retirePresident(param.id, body);
   }
 
-  // 총학생회자 권한으로 집행부원 임명 todo
+  // 총학생회장 권한으로 집행부원 임명
   @Post("staff")
   @UsePipes(new ZodPipe(apiOrg023))
   async createStaff(@Body() body: ApiOrg023RequestBody) {
     return this.organizationService.createStaff(body);
   }
 
+  // 총학생회장 권한으로 집행부원 은퇴
   @Patch("staff/:id/retire")
   @UsePipes(new ZodPipe(apiOrg024))
   async retireStaff(

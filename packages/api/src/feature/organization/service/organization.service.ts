@@ -9,6 +9,13 @@ import {
   ApiOrg007ResponseCreated,
   ApiOrg008ResponseCreated,
   ApiOrg009ResponseCreated,
+  ApiOrg004RequestBody,
+  ApiOrg016RequestBody,
+  ApiOrg017RequestBody,
+  ApiOrg019RequestBody,
+  ApiOrg020RequestBody,
+  ApiOrg022RequestBody,
+  ApiOrg024RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 import { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
 import {
@@ -221,7 +228,7 @@ export class OrganizationService {
     return { organizationPresident: createdPresident };
   }
 
-  async retirePresident(presidentId: number, body: { endTerm: Date }) {
+  async retirePresident(presidentId: number, body: ApiOrg004RequestBody) {
     const presidentList = [
       await this.organizationPresidentRepository.fetch(presidentId),
     ];
@@ -242,6 +249,8 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedPresident = await this.organizationPresidentRepository.patch(
       { id: presidentId } as BaseRepositoryQuery<
         OrganizationPresidentQuery,
@@ -251,7 +260,7 @@ export class OrganizationService {
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -535,7 +544,7 @@ export class OrganizationService {
     return { operatingCommitteeMember: newMember[0] };
   }
 
-  async retireMember(student, memberId: number, body: { endTerm: Date }) {
+  async retireMember(student, memberId: number, body: ApiOrg016RequestBody) {
     const memberList = [
       await this.organizationMemberRepository.fetch(memberId),
     ];
@@ -558,13 +567,15 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedMember = await this.organizationMemberRepository.patch(
       { id: memberId } as BaseRepositoryQuery<OrganizationMemberQuery, number>,
       model => ({
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -574,7 +585,7 @@ export class OrganizationService {
     };
   }
 
-  async retireManager(student, managerId: number, body: { endTerm: Date }) {
+  async retireManager(student, managerId: number, body: ApiOrg017RequestBody) {
     const managerList = [
       await this.organizationManagerRepository.fetch(managerId),
     ];
@@ -597,6 +608,8 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedManager = await this.organizationManagerRepository.patch(
       { id: managerId } as BaseRepositoryQuery<
         OrganizationManagerQuery,
@@ -606,7 +619,7 @@ export class OrganizationService {
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -635,7 +648,7 @@ export class OrganizationService {
   async retireTeamMember(
     student,
     teamMemberId: number,
-    body: { endTerm: Date },
+    body: ApiOrg019RequestBody,
   ) {
     const teamMemberList = [
       await this.teamMemberRepository.fetch(teamMemberId),
@@ -660,13 +673,15 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedTeamMember = await this.teamMemberRepository.patch(
       { id: teamMemberId } as BaseRepositoryQuery<TeamMemberQuery, number>,
       model => ({
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -679,7 +694,7 @@ export class OrganizationService {
   async retireTeamLeader(
     student,
     teamLeaderId: number,
-    body: { endTerm: Date },
+    body: ApiOrg020RequestBody,
   ) {
     const teamLeaderList = [
       await this.teamLeaderRepository.fetch(teamLeaderId),
@@ -703,13 +718,15 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedTeamLeader = await this.teamLeaderRepository.patch(
       { id: teamLeaderId } as BaseRepositoryQuery<TeamLeaderQuery, number>,
       model => ({
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -727,6 +744,9 @@ export class OrganizationService {
       throw new ConflictException("Operating Committee does not exist.");
     }
 
+    const { studentId } = student;
+    await this.checkOperatingCommitteePresident(studentId, existing[0].id);
+
     await this.operatingCommitteeRepository.delete({
       id: param.id,
     });
@@ -735,7 +755,7 @@ export class OrganizationService {
   async retireOperatingCommitteeMember(
     student,
     operatingCommitteeMemberId: number,
-    body: { endTerm: Date },
+    body: ApiOrg022RequestBody,
   ) {
     const operatingCommitteeMemberList = [
       await this.operatingCommitteeMemberRepository.fetch(
@@ -767,6 +787,8 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedOperatingCommitteeMember =
       await this.operatingCommitteeMemberRepository.patch(
         { id: operatingCommitteeMemberId } as BaseRepositoryQuery<
@@ -777,7 +799,7 @@ export class OrganizationService {
           ...model,
           duration: {
             ...model.duration,
-            endTerm: body.endTerm,
+            endTerm: finalEndTerm,
           },
         }),
       );
@@ -811,7 +833,7 @@ export class OrganizationService {
     return { staff: createdStaff };
   }
 
-  async retireStaff(staffId: number, body: { endTerm: Date }) {
+  async retireStaff(staffId: number, body: ApiOrg024RequestBody) {
     const staffList = [await this.staffRepository.fetch(staffId)];
 
     if (staffList.length === 0 || !staffList[0]) {
@@ -833,13 +855,15 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ? new Date(body.endTerm) : new Date();
+
     const updatedStaff = await this.staffRepository.patch(
       { id: staffId } as BaseRepositoryQuery<StaffQuery, number>,
       model => ({
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );

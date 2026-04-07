@@ -19,7 +19,7 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  endTerm: z.coerce.date(),
+  endTerm: z.coerce.date().nullable().optional(),
 });
 
 const responseBodyMap = {
