@@ -774,7 +774,7 @@ export class OrganizationService {
     const { studentId } = student;
     await this.checkOperatingCommitteePresident(
       studentId,
-      operatingCommitteeMember.id,
+      operatingCommitteeMember.operatingCommittee.id,
     );
 
     if (
@@ -855,7 +855,7 @@ export class OrganizationService {
       });
     }
 
-    const finalEndTerm = body.endTerm ? new Date(body.endTerm) : new Date();
+    const finalEndTerm = body.endTerm ?? new Date();
 
     const updatedStaff = await this.staffRepository.patch(
       { id: staffId } as BaseRepositoryQuery<StaffQuery, number>,
