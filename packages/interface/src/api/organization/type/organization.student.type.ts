@@ -139,3 +139,23 @@ export const zTeamLeaderResponse = zTeamLeader.pick({
 export type ITeamLeader = z.infer<typeof zTeamLeader>;
 export type ITeamLeaderRequestCreate = z.infer<typeof zTeamLeaderRequestCreate>;
 export type ITeamLeaderResponse = z.infer<typeof zTeamLeaderResponse>;
+
+// Staff: 집행위원 엔티티
+export const zStaff = z
+  .object({
+    id: zId.openapi({
+      description: "집행위원 ID",
+    }),
+    student: zExtractId(zStudent).openapi({
+      description: "집행위원의 학생 정보",
+    }),
+    duration: zDuration.openapi({
+      description: "집행 위원이 등록된 기간으로, endTerm이 null이면 현활",
+    }),
+  })
+  .openapi("Staff");
+
+export const zStaffRequestCreate = zStaff.omit({ id: true });
+
+export type IStaff = z.infer<typeof zStaff>;
+export type IStaffRequestCreate = z.infer<typeof zStaffRequestCreate>;
