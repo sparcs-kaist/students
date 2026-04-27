@@ -18,6 +18,9 @@
     "paths": {
       "@sparcs-students/root/*": ["../../*"],
       "@sparcs-students/api/*": ["./src/*"],
+      "@sparcs-students/interface/*": ["../interface/src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }
+

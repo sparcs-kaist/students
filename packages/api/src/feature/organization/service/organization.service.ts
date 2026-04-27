@@ -16,7 +16,7 @@ import {
   ApiOrg020RequestBody,
   ApiOrg022RequestBody,
   ApiOrg024RequestBody,
-} from "@sparcs-students/interface/api/organization/index";
+} from "@sparcs-students/interface/api/organization";
 import { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
 import {
   ITeamMemberRequestCreate,
@@ -168,14 +168,14 @@ export class OrganizationService {
 
   async deleteOrganization(param) {
     const existing = await this.organizationRepository.find({
-      id: param.organizationId,
+      id: param.id,
     });
     if (!existing.length) {
       throw new ConflictException("Organization does not exist.");
     }
 
     await this.organizationRepository.delete({
-      id: param.organizationId,
+      id: param.id,
     });
   }
 
@@ -466,7 +466,12 @@ export class OrganizationService {
     if (existing.length > 0) {
       throw new ConflictException("duplicated team");
     }
-    const newTeam = await this.teamRepository.create(body);
+    const newTeam = await this.teamRepository.create({
+      name: body.name,
+      organization: body.organization,
+      startTerm: body.startTerm,
+      endTerm: body.endTerm,
+    });
     return { team: newTeam[0] };
   }
 
@@ -486,7 +491,11 @@ export class OrganizationService {
     if (existing.length > 0) {
       throw new ConflictException("duplicated member");
     }
-    const newMember = await this.teamMemberRepository.create(body);
+    const newMember = await this.teamMemberRepository.create({
+      student: body.student,
+      team: body.team,
+      duration: body.duration,
+    });
     return { teamMemberId: newMember[0] };
   }
 
@@ -505,7 +514,11 @@ export class OrganizationService {
     if (existing.length > 0) {
       throw new ConflictException("leader exists");
     }
-    const newLeader = await this.teamLeaderRepository.create(body);
+    const newLeader = await this.teamLeaderRepository.create({
+      student: body.student,
+      team: body.team,
+      duration: body.duration,
+    });
     return { teamLeaderId: newLeader[0] };
   }
 

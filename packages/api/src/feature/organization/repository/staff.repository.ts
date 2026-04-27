@@ -4,6 +4,7 @@ import {
   gt,
   InferInsertModel,
   InferSelectModel,
+  isNull,
   lte,
   SQL,
 } from "drizzle-orm";
@@ -20,13 +21,13 @@ import { IStaffCreate, MStaff } from "../model/staff.model";
 
 type StaffQuery = {
   studentId: number;
+  endTerm: Date | null;
   date: Date;
 };
 
 type StaffOrderByKeys = "id" | "studentId" | "startTerm" | "endTerm";
 type StaffQuerySupport = {
   startTerm: string;
-  endTerm: string;
 };
 
 type StaffTable = typeof Staff;
@@ -103,6 +104,10 @@ export class StaffRepository extends BaseSingleTableRepository<
   ): SQL {
     if (key === "date" && value instanceof Date) {
       return and(lte(Staff.startTerm, value), gt(Staff.endTerm, value));
+    }
+
+    if (key === "endTerm" && value === null) {
+      return isNull(Staff.endTerm);
     }
 
     throw new Error(`Invalid key: ${String(key)}`);

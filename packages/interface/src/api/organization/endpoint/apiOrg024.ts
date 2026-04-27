@@ -45,16 +45,11 @@ const apiOrg024 = {
   responseErrorMap,
 };
 
-type ApiOrg024RequestParam = z.infer<typeof apiOrg024.requestParam>;
-type ApiOrg024RequestQuery = z.infer<typeof apiOrg024.requestQuery>;
-type ApiOrg024RequestBody = z.infer<typeof apiOrg024.requestBody>;
-type ApiOrg024ResponseOk = z.infer<(typeof apiOrg024.responseBodyMap)[200]>;
+export type ApiOrg024RequestParam = z.infer<typeof apiOrg024.requestParam>;
+export type ApiOrg024RequestQuery = z.infer<typeof apiOrg024.requestQuery>;
+export type ApiOrg024RequestBody = z.infer<typeof apiOrg024.requestBody>;
+export type ApiOrg024ResponseOk = z.infer<
+  (typeof apiOrg024.responseBodyMap)[200]
+>;
 
 export default apiOrg024;
-
-export type {
-  ApiOrg024RequestParam,
-  ApiOrg024RequestQuery,
-  ApiOrg024RequestBody,
-  ApiOrg024ResponseOk,
-};
