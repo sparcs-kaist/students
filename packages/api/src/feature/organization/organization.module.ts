@@ -16,6 +16,7 @@ import { TeamMemberRepository } from "./repository/organization.team.member.repo
 import { TeamLeaderRepository } from "./repository/organization.team.leader.repository";
 import { OperatingCommitteeRepository } from "./repository/organization.operatingcommittee.repository";
 import { OperatingCommitteeMemberRepository } from "./repository/organization.operatingcommittee.member.repository";
+import { StaffRepository } from "./repository/staff.repository";
 
 @Module({
   imports: [DrizzleModule, SemesterModule],
@@ -36,6 +37,7 @@ import { OperatingCommitteeMemberRepository } from "./repository/organization.op
     OrganizationManagerRepository,
     OperatingCommitteeRepository,
     OperatingCommitteeMemberRepository,
+    StaffRepository,
   ],
   exports: [OrganizationPublicService],
 })

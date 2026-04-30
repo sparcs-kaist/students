@@ -5,7 +5,7 @@ import { zTeamRequestCreate, zTeamResponse } from "../type/organization.type";
 
 /**
  * @version v0.1
- * @description 각 단체장단의 권한으로, 단체 내에 새로운 team을 만들어냅니다.
+ * @description 단체장(president) 권한으로, 단체(organization) 내에 새로운 팀(team)을 만들어냅니다.
  */
 
 const url = () => `/president/organizations/teams/team`;

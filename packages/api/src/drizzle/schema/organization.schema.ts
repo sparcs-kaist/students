@@ -237,3 +237,45 @@ export const TeamLeader = mysqlTable(
     }),
   }),
 );
+
+// Staff 테이블
+export const Staff = mysqlTable(
+  "staff",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    studentId: int("student_id").notNull(),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    studentFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "staff_stu_id_fk",
+    }),
+  }),
+);
+
+// Uapresident 테이블
+export const Uapresident = mysqlTable(
+  "uapresident",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    studentId: int("student_id").notNull(),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    studentFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "uapresident_stu_id_fk",
+    }),
+  }),
+);

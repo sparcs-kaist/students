@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 총학생회장 권한으로 새로운 단체를 생성합니다.
+ * @description 총학생회장(uapresident) 권한으로 새로운 단체(organization)를 생성합니다.
  */
 
 const url = () => `/uapresident/organizations/organization`;

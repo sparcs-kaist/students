@@ -5,13 +5,20 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repository";
-import {
+import type {
   ApiOrg007ResponseCreated,
   ApiOrg008ResponseCreated,
   ApiOrg009ResponseCreated,
+  ApiOrg004RequestBody,
+  ApiOrg016RequestBody,
+  ApiOrg017RequestBody,
+  ApiOrg019RequestBody,
+  ApiOrg020RequestBody,
+  ApiOrg022RequestBody,
+  ApiOrg024RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
-import { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
-import {
+import type { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
+import type {
   ITeamMemberRequestCreate,
   ITeamLeaderRequestCreate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
@@ -28,11 +35,64 @@ import { TeamMemberRepository } from "../repository/organization.team.member.rep
 import { TeamLeaderRepository } from "../repository/organization.team.leader.repository";
 import { OperatingCommitteeRepository } from "../repository/organization.operatingcommittee.repository";
 import { OperatingCommitteeMemberRepository } from "../repository/organization.operatingcommittee.member.repository";
+import { StaffRepository } from "../repository/staff.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
   organizationId: number;
   organizationPresidentTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type OrganizationMemberQuery = {
+  id: number;
+  organizationId: number;
+  organizationMemberTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type OrganizationManagerQuery = {
+  id: number;
+  organizationId: number;
+  organizationManagerTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type TeamMemberQuery = {
+  id: number;
+  teamId: number;
+  teamMemberTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type TeamLeaderQuery = {
+  id: number;
+  teamId: number;
+  teamLeaderTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type OperatingCommitteeMemberQuery = {
+  id: number;
+  operatingCommitteeId: number;
+  operatingCommitteeMemberTypeEnum: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
+type StaffQuery = {
+  id: number;
   studentId: number;
   startTerm: Date;
   endTerm: Date | null;
@@ -51,7 +111,41 @@ export class OrganizationService {
     private readonly teamLeaderRepository: TeamLeaderRepository,
     private readonly operatingCommitteeRepository: OperatingCommitteeRepository,
     private readonly operatingCommitteeMemberRepository: OperatingCommitteeMemberRepository,
+    private readonly staffRepository: StaffRepository,
   ) {}
+
+  async checkOrganizationPresident(studentId, organizationId) {
+    const isPresident = await this.organizationPresidentRepository.find({
+      studentId,
+      organizationId,
+      endTerm: null,
+    });
+    if (isPresident.length === 0) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Not a president of this organization",
+      });
+    }
+  }
+
+  async checkTeamPresident(studentId, teamId) {
+    const team = await this.teamRepository.fetch(teamId);
+    if (!team) throw new NotFoundException("Team not found");
+
+    await this.checkOrganizationPresident(studentId, team.organization.id);
+  }
+
+  async checkOperatingCommitteePresident(studentId, operatingCommitteeId) {
+    const operatingCommittee =
+      await this.operatingCommitteeRepository.fetch(operatingCommitteeId);
+    if (!operatingCommittee)
+      throw new NotFoundException("Operating Committee not found");
+
+    await this.checkOrganizationPresident(
+      studentId,
+      operatingCommittee.organization.id,
+    );
+  }
 
   async createOrganization(body) {
     const organizationData = body.organization;
@@ -70,6 +164,19 @@ export class OrganizationService {
     return {
       organization: newOrganization,
     };
+  }
+
+  async deleteOrganization(param) {
+    const existing = await this.organizationRepository.find({
+      id: param.organizationId,
+    });
+    if (!existing.length) {
+      throw new ConflictException("Organization does not exist.");
+    }
+
+    await this.organizationRepository.delete({
+      id: param.organizationId,
+    });
   }
 
   async createPresident(body) {
@@ -121,7 +228,7 @@ export class OrganizationService {
     return { organizationPresident: createdPresident };
   }
 
-  async retirePresident(presidentId: number, body: { endTerm: Date }) {
+  async retirePresident(presidentId: number, body: ApiOrg004RequestBody) {
     const presidentList = [
       await this.organizationPresidentRepository.fetch(presidentId),
     ];
@@ -142,6 +249,8 @@ export class OrganizationService {
       });
     }
 
+    const finalEndTerm = body.endTerm ?? new Date();
+
     const updatedPresident = await this.organizationPresidentRepository.patch(
       { id: presidentId } as BaseRepositoryQuery<
         OrganizationPresidentQuery,
@@ -151,7 +260,7 @@ export class OrganizationService {
         ...model,
         duration: {
           ...model.duration,
-          endTerm: body.endTerm,
+          endTerm: finalEndTerm,
         },
       }),
     );
@@ -249,8 +358,13 @@ export class OrganizationService {
     return { organizationLists };
   }
 
-  async createMember(body) {
+  async createMember(student, body) {
     const { OrganizationMember } = body;
+    const { studentId } = student;
+    await this.checkOrganizationPresident(
+      studentId,
+      OrganizationMember.organization.id,
+    );
 
     // 단체에 가입 신청한 사람 ( startTerm === null ) 을 확인
     const appliedMember = await this.organizationMemberRepository.find({
@@ -301,8 +415,13 @@ export class OrganizationService {
     return { organizationMember: createdMember };
   }
 
-  async createManager(body) {
+  async createManager(student, body) {
     const { OrganizationManager } = body;
+    const { studentId } = student;
+    await this.checkOrganizationPresident(
+      studentId,
+      OrganizationManager.organization.id,
+    );
 
     const existingManager = await this.organizationManagerRepository.find({
       organizationId: OrganizationManager.organization.id,
@@ -332,8 +451,12 @@ export class OrganizationService {
   }
 
   async postOrganizationTeamForPresident(
+    student,
     body: ITeamRequestCreate,
   ): Promise<ApiOrg007ResponseCreated> {
+    const { studentId } = student;
+    await this.checkOrganizationPresident(studentId, body.organization.id);
+
     // TODO: Type 수정
     const existing = await this.teamRepository.find({
       organizationId: body.organization.id,
@@ -348,8 +471,12 @@ export class OrganizationService {
   }
 
   async postOrganizationTeamMemberForPresident(
+    student,
     body: ITeamMemberRequestCreate,
   ): Promise<ApiOrg008ResponseCreated> {
+    const { studentId } = student;
+    await this.checkTeamPresident(studentId, body.team.id);
+
     // TODO: Type 수정
     const existing = await this.teamMemberRepository.find({
       teamId: body.team.id,
@@ -364,8 +491,12 @@ export class OrganizationService {
   }
 
   async postOrganizationTeamLeaderForPresident(
+    student,
     body: ITeamLeaderRequestCreate,
   ): Promise<ApiOrg009ResponseCreated> {
+    const { studentId } = student;
+    await this.checkTeamPresident(studentId, body.team.id);
+
     // TODO: Type 수정
     const existing = await this.teamLeaderRepository.find({
       teamId: body.team.id,
@@ -378,7 +509,10 @@ export class OrganizationService {
     return { teamLeaderId: newLeader[0] };
   }
 
-  async createOperatingCommittee(body) {
+  async createOperatingCommittee(student, body) {
+    const { studentId } = student;
+    await this.checkOrganizationPresident(studentId, body.organization.id);
+
     const existing = await this.operatingCommitteeRepository.find({
       organizationId: body.organization.id,
       name: body.name,
@@ -391,7 +525,13 @@ export class OrganizationService {
     return { operatingCommittee: newOperatingCommittee[0] };
   }
 
-  async createOperatingCommitteeMember(body) {
+  async createOperatingCommitteeMember(student, body) {
+    const { studentId } = student;
+    await this.checkOperatingCommitteePresident(
+      studentId,
+      body.operatingCommittee.id,
+    );
+
     const existing = await this.operatingCommitteeMemberRepository.find({
       operatingCommitteeId: body.operatingCommittee.id,
       studentId: body.student.id,
@@ -402,5 +542,334 @@ export class OrganizationService {
     const newMember =
       await this.operatingCommitteeMemberRepository.create(body);
     return { operatingCommitteeMember: newMember[0] };
+  }
+
+  async retireMember(student, memberId: number, body: ApiOrg016RequestBody) {
+    const memberList = [
+      await this.organizationMemberRepository.fetch(memberId),
+    ];
+
+    if (memberList.length === 0 || !memberList[0]) {
+      throw new ConflictException("Member not found");
+    }
+
+    const member = memberList[0];
+    const { studentId } = student;
+    await this.checkOrganizationPresident(studentId, member.organization.id);
+
+    if (
+      member.duration.endTerm !== undefined &&
+      member.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedMember = await this.organizationMemberRepository.patch(
+      { id: memberId } as BaseRepositoryQuery<OrganizationMemberQuery, number>,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: finalEndTerm,
+        },
+      }),
+    );
+
+    return {
+      OrganizationMember: updatedMember[0],
+    };
+  }
+
+  async retireManager(student, managerId: number, body: ApiOrg017RequestBody) {
+    const managerList = [
+      await this.organizationManagerRepository.fetch(managerId),
+    ];
+
+    if (managerList.length === 0 || !managerList[0]) {
+      throw new ConflictException("Manager not found");
+    }
+
+    const manager = managerList[0];
+    const { studentId } = student;
+    await this.checkOrganizationPresident(studentId, manager.organization.id);
+
+    if (
+      manager.duration.endTerm !== undefined &&
+      manager.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedManager = await this.organizationManagerRepository.patch(
+      { id: managerId } as BaseRepositoryQuery<
+        OrganizationManagerQuery,
+        number
+      >,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: finalEndTerm,
+        },
+      }),
+    );
+
+    return {
+      OrganizationManager: updatedManager[0],
+    };
+  }
+
+  async deleteTeam(student, param) {
+    const existing = await this.teamRepository.find({
+      id: param.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException("Team does not exist.");
+    }
+
+    const { studentId } = student;
+    await this.checkTeamPresident(studentId, param.id);
+
+    await this.teamRepository.delete({
+      id: param.id,
+    });
+  }
+
+  async retireTeamMember(
+    student,
+    teamMemberId: number,
+    body: ApiOrg019RequestBody,
+  ) {
+    const teamMemberList = [
+      await this.teamMemberRepository.fetch(teamMemberId),
+    ];
+
+    if (teamMemberList.length === 0 || !teamMemberList[0]) {
+      throw new ConflictException("Team Member not found");
+    }
+
+    const teamMember = teamMemberList[0];
+    const { studentId } = student;
+
+    await this.checkTeamPresident(studentId, teamMember.team.id);
+
+    if (
+      teamMember.duration.endTerm !== undefined &&
+      teamMember.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedTeamMember = await this.teamMemberRepository.patch(
+      { id: teamMemberId } as BaseRepositoryQuery<TeamMemberQuery, number>,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: finalEndTerm,
+        },
+      }),
+    );
+
+    return {
+      TeamMember: updatedTeamMember[0],
+    };
+  }
+
+  async retireTeamLeader(
+    student,
+    teamLeaderId: number,
+    body: ApiOrg020RequestBody,
+  ) {
+    const teamLeaderList = [
+      await this.teamLeaderRepository.fetch(teamLeaderId),
+    ];
+
+    if (teamLeaderList.length === 0 || !teamLeaderList[0]) {
+      throw new ConflictException("Team Leader not found");
+    }
+
+    const teamLeader = teamLeaderList[0];
+    const { studentId } = student;
+    await this.checkTeamPresident(studentId, teamLeader.team.id);
+
+    if (
+      teamLeader.duration.endTerm !== undefined &&
+      teamLeader.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedTeamLeader = await this.teamLeaderRepository.patch(
+      { id: teamLeaderId } as BaseRepositoryQuery<TeamLeaderQuery, number>,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: finalEndTerm,
+        },
+      }),
+    );
+
+    return {
+      TeamLeader: updatedTeamLeader[0],
+    };
+  }
+
+  async deleteOperatingCommittee(student, param) {
+    const existing = await this.operatingCommitteeRepository.find({
+      id: param.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException("Operating Committee does not exist.");
+    }
+
+    const { studentId } = student;
+    await this.checkOperatingCommitteePresident(studentId, existing[0].id);
+
+    await this.operatingCommitteeRepository.delete({
+      id: param.id,
+    });
+  }
+
+  async retireOperatingCommitteeMember(
+    student,
+    operatingCommitteeMemberId: number,
+    body: ApiOrg022RequestBody,
+  ) {
+    const operatingCommitteeMemberList = [
+      await this.operatingCommitteeMemberRepository.fetch(
+        operatingCommitteeMemberId,
+      ),
+    ];
+
+    if (
+      operatingCommitteeMemberList.length === 0 ||
+      !operatingCommitteeMemberList[0]
+    ) {
+      throw new ConflictException("Operating Committee Member not found");
+    }
+
+    const operatingCommitteeMember = operatingCommitteeMemberList[0];
+    const { studentId } = student;
+    await this.checkOperatingCommitteePresident(
+      studentId,
+      operatingCommitteeMember.operatingCommittee.id,
+    );
+
+    if (
+      operatingCommitteeMember.duration.endTerm !== undefined &&
+      operatingCommitteeMember.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedOperatingCommitteeMember =
+      await this.operatingCommitteeMemberRepository.patch(
+        { id: operatingCommitteeMemberId } as BaseRepositoryQuery<
+          OperatingCommitteeMemberQuery,
+          number
+        >,
+        model => ({
+          ...model,
+          duration: {
+            ...model.duration,
+            endTerm: finalEndTerm,
+          },
+        }),
+      );
+
+    return {
+      OperatingCommitteeMember: updatedOperatingCommitteeMember[0],
+    };
+  }
+
+  async createStaff(body) {
+    const { staff } = body;
+
+    // 기존 집행부원 확인
+    const existingStaff = await this.staffRepository.find({
+      studentId: staff.student.id,
+      endTerm: null,
+    });
+    // 중복 확인
+    if (existingStaff.length > 0) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Staff existed",
+      });
+    }
+
+    const createdStaff = await this.staffRepository.create({
+      student: staff.student,
+      duration: staff.duration,
+    });
+
+    return { staff: createdStaff };
+  }
+
+  async retireStaff(staffId: number, body: ApiOrg024RequestBody) {
+    const staffList = [await this.staffRepository.fetch(staffId)];
+
+    if (staffList.length === 0 || !staffList[0]) {
+      throw new NotFoundException({
+        status: "Error",
+        message: "Staff Not Found",
+      });
+    }
+
+    const staff = staffList[0];
+
+    if (
+      staff.duration.endTerm !== undefined &&
+      staff.duration.endTerm !== null
+    ) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already Retired",
+      });
+    }
+
+    const finalEndTerm = body.endTerm ?? new Date();
+
+    const updatedStaff = await this.staffRepository.patch(
+      { id: staffId } as BaseRepositoryQuery<StaffQuery, number>,
+      model => ({
+        ...model,
+        duration: {
+          ...model.duration,
+          endTerm: finalEndTerm,
+        },
+      }),
+    );
+
+    return {
+      staff: updatedStaff[0],
+    };
   }
 }

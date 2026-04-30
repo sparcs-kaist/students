@@ -15,7 +15,7 @@ import {
   MemberRoleEnum,
   CommitteeRoleEnum,
   OrganizationRegisterStatusEnum,
-  OrganizationRoleTypeEnum
+  OrganizationRoleTypeEnum,
 } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 export const budgetDomainTagList: {

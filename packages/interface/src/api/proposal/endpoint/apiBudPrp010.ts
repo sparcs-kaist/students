@@ -6,7 +6,7 @@ import { zBudgetProposalExpenseResponse } from "../type/budget-proposal-expense.
 
 /**
  * @version v0.1
- * @description 각 매니저의 권한으로 예산 지출을 제출합니다
+ * @description 매니저(manager) 권한으로 예산안 지출 revision(budgetProposalExpenseRevision)을 제출합니다.
  */
 
 const url = () => `/manager/proposals/budget-proposals/expense-revision/submit`;

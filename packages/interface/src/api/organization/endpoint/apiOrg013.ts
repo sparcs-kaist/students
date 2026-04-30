@@ -5,7 +5,7 @@ import { zOperatingCommitteeMember } from "../type/organization.student.type";
 
 /**
  * @version v0.1
- * @description 단체장단 권한으로 운영위원회 멤버를 임명합니다.
+ * @description 단체장(president) 권한으로, 운영위원회 멤버(organizationCommitteeMember)를 임명합니다.
  */
 
 export const zOperatingCommitteeMemberRequestCreate = zOperatingCommitteeMember

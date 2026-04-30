@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -20,8 +18,6 @@ import {
   apiBudPrp009,
   apiBudPrp010,
   apiBudPrp011,
-  apiPrp017,
-  apiPrp020,
   ApiBudPrp002RequestBody,
   ApiBudPrp003RequestBody,
   ApiBudPrp004RequestBody,
@@ -30,8 +26,6 @@ import {
   ApiBudPrp008RequestBody,
   ApiBudPrp009RequestBody,
   ApiBudPrp010RequestBody,
-  ApiPrp017RequestParam,
-  ApiPrp020RequestParam,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -39,8 +33,10 @@ import {
   GetStudent,
   StudentProfile,
 } from "@sparcs-students/api/common/decorators/get-user.decorator";
+import { ManagerOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { ProposalService } from "../service/proposal.service";
 
+@ManagerOnly()
 @Controller("manager/proposals/budget-proposals")
 export class ProposalManagerController {
   constructor(private readonly proposalService: ProposalService) {}
@@ -167,25 +163,5 @@ export class ProposalManagerController {
     @Query() query,
   ) {
     return this.proposalService.deleteBudgetProposalExpense(student, query);
-  }
-
-  // 하단은 DocumentReview 관련.
-
-  // 각 매니저 권한으로 IncomeDocumentReview 조회
-  @Get("income-document-review/read/:budgetProposalIncomeRevisionId")
-  @UsePipes(new ZodPipe(apiPrp017))
-  async readBudgetProposalIncomeDocumentReview(
-    @Param() params: ApiPrp017RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalIncomeDocumentReview(params);
-  }
-
-  // 각 매니저 권한으로 ExpenseDocumentReview 조회
-  @Get("expense-document-review/read/:budgetProposalExpenseRevisionId")
-  @UsePipes(new ZodPipe(apiPrp020))
-  async readBudgetProposalExpenseDocumentReview(
-    @Param() params: ApiPrp020RequestParam,
-  ) {
-    return this.proposalService.readBudgetProposalExpenseDocumentReview(params);
   }
 }

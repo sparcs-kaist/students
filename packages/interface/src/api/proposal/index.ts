@@ -13,21 +13,6 @@ export * from "./type/budget-proposal-expense.type";
 export * from "./type/budget-proposal-expense-document-review.type";
 export * from "./type/operation-proposal.type";
 
-export * from "./endpoint/apiPrp001";
-export { default as apiPrp001 } from "./endpoint/apiPrp001";
-
-export * from "./endpoint/apiPrp002";
-export { default as apiPrp002 } from "./endpoint/apiPrp002";
-
-export * from "./endpoint/apiPrp004";
-export { default as apiPrp004 } from "./endpoint/apiPrp004";
-
-export * from "./endpoint/apiPrp005";
-export { default as apiPrp005 } from "./endpoint/apiPrp005";
-
-export * from "./endpoint/apiPrp006";
-export { default as apiPrp006 } from "./endpoint/apiPrp006";
-
 export * from "./endpoint/apiBudPrp002";
 export { default as apiBudPrp002 } from "./endpoint/apiBudPrp002";
 
@@ -93,9 +78,6 @@ export { default as apiPrp020 } from "./endpoint/apiPrp020";
 
 export * from "./endpoint/apiPrp021";
 export { default as apiPrp021 } from "./endpoint/apiPrp021";
-
-export * from "./endpoint/apiPrp121";
-export { default as apiPrp121 } from "./endpoint/apiPrp121";
 
 // 도메인 모델 스키마 목록
 const zDomainModels = z.object({
