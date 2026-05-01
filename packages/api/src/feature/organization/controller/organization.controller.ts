@@ -1,11 +1,9 @@
 import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
-import {
-  apiOrg011,
-  apiOrg015,
-  ApiOrg011RequestBody,
-  ApiOrg015RequestBody,
-} from "@sparcs-students/interface/api/organization/index";
+import apiOrg011 from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
+import apiOrg015 from "@sparcs-students/interface/api/organization/endpoint/apiOrg015";
+import type { ApiOrg011RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
+import type { ApiOrg015RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg015";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import {
   GetStudent,
@@ -40,5 +38,10 @@ export class OrganizationController {
     @Body() body: ApiOrg011RequestBody,
   ) {
     return this.organizationService.applyMember(student, body);
+  }
+
+  @Get("me/memberships")
+  async getMyOrganizationMemberships(@GetStudent() student: StudentProfile) {
+    return this.organizationService.getMyOrganizationMemberships(student);
   }
 }

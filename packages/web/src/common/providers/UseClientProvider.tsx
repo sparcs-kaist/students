@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { OverlayProvider } from "overlay-kit";
 
 import theme from "@sparcs-students/web/styles/themes";
+import { AuthProvider } from "@sparcs-students/web/common/providers/AuthContext";
 
 export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
   children = <div />,
@@ -38,7 +39,9 @@ export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
       {/* @ts-expect-error-next-line */}
       <StyledProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <OverlayProvider>{children}</OverlayProvider>
+          <AuthProvider>
+            <OverlayProvider>{children}</OverlayProvider>
+          </AuthProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </StyledProvider>

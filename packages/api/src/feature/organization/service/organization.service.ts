@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { BaseRepositoryQuery } from "@sparcs-students/api/common/base/base.repository";
-import {
+import type {
   ApiOrg007ResponseCreated,
   ApiOrg008ResponseCreated,
   ApiOrg009ResponseCreated,
@@ -17,8 +17,8 @@ import {
   ApiOrg022RequestBody,
   ApiOrg024RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
-import { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
-import {
+import type { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
+import type {
   ITeamMemberRequestCreate,
   ITeamLeaderRequestCreate,
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";

@@ -2,6 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
+import { env } from "@sparcs-students/web/env";
 
 const Container = styled.div`
   pointer-events: none;
@@ -67,7 +68,7 @@ const environment = (() => {
   }
 })();
 
-const MOCK_STATUS = process.env.NEXT_PUBLIC_API_MOCK_MODE
+const MOCK_STATUS = env.NEXT_PUBLIC_API_MOCK_MODE
   ? "--mock=true"
   : "--mock=false";
 
@@ -78,7 +79,7 @@ const DebugBadge: React.FC = () => {
     setDate(
       `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
     );
-  });
+  }, []);
 
   return (
     <Container>
@@ -89,7 +90,7 @@ const DebugBadge: React.FC = () => {
             <br />
             {process.env.NEXT_PUBLIC_BUILD_TIME || date}
           </Badge>
-          <BadgeBottom>©️SPARCS AR-007 Internal</BadgeBottom>
+          <BadgeBottom>©️SPARCS Students Internal</BadgeBottom>
         </>
       )}
     </Container>

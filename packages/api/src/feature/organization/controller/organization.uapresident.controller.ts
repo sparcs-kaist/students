@@ -8,23 +8,25 @@ import {
   UsePipes,
 } from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
-import {
-  apiOrg002,
-  apiOrg003,
-  ApiOrg002RequestBody,
-  ApiOrg003RequestBody,
-  apiOrg004,
+import apiOrg002 from "@sparcs-students/interface/api/organization/endpoint/apiOrg002";
+import apiOrg003 from "@sparcs-students/interface/api/organization/endpoint/apiOrg003";
+import apiOrg004 from "@sparcs-students/interface/api/organization/endpoint/apiOrg004";
+import apiOrg014 from "@sparcs-students/interface/api/organization/endpoint/apiOrg014";
+import apiOrg023 from "@sparcs-students/interface/api/organization/endpoint/apiOrg023";
+import apiOrg024 from "@sparcs-students/interface/api/organization/endpoint/apiOrg024";
+import type { ApiOrg002RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg002";
+import type { ApiOrg003RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg003";
+import type {
   ApiOrg004RequestParam,
   ApiOrg004RequestBody,
-  apiOrg014,
-  ApiOrg014RequestParam,
-  apiOrg023,
-  ApiOrg023RequestBody,
-  apiOrg024,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg004";
+import type { ApiOrg014RequestParam } from "@sparcs-students/interface/api/organization/endpoint/apiOrg014";
+import type { ApiOrg023RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg023";
+import type {
   ApiOrg024RequestParam,
   ApiOrg024RequestBody,
   ApiOrg024ResponseOk,
-} from "@sparcs-students/interface/api/organization/index";
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg024";
 // import {} from // GetUser,
 // "@sparcs-students/api/common/decorators/get-user.decorator";
 import { UapresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";

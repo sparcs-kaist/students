@@ -9,51 +9,69 @@ import {
   UsePipes,
 } from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
-import {
-  apiOrg005,
-  apiOrg006,
-  apiOrg007,
-  apiOrg008,
-  apiOrg009,
-  apiOrg012,
-  apiOrg013,
-  apiOrg016,
-  apiOrg017,
-  apiOrg018,
-  apiOrg019,
-  apiOrg020,
-  apiOrg021,
-  apiOrg022,
-  ApiOrg005RequestBody,
-  ApiOrg006RequestBody,
+import apiOrg005 from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
+import apiOrg006 from "@sparcs-students/interface/api/organization/endpoint/apiOrg006";
+import apiOrg007 from "@sparcs-students/interface/api/organization/endpoint/apiOrg007";
+import apiOrg008 from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
+import apiOrg009 from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";
+import apiOrg012 from "@sparcs-students/interface/api/organization/endpoint/apiOrg012";
+import apiOrg013 from "@sparcs-students/interface/api/organization/endpoint/apiOrg013";
+import apiOrg016 from "@sparcs-students/interface/api/organization/endpoint/apiOrg016";
+import apiOrg017 from "@sparcs-students/interface/api/organization/endpoint/apiOrg017";
+import apiOrg018 from "@sparcs-students/interface/api/organization/endpoint/apiOrg018";
+import apiOrg019 from "@sparcs-students/interface/api/organization/endpoint/apiOrg019";
+import apiOrg020 from "@sparcs-students/interface/api/organization/endpoint/apiOrg020";
+import apiOrg021 from "@sparcs-students/interface/api/organization/endpoint/apiOrg021";
+import apiOrg022 from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
+import type { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
+import type { ApiOrg006RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg006";
+import type {
   ApiOrg007RequestBody,
-  ApiOrg008RequestBody,
-  ApiOrg009RequestBody,
-  ApiOrg012RequestBody,
-  ApiOrg013RequestBody,
-  ApiOrg016RequestBody,
-  ApiOrg017RequestBody,
-  ApiOrg019RequestBody,
-  ApiOrg020RequestBody,
-  ApiOrg022RequestBody,
-  ApiOrg016RequestParam,
-  ApiOrg017RequestParam,
-  ApiOrg018RequestParam,
-  ApiOrg019RequestParam,
-  ApiOrg020RequestParam,
-  ApiOrg021RequestParam,
-  ApiOrg022RequestParam,
   ApiOrg007ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg007";
+import type {
+  ApiOrg008RequestBody,
   ApiOrg008ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
+import type {
+  ApiOrg009RequestBody,
   ApiOrg009ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";
+import type {
+  ApiOrg012RequestBody,
   ApiOrg012ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg012";
+import type {
+  ApiOrg013RequestBody,
   ApiOrg013ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg013";
+import type {
+  ApiOrg016RequestParam,
+  ApiOrg016RequestBody,
   ApiOrg016ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg016";
+import type {
+  ApiOrg017RequestParam,
+  ApiOrg017RequestBody,
   ApiOrg017ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg017";
+import type { ApiOrg018RequestParam } from "@sparcs-students/interface/api/organization/endpoint/apiOrg018";
+import type {
+  ApiOrg019RequestParam,
+  ApiOrg019RequestBody,
   ApiOrg019ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg019";
+import type {
+  ApiOrg020RequestParam,
+  ApiOrg020RequestBody,
   ApiOrg020ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg020";
+import type { ApiOrg021RequestParam } from "@sparcs-students/interface/api/organization/endpoint/apiOrg021";
+import type {
+  ApiOrg022RequestParam,
+  ApiOrg022RequestBody,
   ApiOrg022ResponseOk,
-} from "@sparcs-students/interface/api/organization/index";
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
 import {
   GetStudent,
   StudentProfile,

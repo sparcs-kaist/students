@@ -1,4 +1,4 @@
-import { IStaff } from "@sparcs-students/interface/api/organization/type/organization.student.type";
+import type { IStaff } from "@sparcs-students/interface/api/organization/type/organization.student.type";
 import { MEntity } from "@sparcs-students/api/common/base/entity.model";
 
 export interface IStaffCreate {

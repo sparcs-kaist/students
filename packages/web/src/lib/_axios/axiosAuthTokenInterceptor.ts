@@ -1,8 +1,9 @@
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { getLocalStorageItem } from "@sparcs-students/web/utils/localStorage";
 
 const tokenInterceptor = {
   onFulfilled(config: InternalAxiosRequestConfig) {
-    const accessToken = "Token"; // TODO: get access token
+    const accessToken = getLocalStorageItem("accessToken");
     if (config.headers && !!accessToken) {
       // eslint-disable-next-line no-param-reassign
       config.headers.Authorization = `Bearer ${accessToken}`;

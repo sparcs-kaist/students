@@ -1,5 +1,10 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, eq, gte } from "drizzle-orm";
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { and, asc, eq, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { getKSTDate } from "@sparcs-students/root/packages/interface/src/common/util";
 
@@ -18,6 +23,41 @@ import { MemberDbResult } from "@sparcs-students/api/feature/auth/type/member.mo
 @Injectable()
 export class AuthRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  /**
+   * `ku_kaist_org_id` may not match `department.id`. Use the row when it exists,
+   * otherwise the smallest department id so Student.department FK succeeds.
+   */
+  private async resolveDepartmentId(kaistOrgId: string): Promise<number> {
+    const parsed = parseInt(kaistOrgId);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      const row = await this.db
+        .select({ id: Department.id })
+        .from(Department)
+        .where(eq(Department.id, parsed))
+        .limit(1)
+        .then(takeOne);
+      if (row) return row.id;
+    }
+    const [first] = await this.db
+      .select({ id: Department.id })
+      .from(Department)
+      .orderBy(asc(Department.id))
+      .limit(1);
+    if (first) return first.id;
+
+    // Empty DB / fresh dev: bootstrap a row so Student.department FK can succeed.
+    await this.db
+      .insert(Department)
+      .values({
+        id: 1,
+        name: "Unassigned",
+        nameEn: "Unassigned",
+      })
+      .onDuplicateKeyUpdate({ set: { name: "Unassigned" } });
+
+    return 1;
+  }
 
   async findOrCreateUser(
     email: string,
@@ -50,12 +90,17 @@ export class AuthRepository {
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     // TODO: 임시로 "이전 사원" 타입을 학생으로 분류
     if (type === "Student" || type === "Ex-employee") {
+      const sn = parseInt(studentNumber);
+      if (!Number.isFinite(sn)) {
+        throw new HttpException("Invalid student number from SSO", 400);
+      }
+      const departmentId = await this.resolveDepartmentId(department);
       await this.db
         .insert(Student)
         .values({
-          studentNumber: parseInt(studentNumber),
+          studentNumber: sn,
           userId: user.id,
-          departmentId: parseInt(department),
+          departmentId,
         })
         .onDuplicateKeyUpdate({ set: { userId: user.id } });
       result = await this.findMemberById(user.id);
@@ -142,7 +187,7 @@ export class AuthRepository {
       .then(takeOne);
 
     const [organizationMember, department] = await Promise.all([
-      student?.id
+      student?.id && organizationId !== undefined
         ? this.db
             .select()
             .from(OrganizationMember)
@@ -168,7 +213,7 @@ export class AuthRepository {
       ? await this.db
           .select()
           .from(Organization)
-          .where(eq(Organization.id, organizationId))
+          .where(eq(Organization.id, organizationMember.organizationId))
           .then(takeOne)
       : undefined;
 
@@ -259,12 +304,11 @@ export class AuthRepository {
     expiresAt: Date,
   ): Promise<boolean> {
     return this.db.transaction(async tx => {
-      const [result] = await this.db
+      const [result] = await tx
         .insert(AuthActivatedRefreshTokens)
         .values({ userId, expiresAt, refreshToken });
-      const { affectedRows } = result;
-      if (affectedRows !== 1) {
-        await tx.rollback();
+      if (!result || result.affectedRows !== 1) {
+        throw new HttpException("Cannot store refresh token", 500);
       }
       return true;
     });
@@ -276,7 +320,7 @@ export class AuthRepository {
   ): Promise<boolean> {
     const cur = getKSTDate();
     return this.db.transaction(async tx => {
-      const [result] = await this.db
+      await tx
         .delete(AuthActivatedRefreshTokens)
         .where(
           and(
@@ -285,10 +329,6 @@ export class AuthRepository {
             gte(AuthActivatedRefreshTokens.expiresAt, cur),
           ),
         );
-      const { affectedRows } = result;
-      if (affectedRows !== 1) {
-        await tx.rollback();
-      }
       return true;
     });
   }

@@ -1,6 +1,8 @@
 {
   "로그인": "Login",
+  "로그아웃": "Logout",
   "홈": "Home",
+  "마이페이지": "My Page",
   "만든 사람들": "Credits",
   "라이센스": "License",
   "이용 약관": "Terms of Service",
@@ -13,5 +15,7 @@
   "단체 관리": "Manage Organizations",
   "총학생회장": "UA President",
   "기구 관리": "Manage Organizations",
-  "예/결산 최종 승인": "Final Approval"
+  "예/결산 최종 승인": "Final Approval",
+  "내 단체": "My organizations",
+  "단체 목록을 불러오지 못했습니다": "Could not load your organizations"
 }

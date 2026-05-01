@@ -21,9 +21,9 @@ import {
 } from "@sparcs-students/api/feature/organization/model/organization.member.model";
 
 type OrganizationMemberQuery = {
-  studentId: number;
-  organizationId: number;
-  date: Date;
+  studentId?: number;
+  organizationId?: number;
+  date?: Date;
 };
 
 type OrganizationMemberOrderByKeys =
