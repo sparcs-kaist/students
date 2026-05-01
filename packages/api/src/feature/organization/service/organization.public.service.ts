@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
+import { StudentProfile } from "@sparcs-students/api/common/decorators/get-user.decorator";
 
 import { OrganizationRepository } from "../repository/organization.repository";
 import { OrganizationMemberRepository } from "../repository/organization.member.repository";
@@ -51,6 +52,54 @@ export class OrganizationPublicService {
     });
 
     return { organizationLists };
+  }
+
+  /**
+   * 학생이 소속(또는 신청 중)인 단체를 멤버십 기준으로 나열합니다.
+   */
+  async getMyOrganizationMemberships(student: StudentProfile) {
+    // BaseRepositoryFindQuery + OrganizationMemberQuery infers `never` for flat
+    // filters in some TS versions; runtime find() accepts partial keys.
+    const members = await this.organizationMemberRepository.find({
+      studentId: student.studentId,
+    } as never);
+
+    const byOrganizationId = new Map<
+      number,
+      {
+        membershipId: number;
+        organizationId: number;
+        name: string;
+        nameEng: string;
+      }
+    >();
+
+    await Promise.all(
+      members.map(async member => {
+        try {
+          const org = await this.organizationRepository.fetch(
+            member.organization.id,
+          );
+          const row = {
+            membershipId: member.id,
+            organizationId: org.id,
+            name: org.name,
+            nameEng: org.nameEng,
+          };
+          if (!byOrganizationId.has(org.id)) {
+            byOrganizationId.set(org.id, row);
+          }
+        } catch {
+          /* 단체가 삭제되었거나 조회 불가 */
+        }
+      }),
+    );
+
+    const organizations = Array.from(byOrganizationId.values()).sort((a, b) =>
+      a.name.localeCompare(b.name, "ko"),
+    );
+
+    return { organizations };
   }
 
   async getOrganizationListByType(body) {

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { jwtDecode } from "jwt-decode";
 import { useTranslations } from "next-intl";
 
 import Icon from "@sparcs-students/web/common/components/Icon";
@@ -31,33 +30,32 @@ const LoginInner = styled.div`
 `;
 
 const Login = () => {
-  const { isLoggedIn, login } = useAuth();
+  const { isLoggedIn, login, profile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [type, setType] = useState("");
   const [selectedToken, setSelectedToken] = useState<string>("");
   const t = useTranslations();
 
   useEffect(() => {
     if (!isLoggedIn) {
       setIsMenuOpen(false);
-    } else {
-      const token = getLocalStorageItem("accessToken");
-      if (token) {
-        setSelectedToken(token);
-        const decoded: { name?: string; type?: string } = jwtDecode(token);
-        setUserName(decoded.name || "Unknown User");
-        setType(decoded.type || "Unknown Type");
-      }
+      return;
     }
-  }, [isLoggedIn, selectedToken]);
+    const token = getLocalStorageItem("accessToken");
+    if (token) setSelectedToken(token);
+  }, [isLoggedIn]);
+
+  // getUserType already returns Korean labels; do not pass through t("common....")
+  // or next-intl will look up a key like "common.학생" and show the missing-key string.
+  const rawTypeLabel = profile?.type ? getUserType(profile.type) : "";
+  const typeLabel = rawTypeLabel === "None" ? "" : rawTypeLabel;
 
   return (
     <>
       {isLoggedIn ? (
         <LoginInner onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <Icon type="person" size={16} />
-          {userName} ({t(`common.${getUserType(type)}`)})
+          {profile?.name ?? "User"}
+          {typeLabel ? ` (${typeLabel})` : ""}
         </LoginInner>
       ) : (
         <LoginInner onClick={login}>

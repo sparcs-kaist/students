@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import React from "react";
 import styled from "styled-components";
 
@@ -9,6 +10,7 @@ import Profile from "./Profile";
 
 interface ProfileListProps {
   profiles: {
+    roleKey: string;
     profileType: string;
     token: string;
   }[];
@@ -25,6 +27,7 @@ interface ProfileListProps {
 const ProfileListWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 12px;
   width: 100%;
 `;
@@ -36,6 +39,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
   setSelectedToken,
 }) => {
   const handleProfileClick = (profile: {
+    roleKey: string;
     profileType: string;
     token: string;
   }) => {
@@ -44,22 +48,41 @@ const ProfileList: React.FC<ProfileListProps> = ({
     setIsMenuOpen(false);
   };
 
+  if (profiles.length === 0) {
+    return null;
+  }
+
   return (
     <ProfileListWrapper>
-      <Typography fw="MEDIUM" fs={14} lh={16}>
-        계정 선택
-      </Typography>
-      {profiles.map(profile => (
-        // const decodedToken: DecodedToken = jwtDecode(profile.token);
-        <Profile
-          key={profile.profileType}
-          profileName={profile.profileType}
-          profileNumber={20220390}
-          email="chayunahn@kaist.ac.kr"
-          isSelected={selectedToken === profile.token}
-          onClick={() => handleProfileClick(profile)}
-        />
-      ))}
+      {profiles.length > 1 && (
+        <Typography fw="MEDIUM" fs={14} lh={16}>
+          계정 선택
+        </Typography>
+      )}
+      {profiles.map(profile => {
+        let profileNumber = 0;
+        let email = "";
+        try {
+          const decoded = jwtDecode<{
+            studentNumber?: number;
+            email?: string;
+          }>(profile.token);
+          profileNumber = decoded.studentNumber ?? 0;
+          email = decoded.email ?? "";
+        } catch {
+          /* non-JWT or malformed */
+        }
+        return (
+          <Profile
+            key={profile.roleKey}
+            profileName={profile.profileType}
+            profileNumber={profileNumber}
+            email={email}
+            isSelected={selectedToken === profile.token}
+            onClick={() => handleProfileClick(profile)}
+          />
+        );
+      })}
     </ProfileListWrapper>
   );
 };

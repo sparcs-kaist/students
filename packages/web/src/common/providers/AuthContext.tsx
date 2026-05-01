@@ -52,6 +52,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
   // const [isAgreed, setIsAgreed] = useState(true);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.location.hash?.replace(/^#/, "") ?? "";
+    if (!raw.includes("accessToken=")) return;
+    const params = new URLSearchParams(raw);
+    const at = params.get("accessToken");
+    if (!at) return;
+    setLocalStorageItem("accessToken", at);
+    try {
+      setProfile(jwtDecode<Profile>(at));
+      setIsLoggedIn(true);
+    } catch {
+      /* invalid jwt */
+    }
+    const u = new URL(window.location.href);
+    u.hash = "";
+    window.history.replaceState(null, "", u.pathname + u.search);
+  }, []);
+
   // const checkAgree = async () => {
   //   // const agree = await getUserAgree();
   //   // setIsAgreed(agree.status.isAgree);
@@ -84,16 +103,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (responseToken !== undefined) {
         setLocalStorageItem("responseToken", JSON.stringify(responseToken));
         if (responseToken) {
-          setLocalStorageItem(
-            "accessToken",
+          const jwtString =
             responseToken.professor ??
-              responseToken.doctor ??
-              responseToken.master ??
-              responseToken.undergraduate ??
-              responseToken.employee ??
-              responseToken.executive ??
-              "",
-          );
+            responseToken.doctor ??
+            responseToken.master ??
+            responseToken.undergraduate ??
+            responseToken.employee ??
+            responseToken.executive ??
+            (typeof responseToken === "string" ? responseToken : "");
+          setLocalStorageItem("accessToken", jwtString);
+          if (jwtString) {
+            try {
+              setProfile(jwtDecode<Profile>(jwtString));
+            } catch {
+              setProfile(undefined);
+            }
+          }
           setIsLoggedIn(true);
           cookies.remove("accessToken");
           logger.log("Logged in successfully.");

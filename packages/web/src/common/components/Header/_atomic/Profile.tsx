@@ -18,10 +18,11 @@ const ProfileWrapper = styled.div.withConfig({
 })<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+  width: 100%;
   padding: 8px 12px;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
-  flex: 1;
   border-radius: 4px;
   cursor: pointer;
   border: ${({ theme, selected }) =>
@@ -36,9 +37,10 @@ const ProfileWrapper = styled.div.withConfig({
 const ProfileText = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 4px;
   flex: 1;
+  min-width: 0;
 `;
 
 const Profile: React.FC<ProfileProps> = ({

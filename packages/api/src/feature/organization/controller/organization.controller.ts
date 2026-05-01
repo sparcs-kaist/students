@@ -39,4 +39,9 @@ export class OrganizationController {
   ) {
     return this.organizationService.applyMember(student, body);
   }
+
+  @Get("me/memberships")
+  async getMyOrganizationMemberships(@GetStudent() student: StudentProfile) {
+    return this.organizationService.getMyOrganizationMemberships(student);
+  }
 }

@@ -27,10 +27,11 @@ const mockInterceptor = {
           requestBody,
         )}\nqueryParams: ${JSON.stringify(queryParams)}`,
       );
-      return responseConfig;
     }
 
-    responseConfig.baseURL = BASE_URL;
+    if (BASE_URL) {
+      responseConfig.baseURL = BASE_URL;
+    }
 
     return responseConfig;
   },
