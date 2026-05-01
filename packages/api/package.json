@@ -24,7 +24,7 @@
     "migrate:dev": "pnpm db up --wait && pnpm drizzle-kit generate:mysql --config ./src/drizzle/drizzle.config.ts && pnpm ts-node src/drizzle/drizzle.migrate.ts",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/packages/api/src/main",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
