@@ -34,6 +34,8 @@ FROM base
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/packages/web /app/packages/web
 COPY --from=build /app/packages/interface /app/packages/interface
+COPY --from=build /app/tsconfig.json /app/tsconfig.json
+COPY --from=build /app/env /app/env
 WORKDIR /app/packages/web
 
 EXPOSE 3000

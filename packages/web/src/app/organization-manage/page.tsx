@@ -33,11 +33,11 @@ import {
   mockCommitteeMemberTableData,
 } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
 
-import { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
-import { ApiOrg008RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
-import { ApiOrg009RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";
-import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
-import { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
+import type { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
+import type { ApiOrg008RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg008";
+import type { ApiOrg009RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg009";
+import type { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
+import type { IOrganization } from "@sparcs-students/interface/api/organization/type/organization.type";
 import { CommitteeRoleEnum } from "@sparcs-students/root/packages/interface/src/common/enum/organization.enum";
 
 const BoxWrapper = styled.div`

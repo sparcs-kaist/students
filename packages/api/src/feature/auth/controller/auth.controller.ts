@@ -36,6 +36,22 @@ import { Request, UserRefreshTokenPayload } from "../dto/auth.dto";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * Cookies set on the API origin are not visible on the Next dev origin (different port).
+   * Put accessToken in the URL fragment so the SPA can copy it to localStorage once.
+   */
+  private buildPostLoginRedirect(next: string, accessToken: string): string {
+    let url: URL;
+    try {
+      url = new URL(next);
+    } catch {
+      const port = process.env.CLIENT_PORT ?? "3000";
+      url = new URL(next, `http://localhost:${port}`);
+    }
+    url.hash = `accessToken=${encodeURIComponent(accessToken)}`;
+    return url.toString();
+  }
+
   @Public()
   @Get("/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
@@ -70,8 +86,9 @@ export class AuthController {
       httpOnly: false,
       path: "/",
     });
-    logger.debug(`Redirecting to ${next}`);
-    return res.redirect(next);
+    const redirectTo = this.buildPostLoginRedirect(next, token.accessToken);
+    logger.debug(`Redirecting to ${redirectTo}`);
+    return res.redirect(redirectTo);
   }
 
   @Public()

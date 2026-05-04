@@ -6,6 +6,7 @@ import { ApiAut002ResponseCreated } from "@sparcs-students/root/packages/interfa
 import { ApiAut003ResponseOk } from "@sparcs-students/root/packages/interface/src/api/auth/endpoint/apiAut003";
 import { removeUndefined } from "@sparcs-students/root/packages/interface/src/common/util";
 
+import logger from "@sparcs-students/api/common/util/logger";
 import settings from "@sparcs-students/api/settings";
 import { SSOUser } from "@sparcs-students/api/feature/auth/dto/sso-user.dto";
 import { AuthRepository } from "@sparcs-students/api/feature/auth/repository/auth.repository";
@@ -31,6 +32,7 @@ export class AuthService {
     const ssoClient = new SSOClient(
       ssoConfig.ssoClientId,
       ssoConfig.ssoSecretKey,
+      ssoConfig.ssoIsBeta,
     );
     this.ssoClient = ssoClient;
   }
@@ -61,7 +63,16 @@ export class AuthService {
     query: ApiAut004RequestQuery,
     session: Request["session"],
   ) {
-    const ssoProfile: SSOUser = await this.ssoClient.getUserInfo(query.code);
+    let ssoProfile: SSOUser;
+    try {
+      ssoProfile = await this.ssoClient.getUserInfo(query.code);
+    } catch (err) {
+      logger.error(err);
+      throw new HttpException(
+        "SPARCS SSO token exchange failed; verify SSO_CLIENT_ID, SSO_SECRET_KEY, and SSO_IS_BETA",
+        502,
+      );
+    }
     const kaistInfo = ssoProfile.kaist_info;
     const studentNumber = kaistInfo?.ku_std_no || "00000000";
     const email =

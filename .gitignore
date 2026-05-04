@@ -1,6 +1,7 @@
 *.pub
 .env
 env/.env.dev
+env/.env.development
 env/.env.prod
 env/.env.local
 env/.env

@@ -17,10 +17,9 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@sparcs-students/root/*": ["../../*"],
-      "@sparcs-students/api/*": ["./src/*"],
-      "@sparcs-students/interface/*": ["../interface/src/*"]
+      "@sparcs-students/api/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
 }
-
