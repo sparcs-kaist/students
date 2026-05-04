@@ -168,14 +168,14 @@ export class OrganizationService {
 
   async deleteOrganization(param) {
     const existing = await this.organizationRepository.find({
-      id: param.organizationId,
+      id: param.id,
     });
     if (!existing.length) {
       throw new ConflictException("Organization does not exist.");
     }
 
     await this.organizationRepository.delete({
-      id: param.organizationId,
+      id: param.id,
     });
   }
 
