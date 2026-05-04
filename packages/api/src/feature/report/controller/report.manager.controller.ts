@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Get,
-  Param, 
+  Param,
   Delete,
   Patch,
   Post,
@@ -93,10 +93,7 @@ export class ReportManagerController {
     @GetStudent() student: StudentProfile,
     @Body() body: ApiBudRpt005RequestBody,
   ) {
-    return this.reportService.submitBudgetReportIncomeRevision(
-      student,
-      body,
-    );
+    return this.reportService.submitBudgetReportIncomeRevision(student, body);
   }
 
   // 결산안 수입 삭제
@@ -106,10 +103,7 @@ export class ReportManagerController {
     @GetStudent() student: StudentProfile,
     @Query() query,
   ) {
-    return this.reportService.deleteBudgetReportIncome(
-      student,
-      query,
-    );
+    return this.reportService.deleteBudgetReportIncome(student, query);
   }
 
   // 각 매니저 권한으로 결산안 지출 생성
@@ -158,10 +152,7 @@ export class ReportManagerController {
     @GetStudent() student: StudentProfile,
     @Body() body: ApiBudRpt010RequestBody,
   ) {
-    return this.reportService.submitBudgetReportExpenseRevision(
-      student,
-      body,
-    );
+    return this.reportService.submitBudgetReportExpenseRevision(student, body);
   }
 
   // 결산안 지출 삭제
