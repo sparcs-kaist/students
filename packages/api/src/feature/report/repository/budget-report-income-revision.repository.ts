@@ -18,6 +18,7 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 export type BudgetReportIncomeRevisionQuery = {
   // id: number; // id 는 기본 내장
   budgetReportIncomeId: number;
+  code: number;
 };
 
 type BudgetReportIncomeRevisionOrderByKeys = "id";
@@ -64,8 +65,12 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
     return new MBudgetReportIncomeRevision({
       id: result.id,
       budgetReportIncome: { id: result.budgetReportIncomeId },
+      budgetDomainEnum: result.budgetDomainEnum,
+      budgetDivisionIncomeEnum: result.budgetDivisionIncomeEnum,
+      name: result.name,
       amount: result.amount,
-      note: result.note,
+      detail: result.detail,
+      code: result.code,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
@@ -78,8 +83,12 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
     return {
       id: model.id,
       budgetReportIncomeId: model.budgetReportIncome.id,
+      budgetDomainEnum: model.budgetDomainEnum,
+      budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
+      name: model.name,
       amount: model.amount,
-      note: model.note,
+      detail: model.detail,
+      code: model.code,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
@@ -91,8 +100,12 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
   ): BudgetReportIncomeRevisionDbInsert {
     return {
       budgetReportIncomeId: model.budgetReportIncome.id,
+      budgetDomainEnum: model.budgetDomainEnum,
+      budgetDivisionIncomeEnum: model.budgetDivisionIncomeEnum,
+      name: model.name,
       amount: model.amount,
-      note: model.note,
+      detail: model.detail,
+      code: model.code,
     };
   }
 
@@ -104,12 +117,9 @@ export class BudgetReportIncomeRevisionRepository extends BaseSingleTableReposit
       TableWithID | null
     > = {
       id: BudgetReportIncomeRevision,
-      budgetReportIncome: BudgetReportIncomeRevision,
-      amount: BudgetReportIncomeRevision,
-      note: BudgetReportIncomeRevision,
+      budgetReportIncomeId: BudgetReportIncomeRevision,
+      code: BudgetReportIncomeRevision,
       submittedAt: BudgetReportIncomeRevision,
-      cogAgendaId: BudgetReportIncomeRevision,
-      gsrcAgendaId: BudgetReportIncomeRevision,
     };
 
     if (!(field in fieldMappings)) {
