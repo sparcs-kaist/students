@@ -3,13 +3,9 @@ import { IProjectReportRevision } from "@sparcs-students/interface/api/report/ty
 
 export interface IProjectReportRevisionCreate {
   projectReport: IProjectReportRevision["projectReport"];
-
   name: IProjectReportRevision["name"];
-
   method: IProjectReportRevision["method"];
-
   prepareDuration: IProjectReportRevision["prepareDuration"];
-
   duration: IProjectReportRevision["duration"];
 
   timelines: IProjectReportRevision["timelines"];
@@ -18,11 +14,9 @@ export interface IProjectReportRevisionCreate {
 
   manager: IProjectReportRevision["manager"];
 
-  participation: IProjectReportRevision["participation"];
+  purpose: IProjectReportRevision["purpose"];
 
-  result: IProjectReportRevision["result"];
-
-  unmet: IProjectReportRevision["unmet"];
+  target: IProjectReportRevision["target"];
 
   detail: IProjectReportRevision["detail"];
 
@@ -51,11 +45,9 @@ export class MProjectReportRevision
 
   manager: IProjectReportRevision["manager"];
 
-  participation: IProjectReportRevision["participation"];
+  purpose: IProjectReportRevision["purpose"];
 
-  result: IProjectReportRevision["result"];
-
-  unmet: IProjectReportRevision["unmet"];
+  target: IProjectReportRevision["target"];
 
   detail: IProjectReportRevision["detail"];
 
