@@ -17,11 +17,15 @@ import { BudgetReportExpenseRepository } from "../report/repository/budget-repor
 import { OrganizationManagerRepository } from "../organization/repository/organization.manager.repository";
 import { BudgetProposalExpenseDocumentReviewRepository } from "./repository/budget-proposal-expense-document-review.repository";
 import { BudgetProposalIncomeDocumentReviewRepository } from "./repository/budget-proposal-income-document-review.repository";
+import { ProjectProposalTimelineRepository } from "./repository/project-proposal-timeline.repository";
+import { ProjectProposalDocumentReviewRepository } from "./repository/project-proposal-document-review.repository";
 
 @Module({
   providers: [
     ProjectProposalRepository,
     ProjectProposalRevisionRepository,
+    ProjectProposalTimelineRepository,
+    ProjectProposalDocumentReviewRepository,
     BudgetProposalExpenseRepository,
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
@@ -39,6 +43,8 @@ import { BudgetProposalIncomeDocumentReviewRepository } from "./repository/budge
   exports: [
     ProjectProposalRepository,
     ProjectProposalRevisionRepository,
+    ProjectProposalTimelineRepository,
+    ProjectProposalDocumentReviewRepository,
     BudgetProposalExpenseRepository,
     BudgetProposalExpenseRevisionRepository,
     BudgetProposalIncomeRepository,
