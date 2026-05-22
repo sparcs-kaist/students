@@ -1,9 +1,12 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UsePipes } from "@nestjs/common";
 
 import {
   apiFil001,
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
+  apiFil002,
+  ApiFil002RequestParam,
+  ApiFil002ResponseOk,
 } from "@sparcs-students/interface/api/file/index";
 
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -28,5 +31,15 @@ export class FileController {
     const files = await this.fileService.getUploadUrl(body.metadata, userId);
 
     return files;
+  }
+
+  @Get("files/:id")
+  @UsePipes(new ZodPipe(apiFil002))
+  async getDownloadUrl(
+    @Param() param: ApiFil002RequestParam,
+  ): Promise<ApiFil002ResponseOk> {
+    logger.debug(`[getDownloadUrl] file id is ${param.id}`);
+
+    return this.fileService.getDownloadUrl(param.id);
   }
 }

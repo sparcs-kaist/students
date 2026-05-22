@@ -1,10 +1,16 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 import {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
+  ApiFil002RequestParam,
+  ApiFil002ResponseOk,
 } from "@sparcs-students/interface/api/file/index";
 import { IUser } from "@sparcs-students/interface/api/user/index";
 
@@ -58,5 +64,32 @@ export class FileService {
     );
 
     return { files };
+  }
+
+  /**
+   * 파일 Id를 받아 presigned URL을 반환합니다.
+   * @param param 파일 고유 Id
+   * @returns 파일 조회/다운로드 URL
+   */
+  async getDownloadUrl(
+    fileId: ApiFil002RequestParam["id"],
+  ): Promise<ApiFil002ResponseOk> {
+    const file = await this.fileRepository.fetch(fileId);
+
+    if (!file) {
+      throw new NotFoundException({
+        status: "Error",
+        message: "파일이 존재하지 않습니다.",
+      });
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: getFileKey(file),
+    });
+
+    const url = await getSignedUrl(this.s3Client, command, { expiresIn: 600 });
+
+    return { url };
   }
 }
