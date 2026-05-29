@@ -1,16 +1,23 @@
 import {
   GetObjectCommand,
   PutObjectCommand,
+  DeleteObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from "@nestjs/common";
 
 import {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
   ApiFil002RequestParam,
   ApiFil002ResponseOk,
+  ApiFil003RequestParam,
+  ApiFil003ResponseOk,
 } from "@sparcs-students/interface/api/file/index";
 import { IUser } from "@sparcs-students/interface/api/user/index";
 
@@ -20,10 +27,17 @@ import { getFileKey } from "../file.util";
 
 @Injectable()
 export class FileService {
-  constructor(
-    private s3Client: S3Client,
-    private fileRepository: FileRepository,
-  ) {}
+  private s3Client: S3Client;
+
+  constructor(private fileRepository: FileRepository) {
+    this.s3Client = new S3Client({
+      region: process.env.AWS_REGION || "ap-northeast-2",
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+      },
+    });
+  }
 
   /**
    * 파일 업로드용 presigned URL을 생성하며, 파일을 DB에 생성합니다.
@@ -91,5 +105,38 @@ export class FileService {
     const url = await getSignedUrl(this.s3Client, command, { expiresIn: 600 });
 
     return { url };
+  }
+
+  /**
+   * DB 및 S3에서 파일을 삭제합니다.
+   * @param fileId 파일 고유 Id
+   * @param userId 유저 고유 Id
+   */
+  async deleteFile(
+    fileId: ApiFil003RequestParam["id"],
+    userId: number,
+  ): Promise<ApiFil003ResponseOk> {
+    const file = await this.fileRepository.fetch(fileId);
+
+    if (!file) {
+      throw new NotFoundException("파일이 존재하지 않습니다.");
+    }
+    if (file.userId !== userId) {
+      throw new ForbiddenException("파일을 삭제할 권한이 없습니다.");
+    }
+
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: getFileKey(file),
+    });
+
+    // DB와 S3에서 동시에 삭제
+    await Promise.all([
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.fileRepository.delete({ id: fileId } as any),
+      this.s3Client.send(command),
+    ]);
+
+    return { status: "Success", message: "파일이 성공적으로 삭제되었습니다." };
   }
 }

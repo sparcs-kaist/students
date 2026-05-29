@@ -10,6 +10,9 @@ export { default as apiFil001 } from "./endpoint/apiFil001"; // default export �
 export * from "./endpoint/apiFil002";
 export { default as apiFil002 } from "./endpoint/apiFil002";
 
+export * from "./endpoint/apiFil003";
+export { default as apiFil003 } from "./endpoint/apiFil003";
+
 // 도메인 모델 스키마 목록
 const zDomainModels = z.object({
   file: zFile,
