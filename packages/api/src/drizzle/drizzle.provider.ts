@@ -18,8 +18,12 @@ let connectionInstance = null;
 
 export const getConnection = async () => {
   if (!connectionInstance) {
-    connectionInstance = await mysql.createConnection({
+    connectionInstance = mysql.createPool({
       uri: env.DATABASE_URL,
+      connectionLimit: 10,
+      waitForConnections: true,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0,
     });
   }
   return connectionInstance;
