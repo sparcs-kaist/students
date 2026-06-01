@@ -27,17 +27,10 @@ import { getFileKey } from "../file.util";
 
 @Injectable()
 export class FileService {
-  private s3Client: S3Client;
-
-  constructor(private fileRepository: FileRepository) {
-    this.s3Client = new S3Client({
-      region: process.env.AWS_REGION || "ap-northeast-2",
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-      },
-    });
-  }
+  constructor(
+    private s3Client: S3Client,
+    private fileRepository: FileRepository,
+  ) {}
 
   /**
    * 파일 업로드용 presigned URL을 생성하며, 파일을 DB에 생성합니다.
