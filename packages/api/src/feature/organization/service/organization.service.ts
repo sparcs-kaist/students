@@ -738,14 +738,28 @@ export class OrganizationService {
 
   async getHistoryById(studentId: number) {
     const [presidents, managers, members] = await Promise.all([
-      this.organizationPresidentRepository.find({ studentId }),
-      this.organizationManagerRepository.find({ studentId }),
-      this.organizationMemberRepository.find({ studentId }),
+      this.organizationPresidentRepository.findByStudentId(studentId),
+      this.organizationManagerRepository.findByStudentId(studentId),
+      this.organizationMemberRepository.findByStudentId(studentId),
     ]);
 
-    const map = new Map<number, { organizationId: number; roles: object[] }>();
+    type HistoryRole = {
+      kind: "president" | "manager" | "member";
+      title?: string | null;
+      organizationPresidentTypeEnum?: number | null;
+      student: { id: number };
+      duration: {
+        startTerm: Date | string;
+        endTerm?: Date | string | null;
+      };
+    };
 
-    const pushRole = (orgId: number, role: object) => {
+    const map = new Map<
+      number,
+      { organizationId: number; roles: HistoryRole[] }
+    >();
+
+    const pushRole = (orgId: number, role: HistoryRole) => {
       if (!map.has(orgId)) map.set(orgId, { organizationId: orgId, roles: [] });
       map.get(orgId)!.roles.push(role);
     };
