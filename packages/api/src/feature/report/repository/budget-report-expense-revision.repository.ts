@@ -17,9 +17,8 @@ import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type BudgetReportExpenseRevisionQuery = {
   // id: number; // id 는 기본 내장
-  organizationId: number;
-  semesterId: number;
-  projectReportId: number;
+  budgetReportExpenseId: number;
+  code: number;
 };
 
 type BudgetReportExpenseRevisionOrderByKeys = "id";
@@ -66,8 +65,13 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
     return new MBudgetReportExpenseRevision({
       id: result.id,
       budgetReportExpense: { id: result.budgetReportExpenseId },
+      budgetDomainEnum: result.budgetDomainEnum,
+      budgetDivisionExpenseEnum: result.budgetDivisionExpenseEnum,
+      budgetClassExpenseEnum: result.budgetClassExpenseEnum,
+      name: result.name,
       amount: result.amount,
-      note: result.note,
+      detail: result.detail,
+      code: result.code,
       submittedAt: result.submittedAt,
       cogAgenda: { id: result.cogAgendaId },
       gsrcAgenda: { id: result.gsrcAgendaId },
@@ -80,8 +84,13 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
     return {
       id: model.id,
       budgetReportExpenseId: model.budgetReportExpense.id,
+      budgetDomainEnum: model.budgetDomainEnum,
+      budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
+      budgetClassExpenseEnum: model.budgetClassExpenseEnum,
+      name: model.name,
       amount: model.amount,
-      note: model.note,
+      detail: model.detail,
+      code: model.code,
       submittedAt: model.submittedAt,
       cogAgendaId: model.cogAgenda?.id,
       gsrcAgendaId: model.gsrcAgenda?.id,
@@ -93,8 +102,13 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
   ): BudgetReportExpenseRevisionDbInsert {
     return {
       budgetReportExpenseId: model.budgetReportExpense.id,
+      budgetDomainEnum: model.budgetDomainEnum,
+      budgetDivisionExpenseEnum: model.budgetDivisionExpenseEnum,
+      budgetClassExpenseEnum: model.budgetClassExpenseEnum,
+      name: model.name,
       amount: model.amount,
-      note: model.note,
+      detail: model.detail,
+      code: model.code,
     };
   }
 
@@ -105,12 +119,10 @@ export class BudgetReportExpenseRevisionRepository extends BaseSingleTableReposi
       BudgetReportExpenseRevisionFieldMapKeys,
       TableWithID | null
     > = {
+      id: BudgetReportExpenseRevision,
       budgetReportExpenseId: BudgetReportExpenseRevision,
-      note: BudgetReportExpenseRevision,
-      amount: BudgetReportExpenseRevision,
+      code: BudgetReportExpenseRevision,
       submittedAt: BudgetReportExpenseRevision,
-      cogAgendaId: BudgetReportExpenseRevision,
-      gsrcAgendaId: BudgetReportExpenseRevision,
     };
 
     if (!(field in fieldMappings)) {

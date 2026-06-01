@@ -3,10 +3,7 @@ import { IBudgetReportExpense } from "@sparcs-students/interface/api/report/type
 
 export interface IBudgetReportExpenseCreate extends IBudgetReportExpense {
   organization: IBudgetReportExpense["organization"];
-
   semester: IBudgetReportExpense["semester"];
-
-  projectReport: IBudgetReportExpense["projectReport"];
 }
 
 export class MBudgetReportExpense
@@ -18,8 +15,6 @@ export class MBudgetReportExpense
   organization: IBudgetReportExpense["organization"];
 
   semester: IBudgetReportExpense["semester"];
-
-  projectReport: IBudgetReportExpense["projectReport"];
 
   constructor(data: IBudgetReportExpense) {
     super();
