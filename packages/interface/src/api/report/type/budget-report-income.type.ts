@@ -36,3 +36,57 @@ export const zBudgetReportIncomeRevision = z
 export type IBudgetReportIncomeRevision = z.infer<
   typeof zBudgetReportIncomeRevision
 >;
+
+export const zBudgetReportIncomeRequestCreate = zBudgetReportIncome.omit({
+  id: true,
+});
+
+export const zBudgetReportIncomeRequestUpdate = zBudgetReportIncomeRevision;
+
+export const zBudgetReportIncomeResponse = zBudgetReportIncomeRevision.pick({
+  id: true,
+});
+
+export const zBudgetReportIncomeRevisionRequestCreate =
+  zBudgetReportIncomeRevision.omit({ id: true });
+
+export const zBudgetReportIncomeRevisionResponse =
+  zBudgetReportIncomeRevision.pick({
+    id: true,
+  });
+
+export const zBudgetReportIncomeSubmitRequestUpdate =
+  zBudgetReportIncomeRevision.pick({ id: true });
+
+export const zBudgetReportIncomeSubmitResponse = zBudgetReportIncome.pick({
+  id: true,
+});
+
+export const zBudgetReportIncomeRequestDelete = zBudgetReportIncome.pick({
+  id: true,
+});
+
+export type IBudgetReportIncomeRequestCreate = z.infer<
+  typeof zBudgetReportIncomeRequestCreate
+>;
+export type IBudgetReportIncomeRequestUpdate = z.infer<
+  typeof zBudgetReportIncomeRequestUpdate
+>;
+export type IBudgetReportIncomeResponse = z.infer<
+  typeof zBudgetReportIncomeResponse
+>;
+export type IBudgetReportIncomeRevisionRequestCreate = z.infer<
+  typeof zBudgetReportIncomeRevisionRequestCreate
+>;
+export type IBudgetReportIncomeRevisionResponse = z.infer<
+  typeof zBudgetReportIncomeRevisionResponse
+>;
+export type IBudgetReportIncomeSubmitRequestUpdate = z.infer<
+  typeof zBudgetReportIncomeSubmitRequestUpdate
+>;
+export type IBudgetReportIncomeSubmitResponse = z.infer<
+  typeof zBudgetReportIncomeResponse
+>;
+export type IBudgetReportIncomeRequestDelete = z.infer<
+  typeof zBudgetReportIncomeRequestDelete
+>;

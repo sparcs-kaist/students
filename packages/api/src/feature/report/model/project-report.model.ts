@@ -1,5 +1,5 @@
 import { MEntity } from "@sparcs-students/api/common/base/entity.model";
-import { IProjectReport } from "@sparcs-students/interface/api/report/index";
+import { IProjectReport } from "@sparcs-students/interface/api/report/type/project-report.type";
 
 export interface IProjectReportCreate extends IProjectReport {
   organization: IProjectReport["organization"];

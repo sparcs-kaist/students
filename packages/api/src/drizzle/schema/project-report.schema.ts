@@ -23,7 +23,7 @@ export const ProjectReport = mysqlTable(
     semesterId: int("semester_id").notNull(),
     projectProposalId: int("project_proposal_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
@@ -67,7 +67,7 @@ export const ProjectReportRevision = mysqlTable(
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
     agendaId: int("agenda_id"),
   },
@@ -115,7 +115,7 @@ export const ProjectReportTimeline = mysqlTable(
     detail: text("detail").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
