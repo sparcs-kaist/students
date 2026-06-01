@@ -736,6 +736,63 @@ export class OrganizationService {
     };
   }
 
+  async getHistoryById(studentId: number) {
+    const [presidents, managers, members] = await Promise.all([
+      this.organizationPresidentRepository.find({ studentId }),
+      this.organizationManagerRepository.find({ studentId }),
+      this.organizationMemberRepository.find({ studentId }),
+    ]);
+
+    const map = new Map<number, { organizationId: number; roles: object[] }>();
+
+    const pushRole = (orgId: number, role: object) => {
+      if (!map.has(orgId)) map.set(orgId, { organizationId: orgId, roles: [] });
+      map.get(orgId)!.roles.push(role);
+    };
+
+    presidents.forEach(p => {
+      pushRole(p.organization.id, {
+        kind: "president",
+        title: p.title,
+        organizationPresidentTypeEnum: p.organizationPresidentTypeEnum,
+        student: { id: p.student.id },
+        duration: p.duration,
+      });
+    });
+
+    managers.forEach(m => {
+      pushRole(m.organization.id, {
+        kind: "manager",
+        student: { id: m.student.id },
+        duration: m.duration,
+      });
+    });
+
+    members.forEach(m => {
+      pushRole(m.organization.id, {
+        kind: "member",
+        student: { id: m.student.id },
+        duration: m.duration,
+      });
+    });
+
+    const orgIds = Array.from(map.keys());
+    const organizations = await Promise.all(
+      orgIds.map(id => this.organizationRepository.fetch(id)),
+    );
+
+    const histories = organizations.map(org => ({
+      organization: org,
+      roles: (map.get(org.id)?.roles ?? []).sort(
+        (a, b) =>
+          new Date(a.duration.startTerm).getTime() -
+          new Date(b.duration.startTerm).getTime(),
+      ),
+    }));
+
+    return { histories };
+  }
+
   async deleteOperatingCommittee(student, param) {
     const existing = await this.operatingCommitteeRepository.find({
       id: param.id,
