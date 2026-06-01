@@ -13,6 +13,7 @@ import { OrganizationModule } from "./feature/organization/organization.module";
 import { SemesterModule } from "./feature/semester/semester.module";
 import FileModule from "./feature/file/file.module";
 import { ProposalModule } from "./feature/proposal/proposal.module";
+import { UserModule } from "./feature/user/user.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ProposalModule } from "./feature/proposal/proposal.module";
     SemesterModule,
     FileModule,
     ProposalModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
