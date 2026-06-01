@@ -3,6 +3,7 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  ForbiddenException,
 } from "@nestjs/common";
 import { BudgetReportIncomeRepository } from "@sparcs-students/api/feature/report/repository/budget-report-income.repository";
 import { BudgetReportExpenseRepository } from "@sparcs-students/api/feature/report/repository/budget-report-expense.repository";
@@ -15,6 +16,12 @@ import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-e
 import { BudgetProposalExpenseRevisionRepository } from "../repository/budget-proposal-expense-revision.repository";
 import { BudgetProposalIncomeDocumentReviewRepository } from "../repository/budget-proposal-income-document-review.repository";
 import { BudgetProposalExpenseDocumentReviewRepository } from "../repository/budget-proposal-expense-document-review.repository";
+import { ProjectProposalRepository } from "../repository/project-proposal.repository";
+import { ProjectProposalRevisionRepository } from "../repository/project-proposal-revision.repository";
+import { ProjectProposalTimelineRepository } from "../repository/project-proposal-timeline.repository";
+import { ProjectProposalDocumentReviewRepository } from "../repository/project-proposal-document-review.repository";
+import { OperationProposalRepository } from "../repository/operation-proposal.repository";
+import { OperationProposalRevisionRepository } from "../repository/operation-proposal-revision.repository";
 
 @Injectable()
 export class ProposalService {
@@ -28,6 +35,12 @@ export class ProposalService {
     private readonly organizationManagerRepository: OrganizationManagerRepository,
     private readonly budgetProposalIncomeDocumentReviewRepository: BudgetProposalIncomeDocumentReviewRepository,
     private readonly budgetProposalExpenseDocumentReviewRepository: BudgetProposalExpenseDocumentReviewRepository,
+    private readonly projectProposalRepository: ProjectProposalRepository,
+    private readonly projectProposalRevisionRepository: ProjectProposalRevisionRepository,
+    private readonly projectProposalTimelineRepository: ProjectProposalTimelineRepository,
+    private readonly projectProposalDocumentReviewRepository: ProjectProposalDocumentReviewRepository,
+    private readonly operationProposalRepository: OperationProposalRepository,
+    private readonly operationProposalRevisionRepository: OperationProposalRevisionRepository,
   ) {}
 
   async checkManager(studentId, organizationId) {
@@ -662,5 +675,315 @@ export class ProposalService {
     await this.budgetProposalExpenseDocumentReviewRepository.delete({
       id: param.budgetProposalExpenseDocumentReviewId,
     });
+  }
+
+  async createProjectProposal(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    await this.checkManager(studentId, body.organization.id);
+
+    // semester 중복 확인
+    const existing = await this.projectProposalRepository.find({
+      organizationId: body.organization.id,
+      semesterId: body.semester.id,
+    });
+    if (existing.length > 0) {
+      throw new ConflictException("Already exists this semester.");
+    }
+
+    // 생성
+    const [newProjectProposal] =
+      await this.projectProposalRepository.create(body);
+    return {
+      projectProposal: newProjectProposal,
+    };
+  }
+
+  async createProjectProposalRevision(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: body.projectProposal.id,
+    });
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    // 생성
+    const [newProjectProposalRevision] =
+      await this.projectProposalRevisionRepository.create(body);
+
+    return {
+      projectProposalRevision: newProjectProposalRevision,
+    };
+  }
+
+  async createProjectProposalTimeline(student, body) {
+    // 단체의 매니저가 맞는지 확인
+    const { studentId } = student;
+    const [projectProposalRevision] =
+      await this.projectProposalRevisionRepository.find({
+        code: body.projectProposalRevision.code,
+      });
+    if (!projectProposalRevision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: projectProposalRevision.projectProposal.id,
+    } as any);
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    // 생성
+    const [newProjectProposalTimeline] =
+      await this.projectProposalTimelineRepository.create(body);
+    return {
+      projectProposalTimeline: newProjectProposalTimeline,
+    };
+  }
+
+  async updateProjectProposalRevision(student, body) {
+    const { studentId } = student;
+
+    const [target] = await this.projectProposalRevisionRepository.find({
+      id: body.id,
+    });
+
+    if (!target) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: target.projectProposal.id,
+    } as any);
+
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    const result =
+      target.submittedAt !== null
+        ? await this.projectProposalRevisionRepository.create({
+            projectProposal: { id: projectProposal.id },
+            name: body.name ?? target.name,
+            method: body.method ?? target.method,
+            prepareStartTerm: body.prepareStartTerm ?? target.prepareStartTerm,
+            prepareEndTerm: body.prepareEndTerm ?? target.prepareEndTerm,
+            startTerm: body.startTerm ?? target.startTerm,
+            endTerm: body.endTerm ?? target.endTerm,
+            team: body.team ?? target.team,
+            manager: body.manager ?? target.manager,
+            purpose: body.purpose ?? target.purpose,
+            target: body.target ?? target.target,
+            detail: body.detail ?? target.detail,
+            note: body.note ?? target.note,
+            code: target.code,
+          })
+        : await this.projectProposalRevisionRepository.patch(
+            { id: body.id },
+            model => ({
+              ...model,
+              ...(body.name !== undefined && { name: body.name }),
+              ...(body.method !== undefined && { method: body.method }),
+              ...(body.prepareStartTerm !== undefined && {
+                prepareStartTerm: body.prepareStartTerm,
+              }),
+              ...(body.prepareEndTerm !== undefined && {
+                prepareEndTerm: body.prepareEndTerm,
+              }),
+              ...(body.startTerm !== undefined && {
+                startTerm: body.startTerm,
+              }),
+              ...(body.endTerm !== undefined && {
+                endTerm: body.endTerm,
+              }),
+              ...(body.team !== undefined && { team: body.team }),
+              ...(body.manager !== undefined && { manager: body.manager }),
+              ...(body.purpose !== undefined && { purpose: body.purpose }),
+              ...(body.target !== undefined && { target: body.target }),
+              ...(body.detail !== undefined && { detail: body.detail }),
+              ...(body.note !== undefined && { note: body.note }),
+              id: model.id,
+            }),
+          );
+
+    return {
+      projectProposalRevision: result,
+    };
+  }
+
+  async updateProjectProposalTimeline(student, body) {
+    const { studentId } = student;
+    const { organizationId, code, projectProposalTimeline } = body;
+
+    await this.checkManager(studentId, organizationId);
+
+    const [projectProposalRevision] =
+      await this.projectProposalRevisionRepository.find({
+        code,
+      });
+
+    if (!projectProposalRevision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: projectProposalRevision.projectProposal.id,
+    } as any);
+
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+
+    if (projectProposal.organization.id !== organizationId) {
+      throw new ForbiddenException(
+        "This ProjectProposal does not belong to the organization.",
+      );
+    }
+
+    const [target] = await this.projectProposalTimelineRepository.find({
+      projectProposalRevision: code,
+    });
+
+    if (!target) {
+      throw new NotFoundException("ProjectProposalTimeline does not exist.");
+    }
+
+    const updatedProjectProposalTimeline =
+      await this.projectProposalTimelineRepository.patch(
+        {
+          id: target.id,
+        } as any,
+        model => ({
+          ...model,
+
+          ...(projectProposalTimeline.startTerm !== undefined && {
+            startTerm: projectProposalTimeline.startTerm,
+          }),
+
+          ...(projectProposalTimeline.endTerm !== undefined && {
+            endTerm: projectProposalTimeline.endTerm,
+          }),
+
+          ...(projectProposalTimeline.detail !== undefined && {
+            detail: projectProposalTimeline.detail,
+          }),
+
+          ...(projectProposalTimeline.note !== undefined && {
+            note: projectProposalTimeline.note,
+          }),
+
+          id: model.id,
+        }),
+      );
+
+    return {
+      projectProposalTimeline: updatedProjectProposalTimeline,
+    };
+  }
+
+  /*
+    submitProjectProposalRevision 추가
+  */
+  async deleteProjectProposalRevision(student, query) {
+    const { studentId } = student;
+
+    const [projectProposalRevision] =
+      await this.projectProposalRevisionRepository.find({
+        code: query.code,
+      });
+
+    if (!projectProposalRevision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: projectProposalRevision.projectProposal.id,
+    } as any);
+
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    await this.projectProposalTimelineRepository.delete({
+      projectProposalRevision: query.code,
+    });
+
+    await this.projectProposalRevisionRepository.delete({
+      code: query.code,
+    });
+
+    return {};
+  }
+
+  async getRecentProjectProposalRevision(query) {
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: query.projectProposal,
+    });
+
+    if (!projectProposal) {
+      return {};
+    }
+
+    const [projectProposalRevision] =
+      await this.projectProposalRevisionRepository.find({
+        projectProposalId: query.projectProposal,
+        orderBy: {
+          id: OrderByTypeEnum.DESC,
+        },
+        pagination: { offset: 1, itemCount: 1 },
+      } as any);
+
+    return {
+      projectProposalRevision,
+    };
+  }
+
+  async getProjectProposalRevisionDateList(query) {
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: query.projectProposal,
+    });
+
+    if (!projectProposal) {
+      return [];
+    }
+
+    const rows = await this.projectProposalRevisionRepository.find({
+      projectProposalId: query.projectProposal,
+      submittedAt: { isNotNull: true },
+      orderBy: { id: OrderByTypeEnum.ASC },
+    } as any);
+
+    return rows.map(row => row.submittedAt as unknown as string);
+  }
+
+  async createOperationProposal(student, body) {
+    const { studentId } = student;
+
+    await this.checkManager(studentId, body.organization.id);
+
+    const existing = await this.operationProposalRepository.find({
+      organizationId: body.organization.id,
+      semesterId: body.semester.id,
+    });
+
+    if (existing.length > 0) {
+      throw new ConflictException("Already exists this semester.");
+    }
+
+    const [operationProposal] =
+      await this.operationProposalRepository.create(body);
+
+    return {
+      operationProposal,
+    };
   }
 }

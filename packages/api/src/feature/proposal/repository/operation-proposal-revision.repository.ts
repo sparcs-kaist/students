@@ -1,115 +1,75 @@
 import { Injectable } from "@nestjs/common";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 import {
-  BaseMultiTableRepository,
-  MultiInsertModel,
-  MultiSelectModel,
-  MultiUpdateModel,
-} from "@sparcs-students/api/common/base/base.multi.repository";
-import {
+  BaseRepositoryFindQuery,
+  BaseRepositoryQuery,
   BaseTableFieldMapKeys,
   TableWithID,
 } from "@sparcs-students/api/common/base/base.repository";
-import {
-  OperatingCommitteeProposal,
-  OperationProposalRevision,
-  TeamOperationProposal,
-} from "@sparcs-students/api/drizzle/schema/project-proposal.schema";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
+import { OperationProposalRevision } from "@sparcs-students/api/drizzle/schema/project-proposal.schema";
 import {
   IOperationProposalRevisionCreate,
   MOperationProposalRevision,
 } from "@sparcs-students/api/feature/proposal/model/operation-proposal-revision.model";
-import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type OperationProposalRevisionQuery = {
-  organizationId: number;
-  semesterId: number;
-  projectProposalId: number;
+  operationProposalId: number;
+  organizationDiagramId: number;
   submittedAt: Date;
   cogAgendaId: number;
   gsrcAgendaId: number;
 };
 
-type OperationProposalRevisionOrderByKeys = "id" | "documentStatusEnum";
+type OperationProposalRevisionOrderByKeys = "id";
 type OperationProposalRevisionQuerySupport = EmptyObject;
-
-type OperationProposalRevisionTable = {
-  main: typeof OperationProposalRevision;
-  oneToOne: EmptyObject;
-  oneToMany: {
-    operatingCommitteeOperation: typeof OperatingCommitteeProposal;
-    teamOperation: typeof TeamOperationProposal;
-  };
-};
+type OperationProposalRevisionTable = typeof OperationProposalRevision;
 type OperationProposalRevisionDbSelect =
-  MultiSelectModel<OperationProposalRevisionTable>;
+  InferSelectModel<OperationProposalRevisionTable>;
 type OperationProposalRevisionDbUpdate =
-  MultiUpdateModel<OperationProposalRevisionTable>;
-type OperationProposalRevisionDbInsert = MultiInsertModel<
-  OperationProposalRevisionTable,
-  "operationProposalRevisionId"
->;
-
+  Partial<OperationProposalRevisionDbSelect>;
+type OperationProposalRevisionDbInsert =
+  InferInsertModel<OperationProposalRevisionTable>;
 type OperationProposalRevisionFieldMapKeys = BaseTableFieldMapKeys<
   OperationProposalRevisionQuery,
   OperationProposalRevisionOrderByKeys,
   OperationProposalRevisionQuerySupport
 >;
 
+export type OperationProposalRevisionRepositoryFindQuery =
+  BaseRepositoryFindQuery<
+    OperationProposalRevisionQuery,
+    OperationProposalRevisionOrderByKeys
+  >;
+export type OperationProposalRevisionRepositoryQuery =
+  BaseRepositoryQuery<OperationProposalRevisionQuery>;
+
 @Injectable()
-export class OperationProposalRevisionRepository extends BaseMultiTableRepository<
+export class OperationProposalRevisionRepository extends BaseSingleTableRepository<
   MOperationProposalRevision,
   IOperationProposalRevisionCreate,
-  "operationProposalRevisionId",
   OperationProposalRevisionTable,
   OperationProposalRevisionQuery,
   OperationProposalRevisionOrderByKeys,
   OperationProposalRevisionQuerySupport
 > {
   constructor() {
-    super(
-      {
-        main: OperationProposalRevision,
-        oneToOne: {},
-        oneToMany: {
-          operatingCommitteeOperation: OperatingCommitteeProposal,
-          teamOperation: TeamOperationProposal,
-        },
-      },
-      MOperationProposalRevision,
-      "operationProposalRevisionId",
-    );
+    super(OperationProposalRevision, MOperationProposalRevision);
   }
 
   protected dbToModelMapping(
     result: OperationProposalRevisionDbSelect,
   ): MOperationProposalRevision {
     return new MOperationProposalRevision({
-      id: result.main.id,
-
-      operationProposal: { id: result.main.operationProposalId },
-
-      organizationDiagramFile: { id: result.main.organizationDiagramId },
-
-      note: result.main.note,
-
-      operatingCommitteeOperation:
-        result.oneToMany.operatingCommitteeOperation.map(operation => ({
-          operatingCommittee: { id: operation.operatingCommitteeId },
-          note: operation.note,
-        })),
-
-      teamOperation: result.oneToMany.teamOperation.map(operation => ({
-        team: { id: operation.teamId },
-        description: operation.description,
-      })),
-
-      submittedAt: result.main.submittedAt,
-
-      cogAgenda: { id: result.main.cogAgendaId },
-
-      gsrcAgenda: { id: result.main.gsrcAgendaId },
-
+      id: result.id,
+      operationProposal: { id: result.operationProposalId },
+      organizationDiagram: { id: result.organizationDiagramId },
+      note: result.note,
+      submittedAt: result.submittedAt,
+      cogAgenda: result.cogAgendaId ? { id: result.cogAgendaId } : undefined,
+      gsrcAgenda: result.gsrcAgendaId ? { id: result.gsrcAgendaId } : undefined,
     });
   }
 
@@ -117,27 +77,13 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
     model: MOperationProposalRevision,
   ): OperationProposalRevisionDbUpdate {
     return {
-      main: {
-        id: model.id,
-        operationProposalId: model.operationProposal.id,
-        organizationDiagramId: model.organizationDiagramFile.id,
-        submittedAt: model.submittedAt,
-        cogAgendaId: model.cogAgenda?.id,
-        gsrcAgendaId: model.gsrcAgenda?.id,
-      },
-      oneToOne: {},
-      oneToMany: {
-        operatingCommitteeOperation: model.operatingCommitteeOperation.map(
-          operation => ({
-            operatingCommitteeId: operation.operatingCommittee.id,
-            note: operation.note,
-          }),
-        ),
-        teamOperation: model.teamOperation.map(operation => ({
-          teamId: operation.team.id,
-          description: operation.description,
-        })),
-      },
+      id: model.id,
+      operationProposalId: model.operationProposal.id,
+      organizationDiagramId: model.organizationDiagram.id,
+      note: model.note,
+      submittedAt: model.submittedAt,
+      cogAgendaId: model.cogAgenda?.id,
+      gsrcAgendaId: model.gsrcAgenda?.id,
     };
   }
 
@@ -145,24 +91,9 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
     model: IOperationProposalRevisionCreate,
   ): OperationProposalRevisionDbInsert {
     return {
-      main: {
-        operationProposalId: model.operationProposal.id,
-        organizationDiagramId: model.organizationDiagramFile.id,
-        note: model.note,
-      },
-      oneToOne: {},
-      oneToMany: {
-        operatingCommitteeOperation: model.operatingCommitteeOperation.map(
-          operation => ({
-            operatingCommitteeId: operation.operatingCommittee.id,
-            note: operation.note,
-          }),
-        ),
-        teamOperation: model.teamOperation.map(operation => ({
-          teamId: operation.team.id,
-          description: operation.description,
-        })),
-      },
+      operationProposalId: model.operationProposal.id,
+      organizationDiagramId: model.organizationDiagram.id,
+      note: model.note,
     };
   }
 
@@ -174,9 +105,8 @@ export class OperationProposalRevisionRepository extends BaseMultiTableRepositor
       TableWithID | null
     > = {
       id: OperationProposalRevision,
-      organizationId: OperationProposalRevision,
-      semesterId: OperationProposalRevision,
       operationProposalId: OperationProposalRevision,
+      organizationDiagramId: OperationProposalRevision,
       submittedAt: OperationProposalRevision,
       cogAgendaId: OperationProposalRevision,
       gsrcAgendaId: OperationProposalRevision,
