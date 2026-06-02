@@ -1,6 +1,7 @@
 import {
   ConflictException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -24,6 +25,10 @@ import type {
 } from "@sparcs-students/interface/api/organization/type/organization.student.type";
 
 import { SemesterPublicService } from "@sparcs-students/api/feature/semester/service/semester.public.service";
+import { DrizzleAsyncProvider } from "@sparcs-students/api/drizzle/drizzle.provider";
+import { MySql2Database } from "drizzle-orm/mysql2";
+import { eq, isNull, and } from "drizzle-orm";
+import { Student } from "@sparcs-students/api/drizzle/schema/user.schema";
 import { OrganizationRepository } from "../repository/organization.repository";
 
 import { OrganizationPresidentRepository } from "../repository/organization.president.repository";
@@ -36,6 +41,7 @@ import { TeamLeaderRepository } from "../repository/organization.team.leader.rep
 import { OperatingCommitteeRepository } from "../repository/organization.operatingcommittee.repository";
 import { OperatingCommitteeMemberRepository } from "../repository/organization.operatingcommittee.member.repository";
 import { StaffRepository } from "../repository/staff.repository";
+import { UapresidentRepository } from "../repository/uapresident.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -98,6 +104,13 @@ type StaffQuery = {
   endTerm: Date | null;
 };
 
+type UapresidentServiceQuery = {
+  id: number;
+  studentId: number;
+  startTerm: Date;
+  endTerm: Date | null;
+};
+
 @Injectable()
 export class OrganizationService {
   constructor(
@@ -112,6 +125,9 @@ export class OrganizationService {
     private readonly operatingCommitteeRepository: OperatingCommitteeRepository,
     private readonly operatingCommitteeMemberRepository: OperatingCommitteeMemberRepository,
     private readonly staffRepository: StaffRepository,
+    private readonly uapresidentRepository: UapresidentRepository,
+    @Inject(DrizzleAsyncProvider)
+    private readonly db: MySql2Database,
   ) {}
 
   async checkOrganizationPresident(studentId, organizationId) {
@@ -168,14 +184,14 @@ export class OrganizationService {
 
   async deleteOrganization(param) {
     const existing = await this.organizationRepository.find({
-      id: param.organizationId,
+      id: param.id,
     });
     if (!existing.length) {
       throw new ConflictException("Organization does not exist.");
     }
 
     await this.organizationRepository.delete({
-      id: param.organizationId,
+      id: param.id,
     });
   }
 
@@ -871,5 +887,79 @@ export class OrganizationService {
     return {
       staff: updatedStaff[0],
     };
+  }
+
+  /**
+   * 현재 총학생회장이 다음 총학생회장에게 권한을 위임합니다.
+   * 1. 학번으로 다음 학생을 조회합니다.
+   * 2. 현재 UAPresident(currentStudentId)의 임기를 종료합니다.
+   * 3. 새 UAPresident 레코드를 생성합니다.
+   */
+  async delegateUapresident(
+    currentStudentId: number,
+    body: { studentNumber: number; startTerm: Date },
+  ) {
+    // 1. 학번으로 다음 학생 조회
+    const [nextStudent] = await this.db
+      .select({ id: Student.id })
+      .from(Student)
+      .where(
+        and(
+          eq(Student.studentNumber, body.studentNumber),
+          isNull(Student.deletedAt),
+        ),
+      )
+      .limit(1);
+
+    if (!nextStudent) {
+      throw new NotFoundException({
+        status: "Error",
+        message: "Student Not Found",
+      });
+    }
+
+    // 2. 이미 UAPresident인지 확인
+    const existing = await this.uapresidentRepository.find({
+      studentId: nextStudent.id,
+      endTerm: null as unknown as Date,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    if (existing.length > 0) {
+      throw new ConflictException({
+        status: "Error",
+        message: "Already UAPresident",
+      });
+    }
+
+    // 3. 현재 UAPresident 임기 일괄 종료 (Promise.all로 병렬 처리)
+    const currentRecords = await this.uapresidentRepository.find({
+      studentId: currentStudentId,
+      endTerm: null as unknown as Date,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    const now = new Date();
+
+    await Promise.all(
+      currentRecords.map(record =>
+        this.uapresidentRepository.patch(
+          { id: record.id } as BaseRepositoryQuery<
+            UapresidentServiceQuery,
+            number
+          >,
+          model => ({
+            ...model,
+            duration: { ...model.duration, endTerm: now },
+          }),
+        ),
+      ),
+    );
+
+    // 4. 새 UAPresident 생성
+    const newRecords = await this.uapresidentRepository.create({
+      student: { id: nextStudent.id },
+      duration: { startTerm: body.startTerm, endTerm: null },
+    });
+
+    return { newUapresidentId: newRecords[0].id };
   }
 }

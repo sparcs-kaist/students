@@ -4,7 +4,6 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Icon as MUIIcon } from "@mui/material";
 import colors from "@sparcs-students/web/styles/themes/colors";
-import isPropValid from "@emotion/is-prop-valid";
 
 interface IconProps {
   type: string;
@@ -13,12 +12,12 @@ interface IconProps {
   color?: string;
 }
 
-const IconInner = styled(MUIIcon).withConfig({
-  shouldForwardProp: prop => isPropValid(prop),
-})<{
+const IconWrapper = styled.span<{
   clickable: boolean;
 }>`
-  display: flex;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   ${({ clickable }) =>
     clickable &&
     css`
@@ -32,13 +31,9 @@ const Icon: React.FC<IconProps> = ({
   onClick = undefined,
   color = colors.BLACK,
 }) => (
-  <IconInner
-    clickable={!!onClick}
-    onClick={onClick}
-    style={{ color, fontSize: size }}
-  >
-    {type}
-  </IconInner>
+  <IconWrapper clickable={!!onClick} onClick={onClick}>
+    <MUIIcon style={{ color, fontSize: size }}>{type}</MUIIcon>
+  </IconWrapper>
 );
 
 export default Icon;

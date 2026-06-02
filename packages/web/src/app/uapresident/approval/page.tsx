@@ -46,10 +46,7 @@ const ApprovalPage = () => {
       <FlexWrapper direction="column" gap={10}>
         <PageTitle>예/결산 최종 승인</PageTitle>
         <BreadCrumb
-          items={[
-            { name: "메인", path: "/" },
-            { name: "예/결산 최종 승인", path: "/uapresident/approval" },
-          ]}
+          items={[{ name: "예/결산 최종 승인", path: "/uapresident/approval" }]}
         />
       </FlexWrapper>
 
@@ -109,6 +106,7 @@ const ApprovalPage = () => {
               onClick={() => {
                 // eslint-disable-next-line no-console
                 console.log("Save clicked");
+                // eslint-disable-next-line no-alert
                 alert("저장 기능은 아직 구현되지 않았습니다.");
               }}
               style={{ width: "120px" }}

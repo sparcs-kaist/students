@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
@@ -113,7 +115,7 @@ const MyMenu: React.FC<MyMenuProps> = ({
 
   const t = useTranslations();
 
-  const raw = localStorage.getItem("responseToken");
+  const raw = getLocalStorageItem("responseToken");
   let parsed: unknown = {};
   try {
     parsed = raw ? JSON.parse(raw) : {};
