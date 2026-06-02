@@ -20,6 +20,7 @@ import styled from "styled-components";
 import {
   applyOrganization,
   getOrganizationLookup,
+  getOrganizationListByType,
 } from "@sparcs-students/web/features/organization-register/api/organizationApi";
 import { ApiOrg011RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
 import { ApiOrg001ResponseOK } from "@sparcs-students/interface/api/organization/endpoint/apiOrg001";
@@ -79,6 +80,25 @@ const OrganizationRegister = () => {
 
     fetchOrganizations();
   }, []);
+
+  useEffect(() => {
+    if (selectedKey) {
+      const fetchListByType = async () => {
+        try {
+          const typeEnum = parseInt(selectedKey);
+          if (!Number.isNaN(typeEnum)) {
+            await getOrganizationListByType({
+              semesterId: 1,
+              organizationTypeEnum: typeEnum,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch organization list by type:", error);
+        }
+      };
+      fetchListByType();
+    }
+  }, [selectedKey]);
 
   const totalList = useMemo((): OrganizationItem[] => {
     if (!organizationData?.organizationLists) return [];
@@ -219,6 +239,7 @@ const OrganizationRegister = () => {
         />
         <FlexWrapper direction="row" gap={8}>
           <Button
+            id="btn-lookup-org"
             buttonText="조회"
             style={{ marginLeft: "auto", width: "80px" }}
             onClick={() => lookUp(selectedId)}
@@ -229,7 +250,11 @@ const OrganizationRegister = () => {
         {orgData !== null && (
           <CenterWrapper direction="row" gap={8}>
             {!isApplied ? (
-              <ApplyButton buttonText="신청" onClick={handleApply} />
+              <ApplyButton
+                id="btn-apply-org"
+                buttonText="신청"
+                onClick={handleApply}
+              />
             ) : (
               <ApplyButton buttonText="신청 완료" type="disabled" />
             )}

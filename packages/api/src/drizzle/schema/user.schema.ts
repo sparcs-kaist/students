@@ -31,7 +31,8 @@ export const Student = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     studentNumber: int("student_number").unique(),
     userId: int("user_id").notNull(),
-    departmentId: int("department_id").notNull(),
+    // 학과 정보가 없는 가입 신청자나 mock 사용자를 허용하기 위해 departmentId를 nullable로 변경
+    departmentId: int("department_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),

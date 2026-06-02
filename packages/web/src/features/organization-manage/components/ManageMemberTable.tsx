@@ -300,12 +300,14 @@ const MemberRow: React.FC<MemberRowProps> = ({
       />
 
       <TableCell type="Default" width={COL_WIDTHS.delete}>
-        <Icon
-          type="delete"
-          size={16}
-          onClick={() => openDeleteModal()}
-          color="BLACK"
-        />
+        <span id={`btn-delete-${roleType}-${rowIndex}`}>
+          <Icon
+            type="delete"
+            size={16}
+            onClick={() => openDeleteModal()}
+            color="BLACK"
+          />
+        </span>
       </TableCell>
     </TableRowWrapper>
   );
@@ -450,11 +452,11 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlexWrapper direction="column" gap={16}>
-          {roleType === "committee" && (
-            <ButtonsWrapper>
-              <Button onClick={openAddMemberModal}>위원 추가</Button>
-            </ButtonsWrapper>
-          )}
+          <ButtonsWrapper>
+            <Button onClick={openAddMemberModal}>
+              {roleType === "committee" ? "위원 추가" : "부원 추가"}
+            </Button>
+          </ButtonsWrapper>
           <FlexWrapper
             direction="column"
             gap={16}
