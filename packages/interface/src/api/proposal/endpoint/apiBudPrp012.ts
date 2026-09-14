@@ -9,10 +9,10 @@ import { zBudgetProposalIncomeRevision } from "@sparcs-students/interface/api/pr
  * @description 예산안 수입 revision 최신본을 조회합니다.
  */
 
-const url = () => `student/proposals/budget-proposals/income/getRecent`;
+const url = () => `/student/proposals/budget-proposals/income/getRecent`;
 const method = "GET";
 export const ApiBudPrp012RequestUrl =
-  "student/proposals/budget-proposals/income/getRecent";
+  "/student/proposals/budget-proposals/income/getRecent";
 
 const requestParam = z.object({});
 

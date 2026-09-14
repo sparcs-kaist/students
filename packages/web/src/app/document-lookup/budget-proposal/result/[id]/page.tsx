@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
+import { format } from "date-fns";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import ViewResult from "@sparcs-students/web/features/document-lookup/components/ViewResult";
@@ -30,6 +31,7 @@ import {
   fetchIncomeRevisionsByDate,
   fetchExpenseRevisionsByDate,
   fetchIncomeDateList,
+  fetchExpenseDateList,
   fetchSemesterList,
 } from "@sparcs-students/web/features/document-lookup/budget/services/hook/budgetReportApi";
 // 실제 mock 데이터 import
@@ -74,9 +76,7 @@ const BudgetProposal = () => {
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<
     number | null
   >(queryId);
-  const [selectedSemesterId, setSelectedSemesterId] = useState<number | null>(
-    null,
-  );
+  const [, setSelectedSemesterId] = useState<number | null>(null);
   const userPermission = getMockUserPermission();
 
   // 실제 API에서 받아온 데이터 (date 별 revision 목록)
@@ -186,23 +186,25 @@ const BudgetProposal = () => {
     async function loadRecent() {
       if (!mounted) return;
       // 선택된 연도/학기에 해당하는 semester id 찾기
+      let targetSemesterId: number | null = null;
       try {
         const semRes: ApiSem001ResponseOk = await fetchSemesterList();
         if (!mounted) return;
 
-        // fetchSemesterList는 { semester: ISemester } 형태를 반환하도록 정의되어 있으므로 안전하게 접근
-        const targetSemester = (semRes as Array<SemesterType>).find(
+        // fetchSemesterList는 Semester 목록 형태를 반환하므로 안전하게 접근
+        const targetSemester = (semRes as unknown as Array<SemesterType>).find(
           sem =>
             sem.year === year &&
             sem.semesterEnum === (isSpring ? SemesterEnum.H1 : SemesterEnum.H2),
         );
-        setSelectedSemesterId(targetSemester ? targetSemester.id : null);
+        targetSemesterId = targetSemester ? targetSemester.id : null;
+        setSelectedSemesterId(targetSemesterId);
       } catch (e) {
         // 학기 조회 실패 시 null 처리
         setSelectedSemesterId(null);
       }
 
-      if (selectedSemesterId === null) {
+      if (targetSemesterId === null) {
         // 학기를 찾지 못하면 초기화
         setIncomeRevisions(null);
         setExpenseRevisions(null);
@@ -210,23 +212,34 @@ const BudgetProposal = () => {
         return;
       }
 
-      // 2) 제출 연월일 목록 로드 (fetchIncomeDateList 사용)
+      // 2) 제출 연월일 목록 로드 (수입/지출 제출본 날짜를 모두 합쳐서 사용)
       try {
-        const dateRes = await fetchIncomeDateList({
-          organization: selectedOrganizationId as number,
-          semester: selectedSemesterId,
-        });
+        const [incomeDateRes, expenseDateRes] = await Promise.all([
+          fetchIncomeDateList({
+            organization: selectedOrganizationId as number,
+            semester: targetSemesterId,
+          }),
+          fetchExpenseDateList({
+            organization: selectedOrganizationId as number,
+            semester: targetSemesterId,
+          }),
+        ]);
         if (!mounted) return;
 
-        let parsedDates: Date[] = [];
-        if (Array.isArray(dateRes) && dateRes.length > 0) {
-          const first = dateRes[0];
-          if (typeof first === "string") {
-            parsedDates = dateRes.map((s: string) => new Date(s));
-          }
-        }
-        if (parsedDates.length === 0) parsedDates = [date as Date];
-        setDateList(parsedDates);
+        const toDateStrings = (dateRes: unknown): string[] =>
+          Array.isArray(dateRes) && typeof dateRes[0] === "string"
+            ? (dateRes as string[])
+            : [];
+        const mergedDates = Array.from(
+          new Set([
+            ...toDateStrings(incomeDateRes),
+            ...toDateStrings(expenseDateRes),
+          ]),
+        )
+          .sort()
+          .map(s => new Date(s));
+
+        setDateList(mergedDates.length > 0 ? mergedDates : [date as Date]);
       } catch {
         setDateList([date as Date]);
       }
@@ -235,7 +248,7 @@ const BudgetProposal = () => {
       try {
         const inc = await fetchRecentIncomeRevision({
           organization: selectedOrganizationId as number,
-          semester: selectedSemesterId as number,
+          semester: targetSemesterId,
         });
         if (!mounted) return;
         setIncomeRevisions(
@@ -250,7 +263,7 @@ const BudgetProposal = () => {
       try {
         const exp = await fetchRecentExpenseRevision({
           organization: selectedOrganizationId as number,
-          semester: selectedSemesterId as number,
+          semester: targetSemesterId,
         });
         if (!mounted) return;
         setExpenseRevisions(
@@ -273,10 +286,13 @@ const BudgetProposal = () => {
   useEffect(() => {
     let mounted = true;
     async function loadByDate() {
+      const formattedDate =
+        date instanceof Date ? format(date, "yyyy-MM-dd") : String(date);
+
       try {
         const inc = await fetchIncomeRevisionsByDate({
           organization: selectedOrganizationId as number,
-          date: date.toString(),
+          date: formattedDate,
         });
         if (!mounted) return;
         setIncomeRevisions(inc.budgetProposalIncomeRevisions ?? null);
@@ -288,7 +304,7 @@ const BudgetProposal = () => {
       try {
         const exp = await fetchExpenseRevisionsByDate({
           organization: selectedOrganizationId as number,
-          date: date.toString(),
+          date: formattedDate,
         });
         if (!mounted) return;
         setExpenseRevisions(exp.budgetProposalExpenseRevisions ?? null);

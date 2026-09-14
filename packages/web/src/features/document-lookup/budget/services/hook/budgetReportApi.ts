@@ -32,8 +32,6 @@ import apiBudPrp017, {
 import apiSem001, {
   ApiSem001ResponseOk,
 } from "@sparcs-students/interface/api/semester/endpoint/apiSem001";
-import { z } from "zod";
-import { zSemester } from "@sparcs-students/interface/api/semester/type/semester.type";
 
 // API 012: 예산안 수입 revision 최신본 조회 (GET with query)
 export const fetchRecentIncomeRevision = async (
@@ -84,7 +82,7 @@ export const fetchIncomeDateList = async (
   try {
     const response = await axiosClient.get<ApiBudPrp014ResponseOk>(
       apiBudPrp014.url(),
-      { params: query, baseURL: "https://localhost:8000" },
+      { params: query },
     );
 
     if (response.status === HttpStatusCode.Ok) {
@@ -169,12 +167,7 @@ export const fetchSemesterList = async (): Promise<ApiSem001ResponseOk> => {
     );
 
     if (response.status === HttpStatusCode.Ok) {
-      // Zod를 사용하여 응답 데이터 검증
-      const semesterSchema = z.object({
-        semester: zSemester,
-      });
-      const parsedData = semesterSchema.parse(response.data);
-      return parsedData;
+      return response.data;
     }
 
     throw new Error("Failed to fetch semester list");
