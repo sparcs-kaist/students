@@ -10,10 +10,10 @@ import { zBudgetProposalExpenseRevision } from "../type/budget-proposal-expense.
  */
 
 const url = () =>
-  `student/proposals/budget-proposals/expense/getRevisionsByDate`;
+  `/student/proposals/budget-proposals/expense/getRevisionsByDate`;
 const method = "GET";
 export const ApiBudPrp017RequestUrl =
-  "student/proposals/budget-proposals/expense/getRevisionsByDate";
+  "/student/proposals/budget-proposals/expense/getRevisionsByDate";
 
 const requestParam = z.object({});
 

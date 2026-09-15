@@ -10,10 +10,10 @@ import { zBudgetProposalIncomeRevision } from "../type/budget-proposal-income.ty
  */
 
 const url = () =>
-  `student/proposals/budget-proposals/income/getRevisionsByDate`;
+  `/student/proposals/budget-proposals/income/getRevisionsByDate`;
 const method = "GET";
 export const ApiBudPrp016RequestUrl =
-  "student/proposals/budget-proposals/income/getRevisionsByDate";
+  "/student/proposals/budget-proposals/income/getRevisionsByDate";
 
 const requestParam = z.object({});
 
