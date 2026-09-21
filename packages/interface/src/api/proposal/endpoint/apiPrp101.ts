@@ -39,6 +39,10 @@ const responseErrorMap = {
     status: z.literal("Error"),
     message: z.literal("Unauthorized"),
   }),
+  [HttpStatusCode.Conflict]: z.object({
+    status: z.literal("Error"),
+    message: z.string(),
+  }),
 };
 
 const apiPrp101 = {
