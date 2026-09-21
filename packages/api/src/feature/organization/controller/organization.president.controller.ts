@@ -23,6 +23,9 @@ import apiOrg019 from "@sparcs-students/interface/api/organization/endpoint/apiO
 import apiOrg020 from "@sparcs-students/interface/api/organization/endpoint/apiOrg020";
 import apiOrg021 from "@sparcs-students/interface/api/organization/endpoint/apiOrg021";
 import apiOrg022 from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
+import apiOrg028 from "@sparcs-students/interface/api/organization/endpoint/apiOrg028";
+import apiOrg029 from "@sparcs-students/interface/api/organization/endpoint/apiOrg029";
+import apiOrg030 from "@sparcs-students/interface/api/organization/endpoint/apiOrg030";
 import type { ApiOrg005RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
 import type { ApiOrg006RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg006";
 import type {
@@ -45,6 +48,13 @@ import type {
   ApiOrg013RequestBody,
   ApiOrg013ResponseCreated,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg013";
+import type { ApiOrg028RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg028";
+import type {
+  ApiOrg029RequestParam,
+  ApiOrg029RequestBody,
+  ApiOrg029ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg029";
+import type { ApiOrg030RequestParam } from "@sparcs-students/interface/api/organization/endpoint/apiOrg030";
 import type {
   ApiOrg016RequestParam,
   ApiOrg016RequestBody,
@@ -252,5 +262,37 @@ export class OrganizationPresidentController {
       param.id,
       body,
     );
+  }
+
+  @Post("role")
+  @UsePipes(new ZodPipe(apiOrg028))
+  async createOrganizationRole(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiOrg028RequestBody,
+  ) {
+    return this.organizationService.createOrganizationRole(student, body);
+  }
+
+  @Patch("role/:id")
+  @UsePipes(new ZodPipe(apiOrg029))
+  async updateOrganizationRole(
+    @GetStudent() student: StudentProfile,
+    @Param() param: ApiOrg029RequestParam,
+    @Body() body: ApiOrg029RequestBody,
+  ): Promise<ApiOrg029ResponseOk> {
+    return this.organizationService.updateOrganizationRole(
+      student,
+      param.id,
+      body,
+    );
+  }
+
+  @Delete("role/:id")
+  @UsePipes(new ZodPipe(apiOrg030))
+  async deleteOrganizationRole(
+    @GetStudent() student: StudentProfile,
+    @Param() param: ApiOrg030RequestParam,
+  ) {
+    return this.organizationService.deleteOrganizationRole(student, param.id);
   }
 }

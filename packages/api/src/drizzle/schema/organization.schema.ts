@@ -128,6 +128,34 @@ export const OrganizationMember = mysqlTable(
   }),
 );
 
+// OrganizationRole 테이블
+export const OrganizationRole = mysqlTable(
+  "organization_role",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    organizationId: int("organization_id").notNull(),
+    studentId: int("student_id").notNull(),
+    roleName: varchar("role_name", { length: 100 }).notNull(),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    organizationFk: foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [Organization.id],
+      name: "org_role_org_id_fk",
+    }),
+    studentFk: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+      name: "org_role_stu_id_fk",
+    }),
+  }),
+);
+
 // OrganizationManager 테이블
 export const OrganizationManager = mysqlTable(
   "organization_manager",

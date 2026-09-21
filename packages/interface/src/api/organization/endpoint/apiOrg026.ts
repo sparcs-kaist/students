@@ -1,10 +1,12 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
-import { zExtractId } from "@sparcs-students/interface/common/type/ids";
-import { zDuration } from "@sparcs-students/interface/common/type/time.type";
-import { OrganizationPresidentTypeEnum } from "@sparcs-students/interface/common/enum";
-import { zStudent } from "@sparcs-students/interface/api/user/type/user.type";
-import { zOrganization } from "../type/organization.type";
+import { zId } from "@sparcs-students/interface/common/type/ids";
+import { zOrganizationRole } from "../type/organization.role.type";
+
+/**
+ * @version v0.1
+ * @description studentId를 기반으로 해당 학생의 조직 내 역할 이력을 조회합니다.
+ */
 
 const url = (studentId: number) =>
   `/uapresident/organizations/get-history-byId?studentId=${studentId}`;
@@ -13,36 +15,15 @@ export const ApiOrg026RequestUrl =
   "/uapresident/organizations/get-history-byId";
 
 const requestParam = z.object({});
-const requestQuery = z.object({ studentId: z.coerce.number() });
+const requestQuery = z.object({
+  studentId: zId,
+  fromDate: z.coerce.date().optional(),
+  toDate: z.coerce.date().optional(),
+});
 const requestBody = z.object({});
 
-const zRoleEntry = z.object({
-  kind: z.enum([
-    "president",
-    "manager",
-    "member",
-    "staff",
-    "teamLeader",
-    "operatingCommittee",
-  ]),
-  title: z.string().max(255).nullable().optional(),
-  organizationPresidentTypeEnum: z
-    .nativeEnum(OrganizationPresidentTypeEnum)
-    .nullable()
-    .optional(),
-  student: zExtractId(zStudent),
-  duration: zDuration,
-});
-
-const zOrganizationHistory = z.object({
-  organization: zExtractId(zOrganization),
-  roles: z
-    .array(zRoleEntry)
-    .openapi({ description: "기구별 역할 기록, 시작일 기준 정렬" }),
-});
-
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({ histories: z.array(zOrganizationHistory) }),
+  [HttpStatusCode.Ok]: z.object({ histories: z.array(zOrganizationRole) }),
 };
 
 const responseErrorMap = {

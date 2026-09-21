@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -16,6 +17,8 @@ import type {
   ApiOrg020RequestBody,
   ApiOrg022RequestBody,
   ApiOrg024RequestBody,
+  ApiOrg028RequestBody,
+  ApiOrg029RequestBody,
 } from "@sparcs-students/interface/api/organization/index";
 import type { ITeamRequestCreate } from "@sparcs-students/interface/api/organization/type/organization.type";
 import type {
@@ -36,6 +39,7 @@ import { TeamLeaderRepository } from "../repository/organization.team.leader.rep
 import { OperatingCommitteeRepository } from "../repository/organization.operatingcommittee.repository";
 import { OperatingCommitteeMemberRepository } from "../repository/organization.operatingcommittee.member.repository";
 import { StaffRepository } from "../repository/staff.repository";
+import { OrganizationRoleRepository } from "../repository/organization.role.repository";
 
 type OrganizationPresidentQuery = {
   id: number;
@@ -112,6 +116,7 @@ export class OrganizationService {
     private readonly operatingCommitteeRepository: OperatingCommitteeRepository,
     private readonly operatingCommitteeMemberRepository: OperatingCommitteeMemberRepository,
     private readonly staffRepository: StaffRepository,
+    private readonly organizationRoleRepository: OrganizationRoleRepository,
   ) {}
 
   async checkOrganizationPresident(studentId, organizationId) {
@@ -736,75 +741,93 @@ export class OrganizationService {
     };
   }
 
-  async getHistoryById(studentId: number) {
-    const [presidents, managers, members] = await Promise.all([
-      this.organizationPresidentRepository.findByStudentId(studentId),
-      this.organizationManagerRepository.findByStudentId(studentId),
-      this.organizationMemberRepository.findByStudentId(studentId),
-    ]);
+  private filterRoleHistory(
+    histories: Awaited<ReturnType<OrganizationRoleRepository["find"]>>,
+    fromDate?: Date,
+    toDate?: Date,
+  ) {
+    if (fromDate && toDate && fromDate > toDate) {
+      throw new BadRequestException("fromDate must be before toDate");
+    }
 
-    type HistoryRole = {
-      kind: "president" | "manager" | "member";
-      title?: string | null;
-      organizationPresidentTypeEnum?: number | null;
-      student: { id: number };
-      duration: {
-        startTerm: Date | string;
-        endTerm?: Date | string | null;
-      };
-    };
-
-    const map = new Map<
-      number,
-      { organizationId: number; roles: HistoryRole[] }
-    >();
-
-    const pushRole = (orgId: number, role: HistoryRole) => {
-      if (!map.has(orgId)) map.set(orgId, { organizationId: orgId, roles: [] });
-      map.get(orgId)!.roles.push(role);
-    };
-
-    presidents.forEach(p => {
-      pushRole(p.organization.id, {
-        kind: "president",
-        title: p.title,
-        organizationPresidentTypeEnum: p.organizationPresidentTypeEnum,
-        student: { id: p.student.id },
-        duration: p.duration,
-      });
+    return histories.filter(role => {
+      const startsBeforeRangeEnds =
+        !toDate || role.duration.startTerm <= toDate;
+      const endsAfterRangeStarts =
+        !fromDate ||
+        !role.duration.endTerm ||
+        role.duration.endTerm >= fromDate;
+      return startsBeforeRangeEnds && endsAfterRangeStarts;
     });
+  }
 
-    managers.forEach(m => {
-      pushRole(m.organization.id, {
-        kind: "manager",
-        student: { id: m.student.id },
-        duration: m.duration,
-      });
-    });
+  async getHistoryById(studentId: number, fromDate?: Date, toDate?: Date) {
+    const histories = await this.organizationRoleRepository.find({
+      studentId,
+    } as Parameters<typeof this.organizationRoleRepository.find>[0]);
+    return { histories: this.filterRoleHistory(histories, fromDate, toDate) };
+  }
 
-    members.forEach(m => {
-      pushRole(m.organization.id, {
-        kind: "member",
-        student: { id: m.student.id },
-        duration: m.duration,
-      });
-    });
+  async getHistoryByRoleName(
+    organizationId: number,
+    roleName: string,
+    fromDate?: Date,
+    toDate?: Date,
+  ) {
+    const histories = await this.organizationRoleRepository.find({
+      organizationId,
+      roleName,
+    } as Parameters<typeof this.organizationRoleRepository.find>[0]);
+    return { histories: this.filterRoleHistory(histories, fromDate, toDate) };
+  }
 
-    const orgIds = Array.from(map.keys());
-    const organizations = await Promise.all(
-      orgIds.map(id => this.organizationRepository.fetch(id)),
+  async createOrganizationRole(student, body: ApiOrg028RequestBody) {
+    const role = body.organizationRole;
+    await this.checkOrganizationPresident(
+      student.studentId,
+      role.organization.id,
     );
+    const [organizationRole] = await this.organizationRoleRepository.create({
+      ...role,
+      roleName: role.roleName.trim(),
+    });
+    return { organizationRole };
+  }
 
-    const histories = organizations.map(org => ({
-      organization: org,
-      roles: (map.get(org.id)?.roles ?? []).sort(
-        (a, b) =>
-          new Date(a.duration.startTerm).getTime() -
-          new Date(b.duration.startTerm).getTime(),
-      ),
-    }));
+  async updateOrganizationRole(
+    student,
+    id: number,
+    body: ApiOrg029RequestBody,
+  ) {
+    const [existing] = await this.organizationRoleRepository.find({
+      id,
+    } as never);
+    if (!existing) throw new NotFoundException("Organization role not found");
+    await this.checkOrganizationPresident(
+      student.studentId,
+      existing.organization.id,
+    );
+    const [organizationRole] = await this.organizationRoleRepository.patch(
+      { id } as never,
+      model => ({
+        ...model,
+        roleName: body.organizationRole.roleName.trim(),
+        duration: body.organizationRole.duration,
+      }),
+    );
+    return { organizationRole };
+  }
 
-    return { histories };
+  async deleteOrganizationRole(student, id: number) {
+    const [existing] = await this.organizationRoleRepository.find({
+      id,
+    } as never);
+    if (!existing) throw new NotFoundException("Organization role not found");
+    await this.checkOrganizationPresident(
+      student.studentId,
+      existing.organization.id,
+    );
+    await this.organizationRoleRepository.delete({ id } as never);
   }
 
   async deleteOperatingCommittee(student, param) {

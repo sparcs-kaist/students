@@ -1,6 +1,5 @@
 import { Controller, Get, Query, UsePipes } from "@nestjs/common";
 import { UaOrgOnly } from "@sparcs-students/api/common/decorators/require-organization.decorator";
-import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
   apiUsr002,
@@ -15,7 +14,6 @@ import { UserService } from "../service/user.service";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Public()
   @Get("find")
   @UsePipes(new ZodPipe(apiUsr002))
   async findStudent(
