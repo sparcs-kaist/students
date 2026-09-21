@@ -11,9 +11,11 @@ import { SidCommand } from "@sparcs-students/api/feature/auth/guard/command/sid.
 import { RequirePositionCommand } from "./guard/command/requirePosition.command";
 
 import { AuthService } from "./service/auth.service";
+import { OrganizationCheckerService } from "./service/organization-checker.service";
 import { PositionCheckerService } from "./service/position-checker.service";
 import { AuthRepository } from "./repository/auth.repository";
 import { AuthController } from "./controller/auth.controller";
+import { RequireOrganizationCommand } from "./guard/command/requireOrganization.command";
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { AuthController } from "./controller/auth.controller";
     JwtHeaderCommand,
     SidCommand,
     PositionCheckerService,
+    OrganizationCheckerService,
     RequirePositionCommand,
+    RequireOrganizationCommand,
   ],
   exports: [AuthService, AuthConfig, AuthChain],
 })

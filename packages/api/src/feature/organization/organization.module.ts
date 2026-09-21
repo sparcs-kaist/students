@@ -4,6 +4,7 @@ import { DrizzleModule } from "src/drizzle/drizzle.module";
 import { SemesterModule } from "src/feature/semester/semester.module";
 import { OrganizationService } from "./service/organization.service";
 import { OrganizationUapresidentController } from "./controller/organization.uapresident.controller";
+import { OrganizationUaOrganizationController } from "./controller/organization.uaorganization.controller";
 import { OrganizationPresidentController } from "./controller/organization.president.controller";
 import { OrganizationController } from "./controller/organization.controller";
 import { OrganizationPublicService } from "./service/organization.public.service";
@@ -17,6 +18,7 @@ import { TeamLeaderRepository } from "./repository/organization.team.leader.repo
 import { OperatingCommitteeRepository } from "./repository/organization.operatingcommittee.repository";
 import { OperatingCommitteeMemberRepository } from "./repository/organization.operatingcommittee.member.repository";
 import { StaffRepository } from "./repository/staff.repository";
+import { OrganizationRoleRepository } from "./repository/organization.role.repository";
 import { UapresidentRepository } from "./repository/uapresident.repository";
 
 @Module({
@@ -24,6 +26,7 @@ import { UapresidentRepository } from "./repository/uapresident.repository";
   controllers: [
     OrganizationUapresidentController,
     OrganizationPresidentController,
+    OrganizationUaOrganizationController,
     OrganizationController,
   ],
   providers: [
@@ -39,6 +42,7 @@ import { UapresidentRepository } from "./repository/uapresident.repository";
     OperatingCommitteeRepository,
     OperatingCommitteeMemberRepository,
     StaffRepository,
+    OrganizationRoleRepository,
     UapresidentRepository,
   ],
   exports: [OrganizationPublicService],
