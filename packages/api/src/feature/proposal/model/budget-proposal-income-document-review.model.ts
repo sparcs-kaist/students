@@ -3,8 +3,11 @@ import { IBudgetProposalIncomeDocumentReview } from "@sparcs-students/interface/
 
 export interface IBudgetProposalIncomeDocumentReviewCreate {
   budgetProposalIncomeRevision: IBudgetProposalIncomeDocumentReview["budgetProposalIncomeRevision"];
+
   student: IBudgetProposalIncomeDocumentReview["student"];
+
   documentReviewStatusEnum: IBudgetProposalIncomeDocumentReview["documentReviewStatusEnum"];
+
   detail?: IBudgetProposalIncomeDocumentReview["detail"];
 }
 

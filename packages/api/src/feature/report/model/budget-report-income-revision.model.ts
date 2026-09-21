@@ -4,9 +4,17 @@ import { IBudgetReportIncomeRevision } from "@sparcs-students/interface/api/repo
 export interface IBudgetReportIncomeRevisionCreate {
   budgetReportIncome: IBudgetReportIncomeRevision["budgetReportIncome"];
 
+  budgetDomainEnum: IBudgetReportIncomeRevision["budgetDomainEnum"];
+
+  budgetDivisionIncomeEnum: IBudgetReportIncomeRevision["budgetDivisionIncomeEnum"];
+
+  name: IBudgetReportIncomeRevision["name"];
+
   amount: IBudgetReportIncomeRevision["amount"];
 
-  note: IBudgetReportIncomeRevision["note"];
+  detail: IBudgetReportIncomeRevision["detail"];
+
+  code: IBudgetReportIncomeRevision["code"];
 }
 
 export class MBudgetReportIncomeRevision
@@ -17,9 +25,17 @@ export class MBudgetReportIncomeRevision
 
   budgetReportIncome: IBudgetReportIncomeRevision["budgetReportIncome"];
 
+  budgetDomainEnum: IBudgetReportIncomeRevision["budgetDomainEnum"];
+
+  budgetDivisionIncomeEnum: IBudgetReportIncomeRevision["budgetDivisionIncomeEnum"];
+
+  name: IBudgetReportIncomeRevision["name"];
+
   amount: IBudgetReportIncomeRevision["amount"];
 
-  note: IBudgetReportIncomeRevision["note"];
+  detail: IBudgetReportIncomeRevision["detail"];
+
+  code: IBudgetReportIncomeRevision["code"];
 
   constructor(data: IBudgetReportIncomeRevision) {
     super();

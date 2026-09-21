@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Controller,
@@ -259,6 +261,7 @@ const ManagerProjectReportTable: React.FC<ManagerProjectReportTableProps> = ({
   };
 
   const onSubmit = (data: PRFormValues) => {
+    // eslint-disable-next-line no-console
     console.log(data);
   };
 

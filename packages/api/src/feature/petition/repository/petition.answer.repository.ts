@@ -71,10 +71,10 @@ export class PetitionAnswerRepository {
     param: IPetitionAnswerRequestCreate,
   ): Promise<void> {
     const [result] = await tx.insert(PetitionAnswer).values({
-      ...param,
       petitionId: param.petition.id,
       userId: param.user.id,
       teamId: param.team.id,
+      posted: param.posted ?? false,
     });
     if (result.insertId === undefined) {
       throw new HttpException("Failed to insert", HttpStatus.BAD_REQUEST);

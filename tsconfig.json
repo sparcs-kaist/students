@@ -18,7 +18,8 @@
     "removeComments": true,
     "noEmit": false,
     "paths": {
-      "@sparcs-students/root/*": ["./*"]
+      "@sparcs-students/root/*": ["./*"],
+      "@sparcs-students/interface/*": ["./packages/interface/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

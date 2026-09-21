@@ -19,7 +19,7 @@ export type BudgetProposalIncomeQuery = {
   // id: number; // id 는 기본 내장
   organizationId: number;
   semesterId: number;
-  projectProposalId: number;
+  // projectProposalId: number; // (organizationId, semesterId) 당 projectProposalId 이 유일하게 존재
 };
 
 type BudgetProposalIncomeOrderByKeys = "id";

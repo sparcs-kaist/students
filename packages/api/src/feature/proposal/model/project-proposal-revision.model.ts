@@ -3,12 +3,16 @@ import { IProjectProposalRevision } from "@sparcs-students/interface/api/proposa
 
 export interface IProjectProposalRevisionCreate {
   projectProposal: IProjectProposalRevision["projectProposal"];
-  name: IProjectProposalRevision["name"];
-  method: IProjectProposalRevision["method"];
-  prepareDuration: IProjectProposalRevision["prepareDuration"];
-  duration: IProjectProposalRevision["duration"];
 
-  timelines: IProjectProposalRevision["timelines"];
+  name: IProjectProposalRevision["name"];
+
+  method: IProjectProposalRevision["method"];
+
+  prepareStartTerm: IProjectProposalRevision["prepareStartTerm"];
+  prepareEndTerm: IProjectProposalRevision["prepareEndTerm"];
+
+  startTerm: IProjectProposalRevision["startTerm"];
+  endTerm: IProjectProposalRevision["endTerm"];
 
   team: IProjectProposalRevision["team"];
 
@@ -22,6 +26,7 @@ export interface IProjectProposalRevisionCreate {
 
   note: IProjectProposalRevision["note"];
 
+  code: IProjectProposalRevision["code"];
 }
 
 export class MProjectProposalRevision
@@ -36,11 +41,13 @@ export class MProjectProposalRevision
 
   method: IProjectProposalRevision["method"];
 
-  prepareDuration: IProjectProposalRevision["prepareDuration"];
+  prepareStartTerm: IProjectProposalRevision["prepareStartTerm"];
 
-  duration: IProjectProposalRevision["duration"];
+  prepareEndTerm: IProjectProposalRevision["prepareEndTerm"];
 
-  timelines: IProjectProposalRevision["timelines"];
+  startTerm: IProjectProposalRevision["startTerm"];
+
+  endTerm: IProjectProposalRevision["endTerm"];
 
   team: IProjectProposalRevision["team"];
 
@@ -53,6 +60,8 @@ export class MProjectProposalRevision
   detail: IProjectProposalRevision["detail"];
 
   note: IProjectProposalRevision["note"];
+
+  code: IProjectProposalRevision["code"];
 
   constructor(data: IProjectProposalRevision) {
     super();

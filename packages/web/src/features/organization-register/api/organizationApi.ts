@@ -11,6 +11,27 @@ import apiOrg011, {
   ApiOrg011RequestBody,
   ApiOrg011ResponseCreated,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg011";
+import apiOrg015, {
+  ApiOrg015RequestBody,
+  ApiOrg015ResponseOK,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg015";
+
+// API 015: 타입별 단체목록 조회
+export const getOrganizationListByType = async (
+  data: ApiOrg015RequestBody,
+): Promise<ApiOrg015ResponseOK> => {
+  try {
+    const response = await axiosClient.post<ApiOrg015ResponseOK>(
+      apiOrg015.url(),
+      data,
+    );
+    if (response.status === HttpStatusCode.Ok) return response.data;
+    throw new Error("Failed to fetch organizations by type");
+  } catch (error) {
+    console.error("API Error (getOrganizationListByType):", error);
+    throw error;
+  }
+};
 
 // API 001: 반기별 단체목록 조회
 export const getOrganizationLookup = async (): Promise<ApiOrg001ResponseOK> => {

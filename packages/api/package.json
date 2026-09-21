@@ -9,6 +9,7 @@
     "dev": "pnpm db up -d && pnpm start:dev",
     "dev:dev": "cross-env NODE_ENV=dev pnpm start:dev",
     "dev:local": "pnpm db up -d && cross-env NODE_ENV=local pnpm start:dev",
+    "seed:dev": "cross-env NODE_ENV=dev ts-node -r tsconfig-paths/register src/drizzle/drizzle.seed.ts",
     "prod": "pnpm migrate:prod && pnpm start:prod",
     "db": "docker compose -f ../../.docker/docker-compose.dev.yml --env-file ../../env/.env.dev -p ar-007-students",
     "env": "echo $NODE_ENV",

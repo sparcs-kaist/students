@@ -18,7 +18,10 @@ import Modal from "@sparcs-students/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-students/web/common/components/Modal/CancellableModalContent";
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 import useOrganizationStore from "@sparcs-students/web/features/organization-manage/stores/useOrganizationStore";
-import { createTeam } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
+import {
+  createTeam,
+  deleteTeam,
+} from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 
 export interface CommitteeProps {
   id: string;
@@ -95,7 +98,9 @@ const DeleteCell: React.FC<{ id: string; onDelete: (id: string) => void }> = ({
   id,
   onDelete,
 }) => (
-  <Icon type="delete" size={16} onClick={() => onDelete(id)} color="BLACK" />
+  <span id={`btn-delete-team-${id}`}>
+    <Icon type="delete" size={16} onClick={() => onDelete(id)} color="BLACK" />
+  </span>
 );
 
 const renderDeleteCell =
@@ -107,6 +112,62 @@ const renderDeleteCell =
 const renderNameCell = ({ getValue }: { getValue: () => string }) => (
   <NameCell name={getValue()} />
 );
+
+const AddDepartmentModal = ({
+  isOpen,
+  close,
+}: {
+  isOpen: boolean;
+  close: () => void;
+}) => {
+  const [teamName, setTeamName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  return (
+    <Modal isOpen={isOpen} width="400px">
+      <CancellableModalContent
+        onConfirm={async () => {
+          if (isSubmitting) return;
+          setIsSubmitting(true);
+          try {
+            const { currentOrganizationId } = useOrganizationStore.getState();
+            if (!currentOrganizationId) {
+              alert("조직이 선택되지 않았습니다.");
+              return;
+            }
+
+            await createTeam({
+              team: {
+                organization: { id: currentOrganizationId },
+                name: teamName,
+                startTerm: new Date(),
+                endTerm: null,
+              },
+            });
+            close();
+            window.location.reload(); // Reload to show new team
+          } catch (e) {
+            console.error(e);
+            alert("부서 추가 실패");
+          } finally {
+            setIsSubmitting(false);
+          }
+        }}
+        onClose={close}
+      >
+        <FlexWrapper direction="column" gap={16}>
+          <Typography fs={20} lh={24} fw="BOLD" color="BLACK">
+            부서 추가
+          </Typography>
+          <TableTextInput
+            value={teamName}
+            handleChange={setTeamName}
+            placeholder="부서명 입력"
+          />
+        </FlexWrapper>
+      </CancellableModalContent>
+    </Modal>
+  );
+};
 
 const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
   name,
@@ -121,8 +182,17 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
   // TODO: back 구현되면, 저장 버튼 클릭시 editData 이용해서 data update하기
   const [editData, setEditData] = useState<CommitteeProps[]>(data);
 
-  const handleDelete = (id: string) => {
-    setEditData(prevData => prevData.filter(item => item.id !== id));
+  const handleDelete = async (id: string) => {
+    if (window.confirm("정말 부서(팀)를 삭제하시겠습니까?")) {
+      try {
+        await deleteTeam(parseInt(id));
+        setEditData(prevData => prevData.filter(item => item.id !== id));
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+        alert("부서 삭제 실패");
+      }
+    }
   };
 
   const columnHelper = createColumnHelper<CommitteeProps>();
@@ -175,55 +245,9 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
   });
 
   const handleAddDepartment = () => {
-    overlay.open(({ isOpen, close }) => {
-      let teamName = "";
-      return (
-        <Modal isOpen={isOpen} width="400px">
-          <CancellableModalContent
-            onConfirm={async () => {
-              try {
-                // Assuming currentOrganizationId is available in context or store, but here we might need to pass it or get it.
-                // Since this component is used in organization-manage page, we can use the store.
-                const { currentOrganizationId } =
-                  useOrganizationStore.getState();
-                if (!currentOrganizationId) {
-                  alert("조직이 선택되지 않았습니다.");
-                  return;
-                }
-
-                await createTeam({
-                  team: {
-                    organization: { id: currentOrganizationId },
-                    name: teamName,
-                    startTerm: new Date(),
-                    endTerm: null,
-                  },
-                });
-                close();
-                window.location.reload(); // Reload to show new team
-              } catch (e) {
-                console.error(e);
-                alert("부서 추가 실패");
-              }
-            }}
-            onClose={close}
-          >
-            <FlexWrapper direction="column" gap={16}>
-              <Typography fs={20} lh={24} fw="BOLD" color="BLACK">
-                부서 추가
-              </Typography>
-              <TableTextInput
-                value={teamName}
-                handleChange={v => {
-                  teamName = v;
-                }}
-                placeholder="부서명 입력"
-              />
-            </FlexWrapper>
-          </CancellableModalContent>
-        </Modal>
-      );
-    });
+    overlay.open(({ isOpen, close }) => (
+      <AddDepartmentModal isOpen={isOpen} close={close} />
+    ));
   };
 
   return (

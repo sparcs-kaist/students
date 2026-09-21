@@ -4,6 +4,7 @@ import { zOperationProposal } from "./type/operation-proposal.type";
 import { zBudgetProposalExpense } from "./type/budget-proposal-expense.type";
 import { zProjectProposal } from "./type/project-proposal.type";
 import { zBudgetProposalIncome } from "./type/budget-proposal-income.type";
+import { zExecutionProposal } from "./type/execution-proposal.type";
 
 export * from "./type/project-proposal.type";
 export * from "./type/project-proposal-document-review.type";
@@ -12,6 +13,7 @@ export * from "./type/budget-proposal-income-document-review.type";
 export * from "./type/budget-proposal-expense.type";
 export * from "./type/budget-proposal-expense-document-review.type";
 export * from "./type/operation-proposal.type";
+export * from "./type/execution-proposal.type";
 
 export * from "./endpoint/apiBudPrp002";
 export { default as apiBudPrp002 } from "./endpoint/apiBudPrp002";
@@ -79,12 +81,49 @@ export { default as apiPrp020 } from "./endpoint/apiPrp020";
 export * from "./endpoint/apiPrp021";
 export { default as apiPrp021 } from "./endpoint/apiPrp021";
 
+export * from "./endpoint/apiPrp101";
+export { default as apiPrp101 } from "./endpoint/apiPrp101";
+
+export * from "./endpoint/apiPrp102";
+export { default as apiPrp102 } from "./endpoint/apiPrp102";
+
+export * from "./endpoint/apiPrp103";
+export { default as apiPrp103 } from "./endpoint/apiPrp103";
+
+export * from "./endpoint/apiPrp104";
+export { default as apiPrp104 } from "./endpoint/apiPrp104";
+
+export * from "./endpoint/apiPrp105";
+export { default as apiPrp105 } from "./endpoint/apiPrp105";
+
+export * from "./endpoint/apiPrp107";
+export { default as apiPrp107 } from "./endpoint/apiPrp107";
+
+export * from "./endpoint/apiPrp108";
+export { default as apiPrp108 } from "./endpoint/apiPrp108";
+
+export * from "./endpoint/apiPrp109";
+export { default as apiPrp109 } from "./endpoint/apiPrp109";
+
+export * from "./endpoint/apiPrp111";
+export { default as apiPrp111 } from "./endpoint/apiPrp111";
+
+export * from "./endpoint/apiPrp112";
+export { default as apiPrp112 } from "./endpoint/apiPrp112";
+
+export * from "./endpoint/apiPrp113";
+export { default as apiPrp113 } from "./endpoint/apiPrp113";
+
+export * from "./endpoint/apiPrp114";
+export { default as apiPrp114 } from "./endpoint/apiPrp114";
+
 // 도메인 모델 스키마 목록
 const zDomainModels = z.object({
   projectProposal: zProjectProposal,
   budgetProposalIncome: zBudgetProposalIncome,
   budgetProposalExpense: zBudgetProposalExpense,
   operationProposal: zOperationProposal,
+  executionProposal: zExecutionProposal,
 });
 
 registry.registerPath({

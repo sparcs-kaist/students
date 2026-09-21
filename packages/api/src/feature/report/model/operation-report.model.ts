@@ -5,10 +5,6 @@ export interface IOperationReportCreate extends IOperationReport {
   organization: IOperationReport["organization"];
 
   semester: IOperationReport["semester"];
-
-  organizationDiagram: IOperationReport["organizationDiagram"];
-
-  note: IOperationReport["note"];
 }
 
 export class MOperationReport extends MEntity implements IOperationReport {
@@ -17,10 +13,6 @@ export class MOperationReport extends MEntity implements IOperationReport {
   organization: IOperationReport["organization"];
 
   semester: IOperationReport["semester"];
-
-  organizationDiagram: IOperationReport["organizationDiagram"];
-
-  note: IOperationReport["note"];
 
   constructor(data: IOperationReport) {
     super();

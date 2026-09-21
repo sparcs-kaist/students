@@ -51,17 +51,19 @@ export interface ManageOrganizationTableProps {
   title: string;
   onAppointPresident?: (id: number) => void;
   onRetirePresident?: (id: number) => void;
+  onDeleteOrganization?: (id: number) => void;
   onAddOrganization?: () => void;
 }
 
 const COL_WIDTHS = {
-  idx: "80px",
+  idx: "60px",
   name: 0, // flex 1
-  count: "120px",
+  count: "100px",
   repId: "120px",
-  repName: "120px",
-  changeRep: "120px",
-  delete: "120px",
+  repName: "100px",
+  changeRep: "100px",
+  retireRep: "100px",
+  delete: "100px",
 };
 
 const OrganizationRow: React.FC<{
@@ -70,12 +72,14 @@ const OrganizationRow: React.FC<{
   isLast: boolean;
   onAppointPresident?: (id: number) => void;
   onRetirePresident?: (id: number) => void;
+  onDeleteOrganization?: (id: number) => void;
 }> = ({
   row,
   rowIndex,
   isLast,
   onAppointPresident = undefined,
   onRetirePresident = undefined,
+  onDeleteOrganization = undefined,
 }) => (
   <TableRowWrapper isLast={isLast}>
     <TableCell type="Default" width={COL_WIDTHS.idx}>
@@ -94,24 +98,40 @@ const OrganizationRow: React.FC<{
       {row.repName}
     </TableCell>
     <TableCell type="Default" width={COL_WIDTHS.changeRep}>
-      <Icon
-        type="subdirectory_arrow_left" // Using a similar icon for "Change" or "Return"
-        size={16}
-        onClick={() => {
-          if (onAppointPresident) onAppointPresident(row.id);
-        }}
-        color="BLACK"
-      />
+      <span id={`btn-appoint-pres-${row.id}`} style={{ cursor: "pointer" }}>
+        <Icon
+          type="subdirectory_arrow_left"
+          size={16}
+          onClick={() => {
+            if (onAppointPresident) onAppointPresident(row.id);
+          }}
+          color="BLACK"
+        />
+      </span>
+    </TableCell>
+    <TableCell type="Default" width={COL_WIDTHS.retireRep}>
+      <span id={`btn-retire-pres-${row.id}`} style={{ cursor: "pointer" }}>
+        <Icon
+          type="person_off"
+          size={16}
+          onClick={() => {
+            if (onRetirePresident) onRetirePresident(row.id);
+          }}
+          color="BLACK"
+        />
+      </span>
     </TableCell>
     <TableCell type="Default" width={COL_WIDTHS.delete}>
-      <Icon
-        type="delete"
-        size={16}
-        onClick={() => {
-          if (onRetirePresident) onRetirePresident(row.id);
-        }}
-        color="BLACK"
-      />
+      <span id={`btn-delete-org-${row.id}`} style={{ cursor: "pointer" }}>
+        <Icon
+          type="delete"
+          size={16}
+          onClick={() => {
+            if (onDeleteOrganization) onDeleteOrganization(row.id);
+          }}
+          color="BLACK"
+        />
+      </span>
     </TableCell>
   </TableRowWrapper>
 );
@@ -121,6 +141,7 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
   title,
   onAppointPresident = undefined,
   onRetirePresident = undefined,
+  onDeleteOrganization = undefined,
   onAddOrganization = undefined,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -141,6 +162,7 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
         </Typography>
         {onAddOrganization && (
           <Button
+            id={`btn-add-org-${title}`}
             onClick={onAddOrganization}
             style={{ width: "80px", padding: "8px", fontSize: "14px" }}
           >
@@ -175,6 +197,9 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
               <TableCell type="Header" width={COL_WIDTHS.changeRep}>
                 대표자 변경
               </TableCell>
+              <TableCell type="Header" width={COL_WIDTHS.retireRep}>
+                대표자 은퇴
+              </TableCell>
               <TableCell type="Header" width={COL_WIDTHS.delete}>
                 기구 삭제
               </TableCell>
@@ -189,6 +214,7 @@ const ManageOrganizationTable: React.FC<ManageOrganizationTableProps> = ({
                 isLast={idx === data.length - 1}
                 onAppointPresident={onAppointPresident}
                 onRetirePresident={onRetirePresident}
+                onDeleteOrganization={onDeleteOrganization}
               />
             ))}
           </TableContentWrapper>

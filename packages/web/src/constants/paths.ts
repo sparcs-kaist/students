@@ -75,6 +75,10 @@ const paths = {
         name: "예/결산 최종 승인",
         path: "/uapresident/approval",
       },
+      {
+        name: "총학생회장 권한 위임",
+        path: "/uapresident/delegate",
+      },
     ],
   },
 

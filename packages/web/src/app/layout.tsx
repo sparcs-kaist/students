@@ -10,7 +10,7 @@ import {
 } from "@sparcs-students/web/styles/fonts/googleFonts";
 import StyledComponentsRegistry from "@sparcs-students/web/common/libs/styledComponents/StyledComponentRegistry";
 
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
 import Header from "@sparcs-students/web/common/components/Header";
 import Footer from "@sparcs-students/web/common/components/Footer";
@@ -21,6 +21,8 @@ import ResponsiveContent from "@sparcs-students/web/common/components/Responsive
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import DebugBadge from "../common/components/DebugBadge";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "SPARCS Students for StudentsUA",

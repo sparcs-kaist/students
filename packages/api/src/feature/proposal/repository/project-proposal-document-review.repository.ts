@@ -64,7 +64,7 @@ export class ProjectProposalDocumentReviewRepository extends BaseSingleTableRepo
       id: result.id,
       projectProposalRevision: { id: result.projectProposalRevisionId },
       student: { id: result.studentId },
-      documentReviewStatusEnum: result.documentReviewStatusEnum,
+      documentReviewStatusEnum: result.documentReviewStatusEnumId,
       detail: result.detail,
     });
   }
@@ -76,7 +76,7 @@ export class ProjectProposalDocumentReviewRepository extends BaseSingleTableRepo
       id: model.id,
       projectProposalRevisionId: model.projectProposalRevision.id,
       studentId: model.student.id,
-      documentReviewStatusEnum: model.documentReviewStatusEnum,
+      documentReviewStatusEnumId: model.documentReviewStatusEnum,
       detail: model.detail,
     };
   }
@@ -87,7 +87,7 @@ export class ProjectProposalDocumentReviewRepository extends BaseSingleTableRepo
     return {
       projectProposalRevisionId: model.projectProposalRevision.id,
       studentId: model.student.id,
-      documentReviewStatusEnum: model.documentReviewStatusEnum,
+      documentReviewStatusEnumId: model.documentReviewStatusEnum,
       detail: model.detail,
     };
   }

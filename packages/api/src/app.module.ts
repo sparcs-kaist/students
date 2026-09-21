@@ -14,6 +14,7 @@ import { SemesterModule } from "./feature/semester/semester.module";
 import FileModule from "./feature/file/file.module";
 import { ProposalModule } from "./feature/proposal/proposal.module";
 import { UserModule } from "./feature/user/user.module";
+import { ReportModule } from "./feature/report/report.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserModule } from "./feature/user/user.module";
     FileModule,
     ProposalModule,
     UserModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [

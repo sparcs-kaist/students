@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Controller,
@@ -256,6 +258,7 @@ const ManagerProjectProposalTable: React.FC<
   };
 
   const onSubmit = (data: PPFormValues) => {
+    // eslint-disable-next-line no-console
     console.log(data);
   };
 

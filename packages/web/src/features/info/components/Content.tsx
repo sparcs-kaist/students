@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import isPropValid from "@emotion/is-prop-valid";
 import styled, { DefaultTheme } from "styled-components";

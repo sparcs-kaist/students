@@ -1,3 +1,5 @@
+"use client";
+
 import HelpOutlineButton from "@mui/icons-material/HelpOutline";
 import React, { useState } from "react";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";

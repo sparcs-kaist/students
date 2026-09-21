@@ -14,6 +14,7 @@ import apiOrg004 from "@sparcs-students/interface/api/organization/endpoint/apiO
 import apiOrg014 from "@sparcs-students/interface/api/organization/endpoint/apiOrg014";
 import apiOrg023 from "@sparcs-students/interface/api/organization/endpoint/apiOrg023";
 import apiOrg024 from "@sparcs-students/interface/api/organization/endpoint/apiOrg024";
+import apiOrg026 from "@sparcs-students/interface/api/organization/endpoint/apiOrg026";
 import type { ApiOrg002RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg002";
 import type { ApiOrg003RequestBody } from "@sparcs-students/interface/api/organization/endpoint/apiOrg003";
 import type {
@@ -27,8 +28,14 @@ import type {
   ApiOrg024RequestBody,
   ApiOrg024ResponseOk,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg024";
-// import {} from // GetUser,
-// "@sparcs-students/api/common/decorators/get-user.decorator";
+import type {
+  ApiOrg026RequestBody,
+  ApiOrg026ResponseCreated,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg026";
+import {
+  GetStudent,
+  StudentProfile,
+} from "@sparcs-students/api/common/decorators/get-user.decorator";
 import { UapresidentOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
 import { OrganizationService } from "../service/organization.service";
 
@@ -83,5 +90,18 @@ export class OrganizationUapresidentController {
     @Body() body: ApiOrg024RequestBody,
   ): Promise<ApiOrg024ResponseOk> {
     return this.organizationService.retireStaff(param.id, body);
+  }
+
+  // 총학생회장 권한 위임 (다음 회장에게 UAPresident 권한 이전)
+  @Post("delegate-uapresident")
+  @UsePipes(new ZodPipe(apiOrg026))
+  async delegateUapresident(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiOrg026RequestBody,
+  ): Promise<ApiOrg026ResponseCreated> {
+    return this.organizationService.delegateUapresident(
+      student.studentId,
+      body,
+    );
   }
 }

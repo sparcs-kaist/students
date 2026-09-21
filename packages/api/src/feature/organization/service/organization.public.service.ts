@@ -22,10 +22,12 @@ export class OrganizationPublicService {
     const semesters = await this.semesterPublicService.fetchSemesterAll();
 
     const organizationLists = semesters.map(semester => {
+      // 학기 기간과 기구 활동 기간이 겹치는 기구들을 올바르게 필터링하기 위해 날짜 비교 로직 수정
       const organizationsInSemester = allOrganizations.filter(
         org =>
-          org.startTerm >= semester.startTerm &&
-          (org.endTerm === null || org.startTerm <= semester.endTerm),
+          new Date(org.startTerm) <= new Date(semester.endTerm) &&
+          (org.endTerm === null ||
+            new Date(org.endTerm) >= new Date(semester.startTerm)),
       );
 
       const typeMap = new Map();
@@ -113,10 +115,12 @@ export class OrganizationPublicService {
       throw new NotFoundException("Semester not found");
     }
 
+    // 학기 기간과 기구 활동 기간이 겹치는 기구들을 올바르게 필터링하기 위해 날짜 비교 로직 수정
     const organizationsInSemester = allOrganizations.filter(
       org =>
-        org.startTerm >= semester.startTerm &&
-        org.startTerm <= semester.endTerm,
+        new Date(org.startTerm) <= new Date(semester.endTerm) &&
+        (org.endTerm === null ||
+          new Date(org.endTerm) >= new Date(semester.startTerm)),
     );
 
     const organizationsOfType =

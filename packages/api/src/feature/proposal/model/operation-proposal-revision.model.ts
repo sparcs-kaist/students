@@ -3,10 +3,10 @@ import { IOperationProposalRevision } from "@sparcs-students/interface/api/propo
 
 export interface IOperationProposalRevisionCreate {
   operationProposal: IOperationProposalRevision["operationProposal"];
-  organizationDiagramFile: IOperationProposalRevision["organizationDiagramFile"];
+
+  organizationDiagram: IOperationProposalRevision["organizationDiagram"];
+
   note: IOperationProposalRevision["note"];
-  operatingCommitteeOperation: IOperationProposalRevision["operatingCommitteeOperation"];
-  teamOperation: IOperationProposalRevision["teamOperation"];
 }
 
 export class MOperationProposalRevision
@@ -17,13 +17,9 @@ export class MOperationProposalRevision
 
   operationProposal: IOperationProposalRevision["operationProposal"];
 
-  organizationDiagramFile: IOperationProposalRevision["organizationDiagramFile"];
+  organizationDiagram: IOperationProposalRevision["organizationDiagram"];
 
   note: IOperationProposalRevision["note"];
-
-  operatingCommitteeOperation: IOperationProposalRevision["operatingCommitteeOperation"];
-
-  teamOperation: IOperationProposalRevision["teamOperation"];
 
   constructor(data: IOperationProposalRevision) {
     super();

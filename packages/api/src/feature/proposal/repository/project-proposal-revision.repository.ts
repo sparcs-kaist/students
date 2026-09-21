@@ -1,19 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 import {
-  BaseMultiTableRepository,
-  MultiInsertModel,
-  MultiSelectModel,
-  MultiUpdateModel,
-} from "@sparcs-students/api/common/base/base.multi.repository";
-import {
+  BaseRepositoryFindQuery,
+  BaseRepositoryQuery,
   BaseTableFieldMapKeys,
   TableWithID,
 } from "@sparcs-students/api/common/base/base.repository";
-import {
-  ProjectProposalRevision,
-  ProjectProposalTimeline,
-} from "@sparcs-students/api/drizzle/schema/project-proposal.schema";
+import { BaseSingleTableRepository } from "@sparcs-students/api/common/base/base.single.repository";
+import { ProjectProposalRevision } from "@sparcs-students/api/drizzle/schema/project-proposal.schema";
 import {
   IProjectProposalRevisionCreate,
   MProjectProposalRevision,
@@ -21,32 +16,21 @@ import {
 import { EmptyObject } from "@sparcs-students/api/common/base/entity.model";
 
 export type ProjectProposalRevisionQuery = {
-  organizationId: number;
-  semesterId: number;
+  // id: number; // id 는 기본 내장
   projectProposalId: number;
+  code: number;
   submittedAt: Date;
-  cogAgendaId: number;
-  gsrcAgendaId: number;
 };
 
-type ProjectProposalRevisionOrderByKeys = "id" | "documentStatusEnum";
-type ProjectProposalRevisionQuerySupport = EmptyObject;
+type ProjectProposalRevisionOrderByKeys = "id";
+type ProjectProposalRevisionQuerySupport = EmptyObject; // Query Support 용
 
-type ProjectProposalRevisionTable = {
-  main: typeof ProjectProposalRevision;
-  oneToOne: EmptyObject;
-  oneToMany: {
-    projectProposalTimeline: typeof ProjectProposalTimeline;
-  };
-};
+type ProjectProposalRevisionTable = typeof ProjectProposalRevision;
 type ProjectProposalRevisionDbSelect =
-  MultiSelectModel<ProjectProposalRevisionTable>;
-type ProjectProposalRevisionDbUpdate =
-  MultiUpdateModel<ProjectProposalRevisionTable>;
-type ProjectProposalRevisionDbInsert = MultiInsertModel<
-  ProjectProposalRevisionTable,
-  "projectProposalRevisionId"
->;
+  InferSelectModel<ProjectProposalRevisionTable>;
+type ProjectProposalRevisionDbUpdate = Partial<ProjectProposalRevisionDbSelect>;
+type ProjectProposalRevisionDbInsert =
+  InferInsertModel<ProjectProposalRevisionTable>;
 
 type ProjectProposalRevisionFieldMapKeys = BaseTableFieldMapKeys<
   ProjectProposalRevisionQuery,
@@ -54,79 +38,60 @@ type ProjectProposalRevisionFieldMapKeys = BaseTableFieldMapKeys<
   ProjectProposalRevisionQuerySupport
 >;
 
+export type ProjectProposalRevisionRepositoryFindQuery =
+  BaseRepositoryFindQuery<
+    ProjectProposalRevisionQuery,
+    ProjectProposalRevisionOrderByKeys
+  >;
+export type ProjectProposalRevisionRepositoryQuery =
+  BaseRepositoryQuery<ProjectProposalRevisionQuery>;
+
 @Injectable()
-export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
+export class ProjectProposalRevisionRepository extends BaseSingleTableRepository<
   MProjectProposalRevision,
   IProjectProposalRevisionCreate,
-  "projectProposalRevisionId",
   ProjectProposalRevisionTable,
   ProjectProposalRevisionQuery,
   ProjectProposalRevisionOrderByKeys,
   ProjectProposalRevisionQuerySupport
 > {
   constructor() {
-    super(
-      {
-        main: ProjectProposalRevision,
-        oneToOne: {},
-        oneToMany: {
-          projectProposalTimeline: ProjectProposalTimeline,
-        },
-      },
-      MProjectProposalRevision,
-      "projectProposalRevisionId",
-    );
+    super(ProjectProposalRevision, MProjectProposalRevision);
   }
 
   protected dbToModelMapping(
     result: ProjectProposalRevisionDbSelect,
   ): MProjectProposalRevision {
     return new MProjectProposalRevision({
-      id: result.main.id,
+      id: result.id,
 
-      projectProposal: { id: result.main.projectProposalId },
+      projectProposal: { id: result.projectProposalId },
 
-      name: result.main.name,
+      name: result.name,
 
-      method: result.main.method,
+      method: result.method,
 
-      prepareDuration: {
-        startTerm: result.main.prepareStartTerm,
-        endTerm: result.main.prepareEndTerm,
-      },
+      prepareStartTerm: result.prepareStartTerm,
+      prepareEndTerm: result.prepareEndTerm,
 
-      duration: {
-        startTerm: result.main.startTerm,
-        endTerm: result.main.endTerm,
-      },
+      startTerm: result.startTerm,
+      endTerm: result.endTerm,
 
-      timelines: result.oneToMany.projectProposalTimeline.map(timeline => ({
-        detail: timeline.detail,
-        duration: {
-          startTerm: timeline.startTerm,
-          endTerm: timeline.endTerm,
-        },
-        note: timeline.note,
-      })),
+      team: { id: result.teamId },
 
-      team: { id: result.main.teamId },
+      manager: { id: result.managerId },
 
-      manager: { id: result.main.managerId },
+      purpose: result.purpose,
 
-      purpose: result.main.purpose,
+      target: result.target,
 
-      target: result.main.target,
+      detail: result.detail,
 
-      detail: result.main.detail,
+      note: result.note,
 
-      note: result.main.note,
+      code: result.code,
 
-      submittedAt: result.main.submittedAt,
-
-      cogAgenda: { id: result.main.cogAgendaId },
-
-      gsrcAgenda: { id: result.main.gsrcAgendaId },
-      
+      submittedAt: result.submittedAt,
     });
   }
 
@@ -134,25 +99,33 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
     model: MProjectProposalRevision,
   ): ProjectProposalRevisionDbUpdate {
     return {
-      main: {
-        id: model.id,
-        name: model.name,
-        teamId: model.team.id,
-        managerId: model.manager.id,
-        purpose: model.purpose,
-        target: model.target,
-        detail: model.detail,
-        note: model.note,
-      },
-      oneToOne: {},
-      oneToMany: {
-        projectProposalTimeline: model.timelines.map(timeline => ({
-          startTerm: timeline.duration.startTerm,
-          endTerm: timeline.duration.endTerm,
-          detail: timeline.detail,
-          note: timeline.note,
-        })),
-      },
+      id: model.id,
+
+      projectProposalId: model.projectProposal.id,
+
+      name: model.name,
+
+      method: model.method,
+
+      prepareStartTerm: model.prepareStartTerm,
+      prepareEndTerm: model.prepareEndTerm,
+
+      startTerm: model.startTerm,
+      endTerm: model.endTerm,
+
+      teamId: model.team.id,
+
+      managerId: model.manager.id,
+
+      purpose: model.purpose,
+
+      target: model.target,
+
+      detail: model.detail,
+
+      note: model.note,
+
+      submittedAt: model.submittedAt,
     };
   }
 
@@ -160,30 +133,31 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
     model: IProjectProposalRevisionCreate,
   ): ProjectProposalRevisionDbInsert {
     return {
-      main: {
-        projectProposalId: model.projectProposal.id,
-        name: model.name,
-        method: model.method,
-        prepareStartTerm: model.prepareDuration.startTerm,
-        prepareEndTerm: model.prepareDuration.endTerm,
-        startTerm: model.duration.startTerm,
-        endTerm: model.duration.endTerm,
-        teamId: model.team.id,
-        managerId: model.manager.id,
-        purpose: model.purpose,
-        target: model.target,
-        detail: model.detail,
-        note: model.note,
-      },
-      oneToOne: {},
-      oneToMany: {
-        projectProposalTimeline: model.timelines.map(timeline => ({
-          startTerm: timeline.duration.startTerm,
-          endTerm: timeline.duration.endTerm,
-          detail: timeline.detail,
-          note: timeline.note,
-        })),
-      },
+      projectProposalId: model.projectProposal.id,
+
+      name: model.name,
+
+      method: model.method,
+
+      prepareStartTerm: model.prepareStartTerm,
+      prepareEndTerm: model.prepareEndTerm,
+
+      startTerm: model.startTerm,
+      endTerm: model.endTerm,
+
+      teamId: model.team.id,
+
+      managerId: model.manager.id,
+
+      purpose: model.purpose,
+
+      target: model.target,
+
+      detail: model.detail,
+
+      note: model.note,
+
+      code: model.code,
     };
   }
 
@@ -195,12 +169,9 @@ export class ProjectProposalRevisionRepository extends BaseMultiTableRepository<
       TableWithID | null
     > = {
       id: ProjectProposalRevision,
-      organizationId: ProjectProposalRevision,
-      semesterId: ProjectProposalRevision,
       projectProposalId: ProjectProposalRevision,
+      code: ProjectProposalRevision,
       submittedAt: ProjectProposalRevision,
-      cogAgendaId: ProjectProposalRevision,
-      gsrcAgendaId: ProjectProposalRevision,
     };
 
     if (!(field in fieldMappings)) {

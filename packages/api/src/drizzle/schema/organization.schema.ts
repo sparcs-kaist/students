@@ -31,7 +31,8 @@ export const OperatingCommittee = mysqlTable(
     organizationId: int("organization_id").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     nameEng: varchar("name_eng", { length: 255 }).notNull(),
-    committeeTypeEnum: int("committee_type_enum").notNull(),
+    // 운영위원회 생성 시 기본 committeeTypeEnum 값을 제공하기 위해 default(1) 추가
+    committeeTypeEnum: int("committee_type_enum").default(1).notNull(),
     startTerm: datetime("start_term").notNull(),
     endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow().notNull(),

@@ -19,19 +19,19 @@ export const ProjectProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectProposalOrganizationIdFk: foreignKey({
+    organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "project_proposal_organization_id_fk",
+      name: "proj_pro_org_id_fk",
     }),
-    projectProposalSemesterIdFk: foreignKey({
+    semesterFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "project_proposal_semester_id_fk",
+      name: "proj_pro_sem_id_fk",
     }),
   }),
 );
@@ -57,34 +57,35 @@ export const ProjectProposalRevision = mysqlTable(
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
+    code: int("code").unique().notNull(),
   },
   table => ({
-    projectProposalRevisionProjectProposalIdFk: foreignKey({
+    projectProposalFk: foreignKey({
       columns: [table.projectProposalId],
       foreignColumns: [ProjectProposal.id],
-      name: "project_proposal_revision_project_proposal_id_fk",
+      name: "proj_prop_rev_proj_prop_id_fk",
     }),
-    projectProposalRevisionTeamIdFk: foreignKey({
+    teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "project_proposal_revision_team_id_fk",
+      name: "proj_prop_rev_team_id_fk",
     }),
-    projectProposalRevisionManagerIdFk: foreignKey({
+    studentFk: foreignKey({
       columns: [table.managerId],
       foreignColumns: [Student.id],
-      name: "project_proposal_revision_manager_id_fk",
+      name: "proj_prop_rev_st_id_fk",
     }),
-    projectProposalRevisionCogAgendaIdFk: foreignKey({
+    cogAgendaFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "project_proposal_revision_cog_agenda_id_fk",
+      name: "proj_prop_rev_cog_age_id_fk",
     }),
-    projectProposalRevisionGsrcAgendaIdFk: foreignKey({
+    gsrcAgendaFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "project_proposal_revision_gsrc_agenda_id_fk",
+      name: "proj_prop_rev_gsrc_age_id_fk",
     }),
   }),
 );
@@ -93,20 +94,20 @@ export const ProjectProposalTimeline = mysqlTable(
   "project_proposal_timeline",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    projectProposalRevisionId: int("project_proposal_revision_id").notNull(),
+    projectProposalRevision: int("code").notNull(),
     startTerm: timestamp("start_term").notNull(),
     endTerm: timestamp("end_term").notNull(),
     detail: text("detail").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectProposalTimelineProjectProposalRevisionIdFk: foreignKey({
-      columns: [table.projectProposalRevisionId],
-      foreignColumns: [ProjectProposalRevision.id],
-      name: "project_proposal_timeline_revision_id_fk",
+    projectProposalRevisionFk: foreignKey({
+      columns: [table.projectProposalRevision],
+      foreignColumns: [ProjectProposalRevision.code],
+      name: "proj_prop_time_proj_prop_rev_code_fk",
     }),
   }),
 );
@@ -118,19 +119,19 @@ export const OperationProposal = mysqlTable(
     organizationId: int("organization_id").notNull(),
     semesterId: int("semester_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    operationProposalOrganizationIdFk: foreignKey({
+    organizationFk: foreignKey({
       columns: [table.organizationId],
       foreignColumns: [Organization.id],
-      name: "operation_proposal_organization_id_fk",
+      name: "op_prop_org_id_fk",
     }),
-    operationProposalSemesterIdFk: foreignKey({
+    semesterIdFk: foreignKey({
       columns: [table.semesterId],
       foreignColumns: [Semester.id],
-      name: "operation_proposal_semester_id_fk",
+      name: "op_prop_sem_id_fk",
     }),
   }),
 );
@@ -140,91 +141,79 @@ export const OperationProposalRevision = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     operationProposalId: int("operation_proposal_id").notNull(),
-    organizationDiagramId: int("organization_diagram_id").notNull(),
+    organizationDiagramId: int("organization_diagram_id").notNull().unique(),
     note: text("note"),
     submittedAt: timestamp("submitted_at"),
     cogAgendaId: int("cog_agenda_id"),
     gsrcAgendaId: int("gsrc_agenda_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    operationProposalRevisionOperationProposalIdFk: foreignKey({
+    operationProposalFk: foreignKey({
       columns: [table.operationProposalId],
       foreignColumns: [OperationProposal.id],
-      name: "operation_proposal_revision_operation_proposal_id_fk",
+      name: "op_prop_rev_op_prop_id_fk",
     }),
-    operationProposalRevisionOrganizationDiagramIdFk: foreignKey({
+    fileFk: foreignKey({
       columns: [table.organizationDiagramId],
       foreignColumns: [File.id],
-      name: "operation_proposal_revision_organization_diagram_id_fk",
+      name: "op_prop_rev_file_id_fk",
     }),
-    operationProposalRevisionCogAgendaIdFk: foreignKey({
+    cogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operation_proposal_revision_cog_agenda_id_fk",
+      name: "op_prop_rev_age_id_fk",
     }),
-    operationProposalRevisionGsrcAgendaIdFk: foreignKey({
+    gsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
       foreignColumns: [Agenda.id],
-      name: "operation_proposal_revision_gsrc_agenda_id_fk",
+      name: "op_prop_rev_gsrc_age_id_fk",
     }),
   }),
 );
 
-export const OperatingCommitteeProposal = mysqlTable(
-  "operating_committee_proposal_revision",
+export const ExecutionProposal = mysqlTable(
+  "execution_proposal",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    operationProposalRevisionId: int(
-      "operation_proposal_revision_id",
-    ).notNull(),
     operatingCommitteeId: int("operating_committee_id").notNull(),
     note: text("note"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    operatingCommitteeProposalRevisionOperationProposalRevisionIdFk: foreignKey(
-      {
-        columns: [table.operationProposalRevisionId],
-        foreignColumns: [OperationProposalRevision.id],
-        name: "operating_committee_proposal_operation_proposal_revision_id_fk",
-      },
-    ),
-    operatingCommitteeProposalRevisionOperatingCommitteeIdFk: foreignKey({
+    operatingCommitteeFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "operating_committee_proposal_ope_com_id_fk",
+      name: "exe_pro_op_com_id_fk",
     }),
   }),
 );
 
-export const TeamOperationProposal = mysqlTable(
-  "team_operation_proposal",
+export const ExecutionProposalRevision = mysqlTable(
+  "execution_proposal_revision",
   {
     id: int("id").autoincrement().primaryKey().notNull(),
-    operationProposalRevisionId: int(
-      "operation_proposal_revision_id",
-    ).notNull(),
+    executionProposalId: int("execution_proposal_id").notNull(),
     teamId: int("team_id").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    teamOperationProposalOperationProposalRevisionIdFk: foreignKey({
-      columns: [table.operationProposalRevisionId],
-      foreignColumns: [OperationProposalRevision.id],
-      name: "team_operation_proposal_operation_proposal_revision_id_fk",
+    executionProposalFk: foreignKey({
+      columns: [table.executionProposalId],
+      foreignColumns: [ExecutionProposal.id],
+      name: "exe_pro_rev_exe_pro_id_fk",
     }),
-    teamOperationProposalTeamIdFk: foreignKey({
+    teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "team_operation_proposal_team_id_fk",
+      name: "exe_pro_rev_team_id_fk",
     }),
   }),
 );
@@ -235,22 +224,22 @@ export const ProjectProposalDocumentReview = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     projectProposalRevisionId: int("project_proposal_revision_id").notNull(),
     studentId: int("student_id").notNull(),
-    documentReviewStatusEnum: int("document_review_status_enum").notNull(),
+    documentReviewStatusEnumId: int("document_review_status_enum_id").notNull(),
     detail: text("detail"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    projectProposalDocumentReviewProjectProposalRevisionIdFk: foreignKey({
+    projectProposalRevisionFk: foreignKey({
       columns: [table.projectProposalRevisionId],
       foreignColumns: [ProjectProposalRevision.id],
       name: "proj_prop_doc_review_proj_prop_rev_id_fk",
     }),
-    projectProposalDocumentReviewStudentIdFk: foreignKey({
+    studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "proj_prop_doc_review_student_id_fk",
+      name: "proj_prop_doc_review_st_id_fk",
     }),
   }),
 );

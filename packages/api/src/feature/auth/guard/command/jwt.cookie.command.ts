@@ -66,7 +66,8 @@ export class JwtCookieCommand implements AuthCommand {
   private async verifyToken(token: string): Promise<MMember> {
     return (await this.jwtService.verifyAsync(token, {
       secret: this.jwtConfig.secret,
-      ignoreExpiration: false,
+      // 로컬 개발/테스트 편의성을 위해 프로덕션이 아닐 때 만료시간 검증 우회
+      ignoreExpiration: process.env.NODE_ENV !== "production",
     })) as MMember;
   }
 

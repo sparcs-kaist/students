@@ -4,22 +4,42 @@ import { IBudgetReportExpenseRevision } from "@sparcs-students/interface/api/rep
 export interface IBudgetReportExpenseRevisionCreate {
   budgetReportExpense: IBudgetReportExpenseRevision["budgetReportExpense"];
 
+  budgetDomainEnum: IBudgetReportExpenseRevision["budgetDomainEnum"];
+
+  budgetDivisionExpenseEnum: IBudgetReportExpenseRevision["budgetDivisionExpenseEnum"];
+
+  budgetClassExpenseEnum: IBudgetReportExpenseRevision["budgetClassExpenseEnum"];
+
+  name: IBudgetReportExpenseRevision["name"];
+
   amount: IBudgetReportExpenseRevision["amount"];
 
-  note: IBudgetReportExpenseRevision["note"];
+  detail: IBudgetReportExpenseRevision["detail"];
+
+  code: IBudgetReportExpenseRevision["code"];
 }
 
 export class MBudgetReportExpenseRevision
   extends MRevisionEntity
   implements IBudgetReportExpenseRevision
 {
-  static modelName = "BudgetReportExpenseRevision";
+  static modelName = "BudgetReportExpense";
 
   budgetReportExpense: IBudgetReportExpenseRevision["budgetReportExpense"];
 
+  budgetDomainEnum: IBudgetReportExpenseRevision["budgetDomainEnum"];
+
+  budgetDivisionExpenseEnum: IBudgetReportExpenseRevision["budgetDivisionExpenseEnum"];
+
+  budgetClassExpenseEnum: IBudgetReportExpenseRevision["budgetClassExpenseEnum"];
+
+  name: IBudgetReportExpenseRevision["name"];
+
   amount: IBudgetReportExpenseRevision["amount"];
 
-  note: IBudgetReportExpenseRevision["note"];
+  detail: IBudgetReportExpenseRevision["detail"];
+
+  code: IBudgetReportExpenseRevision["code"];
 
   constructor(data: IBudgetReportExpenseRevision) {
     super();

@@ -54,9 +54,13 @@ async function bootstrap() {
       cookie: { maxAge: 600000 },
     }),
   );
-  if (process.env.NODE_ENV === "local") {
+  if (process.env.NODE_ENV !== "production") {
+    // 개발/로컬 환경에서 프론트엔드 포트 불일치 시에도 CORS 에러가 발생하지 않도록 127.0.0.1 및 fallback 포트 3000 추가 허용
     app.enableCors({
-      origin: `http://localhost:${process.env.CLIENT_PORT}`,
+      origin: [
+        `http://localhost:${process.env.CLIENT_PORT || 3000}`,
+        `http://127.0.0.1:${process.env.CLIENT_PORT || 3000}`,
+      ],
       credentials: true,
     });
     app.useGlobalFilters(

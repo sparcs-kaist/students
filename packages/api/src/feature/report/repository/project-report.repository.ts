@@ -19,7 +19,6 @@ export type ProjectReportQuery = {
   // id: number; // id 는 기본 내장
   organizationId: number;
   semesterId: number;
-  projectProposal: number;
 };
 
 type ProjectReportOrderByKeys = "id";
@@ -61,7 +60,6 @@ export class ProjectReportRepository extends BaseSingleTableRepository<
       id: result.id,
       organization: { id: result.organizationId },
       semester: { id: result.semesterId },
-      projectProposal: { id: result.projectProposalId },
     });
   }
 
@@ -70,7 +68,6 @@ export class ProjectReportRepository extends BaseSingleTableRepository<
       id: model.id,
       organizationId: model.organization.id,
       semesterId: model.semester.id,
-      projectProposalId: model.projectProposal.id,
     };
   }
 
@@ -80,7 +77,6 @@ export class ProjectReportRepository extends BaseSingleTableRepository<
     return {
       organizationId: model.organization.id,
       semesterId: model.semester.id,
-      projectProposalId: model.projectProposal.id,
     };
   }
 
@@ -92,7 +88,7 @@ export class ProjectReportRepository extends BaseSingleTableRepository<
         id: ProjectReport,
         organizationId: ProjectReport,
         semesterId: ProjectReport,
-        projectProposalId: ProjectReport,
+        projectReportId: ProjectReport,
       };
 
     if (!(field in fieldMappings)) {

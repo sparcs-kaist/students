@@ -29,6 +29,13 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
+const RightButtonWrapper = styled.div`
+  gap: 12px;
+  flex-direction: row;
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const ReviewerBudgetReportFrame = () => {
   const { id } = useParams();
   const [resetKey, setResetKey] = useState(0);
@@ -65,13 +72,45 @@ const ReviewerBudgetReportFrame = () => {
   const handleSubmitAll = () => {
     // CHACHA: 백에 넘어가야 할 데이터들?
     const review = reviewData;
+    // eslint-disable-next-line no-console
     console.log("리뷰하는 문서의 정보:", mockViewBudgetReportResultData);
+    // eslint-disable-next-line no-console
     console.log("제출된 리뷰:", review);
   };
 
   const handleResetAll = () => {
     setReviewData(initialReviewData);
     setResetKey(prev => prev + 1); // CHACHA: re-render
+  };
+
+  /** 모든 항목을 일괄 승인 상태로 변경 */
+  const handleBulkApprove = () => {
+    setReviewData(prev => ({
+      income: prev.income.map(item => ({
+        ...item,
+        reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
+      })),
+      expenditure: prev.expenditure.map(item => ({
+        ...item,
+        reviewStatus: DocumentReviewStatusEnum.ReviewAccepted,
+      })),
+    }));
+    setResetKey(prev => prev + 1);
+  };
+
+  /** 모든 항목을 일괄 반려 상태로 변경 */
+  const handleBulkReject = () => {
+    setReviewData(prev => ({
+      income: prev.income.map(item => ({
+        ...item,
+        reviewStatus: DocumentReviewStatusEnum.ReviewRejected,
+      })),
+      expenditure: prev.expenditure.map(item => ({
+        ...item,
+        reviewStatus: DocumentReviewStatusEnum.ReviewRejected,
+      })),
+    }));
+    setResetKey(prev => prev + 1);
   };
 
   const updatedIncomeData = useMemo(
@@ -107,7 +146,6 @@ const ReviewerBudgetReportFrame = () => {
   );
 
   const openSaveModal = () => {
-    // TODO: add save logic
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} width="400px">
         <ConfirmModalContent
@@ -123,7 +161,6 @@ const ReviewerBudgetReportFrame = () => {
   };
 
   const openDiscardModal = () => {
-    // TODO: add discard logic
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} width="400px">
         <CancellableModalContent
@@ -134,6 +171,38 @@ const ReviewerBudgetReportFrame = () => {
           onClose={() => close()}
         >
           임시저장 내역을{"\n"}모두 삭제하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const openBulkApproveModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <CancellableModalContent
+          onConfirm={() => {
+            handleBulkApprove();
+            close();
+          }}
+          onClose={() => close()}
+        >
+          모든 항목을 일괄 승인하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const openBulkRejectModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} width="400px">
+        <CancellableModalContent
+          onConfirm={() => {
+            handleBulkReject();
+            close();
+          }}
+          onClose={() => close()}
+        >
+          모든 항목을 일괄 반려하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
@@ -160,30 +229,50 @@ const ReviewerBudgetReportFrame = () => {
           });
         }}
       />
-      <ReviewerExpenditureTable
-        key={`expenditure-${resetKey}`}
-        type="proposal"
-        pageId={id}
-        initialData={updatedExpenditureData}
-        onReviewUpdate={({ code, reviewText, reviewStatus }) => {
-          setReviewData(prev => {
-            const newExpenditure = [...prev.expenditure];
-            const existingIndex = newExpenditure.findIndex(
-              d => d.code === code,
-            );
-            const newEntry = { code, reviewText, reviewStatus };
+      <FlexWrapper direction="column" gap={16}>
+        <ReviewerExpenditureTable
+          key={`expenditure-${resetKey}`}
+          type="proposal"
+          pageId={id}
+          title="지출"
+          initialData={updatedExpenditureData}
+          onReviewUpdate={({ code, reviewText, reviewStatus }) => {
+            setReviewData(prev => {
+              const newExpenditure = [...prev.expenditure];
+              const existingIndex = newExpenditure.findIndex(
+                d => d.code === code,
+              );
+              const newEntry = { code, reviewText, reviewStatus };
 
-            if (existingIndex >= 0) {
-              newExpenditure[existingIndex] = newEntry;
-            } else {
-              newExpenditure.push(newEntry);
-            }
+              if (existingIndex >= 0) {
+                newExpenditure[existingIndex] = newEntry;
+              } else {
+                newExpenditure.push(newEntry);
+              }
 
-            return { ...prev, expenditure: newExpenditure };
-          });
-        }}
-      />
+              return { ...prev, expenditure: newExpenditure };
+            });
+          }}
+        />
+        <RightButtonWrapper>
+          <Button
+            type="reverse"
+            onClick={openBulkRejectModal}
+            style={{ width: "120px", padding: "8px 16px" }}
+          >
+            일괄 반려
+          </Button>
+          <Button
+            onClick={openBulkApproveModal}
+            style={{ width: "120px", padding: "8px 16px" }}
+          >
+            일괄 승인
+          </Button>
+        </RightButtonWrapper>
+      </FlexWrapper>
       <TotalTable data={dataToTotal(mockIncomeData, mockExpenditureData)} />
+
+      {/* 임시저장 삭제 / 제출 버튼 */}
       <ButtonWrapper>
         <Button
           type="reverse"
