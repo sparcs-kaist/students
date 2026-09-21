@@ -884,9 +884,60 @@ export class ProposalService {
     };
   }
 
-  /*
-    submitProjectProposalRevision 추가
-  */
+  async submitProjectProposalRevision(student, body) {
+    const { studentId } = student;
+    const { projectProposalRevisionId } = body;
+
+    // 제출 대상 조회
+    const [revision] = await this.projectProposalRevisionRepository.find({
+      id: projectProposalRevisionId,
+    });
+
+    if (!revision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    // 사업계획서 및 소속 단체 확인
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: revision.projectProposal.id,
+    } as any);
+
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    // null과 undefined 모두 미제출로 처리
+    if (revision.submittedAt != null) {
+      throw new ConflictException("Already submitted.");
+    }
+
+    // 제출 시각 저장
+    const [submittedRevision] =
+      await this.projectProposalRevisionRepository.patch(
+        { id: projectProposalRevisionId },
+        model => {
+          if (model.submittedAt != null) {
+            throw new ConflictException("Already submitted.");
+          }
+          const temp = model;
+          temp.submittedAt = new Date();
+          return temp;
+        },
+      );
+
+    if (!submittedRevision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    return {
+      projectProposalRevision: {
+        id: submittedRevision.id,
+      },
+    };
+  }
+
   async deleteProjectProposalRevision(student, query) {
     const { studentId } = student;
 
