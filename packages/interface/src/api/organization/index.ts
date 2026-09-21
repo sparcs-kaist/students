@@ -84,3 +84,9 @@ export { default as apiOrg029 } from "./endpoint/apiOrg029";
 
 export * from "./endpoint/apiOrg030";
 export { default as apiOrg030 } from "./endpoint/apiOrg030";
+
+export * from "./endpoint/apiOrg031";
+export { default as apiOrg031 } from "./endpoint/apiOrg031";
+
+export * from "./endpoint/apiOrg032";
+export { default as apiOrg032 } from "./endpoint/apiOrg032";

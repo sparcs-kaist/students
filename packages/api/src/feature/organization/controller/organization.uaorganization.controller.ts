@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { UaOrgOnly } from "@sparcs-students/api/common/decorators/require-organization.decorator";
-import apiOrg026, {
-  ApiOrg026RequestQuery,
-  ApiOrg026ResponseOk,
-} from "@sparcs-students/interface/api/organization/endpoint/apiOrg026";
-import apiOrg027, {
-  ApiOrg027RequestQuery,
-  ApiOrg027ResponseOk,
-} from "@sparcs-students/interface/api/organization/endpoint/apiOrg027";
+import apiOrg031, {
+  ApiOrg031RequestQuery,
+  ApiOrg031ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg031";
+import apiOrg032, {
+  ApiOrg032RequestQuery,
+  ApiOrg032ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg032";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { OrganizationService } from "../service/organization.service";
 
@@ -16,23 +16,23 @@ import { OrganizationService } from "../service/organization.service";
 export class OrganizationUaOrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
-  @Get("/get-history-byId")
+  @Get("/get-history-by-id-v2")
   async getHistoryById(
-    @Query(new ZodPipe(apiOrg026)) query: ApiOrg026RequestQuery,
-  ): Promise<ApiOrg026ResponseOk> {
+    @Query(new ZodPipe(apiOrg031)) query: ApiOrg031RequestQuery,
+  ): Promise<ApiOrg031ResponseOk> {
     const { studentId, fromDate, toDate } = query;
     const result = await this.organizationService.getHistoryById(
       studentId,
       fromDate,
       toDate,
     );
-    return result as ApiOrg026ResponseOk;
+    return result as ApiOrg031ResponseOk;
   }
 
-  @Get("/get-history-by-rolename")
+  @Get("/get-history-by-rolename-v2")
   async getHistoryByRoleName(
-    @Query(new ZodPipe(apiOrg027)) query: ApiOrg027RequestQuery,
-  ): Promise<ApiOrg027ResponseOk> {
+    @Query(new ZodPipe(apiOrg032)) query: ApiOrg032RequestQuery,
+  ): Promise<ApiOrg032ResponseOk> {
     const { organizationId, roleName, fromDate, toDate } = query;
     return this.organizationService.getHistoryByRoleName(
       organizationId,
