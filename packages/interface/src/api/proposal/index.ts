@@ -96,6 +96,9 @@ export { default as apiPrp104 } from "./endpoint/apiPrp104";
 export * from "./endpoint/apiPrp105";
 export { default as apiPrp105 } from "./endpoint/apiPrp105";
 
+export * from "./endpoint/apiPrp106";
+export { default as apiPrp106 } from "./endpoint/apiPrp106";
+
 export * from "./endpoint/apiPrp107";
 export { default as apiPrp107 } from "./endpoint/apiPrp107";
 
@@ -104,6 +107,9 @@ export { default as apiPrp108 } from "./endpoint/apiPrp108";
 
 export * from "./endpoint/apiPrp109";
 export { default as apiPrp109 } from "./endpoint/apiPrp109";
+
+export * from "./endpoint/apiPrp110";
+export { default as apiPrp110 } from "./endpoint/apiPrp110";
 
 export * from "./endpoint/apiPrp111";
 export { default as apiPrp111 } from "./endpoint/apiPrp111";

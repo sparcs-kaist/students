@@ -75,7 +75,7 @@ export const ProjectProposalRevision = mysqlTable(
     studentFk: foreignKey({
       columns: [table.managerId],
       foreignColumns: [Student.id],
-      name: "proj_prop_rev_st_id_fk",
+      name: "proj_prop_rev_student_id_fk",
     }),
     cogAgendaFk: foreignKey({
       columns: [table.cogAgendaId],
@@ -164,7 +164,7 @@ export const OperationProposalRevision = mysqlTable(
     cogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
       foreignColumns: [Agenda.id],
-      name: "op_prop_rev_age_id_fk",
+      name: "op_prop_rev_cog_age_id_fk",
     }),
     gsrcAgendaIdFk: foreignKey({
       columns: [table.gsrcAgendaId],
@@ -188,7 +188,7 @@ export const ExecutionProposal = mysqlTable(
     operatingCommitteeFk: foreignKey({
       columns: [table.operatingCommitteeId],
       foreignColumns: [OperatingCommittee.id],
-      name: "exe_pro_op_com_id_fk",
+      name: "exec_prop_op_com_id_fk",
     }),
   }),
 );
@@ -208,12 +208,12 @@ export const ExecutionProposalRevision = mysqlTable(
     executionProposalFk: foreignKey({
       columns: [table.executionProposalId],
       foreignColumns: [ExecutionProposal.id],
-      name: "exe_pro_rev_exe_pro_id_fk",
+      name: "exec_prop_rev_exec_prop_id_fk",
     }),
     teamFk: foreignKey({
       columns: [table.teamId],
       foreignColumns: [Team.id],
-      name: "exe_pro_rev_team_id_fk",
+      name: "exec_prop_rev_team_id_fk",
     }),
   }),
 );
@@ -239,7 +239,7 @@ export const ProjectProposalDocumentReview = mysqlTable(
     studentFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "proj_prop_doc_review_st_id_fk",
+      name: "proj_prop_doc_review_student_id_fk",
     }),
   }),
 );
