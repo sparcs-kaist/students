@@ -1012,6 +1012,35 @@ export class ProposalService {
     return rows.map(row => row.submittedAt as unknown as string);
   }
 
+  async getProjectProposalRevisionsByDate(query) {
+    const start = new Date(`${query.date}T00:00:00.000+09:00`);
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+    end.setUTCDate(end.getUTCDate() + 1);
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: query.projectProposal,
+    });
+
+    if (!projectProposal) {
+      return { projectProposalRevisions: [] };
+    }
+
+    const rows = await this.projectProposalRevisionRepository.find({
+      projectProposalId: projectProposal.id,
+      submittedAt: {
+        gte: start,
+        lt: end,
+      },
+      orderBy: {
+        id: OrderByTypeEnum.ASC,
+      },
+    } as any);
+
+    return {
+      projectProposalRevisions: rows,
+    };
+  }
+
   async createOperationProposal(student, body) {
     const { studentId } = student;
 
