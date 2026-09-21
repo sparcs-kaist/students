@@ -8,15 +8,13 @@ import Typography from "@sparcs-students/web/common/components/Typography";
 import colors from "@sparcs-students/web/styles/themes/colors";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  type NoticeRow,
+  getStoredNoticeList,
+} from "@sparcs-students/web/features/notice/noticeData";
 
-interface RowProps {
-  tag?: string;
-  content: string;
-  date?: Date;
-  link?: string;
-}
 interface MainPageFrameProps {
-  notice: RowProps[];
+  notice: NoticeRow[];
   _isMobile?: boolean;
 }
 
@@ -160,6 +158,7 @@ const SmallFrame: React.FC<MainPageFrameProps> = ({
 const MainPageFrame: React.FC = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [notice, setNotice] = useState<NoticeRow[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -184,32 +183,9 @@ const MainPageFrame: React.FC = () => {
     };
   }, []);
 
-  const notice: RowProps[] = [
-    {
-      tag: "총학",
-      content: "2025년 가을학기 예결산안 매뉴얼",
-      date: new Date("2025-08-20"),
-      link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
-    },
-    {
-      tag: "총학",
-      content: "2025년 가을학기 예결산안 양식",
-      date: new Date("2025-08-18"),
-      link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
-    },
-    {
-      tag: "감사원",
-      content: "2025년 가을학기 예결산 제출 파일 양식",
-      date: new Date("2025-08-18"),
-      link: "https://linktr.ee/kaistbai",
-    },
-    {
-      tag: "감사원",
-      content: "2025년 가을학기 감사 매뉴얼",
-      date: new Date("2025-08-10"),
-      link: "https://linktr.ee/kaistbai",
-    },
-  ];
+  useEffect(() => {
+    setNotice(getStoredNoticeList().slice(0, 4));
+  }, []);
 
   return isSmallScreen ? (
     <SmallFrame notice={notice.slice(0, 4)} _isMobile={isMobile} />
