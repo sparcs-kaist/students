@@ -8,7 +8,7 @@ import {
 
 /**
  * @version v0.1
- * @description 매니저(organizationManager) 권한으로 새로운 사업계획서(projectProposal)를 생성합니다.
+ * @description 매니저(organizationManager) 권한으로 새로운 운영계획서(operationProposal)를 생성합니다.
  */
 
 const url = () => `/manager/proposals/operation-proposals/create`;
