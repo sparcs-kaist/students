@@ -1013,8 +1013,8 @@ export class ProposalService {
   }
 
   async getProjectProposalRevisionsByDate(query) {
-    const start = new Date(`${query.date}T00:00:00.000+09:00`);
-    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+    const start = new Date(`${query.date}T00:00:00.000Z`);
+    const end = new Date(`${query.date}T23:59:59.999Z`);
     end.setUTCDate(end.getUTCDate() + 1);
 
     const [projectProposal] = await this.projectProposalRepository.find({
