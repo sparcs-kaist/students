@@ -8,10 +8,10 @@ import { zId } from "@sparcs-students/interface/common/type/ids";
  * @description 예산안 수입 제출본 날짜 목록을 조회합니다.
  */
 
-const url = () => `student/proposals/budget-proposals/income/getDateList`;
+const url = () => `/student/proposals/budget-proposals/income/getDateList`;
 const method = "GET";
 export const ApiBudPrp014RequestUrl =
-  "student/proposals/budget-proposals/income/getDateList";
+  "/student/proposals/budget-proposals/income/getDateList";
 
 const requestParam = z.object({});
 
