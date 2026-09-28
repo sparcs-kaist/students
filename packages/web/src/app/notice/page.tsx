@@ -12,50 +12,18 @@ import ModalTableButton from "@sparcs-students/web/common/components/Buttons/Mod
 import styled from "styled-components";
 import Select from "@sparcs-students/web/common/components/Selects/Select";
 import isPropValid from "@emotion/is-prop-valid";
-
-interface RowProps {
-  tag?: string;
-  content: string;
-  date?: Date;
-  link?: string;
-}
+import { useRouter } from "next/navigation";
+import {
+  type NoticeRow,
+  getStoredNoticeList,
+  NOTICE_STORAGE_KEY,
+} from "@sparcs-students/web/features/notice/noticeData";
 
 interface WrapperProps {
   width: number;
   height?: string;
   justify?: string;
 }
-
-// Example data
-const noticeExample: RowProps[] = [
-  {
-    tag: "총학",
-    content: "2025년 가을학기 예결산안 매뉴얼",
-    date: new Date("2025-08-20"),
-    link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
-  },
-  {
-    tag: "총학",
-    content: "2025년 가을학기 예결산안 양식",
-    date: new Date("2025-08-18"),
-    link: "https://drive.google.com/drive/folders/1-2TxRDA9kSo_3f3wMHAwyug6haGZxxrn?usp=sharing",
-  },
-  {
-    tag: "감사원",
-    content: "2025년 가을학기 예결산 제출 파일 양식",
-    date: new Date("2025-08-18"),
-    link: "https://linktr.ee/kaistbai",
-  },
-  // {
-  //   tag: "감사원",
-  //   content: "2025년 가을학기 감사 매뉴얼",
-  //   date: new Date("2025-08-10"),
-  //   link: "https://linktr.ee/kaistbai",
-  // },
-];
-const allNotice = Array.from({ length: 100 }, () => [...noticeExample])
-  .flat()
-  .sort((a, b) => b.date!.getTime() - a.date!.getTime());
 
 const HorizontalWrapper = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
@@ -163,12 +131,16 @@ const LargeFrame = ({
 );
 
 const Notice = () => {
+  const router = useRouter();
   // const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [searchedNotice, setSearchedNotice] = useState<RowProps[]>(allNotice);
-  const [shownNotice, setShownNotice] = useState<RowProps[]>([]);
+  const [allNotice, setAllNotice] = useState<NoticeRow[]>(() =>
+    getStoredNoticeList(),
+  );
+  const [searchedNotice, setSearchedNotice] = useState<NoticeRow[]>([]);
+  const [shownNotice, setShownNotice] = useState<NoticeRow[]>([]);
 
   const handlePageChange = (newPageIndex: number) => {
     setPageIndex(newPageIndex);
@@ -218,11 +190,22 @@ const Notice = () => {
   }, []);
 
   useEffect(() => {
-    setSearchedNotice(allNotice);
+    const savedNotices = getStoredNoticeList();
+    setAllNotice(savedNotices);
+    setSearchedNotice(savedNotices);
     const start = (pageIndex - 1) * pageSize;
     const end = start + pageSize;
-    setShownNotice(allNotice.slice(start, end));
+    setShownNotice(savedNotices.slice(start, end));
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        NOTICE_STORAGE_KEY,
+        JSON.stringify(allNotice),
+      );
+    }
+  }, [allNotice]);
 
   return (
     <FlexWrapper direction="column" gap={20}>
@@ -243,6 +226,13 @@ const Notice = () => {
             handlePageSizeChange={handlePageSizeChange}
           />
         )}
+        <FlexWrapper direction="row" gap={10} justify="flex-end">
+          <ModalTableButton
+            buttonText="작성"
+            type="default"
+            onClick={() => router.push("/notice/create")}
+          />
+        </FlexWrapper>
         <SingleColumnTable
           header={`총 ${searchedNotice.length}건`}
           rows={shownNotice}
