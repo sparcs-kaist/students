@@ -9,10 +9,10 @@ import { zOrganizationRole } from "../type/organization.role.type";
  * @description organizationId와 roleName을 기반으로 해당 역할의 조직 내 역할 이력을 조회합니다.
  */
 
-const url = () => "/uapresident/organizations/get-history-by-rolename-v2";
+const url = () => "/uapresident/organizations/get-history-by-rolename";
 const method = "GET";
 export const ApiOrg032RequestUrl =
-  "/uapresident/organizations/get-history-by-rolename-v2";
+  "/uapresident/organizations/get-history-by-rolename";
 
 const requestParam = z.object({});
 const requestQuery = z.object({

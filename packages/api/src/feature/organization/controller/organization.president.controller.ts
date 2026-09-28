@@ -7,6 +7,8 @@ import {
   Delete,
   Param,
   UsePipes,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import apiOrg005 from "@sparcs-students/interface/api/organization/endpoint/apiOrg005";
@@ -288,6 +290,7 @@ export class OrganizationPresidentController {
   }
 
   @Delete("role/:id")
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UsePipes(new ZodPipe(apiOrg030))
   async deleteOrganizationRole(
     @GetStudent() student: StudentProfile,

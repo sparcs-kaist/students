@@ -10,10 +10,10 @@ import { zOrganizationRole } from "../type/organization.role.type";
  */
 
 const url = (studentId: number) =>
-  `/uapresident/organizations/get-history-by-id-v2?studentId=${studentId}`;
+  `/uapresident/organizations/get-history-by-id?studentId=${studentId}`;
 const method = "GET";
 export const ApiOrg031RequestUrl =
-  "/uapresident/organizations/get-history-by-id-v2";
+  "/uapresident/organizations/get-history-by-id";
 
 const requestParam = z.object({});
 const requestQuery = z.object({

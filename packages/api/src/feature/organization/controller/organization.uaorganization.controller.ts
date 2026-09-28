@@ -16,7 +16,7 @@ import { OrganizationService } from "../service/organization.service";
 export class OrganizationUaOrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
-  @Get("/get-history-by-id-v2")
+  @Get("/get-history-by-id")
   async getHistoryById(
     @Query(new ZodPipe(apiOrg031)) query: ApiOrg031RequestQuery,
   ): Promise<ApiOrg031ResponseOk> {
@@ -29,7 +29,7 @@ export class OrganizationUaOrganizationController {
     return result as ApiOrg031ResponseOk;
   }
 
-  @Get("/get-history-by-rolename-v2")
+  @Get("/get-history-by-rolename")
   async getHistoryByRoleName(
     @Query(new ZodPipe(apiOrg032)) query: ApiOrg032RequestQuery,
   ): Promise<ApiOrg032ResponseOk> {
