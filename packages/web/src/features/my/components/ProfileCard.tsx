@@ -12,9 +12,12 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
+  width: 100%;
+  min-width: 0;
   padding: 20px 40px 20px 20px;
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
+  box-sizing: border-box;
 `;
 const ProfileCard = () => {
   // TODO : Api 연결
