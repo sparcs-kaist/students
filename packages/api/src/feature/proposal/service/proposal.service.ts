@@ -169,7 +169,7 @@ export class ProposalService {
       throw new NotFoundException("No Budget Proposal Income Exists");
     }
     if (budgetProposalIncomeRevision.submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
+      throw new ConflictException("Already Submitted");
     }
 
     // 단체의 매니저가 맞는지 확인
@@ -350,7 +350,7 @@ export class ProposalService {
       throw new NotFoundException("No Budget Proposal Expense Exists");
     }
     if (budgetProposalExpenseRevision.submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
+      throw new ConflictException("Already Submitted");
     }
 
     // 단체의 매니저가 맞는지 확인
@@ -1015,7 +1015,6 @@ export class ProposalService {
   async getProjectProposalRevisionsByDate(query) {
     const start = new Date(`${query.date}T00:00:00.000Z`);
     const end = new Date(`${query.date}T23:59:59.999Z`);
-    end.setUTCDate(end.getUTCDate() + 1);
 
     const [projectProposal] = await this.projectProposalRepository.find({
       id: query.projectProposal,
