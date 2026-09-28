@@ -11,12 +11,15 @@ import TextButton from "@sparcs-students/web/common/components/Buttons/TextButto
 
 const CardWrapper = styled.div`
   display: flex;
+  width: 100%;
+  min-width: 0;
   padding: 20px;
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[100]};
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+  box-sizing: border-box;
 `;
 
 const TitleWrapper = styled.div`
