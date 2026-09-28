@@ -30,7 +30,7 @@ export class ReportService {
     const isManager = await this.organizationManagerRepository.find({
       studentId,
       organizationId,
-      endTerm: null,
+      endTerm: null, // 임기 끝나는 시점에 endTerm 기록 -> endTerm이 null이면 재직 중으로 판정
     });
     if (isManager.length === 0) {
       throw new ConflictException({

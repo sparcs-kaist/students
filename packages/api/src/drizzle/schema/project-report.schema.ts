@@ -239,12 +239,12 @@ export const ProjectReportDocumentReview = mysqlTable(
     projectReportDocumentReviewProjectReportRevisionIdFk: foreignKey({
       columns: [table.projectReportRevisionId],
       foreignColumns: [ProjectReportRevision.id],
-      name: "proj_prop_doc_review_proj_prop_rev_id_fk",
+      name: "proj_rep_doc_review_proj_rep_rev_id_fk",
     }),
     projectReportDocumentReviewStudentIdFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "proj_prop_doc_review_student_id_fk",
+      name: "proj_rep_doc_review_student_id_fk",
     }),
   }),
 );

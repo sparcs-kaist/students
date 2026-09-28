@@ -43,7 +43,7 @@ export class ProposalService {
     const isManager = await this.organizationManagerRepository.find({
       studentId,
       organizationId,
-      endTerm: null,
+      endTerm: null, // 임기 끝나는 시점에 endTerm 기록 -> endTerm이 null이면 재직 중으로 판정
     });
     if (isManager.length === 0) {
       throw new ConflictException({
@@ -169,7 +169,7 @@ export class ProposalService {
       throw new NotFoundException("No Budget Proposal Income Exists");
     }
     if (budgetProposalIncomeRevision.submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
+      throw new ConflictException("Already Submitted");
     }
 
     // 단체의 매니저가 맞는지 확인
@@ -350,7 +350,7 @@ export class ProposalService {
       throw new NotFoundException("No Budget Proposal Expense Exists");
     }
     if (budgetProposalExpenseRevision.submittedAt !== null) {
-      throw new NotFoundException("Already Submitted");
+      throw new ConflictException("Already Submitted");
     }
 
     // 단체의 매니저가 맞는지 확인
@@ -884,9 +884,60 @@ export class ProposalService {
     };
   }
 
-  /*
-    submitProjectProposalRevision 추가
-  */
+  async submitProjectProposalRevision(student, body) {
+    const { studentId } = student;
+    const { projectProposalRevisionId } = body;
+
+    // 제출 대상 조회
+    const [revision] = await this.projectProposalRevisionRepository.find({
+      id: projectProposalRevisionId,
+    });
+
+    if (!revision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    // 사업계획서 및 소속 단체 확인
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: revision.projectProposal.id,
+    } as any);
+
+    if (!projectProposal) {
+      throw new NotFoundException("ProjectProposal does not exist.");
+    }
+
+    await this.checkManager(studentId, projectProposal.organization.id);
+
+    // null과 undefined 모두 미제출로 처리
+    if (revision.submittedAt != null) {
+      throw new ConflictException("Already submitted.");
+    }
+
+    // 제출 시각 저장
+    const [submittedRevision] =
+      await this.projectProposalRevisionRepository.patch(
+        { id: projectProposalRevisionId },
+        model => {
+          if (model.submittedAt != null) {
+            throw new ConflictException("Already submitted.");
+          }
+          const temp = model;
+          temp.submittedAt = new Date();
+          return temp;
+        },
+      );
+
+    if (!submittedRevision) {
+      throw new NotFoundException("ProjectProposalRevision does not exist.");
+    }
+
+    return {
+      projectProposalRevision: {
+        id: submittedRevision.id,
+      },
+    };
+  }
+
   async deleteProjectProposalRevision(student, query) {
     const { studentId } = student;
 
@@ -959,6 +1010,34 @@ export class ProposalService {
     } as any);
 
     return rows.map(row => row.submittedAt as unknown as string);
+  }
+
+  async getProjectProposalRevisionsByDate(query) {
+    const start = new Date(`${query.date}T00:00:00.000Z`);
+    const end = new Date(`${query.date}T23:59:59.999Z`);
+
+    const [projectProposal] = await this.projectProposalRepository.find({
+      id: query.projectProposal,
+    });
+
+    if (!projectProposal) {
+      return { projectProposalRevisions: [] };
+    }
+
+    const rows = await this.projectProposalRevisionRepository.find({
+      projectProposalId: projectProposal.id,
+      submittedAt: {
+        gte: start,
+        lt: end,
+      },
+      orderBy: {
+        id: OrderByTypeEnum.ASC,
+      },
+    } as any);
+
+    return {
+      projectProposalRevisions: rows,
+    };
   }
 
   async createOperationProposal(student, body) {

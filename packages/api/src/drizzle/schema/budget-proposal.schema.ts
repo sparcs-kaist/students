@@ -59,7 +59,7 @@ export const BudgetProposalIncomeRevision = mysqlTable(
     budgetProposalIncomeRevisionBudgetProposalIdFk: foreignKey({
       columns: [table.budgetProposalIncomeId],
       foreignColumns: [BudgetProposalIncome.id],
-      name: "bud_prop_inc_rev_orig_id_fk",
+      name: "bud_prop_inc_rev_bud_prop_id_fk",
     }),
     budgetProposalIncomeRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
@@ -127,7 +127,7 @@ export const BudgetProposalExpenseRevision = mysqlTable(
     budgetProposalExpenseRevisionBudgetProposalExpenseIdFk: foreignKey({
       columns: [table.budgetProposalExpenseId],
       foreignColumns: [BudgetProposalExpense.id],
-      name: "bud_prop_exp_rev_prop_id_fk",
+      name: "bud_prop_exp_rev_bud_prop_exp_id_fk",
     }),
     budgetProposalExpenseRevisionCogAgendaIdFk: foreignKey({
       columns: [table.cogAgendaId],
@@ -161,7 +161,7 @@ export const BudgetProposalIncomeDocumentReview = mysqlTable(
       foreignKey({
         columns: [table.budgetProposalIncomeRevisionId],
         foreignColumns: [BudgetProposalIncomeRevision.id],
-        name: "bud_prop_inc_rev_prop_id_fk",
+        name: "bud_prop_inc_rev_bud_prop_inc_id_fk",
       }),
     budgetProposalIncomeDocumentReviewStudentIdFk: foreignKey({
       columns: [table.studentId],
@@ -190,12 +190,12 @@ export const BudgetProposalExpenseDocumentReview = mysqlTable(
       foreignKey({
         columns: [table.budgetProposalExpenseRevisionId],
         foreignColumns: [BudgetProposalExpense.id],
-        name: "bud_prop_exp_review_prop_id_fk",
+        name: "bud_prop_exp_doc_review_bud_prop_exp_rev_id_fk",
       }),
     budgetProposalExpenseDocuemntReviewStudentIdFk: foreignKey({
       columns: [table.studentId],
       foreignColumns: [Student.id],
-      name: "bud_prop_exp_rev_student_id_fk",
+      name: "bud_prop_exp_doc_review_student_id_fk",
     }),
   }),
 );

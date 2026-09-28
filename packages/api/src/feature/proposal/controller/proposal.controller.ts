@@ -18,8 +18,10 @@ import {
   apiPrp020,
   apiPrp108,
   apiPrp109,
+  apiPrp110,
   ApiPrp108RequestQuery,
   ApiPrp109RequestQuery,
+  ApiPrp110RequestQuery,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
@@ -125,5 +127,14 @@ export class ProposalController {
     @Query() query: ApiPrp109RequestQuery,
   ) {
     return this.proposalService.getProjectProposalRevisionDateList(query);
+  }
+
+  // 해당 날짜에 제출된 사업계획서 revision 조회
+  @Get("proposal-revision/getRevisionsByDate")
+  @UsePipes(new ZodPipe(apiPrp110))
+  async getProjectProposalRevisionsByDate(
+    @Query() query: ApiPrp110RequestQuery,
+  ) {
+    return this.proposalService.getProjectProposalRevisionsByDate(query);
   }
 }

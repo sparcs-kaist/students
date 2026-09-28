@@ -35,12 +35,14 @@ import {
   apiPrp103,
   apiPrp104,
   apiPrp105,
+  apiPrp106,
   apiPrp107,
   ApiPrp101RequestBody,
   ApiPrp102RequestBody,
   ApiPrp103RequestBody,
   ApiPrp104RequestBody,
   ApiPrp105RequestBody,
+  ApiPrp106RequestBody,
   ApiPrp107RequestQuery,
   apiPrp111,
   ApiPrp111RequestBody,
@@ -240,6 +242,15 @@ export class ProposalManagerController {
     @Body() body: ApiPrp105RequestBody,
   ) {
     return this.proposalService.updateProjectProposalTimeline(student, body);
+  }
+
+  @Patch("proposal-revision/submit")
+  @UsePipes(new ZodPipe(apiPrp106))
+  async submitProjectProposalRevision(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiPrp106RequestBody,
+  ) {
+    return this.proposalService.submitProjectProposalRevision(student, body);
   }
 
   // 각 매니저 권한으로 사업계획서 revision 삭제
