@@ -60,6 +60,12 @@ export class OrganizationMemberRepository extends BaseSingleTableRepository<
     super(OrganizationMember, MOrganizationMember);
   }
 
+  async findByStudentId(studentId: number): Promise<MOrganizationMember[]> {
+    return this.find({
+      studentId,
+    } as Parameters<typeof this.find>[0]);
+  }
+
   protected dbToModelMapping(
     result: OrganizationMemberDbSelect,
   ): MOrganizationMember {
