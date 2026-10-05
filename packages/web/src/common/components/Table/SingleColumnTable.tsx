@@ -8,10 +8,18 @@ import TextButton from "../Buttons/TextButton";
 interface TableProps {
   header: string;
   clickable?: boolean;
-  rows: { tag?: string; content: string; date?: Date; link?: string }[];
+  rows: {
+    id?: string;
+    tag?: string;
+    content: string;
+    date?: Date;
+    link?: string;
+    detail?: string;
+  }[];
   buttonEnable?: boolean;
   mini?: boolean;
   moreLink?: string;
+  onRowNavigate?: () => void;
 }
 
 interface TableRowProps {
@@ -123,6 +131,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
   buttonEnable = true,
   mini = false,
   moreLink = null,
+  onRowNavigate = undefined,
 }) => {
   const router = useRouter();
 
@@ -151,10 +160,22 @@ const SingleColumnTable: React.FC<TableProps> = ({
     return "";
   }
 
-  const handleRowClick = (link: string) => {
-    if (link) {
-      // router.push(link); 나중에 실제 공지사항 탭이 생기면 이걸로 변경하기!
-      window.open(link, "_blank", "noopener,noreferrer");
+  const handleRowClick = (row: {
+    id?: string;
+    link?: string;
+    detail?: string;
+  }) => {
+    if (row.id && row.detail && row.detail.trim().length > 0) {
+      onRowNavigate?.();
+      router.push(`/notice/${encodeURIComponent(row.id)}`);
+      return;
+    }
+
+    if (
+      row.link &&
+      (!row.id || !row.detail || row.detail.trim().length === 0)
+    ) {
+      window.open(row.link, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -186,8 +207,13 @@ const SingleColumnTable: React.FC<TableProps> = ({
           <TableRow
             key={index}
             onClick={() => {
-              if (clickable && row.link) {
-                handleRowClick(row.link);
+              if (
+                clickable &&
+                ((row.id && row.detail && row.detail.trim().length > 0) ||
+                  (row.link &&
+                    (!row.id || !row.detail || row.detail.trim().length === 0)))
+              ) {
+                handleRowClick(row);
               }
             }}
             clickable={clickable}
