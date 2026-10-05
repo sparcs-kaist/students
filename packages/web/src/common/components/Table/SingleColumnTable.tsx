@@ -19,6 +19,7 @@ interface TableProps {
   buttonEnable?: boolean;
   mini?: boolean;
   moreLink?: string;
+  onRowNavigate?: () => void;
 }
 
 interface TableRowProps {
@@ -130,6 +131,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
   buttonEnable = true,
   mini = false,
   moreLink = null,
+  onRowNavigate = undefined,
 }) => {
   const router = useRouter();
 
@@ -164,6 +166,7 @@ const SingleColumnTable: React.FC<TableProps> = ({
     detail?: string;
   }) => {
     if (row.id && row.detail && row.detail.trim().length > 0) {
+      onRowNavigate?.();
       router.push(`/notice/${encodeURIComponent(row.id)}`);
       return;
     }

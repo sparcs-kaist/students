@@ -7,6 +7,10 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import PageTitle from "@sparcs-students/web/common/components/PageTitle";
 import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
+import {
+  NOTICE_STORAGE_KEY,
+  NOTICE_LIST_RESTORE_KEY,
+} from "@sparcs-students/web/features/notice/noticeData";
 
 interface NoticeDetailProps {
   id?: string;
@@ -17,7 +21,14 @@ interface NoticeDetailProps {
   detail?: string;
 }
 
-const NOTICE_STORAGE_KEY = "sparcs-students-notices";
+const goBackToList = (router: ReturnType<typeof useRouter>) => {
+  if (typeof window !== "undefined") {
+    // Ask the list page to restore the previously viewed search / page state
+    // instead of resetting to the full list.
+    window.sessionStorage.setItem(NOTICE_LIST_RESTORE_KEY, "1");
+  }
+  router.push("/notice");
+};
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -106,8 +117,9 @@ const NoticeDetailPage = () => {
       }
 
       const parsed = JSON.parse(stored) as NoticeDetailProps[];
+      const routeId = decodeURIComponent(String(params.id));
       const matchedNotice = (Array.isArray(parsed) ? parsed : []).find(
-        item => String(item.id) === String(params.id),
+        item => String(item.id) === routeId,
       );
 
       setNotice(
@@ -137,7 +149,7 @@ const NoticeDetailPage = () => {
           </NoticeContent>
           <ModalTableButton
             buttonText="목록으로"
-            onClick={() => router.push("/notice")}
+            onClick={() => goBackToList(router)}
           />
         </DetailCard>
       </FlexWrapper>
@@ -176,7 +188,7 @@ const NoticeDetailPage = () => {
         <ModalTableButton
           buttonText="목록으로"
           type="reverse"
-          onClick={() => router.push("/notice")}
+          onClick={() => goBackToList(router)}
         />
       </DetailCard>
     </PageWrapper>

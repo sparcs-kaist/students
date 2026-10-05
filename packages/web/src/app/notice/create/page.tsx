@@ -8,17 +8,11 @@ import BreadCrumb from "@sparcs-students/web/common/components/BreadCrumb";
 import TextInput from "@sparcs-students/web/common/components/Forms/TextInput";
 import TextAreaInput from "@sparcs-students/web/common/components/Forms/TextAreaInput";
 import ModalTableButton from "@sparcs-students/web/common/components/Buttons/ModalTableButton";
-
-interface NoticeDraft {
-  id?: string;
-  tag?: string;
-  content: string;
-  date?: Date;
-  link?: string;
-  detail?: string;
-}
-
-const NOTICE_STORAGE_KEY = "sparcs-students-notices";
+import {
+  type NoticeRow,
+  NOTICE_STORAGE_KEY,
+  getStoredNoticeList,
+} from "@sparcs-students/web/features/notice/noticeData";
 
 const createNoticeId = (content: string, date: Date): string => {
   const safeBase = content
@@ -44,19 +38,18 @@ const NoticeCreatePage = () => {
     }
 
     const createdAt = new Date();
-    const nextNotice: NoticeDraft = {
+    const nextNotice: NoticeRow = {
       id: createNoticeId(trimmedTitle, createdAt),
       content: trimmedTitle,
       date: createdAt,
       detail: trimmedContent,
     };
 
-    const stored = localStorage.getItem(NOTICE_STORAGE_KEY);
-    const currentNotices = stored ? JSON.parse(stored) : [];
+    const currentNotices = getStoredNoticeList();
     const merged = [nextNotice, ...currentNotices];
 
     localStorage.setItem(NOTICE_STORAGE_KEY, JSON.stringify(merged));
-    router.push("/notice");
+    router.push(`/notice?refresh=${Date.now()}`);
   };
 
   return (

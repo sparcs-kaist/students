@@ -9,6 +9,10 @@ export interface NoticeRow {
 
 export const NOTICE_STORAGE_KEY = "sparcs-students-notices";
 
+export const NOTICE_LIST_STATE_KEY = "sparcs-students-notice-list-state";
+
+export const NOTICE_LIST_RESTORE_KEY = "sparcs-students-notice-list-restore";
+
 export const noticeExample: NoticeRow[] = [
   {
     tag: "총학",
