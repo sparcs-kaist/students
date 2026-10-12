@@ -21,6 +21,7 @@ import {
 import { useForm } from "react-hook-form";
 import { ProjectProposalTableRow } from "@sparcs-students/web/features/document-lookup/project/type/managerFormValues";
 import { GroupProps } from "@sparcs-students/web/features/document-lookup/project/components/_atomic/GroupDetail";
+import { submitProjectProposalRevision } from "@sparcs-students/web/features/document-lookup/project/services/hook/projectProposalApi";
 
 interface FrameProps {
   query: string;
@@ -67,10 +68,17 @@ const ManagerProjectProposalFrame: React.FC<FrameProps> = ({
     mockProjectProposalDetailTotalReview,
   ).length;
 
-  const handleSubmitAll = () => {
+  const handleSubmitAll = async () => {
     console.log(proposals); // 사업계획서 표
     console.log(note); // 비고
     console.log(groupList); // 국서/TF 활동 요약 표
+    try {
+      await submitProjectProposalRevision({
+        projectProposalRevisionId: Number(resultId),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleResetAll = () => {
