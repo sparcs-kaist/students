@@ -14,6 +14,10 @@ import GroupsTag, {
 } from "@sparcs-students/web/common/components/Tag/GroupsTag";
 import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import Typography from "@sparcs-students/web/common/components/Typography";
+import {
+  getColumnMinWidth,
+  getColumnWidth,
+} from "@sparcs-students/web/common/components/Table/columnLayout";
 
 interface TableProps<T> {
   table: TableType<T>;
@@ -239,12 +243,6 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
   editData = [],
   setEditData = undefined,
 }: TableProps<T>) => {
-  // 야매로 min-width 바꿔치기 (고치지 마세요)
-  // eslint-disable-next-line no-underscore-dangle
-  table._getColumnDefs().forEach(column => {
-    // eslint-disable-next-line no-param-reassign
-    column.minSize = 0;
-  });
   const router = useRouter();
   const handleRowClick = useCallback(
     (row: T) => {
@@ -279,7 +277,8 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
                   return (
                     <TableCell
                       key={header.id}
-                      width={header.column.getSize()}
+                      width={getColumnWidth(header.column)}
+                      minWidth={getColumnMinWidth(header.column)}
                       type="HeaderSort"
                     >
                       {flexRender(
@@ -292,7 +291,8 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
                 return (
                   <TableCell
                     key={header.id}
-                    width={header.column.getSize()}
+                    width={getColumnWidth(header.column)}
+                    minWidth={getColumnMinWidth(header.column)}
                     type="Header"
                   >
                     {flexRender(
@@ -324,7 +324,8 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
                     cell.column.columnDef.header === "소속 부서" ? (
                       <TableCell
                         key={cell.id}
-                        width={cell.column.getSize()}
+                        width={getColumnWidth(cell.column)}
+                        minWidth={getColumnMinWidth(cell.column)}
                         type="Icon"
                         icon={
                           <GroupDropdownCell
@@ -342,7 +343,8 @@ const MemberEditableTable = <T extends { id: string; groups: string[] }>({
                     ) : (
                       <TableCell
                         key={cell.id}
-                        width={cell.column.getSize()}
+                        width={getColumnWidth(cell.column)}
+                        minWidth={getColumnMinWidth(cell.column)}
                         type="Default"
                       >
                         {flexRender(

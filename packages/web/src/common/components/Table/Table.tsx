@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import TableCell from "./TableCell";
+import { getColumnMinWidth, getColumnWidth } from "./columnLayout";
 import Typography from "../Typography";
 
 interface TableProps<T> {
@@ -91,12 +92,6 @@ const Table = <T,>({
   onClick = undefined,
   rowStyleResolver = undefined,
 }: TableProps<T>) => {
-  // 야매로 min-width 바꿔치기 (고치지 마세요)
-  // eslint-disable-next-line no-underscore-dangle
-  table._getColumnDefs().forEach(column => {
-    // eslint-disable-next-line no-param-reassign
-    column.minSize = 0;
-  });
   const router = useRouter();
   const handleRowClick = useCallback(
     (row: T) => {
@@ -131,7 +126,8 @@ const Table = <T,>({
                   return (
                     <TableCell
                       key={header.id}
-                      width={header.column.getSize()}
+                      width={getColumnWidth(header.column)}
+                      minWidth={getColumnMinWidth(header.column)}
                       type="HeaderSort"
                     >
                       {flexRender(
@@ -144,8 +140,8 @@ const Table = <T,>({
                 return (
                   <TableCell
                     key={header.id}
-                    width={header.column.getSize()}
-                    minWidth={header.column.columnDef.minSize}
+                    width={getColumnWidth(header.column)}
+                    minWidth={getColumnMinWidth(header.column)}
                     type="Header"
                   >
                     {flexRender(
@@ -176,7 +172,8 @@ const Table = <T,>({
                   {row.getVisibleCells().map(cell => (
                     <TableCell
                       key={cell.id}
-                      width={cell.column.getSize()}
+                      width={getColumnWidth(cell.column)}
+                      minWidth={getColumnMinWidth(cell.column)}
                       type="Default"
                     >
                       {flexRender(

@@ -41,6 +41,7 @@ import { useRouter } from "next/navigation";
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 // ExpenditureProps 인터페이스는 위에 정의된 대로 사용
 
@@ -137,7 +138,8 @@ const getColumns = (
       return <Typography>{info.getValue()}</Typography>;
     },
 
-    minSize: 210,
+    size: 0,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("item", {
     id: "item",

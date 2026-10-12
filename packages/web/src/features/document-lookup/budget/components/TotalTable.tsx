@@ -20,6 +20,7 @@ import {
   getbudgetTypeTag,
 } from "@sparcs-students/web/common/util/tableTagList";
 import { useTheme } from "styled-components";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface TotalProps {
   budgetDomain: BudgetDomainEnum;
@@ -68,7 +69,7 @@ const columns = [
       });
     },
     size: 0,
-    minSize: 400,
+    minSize: COLUMN_MIN_WIDTH.AMOUNT,
   }),
   columnHelper.accessor("thisYear", {
     id: "thisYear",
@@ -81,7 +82,7 @@ const columns = [
       });
     },
     size: 0,
-    minSize: 400,
+    minSize: COLUMN_MIN_WIDTH.AMOUNT,
   }),
   columnHelper.accessor("ratio", {
     id: "ratio",

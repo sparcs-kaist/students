@@ -18,6 +18,7 @@ import {
 } from "@tanstack/react-table";
 import { useFormatter } from "next-intl";
 import { useTheme } from "styled-components";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface TotalProps {
   budgetDomain?: BudgetDomainEnum;
@@ -73,7 +74,7 @@ const BudgetReviewTotalTable: React.FC<BudgetReviewTotalTableProps> = ({
           currency: "KRW",
         }),
       size: 0,
-      minSize: 445,
+      minSize: COLUMN_MIN_WIDTH.AMOUNT_WIDE,
     }),
     columnHelper.accessor("thisYear", {
       id: "thisYear",
@@ -84,7 +85,7 @@ const BudgetReviewTotalTable: React.FC<BudgetReviewTotalTableProps> = ({
           currency: "KRW",
         }),
       size: 0,
-      minSize: 445,
+      minSize: COLUMN_MIN_WIDTH.AMOUNT_WIDE,
     }),
     columnHelper.accessor("ratio", {
       id: "ratio",
