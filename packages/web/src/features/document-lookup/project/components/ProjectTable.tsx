@@ -18,6 +18,7 @@ import DarkTag, {
 import { useRouter } from "next/navigation";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface ViewerProjectProps {
   id: string;
@@ -63,7 +64,7 @@ const columns = [
         // }
       />
     ),
-    minSize: 861,
+    minSize: COLUMN_MIN_WIDTH.NAME,
     size: 0,
   }),
   columnHelper.accessor("projectPeriod", {

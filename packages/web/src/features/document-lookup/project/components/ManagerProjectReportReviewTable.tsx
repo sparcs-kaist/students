@@ -16,6 +16,7 @@ import TableCell from "@sparcs-students/web/common/components/Table/TableCell";
 import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 interface MemberTableProps {
   data: ProjectReportDetailTotalReview[];
@@ -46,7 +47,7 @@ const columns = [
     header: "설명",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 700,
+    minSize: COLUMN_MIN_WIDTH.DESCRIPTION,
   }),
 ];
 

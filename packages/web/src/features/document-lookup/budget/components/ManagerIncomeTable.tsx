@@ -579,7 +579,7 @@ const ManagerIncomeTable: React.FC<ManagerIncomeTableProps> = ({
                   <TableCell type="Header" width="150px">
                     예산 분류
                   </TableCell>
-                  <TableCell type="Header" width={0}>
+                  <TableCell type="Header" width={0} minWidth={240}>
                     항목
                   </TableCell>
                   <TableCell type="Header" width="130px">

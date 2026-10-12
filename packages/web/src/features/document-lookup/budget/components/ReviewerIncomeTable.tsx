@@ -29,6 +29,7 @@ import DarkTag, {
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import ReviewButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface IncomeProps {
   code: number;
@@ -100,7 +101,7 @@ const getColumns = (
     header: "항목",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 275,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",
