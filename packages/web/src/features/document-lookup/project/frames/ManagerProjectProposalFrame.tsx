@@ -1,4 +1,5 @@
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import {
   mockGroupListData,
@@ -46,6 +47,7 @@ const ManagerProjectProposalFrame: React.FC<FrameProps> = ({
   resultId,
 }) => {
   // const { id } = useParams();
+  const searchParams = useSearchParams();
   const [note, setNote] = React.useState<string>("");
   const [groupList, setGroupList] =
     React.useState<GroupProps[]>(mockGroupListData);
@@ -72,10 +74,15 @@ const ManagerProjectProposalFrame: React.FC<FrameProps> = ({
     console.log(proposals); // 사업계획서 표
     console.log(note); // 비고
     console.log(groupList); // 국서/TF 활동 요약 표
+    const projectProposalRevisionId = parseInt(
+      searchParams.get("projectProposalRevisionId") || "",
+    );
+    if (Number.isNaN(projectProposalRevisionId)) {
+      alert("제출할 사업계획서 revision을 찾을 수 없습니다.");
+      return;
+    }
     try {
-      await submitProjectProposalRevision({
-        projectProposalRevisionId: Number(resultId),
-      });
+      await submitProjectProposalRevision({ projectProposalRevisionId });
     } catch (error) {
       console.error(error);
     }
