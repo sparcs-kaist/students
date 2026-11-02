@@ -15,6 +15,7 @@ WORKDIR /app
 # Build to output .next build directory
 FROM base AS build
 COPY pnpm-lock.yaml .
+COPY patches ./patches
 RUN pnpm fetch
 COPY . .
 # Build dependencies

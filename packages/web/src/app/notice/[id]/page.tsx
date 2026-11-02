@@ -38,6 +38,7 @@ const PageWrapper = styled.div`
 `;
 
 const DetailCard = styled.div`
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   display: flex;
   flex-direction: column;
   gap: 16px;
