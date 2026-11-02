@@ -12,6 +12,7 @@ import {
   TimelineDateTypeEnum,
 } from "@sparcs-students/web/features/document-lookup/project/services/_mock/mockProjectTimelineData";
 import { formatDotDate } from "@sparcs-students/web/utils/Date/formatDate";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 interface DocumentTimelineTableProps {
   data: ProjectTimelineProps[];
@@ -46,14 +47,14 @@ const getColumns = (dataLength: number) => [
     header: "사업명",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 200,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("reason", {
     id: "reason",
     header: "비고",
     cell: info => info.getValue() ?? "-",
     size: 0,
-    minSize: 200,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
 ];
 

@@ -22,6 +22,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
   display: flex;
   width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,6 +34,12 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
   ${({ width }) => (width === 0 ? "flex: 1;" : "")}
 `;
 
+// width 0은 flex: 1 컬럼. 0px로 두면 표의 내용 기준 폭 계산에서 0으로 잡혀 눌린다.
+const toBodyCellWidth = (width: string | number) => {
+  if (width === 0) return "auto";
+  return typeof width === "number" ? `${width}px` : width;
+};
+
 const CommonCellBodyWrapper = styled.td.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{
@@ -41,8 +48,9 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   width: string | number;
   minWidth: number;
 }>`
-  ${({ width }) => (width === 0 ? "" : `${width}px`)}
+  width: ${({ width }) => toBodyCellWidth(width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -36,6 +36,7 @@ import { budgetExpenseToString } from "@sparcs-students/web/common/util/enumToIt
 import ReviewButton from "@sparcs-students/web/features/document-lookup/project/components/_atomic/ReviewButton";
 import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interface/src/common/enum/meeting.enum";
 import styled from "styled-components";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 // ExpenditureProps 인터페이스는 위에 정의된 대로 사용
 
@@ -104,7 +105,7 @@ const getColumns = (
     header: "사업명",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 150,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("item", {
     id: "item",

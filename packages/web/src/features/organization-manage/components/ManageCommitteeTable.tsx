@@ -22,6 +22,11 @@ import {
   createTeam,
   deleteTeam,
 } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
+import {
+  COLUMN_MIN_WIDTH,
+  getColumnMinWidth,
+  getColumnWidth,
+} from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface CommitteeProps {
   id: string;
@@ -209,6 +214,7 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
       header: "부서명",
       cell: renderNameCell,
       size: 0,
+      minSize: COLUMN_MIN_WIDTH.NAME,
     }),
     columnHelper.accessor("leader", {
       id: "leader",
@@ -235,13 +241,6 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
     data: editData,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
-  });
-
-  // 야매로 min-width 바꿔치기 (고치지 마세요)
-  // eslint-disable-next-line no-underscore-dangle
-  table._getColumnDefs().forEach(column => {
-    // eslint-disable-next-line no-param-reassign
-    column.minSize = 0;
   });
 
   const handleAddDepartment = () => {
@@ -273,7 +272,8 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
                   {headerGroup.headers.map(header => (
                     <TableCell
                       key={header.id}
-                      width={header.column.getSize()}
+                      width={getColumnWidth(header.column)}
+                      minWidth={getColumnMinWidth(header.column)}
                       type="Header"
                     >
                       {flexRender(
@@ -291,7 +291,8 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
                   {row.getVisibleCells().map(cell => (
                     <TableCell
                       key={cell.id}
-                      width={cell.column.getSize()}
+                      width={getColumnWidth(cell.column)}
+                      minWidth={getColumnMinWidth(cell.column)}
                       type="Default"
                     >
                       {flexRender(
