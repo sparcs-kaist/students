@@ -9,28 +9,24 @@ import styled from "styled-components";
 
 const PageContainer = styled.div`
   width: 100%;
-  max-width: 1799px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 16px;
   box-sizing: border-box;
 
-  @media (max-width: 1799px) {
-    max-width: 1400px;
-  }
-
-  @media (max-width: 1399px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
     max-width: 1200px;
   }
 
-  @media (max-width: 1199px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     max-width: 960px;
   }
 
-  @media (max-width: 959px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     max-width: 720px;
   }
 
-  @media (max-width: 719px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     max-width: 100%;
     padding: 0 12px;
   }
@@ -42,7 +38,7 @@ const CardsRow = styled.div`
   gap: 10px;
   width: 100%;
 
-  @media (max-width: 719px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     grid-template-columns: 1fr;
   }
 `;
