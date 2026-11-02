@@ -53,12 +53,14 @@ const Pagination: FC<PaginationProps> = ({
     const end = Math.min(start + groupSize - 1, totalPageCount);
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
-  const [pages, setPages] = useState<Array<number>>(getPages(currentPageIndex));
+  const [pages, setPages] = useState<Array<number>>(
+    getPages(Math.ceil(currentPageIndex / groupSize)),
+  );
 
   useEffect(() => {
     setCurrentPageGroup(Math.ceil(currentPageIndex / groupSize));
     setPages(getPages(Math.ceil(currentPageIndex / groupSize)));
-  }, [currentPageIndex, groupSize, totalCount]);
+  }, [currentPageIndex, groupSize, totalCount, pageSize]);
 
   return (
     <PaginationWrapper>
