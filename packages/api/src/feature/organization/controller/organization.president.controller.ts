@@ -6,6 +6,7 @@ import {
   Patch,
   Delete,
   Param,
+  Query,
   UsePipes,
   HttpCode,
   HttpStatus,
@@ -25,6 +26,7 @@ import apiOrg019 from "@sparcs-students/interface/api/organization/endpoint/apiO
 import apiOrg020 from "@sparcs-students/interface/api/organization/endpoint/apiOrg020";
 import apiOrg021 from "@sparcs-students/interface/api/organization/endpoint/apiOrg021";
 import apiOrg022 from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
+import apiOrg027 from "@sparcs-students/interface/api/organization/endpoint/apiOrg027";
 import apiOrg028 from "@sparcs-students/interface/api/organization/endpoint/apiOrg028";
 import apiOrg029 from "@sparcs-students/interface/api/organization/endpoint/apiOrg029";
 import apiOrg030 from "@sparcs-students/interface/api/organization/endpoint/apiOrg030";
@@ -84,6 +86,10 @@ import type {
   ApiOrg022RequestBody,
   ApiOrg022ResponseOk,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
+import type {
+  ApiOrg027RequestQuery,
+  ApiOrg027ResponseOk,
+} from "@sparcs-students/interface/api/organization/endpoint/apiOrg027";
 import {
   GetStudent,
   StudentProfile,
@@ -100,6 +106,17 @@ export class OrganizationPresidentController {
   @Get("get-applying")
   async getApplying(@GetStudent() student: StudentProfile) {
     return this.organizationService.getApplying(student);
+  }
+
+  @Get("role")
+  async getOrganizationRoles(
+    @GetStudent() student: StudentProfile,
+    @Query(new ZodPipe(apiOrg027)) query: ApiOrg027RequestQuery,
+  ): Promise<ApiOrg027ResponseOk> {
+    return this.organizationService.getOrganizationRoles(
+      student,
+      query.organizationId,
+    );
   }
 
   // 단체장단 권한으로 단체 멤버 임명

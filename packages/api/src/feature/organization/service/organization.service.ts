@@ -797,6 +797,14 @@ export class OrganizationService {
     return { histories: this.filterRoleHistory(histories, fromDate, toDate) };
   }
 
+  async getOrganizationRoles(student, organizationId: number) {
+    await this.checkOrganizationPresident(student.studentId, organizationId);
+    const organizationRoles = await this.organizationRoleRepository.find({
+      organizationId,
+    } as Parameters<typeof this.organizationRoleRepository.find>[0]);
+    return { organizationRoles };
+  }
+
   async createOrganizationRole(student, body: ApiOrg028RequestBody) {
     const role = body.organizationRole;
     await this.checkOrganizationPresident(

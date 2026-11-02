@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { UaOrgOnly } from "@sparcs-students/api/common/decorators/require-organization.decorator";
+import { StaffOnly } from "@sparcs-students/api/common/decorators/require-position.decorator";
+import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import apiOrg031, {
   ApiOrg031RequestQuery,
   ApiOrg031ResponseOk,
@@ -8,12 +9,11 @@ import apiOrg032, {
   ApiOrg032RequestQuery,
   ApiOrg032ResponseOk,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg032";
-import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { OrganizationService } from "../service/organization.service";
 
-@UaOrgOnly()
-@Controller("uapresident/organizations")
-export class OrganizationUaOrganizationController {
+@StaffOnly()
+@Controller("staff/organizations")
+export class OrganizationStaffController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Get("/get-history-by-id")
