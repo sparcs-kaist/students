@@ -16,7 +16,6 @@ import {
   committeeRoleTagList,
   memberRoleTagList,
 } from "@sparcs-students/web/common/util/tableTagList";
-import isEqual from "lodash/isEqual";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Controller,
@@ -36,11 +35,37 @@ import NameSearchResults from "@sparcs-students/web/features/organization-manage
 import { overlay } from "overlay-kit";
 import { mockSearchMemberData } from "@sparcs-students/web/features/organization-manage/services/_mock/mockOrganizationManageData";
 import DeleteModalContent from "@sparcs-students/web/features/organization-manage/components/DeleteModalContent";
+import {
+  getMemberChanges,
+  isSameStudent,
+} from "@sparcs-students/web/features/organization-manage/services/memberForm";
 
-const TableWrapper = styled.table`
+const TableWrapper = styled.table<{ $isCommittee: boolean }>`
   position: relative;
   width: 100%;
+  min-width: ${({ $isCommittee }) => ($isCommittee ? "1440px" : "1000px")};
   border-collapse: collapse;
+
+  th,
+  td {
+    flex-shrink: 0;
+  }
+
+  td {
+    width: 168px;
+  }
+
+  td:first-child,
+  td:last-child {
+    width: 80px;
+  }
+
+  td:nth-child(3) {
+    width: 0;
+  }
+
+  ${({ $isCommittee }) =>
+    $isCommittee && `td:nth-child(5), td:nth-child(6) { width: 0; }`}
 `;
 
 const TableHeaderWrapper = styled.tr`
@@ -91,10 +116,14 @@ type RoleCellInfo = {
 };
 
 export interface OrganizationMemberProps {
+  // Keep the form row identity stable when an added member receives a DB id.
   id: number;
+  membershipId?: number;
   studentId: string;
   name: string;
   role: RoleEnumType;
+  title?: string;
+  legalBasis?: string;
   startDate: string;
   endDate: string;
 }
@@ -108,6 +137,8 @@ export interface ManageMemberTableProps {
     deletedRows: OrganizationMemberProps[];
   }) => void;
   roleType: RoleType;
+  requiresCommitteeMetadata?: boolean;
+  disabled?: boolean;
 }
 
 export interface MemberFormValues {
@@ -134,6 +165,8 @@ interface MemberRowProps {
   isLast: boolean;
   deleteRow: (index: number) => void;
   roleType: RoleType;
+  isNew: boolean;
+  requiresCommitteeMetadata: boolean;
 }
 
 const MemberRow: React.FC<MemberRowProps> = ({
@@ -143,6 +176,8 @@ const MemberRow: React.FC<MemberRowProps> = ({
   isLast,
   deleteRow,
   roleType,
+  isNew,
+  requiresCommitteeMetadata,
 }) => {
   let roleList: RoleCellInfo[];
   switch (roleType) {
@@ -221,6 +256,12 @@ const MemberRow: React.FC<MemberRowProps> = ({
     ));
   };
 
+  const metadataPlaceholder = (name: "title" | "legalBasis") => {
+    if (!requiresCommitteeMetadata) return "해당 없음";
+    if (!isNew) return "기존 위원 수정 미지원";
+    return name === "title" ? "직책명 입력" : "근거 규정 입력";
+  };
+
   return (
     <TableRowWrapper isLast={isLast}>
       <TableCell type="Default" width={COL_WIDTHS.idx}>
@@ -271,6 +312,35 @@ const MemberRow: React.FC<MemberRowProps> = ({
         )}
       />
 
+      {roleType === "committee" &&
+        (["title", "legalBasis"] as const).map(name => (
+          <Controller
+            key={name}
+            name={`members.${rowIndex}.${name}`}
+            rules={{
+              validate: value =>
+                !requiresCommitteeMetadata ||
+                !isNew ||
+                Boolean(value?.trim()) ||
+                "필수 항목입니다.",
+            }}
+            render={({ field, fieldState }) => (
+              <TableCell type="Default" width={0} minWidth={200}>
+                <TableTextInput
+                  aria-label={name === "title" ? "직책명" : "근거 규정"}
+                  value={field.value ?? ""}
+                  handleChange={field.onChange}
+                  onBlur={field.onBlur}
+                  readOnly={!isNew || !requiresCommitteeMetadata}
+                  aria-invalid={!!fieldState.error}
+                  errorMessage={fieldState.error?.message}
+                  placeholder={metadataPlaceholder(name)}
+                />
+              </TableCell>
+            )}
+          />
+        ))}
+
       <Controller
         name={`members.${rowIndex}.startDate`}
         render={({ field }) => (
@@ -316,10 +386,12 @@ const MemberRow: React.FC<MemberRowProps> = ({
 const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   formMethods,
   initialData,
-  onDiffExtract = () => {},
+  onDiffExtract = undefined,
   roleType,
+  requiresCommitteeMetadata = roleType === "committee",
+  disabled = false,
 }) => {
-  const { handleSubmit, control, setValue } = formMethods;
+  const { control, setValue } = formMethods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "members",
@@ -327,83 +399,43 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
 
   const members = useWatch({ control, name: "members" });
 
-  const initialDataRef = useRef<OrganizationMemberProps[]>(initialData);
+  const nextRowId = useRef(Math.min(0, ...initialData.map(row => row.id)) - 1);
 
   useEffect(() => {
-    const initialMap = new Map(
-      initialDataRef.current.map(row => [row.id, row]),
-    );
+    onDiffExtract?.(getMemberChanges(initialData, members));
+  }, [initialData, members, onDiffExtract]);
 
-    members.forEach((row, _index) => {
-      const original = initialMap.get(row.id);
-      if (!original) return;
-      const normalizedRow = {
-        ...row,
-      };
-      const normalizedOriginal = {
-        ...original,
-      };
-      console.log("normalizedRow:", normalizedRow);
-      console.log("normalizedOriginal:", normalizedOriginal);
-      console.log(normalizedRow === normalizedOriginal);
-    });
-  }, [members, setValue]);
-
-  useEffect(() => {
-    const initialMap = new Map(
-      initialDataRef.current.map(row => [row.id, row]),
-    );
-
-    const updatedRows = members.filter(row => {
-      const original = initialMap.get(row.id);
-      return original && !isEqual(row, original);
-    });
-
-    const createdRows = members.filter(row => !initialMap.has(row.id));
-
-    const deletedRows = initialDataRef.current.filter(
-      row => !members.find(r => r.id === row.id),
-    );
-
-    onDiffExtract({ updatedRows, createdRows, deletedRows });
-  }, [members, onDiffExtract]);
-
-  const [dynamicHeight, setDynamicHeight] = React.useState<number | undefined>(
+  const dynamicHeight =
     TABLE_HEADER_HEIGHT +
-      (members.length + 1) * TABLE_ROW_HEIGHT +
-      TABLE_EXTRA_HEIGHT,
-  );
-
-  const onSubmit = (data: MemberFormValues) => {
-    const dirtyRows = data.members.filter(
-      (row, index) => !isEqual(row, initialDataRef.current[index]),
-    );
-    console.log("수정된 row만 제출:", dirtyRows);
-  };
+    (members.length + 1) * TABLE_ROW_HEIGHT +
+    TABLE_EXTRA_HEIGHT;
 
   const deleteRow = (rowIndex: number) => {
-    if (members.length === 1) {
-      return;
-    }
     remove(rowIndex);
-    const length = members.length - 1;
-
-    setDynamicHeight(
-      TABLE_HEADER_HEIGHT +
-        (length + 1) * TABLE_ROW_HEIGHT +
-        TABLE_EXTRA_HEIGHT,
-    );
   };
 
   const addNewRow = (newRow: OrganizationMemberProps) => {
-    append(newRow);
-
-    const length = members.length + 1;
-    setDynamicHeight(
-      TABLE_HEADER_HEIGHT +
-        (length + 1) * TABLE_ROW_HEIGHT +
-        TABLE_EXTRA_HEIGHT,
+    if (
+      formMethods.getValues("members").some(row => isSameStudent(row, newRow))
+    ) {
+      alert("이미 명단에 있는 학우입니다.");
+      return false;
+    }
+    append(
+      {
+        ...newRow,
+        id: nextRowId.current,
+        role:
+          roleType === "committee"
+            ? CommitteeRoleEnum.Member
+            : MemberRoleEnum.Member,
+        title: "",
+        legalBasis: "",
+      },
+      { shouldFocus: false },
     );
+    nextRowId.current -= 1;
+    return true;
   };
 
   const openAddMemberModal = () => {
@@ -415,11 +447,10 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
       >([]);
 
       const onSearch = (text: string) => {
-        console.log("search name: ", text);
-        setSearchText(text);
+        setSearchText(text.trim());
         // Simple filter logic on mock data
         const filtered = mockSearchMemberData.filter(member =>
-          member.name.includes(text),
+          member.name.includes(text.trim()),
         );
         setSearchResults(filtered);
       };
@@ -440,7 +471,9 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
             <NameSearchResults
               isSearch={searchText !== ""}
               searchResults={searchResults}
-              onAddNewRow={addNewRow}
+              onAddNewRow={member => {
+                if (addNewRow(member)) close();
+              }}
             />
           </NameSearchModalContent>
         </Modal>
@@ -450,20 +483,35 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
 
   return (
     <FormProvider {...formMethods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <fieldset
+        disabled={disabled}
+        style={{
+          border: 0,
+          margin: 0,
+          padding: 0,
+          minWidth: 0,
+          pointerEvents: disabled ? "none" : undefined,
+        }}
+      >
         <FlexWrapper direction="column" gap={16}>
           <ButtonsWrapper>
             <Button onClick={openAddMemberModal}>
               {roleType === "committee" ? "위원 추가" : "부원 추가"}
             </Button>
           </ButtonsWrapper>
+          {roleType === "committee" && requiresCommitteeMetadata && (
+            <Typography fs={14} lh={20}>
+              새 위원을 추가한 후 표에서 직책명과 근거 규정을 모두 입력해주세요.
+              기존 위원의 정보 수정은 아직 지원하지 않습니다.
+            </Typography>
+          )}
           <FlexWrapper
             direction="column"
             gap={16}
             height={`${dynamicHeight}px`}
             xOverflow
           >
-            <TableWrapper>
+            <TableWrapper $isCommittee={roleType === "committee"}>
               <thead>
                 <TableHeaderWrapper>
                   <TableCell type="Header" width={COL_WIDTHS.idx}>
@@ -478,6 +526,16 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
                   <TableCell type="Header" width={COL_WIDTHS.role}>
                     직책
                   </TableCell>
+                  {roleType === "committee" && (
+                    <>
+                      <TableCell type="Header" width={0} minWidth={200}>
+                        직책명
+                      </TableCell>
+                      <TableCell type="Header" width={0} minWidth={200}>
+                        근거 규정
+                      </TableCell>
+                    </>
+                  )}
                   <TableCell type="Header" width={COL_WIDTHS.date}>
                     시작일
                   </TableCell>
@@ -499,13 +557,17 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
                     isLast={idx === fields.length - 1}
                     deleteRow={() => deleteRow(idx)}
                     roleType={roleType}
+                    isNew={
+                      !initialData.some(row => row.id === members[idx]?.id)
+                    }
+                    requiresCommitteeMetadata={requiresCommitteeMetadata}
                   />
                 ))}
               </TableContentWrapper>
             </TableWrapper>
           </FlexWrapper>
         </FlexWrapper>
-      </form>
+      </fieldset>
     </FormProvider>
   );
 };

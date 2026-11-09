@@ -1,5 +1,6 @@
 import { axiosClientWithAuth } from "@sparcs-students/web/lib/axios";
-import { HttpStatusCode } from "axios";
+import type { PreserveFormRequestConfig } from "@sparcs-students/web/lib/_axios/axiosErrorInterceptor";
+import { HttpStatusCode, isAxiosError } from "axios";
 
 import apiOrg005, {
   ApiOrg005RequestBody,
@@ -55,6 +56,34 @@ import apiOrg022, {
   ApiOrg022ResponseOk,
 } from "@sparcs-students/interface/api/organization/endpoint/apiOrg022";
 
+const organizationMutationConfig: PreserveFormRequestConfig = {
+  preserveFormOnAuthError: true,
+};
+
+export const getOrganizationMutationErrorMessage = (error: unknown): string => {
+  if (isAxiosError(error)) {
+    switch (error.response?.status) {
+      case HttpStatusCode.Unauthorized:
+        return "로그인이 필요합니다. 입력 내용은 유지됩니다. 로그인 후 다시 제출해주세요.";
+      case HttpStatusCode.Forbidden:
+        return "선택한 단체의 단체장 권한이 필요합니다. 입력 내용은 유지됩니다.";
+      case HttpStatusCode.Conflict:
+        if (
+          error.response?.data?.message ===
+          "Not a president of this organization"
+        ) {
+          return "선택한 단체의 단체장 권한이 필요합니다. 입력 내용은 유지됩니다.";
+        }
+        return "이미 등록된 항목이 있거나 현재 상태와 충돌합니다. 등록 내용을 확인해주세요.";
+      case HttpStatusCode.BadRequest:
+        return "입력값을 확인해주세요. 입력 내용은 유지됩니다.";
+      default:
+        break;
+    }
+  }
+  return "저장 중 오류가 발생했습니다. 입력 내용은 유지됩니다. 서버 상태를 확인한 후 다시 시도해주세요.";
+};
+
 // ORG-005: 단체 멤버 임명
 export const createOrganizationMember = async (
   data: ApiOrg005RequestBody,
@@ -63,6 +92,7 @@ export const createOrganizationMember = async (
     const response = await axiosClientWithAuth.post<ApiOrg005ResponseCreated>(
       apiOrg005.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create organization member");
@@ -80,6 +110,7 @@ export const createOrganizationManager = async (
     const response = await axiosClientWithAuth.post<ApiOrg006ResponseCreated>(
       apiOrg006.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create organization manager");
@@ -97,6 +128,7 @@ export const createTeam = async (
     const response = await axiosClientWithAuth.post<ApiOrg007ResponseCreated>(
       apiOrg007.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create team");
@@ -114,6 +146,7 @@ export const createTeamMember = async (
     const response = await axiosClientWithAuth.post<ApiOrg008ResponseCreated>(
       apiOrg008.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create team member");
@@ -131,6 +164,7 @@ export const createTeamLeader = async (
     const response = await axiosClientWithAuth.post<ApiOrg009ResponseCreated>(
       apiOrg009.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create team leader");
@@ -162,6 +196,7 @@ export const createOperatingCommittee = async (
     const response = await axiosClientWithAuth.post<ApiOrg012ResponseCreated>(
       apiOrg012.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create operating committee");
@@ -179,6 +214,7 @@ export const createOperatingCommitteeMember = async (
     const response = await axiosClientWithAuth.post<ApiOrg013ResponseCreated>(
       apiOrg013.url(),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Created) return response.data;
     throw new Error("Failed to create operating committee member");
@@ -197,6 +233,7 @@ export const retireOrganizationMember = async (
     const response = await axiosClientWithAuth.patch<ApiOrg016ResponseOk>(
       apiOrg016.url(String(id)),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Ok) return response.data;
     throw new Error("Failed to retire organization member");
@@ -215,6 +252,7 @@ export const retireOrganizationManager = async (
     const response = await axiosClientWithAuth.patch<ApiOrg017ResponseOk>(
       apiOrg017.url(String(id)),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Ok) return response.data;
     throw new Error("Failed to retire organization manager");
@@ -227,7 +265,10 @@ export const retireOrganizationManager = async (
 // ORG-018: 팀 삭제
 export const deleteTeam = async (id: number): Promise<void> => {
   try {
-    const response = await axiosClientWithAuth.delete(apiOrg018.url(id));
+    const response = await axiosClientWithAuth.delete(
+      apiOrg018.url(id),
+      organizationMutationConfig,
+    );
     if (response.status === HttpStatusCode.Ok) return;
     throw new Error("Failed to delete team");
   } catch (error) {
@@ -245,6 +286,7 @@ export const retireTeamMember = async (
     const response = await axiosClientWithAuth.patch<ApiOrg019ResponseOk>(
       apiOrg019.url(String(id)),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Ok) return response.data;
     throw new Error("Failed to retire team member");
@@ -263,6 +305,7 @@ export const retireTeamLeader = async (
     const response = await axiosClientWithAuth.patch<ApiOrg020ResponseOk>(
       apiOrg020.url(String(id)),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Ok) return response.data;
     throw new Error("Failed to retire team leader");
@@ -275,7 +318,10 @@ export const retireTeamLeader = async (
 // ORG-021: 운영위원회 삭제
 export const deleteOperatingCommittee = async (id: number): Promise<void> => {
   try {
-    const response = await axiosClientWithAuth.delete(apiOrg021.url(id));
+    const response = await axiosClientWithAuth.delete(
+      apiOrg021.url(id),
+      organizationMutationConfig,
+    );
     if (response.status === HttpStatusCode.Ok) return;
     throw new Error("Failed to delete operating committee");
   } catch (error) {
@@ -293,6 +339,7 @@ export const retireOperatingCommitteeMember = async (
     const response = await axiosClientWithAuth.patch<ApiOrg022ResponseOk>(
       apiOrg022.url(id),
       data,
+      organizationMutationConfig,
     );
     if (response.status === HttpStatusCode.Ok) return response.data;
     throw new Error("Failed to retire operating committee member");
