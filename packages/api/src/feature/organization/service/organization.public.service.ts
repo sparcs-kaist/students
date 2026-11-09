@@ -59,7 +59,9 @@ export class OrganizationPublicService {
   /**
    * 학생이 소속(또는 신청 중)인 단체를 멤버십 기준으로 나열합니다.
    */
-  async getMyOrganizationMemberships(student: StudentProfile) {
+  async getMyOrganizationMemberships(
+    student: Pick<StudentProfile, "studentId">,
+  ) {
     // BaseRepositoryFindQuery + OrganizationMemberQuery infers `never` for flat
     // filters in some TS versions; runtime find() accepts partial keys.
     const members = await this.organizationMemberRepository.find({
