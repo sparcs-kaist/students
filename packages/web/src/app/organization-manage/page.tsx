@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
 import { overlay } from "overlay-kit";
 
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
@@ -18,9 +17,14 @@ import OrganizationSelectCard from "@sparcs-students/web/common/components/Selec
 import TableTextInput from "@sparcs-students/web/common/components/Forms/TableTextInput";
 
 import ManageMemberTable, {
-  MemberFormValues,
   OrganizationMemberProps,
 } from "@sparcs-students/web/features/organization-manage/components/ManageMemberTable";
+import useMemberTableForm from "@sparcs-students/web/features/organization-manage/hooks/useMemberTableForm";
+import {
+  getMemberChanges,
+  hasCommitteeMetadata,
+  MemberChanges,
+} from "@sparcs-students/web/features/organization-manage/services/memberForm";
 import useOrganizationStore from "@sparcs-students/web/features/organization-manage/stores/useOrganizationStore";
 import {
   createOrganizationMember,
@@ -35,6 +39,7 @@ import {
   retireTeamLeader,
   deleteOperatingCommittee,
   retireOperatingCommitteeMember,
+  getOrganizationMutationErrorMessage,
 } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 import { getOrganizationLookup } from "@sparcs-students/web/features/organization-register/api/organizationApi";
 import ManageCommitteeTable from "@sparcs-students/web/features/organization-manage/components/ManageCommitteeTable";
@@ -78,24 +83,20 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-type DirtyCommitteeMemberData = {
-  updatedRows: OrganizationMemberProps[];
-  createdRows: OrganizationMemberProps[];
-  deletedRows: OrganizationMemberProps[];
-};
-
 type DirtyCommitteeMemberDataItem = {
   id: number;
-  dirtyData: DirtyCommitteeMemberData;
+  dirtyData: MemberChanges;
+};
+
+type SubmissionChanges = {
+  dirtyMemberData: MemberChanges;
+  dirtyCommitteeMemberDataList: DirtyCommitteeMemberDataItem[];
 };
 
 const calculateChangedRows = ({
   dirtyMemberData,
   dirtyCommitteeMemberDataList,
-}: {
-  dirtyMemberData: DirtyCommitteeMemberData;
-  dirtyCommitteeMemberDataList: DirtyCommitteeMemberDataItem[];
-}) => {
+}: SubmissionChanges) => {
   let rows =
     dirtyMemberData.createdRows.length +
     dirtyMemberData.deletedRows.length +
@@ -108,6 +109,13 @@ const calculateChangedRows = ({
   });
 
   return rows;
+};
+
+// Wait for every request before updating the baseline, including partial saves.
+const completeRequests = async (requests: Promise<unknown>[]) => {
+  const results = await Promise.allSettled(requests);
+  const failure = results.find(result => result.status === "rejected");
+  if (failure?.status === "rejected") throw failure.reason;
 };
 
 const CreateOperatingCommitteeModal = ({
@@ -142,7 +150,7 @@ const CreateOperatingCommitteeModal = ({
             window.location.reload();
           } catch (e) {
             console.error(e);
-            alert("운영위원회 생성 실패");
+            alert(getOrganizationMutationErrorMessage(e));
           } finally {
             setIsSubmittingModal(false);
           }
@@ -178,52 +186,19 @@ const OrganizationManage = () => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const [dirtyMemberData, setDirtyMemberData] =
-    useState<DirtyCommitteeMemberData>({
-      updatedRows: [],
-      createdRows: [],
-      deletedRows: [],
-    });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState("");
 
   // TODO: Replace with real API when available (e.g., GET /organizations/{id}/members)
   // Currently, there is no API to fetch organization members, so we use mock data.
-  const formMemberMethods = useForm<MemberFormValues>({
-    defaultValues: {
-      members: mockOrganizationMemberData,
-    },
-  });
-
-  const dirtyCommitteeMemberDataList: Array<DirtyCommitteeMemberDataItem> = [];
+  const memberTable = useMemberTableForm(mockOrganizationMemberData);
 
   const committeeTables = mockCommitteeMemberTableData.map(
-    mockCommitteeMemberTable => {
-      const [dirtyCommitteeMemberData, setDirtyCommitteeMemberData] =
-        useState<DirtyCommitteeMemberData>({
-          updatedRows: [],
-          createdRows: [],
-          deletedRows: [],
-        });
-
-      dirtyCommitteeMemberDataList.push({
-        id: mockCommitteeMemberTable.id,
-        dirtyData: dirtyCommitteeMemberData,
-      });
-
-      return {
-        id: mockCommitteeMemberTable.id,
-        name: mockCommitteeMemberTable.name,
-        formMethods: useForm<MemberFormValues>({
-          defaultValues: {
-            members: mockCommitteeMemberTable.OrganizationMember,
-          },
-        }),
-        initialData: mockCommitteeMemberTable.OrganizationMember,
-        onDiffExtract: setDirtyCommitteeMemberData,
-        roleType: "committee" as const,
-      };
-    },
+    mockCommitteeMemberTable => ({
+      id: mockCommitteeMemberTable.id,
+      name: mockCommitteeMemberTable.name,
+      ...useMemberTableForm(mockCommitteeMemberTable.OrganizationMember),
+    }),
   );
 
   useEffect(() => {
@@ -304,7 +279,7 @@ const OrganizationManage = () => {
               window.location.reload();
             } catch (e) {
               console.error(e);
-              alert("운영위원회 삭제 실패");
+              alert(getOrganizationMutationErrorMessage(e));
             }
           }}
           onClose={close}
@@ -329,17 +304,54 @@ const OrganizationManage = () => {
     return val;
   };
 
-  const handleSubmitChanges = async () => {
+  const getSubmissionChanges = (): SubmissionChanges => ({
+    dirtyMemberData: getMemberChanges(
+      memberTable.initialData,
+      memberTable.formMethods.getValues("members"),
+    ),
+    dirtyCommitteeMemberDataList: committeeTables.map(table => ({
+      id: table.id,
+      dirtyData: getMemberChanges(
+        table.initialData,
+        table.formMethods.getValues("members"),
+      ),
+    })),
+  });
+
+  const handleSubmitChanges = async ({
+    dirtyMemberData,
+    dirtyCommitteeMemberDataList,
+  }: SubmissionChanges) => {
+    if (isSubmitting) return;
     if (!currentOrganizationId) {
-      alert("조직 ID를 찾을 수 없습니다. 조직을 선택해주세요.");
+      setSubmissionMessage("조직 ID를 찾을 수 없습니다. 조직을 선택해주세요.");
       return;
     }
 
+    const hasInvalidCommitteeMember = dirtyCommitteeMemberDataList.some(
+      committee =>
+        committee.id === 1 &&
+        committee.dirtyData.createdRows.some(
+          member => !hasCommitteeMetadata(member),
+        ),
+    );
+    if (hasInvalidCommitteeMember) {
+      setSubmissionMessage(
+        "운영위원의 직책명과 근거 규정을 모두 입력해주세요.",
+      );
+      return;
+    }
+
+    const savedMemberRows: OrganizationMemberProps[] = [];
+    const retiredMemberIds: number[] = [];
+    const savedCommitteeRows = new Map<number, OrganizationMemberProps[]>();
+    const retiredCommitteeIds = new Map<number, number[]>();
+    setSubmissionMessage("");
     setIsSubmitting(true);
 
     try {
       // 1. 멤버 및 매니저 추가 처리 (apiOrg005 / apiOrg006)
-      await Promise.all(
+      await completeRequests(
         dirtyMemberData.createdRows.map(async member => {
           if (
             member.role === MemberRoleEnum.Vice ||
@@ -355,7 +367,12 @@ const OrganizationManage = () => {
                 },
               },
             };
-            return createOrganizationManager(requestBody);
+            const response = await createOrganizationManager(requestBody);
+            savedMemberRows.push({
+              ...member,
+              membershipId: response.organizationManager.id,
+            });
+            return;
           }
           const requestBody: ApiOrg005RequestBody = {
             OrganizationMember: {
@@ -367,31 +384,41 @@ const OrganizationManage = () => {
               },
             },
           };
-          return createOrganizationMember(requestBody);
+          const response = await createOrganizationMember(requestBody);
+          savedMemberRows.push({
+            ...member,
+            membershipId: response.organizationMember.id,
+          });
         }),
       );
 
       // 2. 멤버 및 매니저 은퇴 처리 (apiOrg016 / apiOrg017)
-      await Promise.all(
+      await completeRequests(
         dirtyMemberData.deletedRows.map(async member => {
           if (
             member.role === MemberRoleEnum.Vice ||
             member.role === MemberRoleEnum.Editor
           ) {
-            return retireOrganizationManager(member.id, {
+            await retireOrganizationManager(member.membershipId ?? member.id, {
+              endTerm: new Date(),
+            });
+          } else {
+            await retireOrganizationMember(member.membershipId ?? member.id, {
               endTerm: new Date(),
             });
           }
-          return retireOrganizationMember(member.id, {
-            endTerm: new Date(),
-          });
+          retiredMemberIds.push(member.id);
         }),
       );
 
       // 3. 위원회 및 팀의 멤버/리더 추가 및 은퇴 처리
-      await Promise.all(
+      await completeRequests(
         dirtyCommitteeMemberDataList.map(async committeeData => {
           const isOpCom = committeeData.id === 1; // 1 is Operating Committee (운영위원회)
+          const savedRows: OrganizationMemberProps[] = [];
+          const retiredIds: number[] = [];
+          savedCommitteeRows.set(committeeData.id, savedRows);
+          retiredCommitteeIds.set(committeeData.id, retiredIds);
 
           // 3a. 추가 처리 (apiOrg013 또는 apiOrg008/009)
           const createPromises = committeeData.dirtyData.createdRows.map(
@@ -404,18 +431,21 @@ const OrganizationManage = () => {
                     student: {
                       id: getStudentDbId(member.studentId, member.name),
                     },
-                    title:
-                      member.role === CommitteeRoleEnum.Chief
-                        ? "위원장"
-                        : "위원",
-                    legalBasis: "회정 제3조",
+                    title: member.title?.trim() ?? "",
+                    legalBasis: member.legalBasis?.trim() ?? "",
                     duration: {
                       startTerm: new Date(member.startDate),
                       endTerm: member.endDate ? new Date(member.endDate) : null,
                     },
                   },
                 };
-                return createOperatingCommitteeMember(requestBody);
+                const response =
+                  await createOperatingCommitteeMember(requestBody);
+                savedRows.push({
+                  ...member,
+                  membershipId: response.operatingCommitteeMember.id,
+                });
+                return;
               }
               if (member.role === CommitteeRoleEnum.Chief) {
                 // 팀 리더 추가 (apiOrg009)
@@ -431,7 +461,12 @@ const OrganizationManage = () => {
                     },
                   },
                 };
-                return createTeamLeader(requestBody);
+                const response = await createTeamLeader(requestBody);
+                savedRows.push({
+                  ...member,
+                  membershipId: response.teamLeaderId.id,
+                });
+                return;
               }
               // 팀 멤버 추가 (apiOrg008)
               const requestBody: ApiOrg008RequestBody = {
@@ -446,7 +481,11 @@ const OrganizationManage = () => {
                   },
                 },
               };
-              return createTeamMember(requestBody);
+              const response = await createTeamMember(requestBody);
+              savedRows.push({
+                ...member,
+                membershipId: response.teamMemberId.id,
+              });
             },
           );
 
@@ -455,56 +494,96 @@ const OrganizationManage = () => {
             async member => {
               if (isOpCom) {
                 // 운영위원회 멤버 은퇴 (apiOrg022)
-                return retireOperatingCommitteeMember(member.id, {
-                  endTerm: new Date(),
-                });
-              }
-              if (member.role === CommitteeRoleEnum.Chief) {
+                await retireOperatingCommitteeMember(
+                  member.membershipId ?? member.id,
+                  {
+                    endTerm: new Date(),
+                  },
+                );
+              } else if (member.role === CommitteeRoleEnum.Chief) {
                 // 팀 리더 은퇴 (apiOrg020)
-                return retireTeamLeader(member.id, {
+                await retireTeamLeader(member.membershipId ?? member.id, {
+                  endTerm: new Date(),
+                });
+              } else {
+                // 팀 멤버 은퇴 (apiOrg019)
+                await retireTeamMember(member.membershipId ?? member.id, {
                   endTerm: new Date(),
                 });
               }
-              // 팀 멤버 은퇴 (apiOrg019)
-              return retireTeamMember(member.id, {
-                endTerm: new Date(),
-              });
+              retiredIds.push(member.id);
             },
           );
 
-          return Promise.all([...createPromises, ...retirePromises]);
+          await completeRequests([...createPromises, ...retirePromises]);
         }),
       );
 
-      alert("변경사항이 성공적으로 저장되었습니다.");
-      window.location.reload();
+      setSubmissionMessage("변경사항이 저장되었습니다.");
     } catch (error) {
       console.error("제출 중 오류 발생:", error);
-      alert("변경사항 저장 중 오류가 발생했습니다.");
+      setSubmissionMessage(getOrganizationMutationErrorMessage(error));
     } finally {
+      memberTable.commit(savedMemberRows, retiredMemberIds);
+      committeeTables.forEach(table => {
+        table.commit(
+          savedCommitteeRows.get(table.id) ?? [],
+          retiredCommitteeIds.get(table.id) ?? [],
+        );
+      });
       setIsSubmitting(false);
     }
   };
 
-  const onConfirmModal = () => {
+  const onConfirmModal = async () => {
+    if (isSubmitting) return;
+    setSubmissionMessage("");
+    // Read current values directly; an effect or an older modal closure may lag.
+    const changes = getSubmissionChanges();
+    const invalidTables = await Promise.all(
+      committeeTables.map(async table => ({
+        table,
+        valid: await table.formMethods.trigger(),
+      })),
+    );
+    if (invalidTables.some(result => !result.valid)) {
+      const invalidMembers = changes.dirtyCommitteeMemberDataList
+        .filter(committee => committee.id === 1)
+        .flatMap(committee => committee.dirtyData.createdRows)
+        .filter(member => !hasCommitteeMetadata(member));
+      setSubmissionMessage(
+        `${invalidMembers.map(member => member.name).join(", ")} 위원의 직책명과 근거 규정을 모두 입력해주세요.`,
+      );
+      return;
+    }
+    if (
+      changes.dirtyMemberData.updatedRows.length > 0 ||
+      changes.dirtyCommitteeMemberDataList.some(
+        committee => committee.dirtyData.updatedRows.length > 0,
+      )
+    ) {
+      setSubmissionMessage(
+        "기존 위원의 정보 수정은 아직 지원하지 않습니다. 수정한 내용을 되돌린 후 신규 위원 추가 또는 삭제를 제출해주세요.",
+      );
+      return;
+    }
+    const changedRows = calculateChangedRows(changes);
+    if (changedRows === 0) {
+      setSubmissionMessage("변경사항이 없습니다.");
+      return;
+    }
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
         <CancellableModalContent
           onConfirm={async () => {
             close();
-            await handleSubmitChanges();
+            await handleSubmitChanges(changes);
           }}
           onClose={close}
         >
           <Typography fs={20} lh={28} fw="REGULAR">
-            <b>
-              {calculateChangedRows({
-                dirtyMemberData,
-                dirtyCommitteeMemberDataList,
-              })}
-              인
-            </b>
-            의 정보가 변경되었습니다. <br />
+            <b>{changedRows}건</b>
+            의 변경사항이 있습니다. <br />
             <b>반영</b> 하시겠습니까?
           </Typography>
         </CancellableModalContent>
@@ -596,10 +675,10 @@ const OrganizationManage = () => {
           </Typography>
         </Notice>
         <ManageMemberTable
-          formMethods={formMemberMethods}
-          initialData={mockOrganizationMemberData}
-          onDiffExtract={setDirtyMemberData}
+          formMethods={memberTable.formMethods}
+          initialData={memberTable.initialData}
           roleType="member"
+          disabled={isSubmitting}
         />
       </FlexWrapper>
       <FlexWrapper direction="column" gap={48} padding="0 20px">
@@ -642,8 +721,9 @@ const OrganizationManage = () => {
             <ManageMemberTable
               formMethods={committeeTable.formMethods}
               initialData={committeeTable.initialData}
-              onDiffExtract={committeeTable.onDiffExtract}
               roleType="committee"
+              requiresCommitteeMetadata={committeeTable.id === 1}
+              disabled={isSubmitting}
             />
           </FlexWrapper>
         ))}
@@ -665,6 +745,11 @@ const OrganizationManage = () => {
           data={mockCommitteeListData}
         />
       </FlexWrapper>
+      {submissionMessage && (
+        <Typography fs={16} lh={24} role="status" aria-live="polite">
+          {submissionMessage}
+        </Typography>
+      )}
       <ButtonWrapper>
         <Button
           id="btn-submit-changes"

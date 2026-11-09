@@ -21,6 +21,7 @@ import useOrganizationStore from "@sparcs-students/web/features/organization-man
 import {
   createTeam,
   deleteTeam,
+  getOrganizationMutationErrorMessage,
 } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 
 export interface CommitteeProps {
@@ -147,7 +148,7 @@ const AddDepartmentModal = ({
             window.location.reload(); // Reload to show new team
           } catch (e) {
             console.error(e);
-            alert("부서 추가 실패");
+            alert(getOrganizationMutationErrorMessage(e));
           } finally {
             setIsSubmitting(false);
           }
@@ -190,7 +191,7 @@ const ManageCommitteeTable: React.FC<ManageCommitteeTableProps> = ({
         window.location.reload();
       } catch (e) {
         console.error(e);
-        alert("부서 삭제 실패");
+        alert(getOrganizationMutationErrorMessage(e));
       }
     }
   };
