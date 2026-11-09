@@ -1061,4 +1061,65 @@ export class ProposalService {
       operationProposal,
     };
   }
+
+  async createProjectProposalDocumentReview(student, body) {
+    const existing = await this.projectProposalRevisionRepository.find({
+      id: body.projectProposalRevision.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException("ProjectProposalRevision does not exist.");
+    }
+
+    // 동일 revisionId의 documentReview을 soft delete
+    await this.projectProposalDocumentReviewRepository.delete({
+      projectProposalRevisionId: body.projectProposalRevision.id,
+    });
+
+    const { studentId } = student;
+
+    // 승인, 사후 승인일 때 detail = null
+    const detail =
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.Accepted ||
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.LateAccepted
+        ? null
+        : (body.detail ?? null);
+
+    const projectProposalDocumentReviewCreateDto = {
+      ...body,
+      detail,
+      student: { id: studentId },
+    };
+
+    // 생성
+    const [newProjectProposalDocumentReview] =
+      await this.projectProposalDocumentReviewRepository.create(
+        projectProposalDocumentReviewCreateDto,
+      );
+    return {
+      projectProposalDocumentReview: newProjectProposalDocumentReview,
+    };
+  }
+
+  async readProjectProposalDocumentReview(param) {
+    const review = await this.projectProposalDocumentReviewRepository.find({
+      projectProposalRevisionId: param.projectProposalRevisionId,
+    });
+
+    return { projectProposalDocumentReview: review };
+  }
+
+  async deleteProjectProposalDocumentReview(param) {
+    const existing = await this.projectProposalDocumentReviewRepository.find({
+      id: param.projectProposalDocumentReviewId,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "ProjectProposalDocumentReview does not exist.",
+      );
+    }
+
+    await this.projectProposalDocumentReviewRepository.delete({
+      id: param.projectProposalDocumentReviewId,
+    });
+  }
 }
