@@ -14,8 +14,10 @@ import {
   ApiBudPrp017RequestQuery,
   ApiPrp017RequestParam,
   ApiPrp020RequestParam,
+  ApiPrp023RequestParam,
   apiPrp017,
   apiPrp020,
+  apiPrp023,
   apiPrp108,
   apiPrp109,
   apiPrp110,
@@ -24,6 +26,10 @@ import {
   ApiPrp110RequestQuery,
 } from "@sparcs-students/interface/api/proposal/index";
 // import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
+import {
+  GetStudent,
+  StudentProfile,
+} from "@sparcs-students/api/common/decorators/get-user.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ProposalService } from "../service/proposal.service";
@@ -95,9 +101,13 @@ export class ProposalController {
   )
   @UsePipes(new ZodPipe(apiPrp017))
   async readBudgetProposalIncomeDocumentReview(
+    @GetStudent() student: StudentProfile,
     @Param() params: ApiPrp017RequestParam,
   ) {
-    return this.proposalService.readBudgetProposalIncomeDocumentReview(params);
+    return this.proposalService.readBudgetProposalIncomeDocumentReview(
+      student,
+      params,
+    );
   }
 
   // ExpenseDocumentReview 조회
@@ -106,9 +116,26 @@ export class ProposalController {
   )
   @UsePipes(new ZodPipe(apiPrp020))
   async readBudgetProposalExpenseDocumentReview(
+    @GetStudent() student: StudentProfile,
     @Param() params: ApiPrp020RequestParam,
   ) {
-    return this.proposalService.readBudgetProposalExpenseDocumentReview(params);
+    return this.proposalService.readBudgetProposalExpenseDocumentReview(
+      student,
+      params,
+    );
+  }
+
+  // ProjectProposalDocumentReview 조회
+  @Get("project-proposals/document-review/read/:projectProposalRevisionId")
+  @UsePipes(new ZodPipe(apiPrp023))
+  async readProjectProposalDocumentReview(
+    @GetStudent() student: StudentProfile,
+    @Param() params: ApiPrp023RequestParam,
+  ) {
+    return this.proposalService.readProjectProposalDocumentReview(
+      student,
+      params,
+    );
   }
 
   // 사업계획서 revision 최신본 조회

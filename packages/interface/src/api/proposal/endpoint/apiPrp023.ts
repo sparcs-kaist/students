@@ -5,13 +5,15 @@ import { zProjectProposalDocumentReview } from "../type/project-proposal-documen
 
 /**
  * @version v0.1
- * @description 매니저(manager) 권한으로 ProjectProposalDocumentReview를 조회합니다.
+ * @description 매니저(manager) 또는 집행부원(staff) 권한으로 ProjectProposalDocumentReview를 조회합니다.
  */
 
-const url = () => `/manager/proposals/project-proposals/document-review/read`;
+// manager와 staff가 모두 사용하는 api여서 Public 컨트롤러를 사용하고 service 파일에서 권한 검사
+const url = () =>
+  `/proposals/project-proposals/document-review/read:projectProposalRevisionId`;
 const method = "GET";
 export const ApiPrp023RequestUrl =
-  "/manager/proposals/project-proposals/document-review/read";
+  "/proposals/project-proposals/document-review/read:projectProposalRevisionId";
 
 const requestParam = z.object({
   projectProposalRevisionId: z.coerce.number(),
