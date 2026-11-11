@@ -5,14 +5,14 @@ import { zBudgetProposalExpenseDocumentReview } from "../type/budget-proposal-ex
 
 /**
  * @version v0.1
- * @description 각 매니저 권한으로 ExpenseDocumentReview를 조회합니다.
+ * @description 매니저(manager) 또는 집행부원(staff) 권한으로 ExpenseDocumentReview를 조회합니다.
  */
-
+// manager와 staff가 모두 사용하는 api여서 Public 컨트롤러를 사용하고 service 파일에서 권한 검사
 const url = () =>
-  `/manager/proposals/budget-proposals/expense-document-review/read`;
+  `/proposals/budget-proposals/expense-document-review/read:budgetProposalExpenseRevisionId`;
 const method = "GET";
 export const ApiPrp020RequestUrl =
-  "/manager/proposals/budget-proposals/expense-document-review/read";
+  "/proposals/budget-proposals/expense-document-review/read:budgetProposalExpenseRevisionId";
 
 const requestParam = z.object({
   budgetProposalExpenseRevisionId: z.coerce.number(),

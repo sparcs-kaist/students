@@ -8,6 +8,7 @@ import {
 import { OrganizationManagerRepository } from "@sparcs-students/api/feature/organization/repository/organization.manager.repository";
 import { DocumentReviewStatusEnum } from "@sparcs-students/interface/common/enum/meeting.enum";
 import { OrderByTypeEnum } from "@sparcs-students/api/common/enums";
+import { StaffRepository } from "@sparcs-students/api/feature/organization/repository/staff.repository";
 import { BudgetProposalIncomeRepository } from "../repository/budget-proposal-income.repository";
 import { BudgetProposalIncomeRevisionRepository } from "../repository/budget-proposal-income-revision.repository";
 import { BudgetProposalExpenseRepository } from "../repository/budget-proposal-expense.repository";
@@ -37,6 +38,7 @@ export class ProposalService {
     private readonly projectProposalDocumentReviewRepository: ProjectProposalDocumentReviewRepository,
     private readonly operationProposalRepository: OperationProposalRepository,
     private readonly operationProposalRevisionRepository: OperationProposalRevisionRepository,
+    private readonly staffRepository: StaffRepository,
   ) {}
 
   async checkManager(studentId, organizationId) {
@@ -46,9 +48,22 @@ export class ProposalService {
       endTerm: null, // 임기 끝나는 시점에 endTerm 기록 -> endTerm이 null이면 재직 중으로 판정
     });
     if (isManager.length === 0) {
-      throw new ConflictException({
+      throw new ForbiddenException({
         status: "Error",
         message: "Not a manager of this organization",
+      });
+    }
+  }
+
+  async checkStaff(studentId) {
+    const isStaff = await this.staffRepository.find({
+      studentId,
+      endTerm: null, // 임기 끝나는 시점에 endTerm 기록 -> endTerm이 null이면 재직 중으로 판정
+    });
+    if (isStaff.length === 0) {
+      throw new ForbiddenException({
+        status: "Error",
+        message: "Not a staff",
       });
     }
   }
@@ -622,7 +637,63 @@ export class ProposalService {
     };
   }
 
-  async readBudgetProposalIncomeDocumentReview(param) {
+  // staff와 단체의 manager가 모두 DocumentReview를 조회할 수 있어야 하기 때문에 여기서 staff 또는 단체의 manager인지 검사
+  async readBudgetProposalIncomeDocumentReview(student, param) {
+    const { studentId } = student;
+    const { budgetProposalIncomeRevisionId } = param;
+    let staffErrorMessage: string | null = null;
+
+    let isStaff = false;
+
+    try {
+      // staff 검사
+      await this.checkStaff(studentId);
+      isStaff = true;
+    } catch (err) {
+      if (!(err instanceof ForbiddenException)) {
+        throw err;
+      }
+      staffErrorMessage = err.message;
+    }
+    if (!isStaff) {
+      // staff가 아니라면 단체의 manager인지 검사
+      const [budgetProposalIncomeRevision] =
+        await this.budgetProposalIncomeRevisionRepository.find({
+          id: budgetProposalIncomeRevisionId,
+        });
+
+      if (!budgetProposalIncomeRevision) {
+        throw new NotFoundException(
+          "budgetProposalIncomeRevision does not exist.",
+        );
+      }
+
+      const budgetProposalIncomeId =
+        budgetProposalIncomeRevision.budgetProposalIncome.id;
+
+      const [budgetProposalIncome] =
+        await this.budgetProposalIncomeRepository.find({
+          id: budgetProposalIncomeId,
+        } as any);
+
+      if (!budgetProposalIncome) {
+        throw new NotFoundException("budgetProposalIncome does not exist.");
+      }
+
+      try {
+        await this.checkManager(
+          studentId,
+          budgetProposalIncome.organization.id,
+        );
+      } catch (err) {
+        if (!(err instanceof ForbiddenException)) {
+          throw err;
+        }
+
+        throw new ForbiddenException(`${staffErrorMessage}; ${err.message}`);
+      }
+    }
+
     const review = await this.budgetProposalIncomeDocumentReviewRepository.find(
       {
         budgetProposalIncomeRevisionId: param.budgetProposalIncomeRevisionId,
@@ -632,7 +703,63 @@ export class ProposalService {
     return { budgetProposalIncomeDocumentReview: review };
   }
 
-  async readBudgetProposalExpenseDocumentReview(param) {
+  // staff와 단체의 manager가 모두 DocumentReview를 조회할 수 있어야 하기 때문에 여기서 staff 또는 단체의 manager인지 검사
+  async readBudgetProposalExpenseDocumentReview(student, param) {
+    const { studentId } = student;
+    const { budgetProposalExpenseRevisionId } = param;
+    let staffErrorMessage: string | null = null;
+
+    let isStaff = false;
+
+    try {
+      // staff 검사
+      await this.checkStaff(studentId);
+      isStaff = true;
+    } catch (err) {
+      if (!(err instanceof ForbiddenException)) {
+        throw err;
+      }
+      staffErrorMessage = err.message;
+    }
+    if (!isStaff) {
+      // staff가 아니라면 단체의 manager인지 검사
+      const [budgetProposalExpenseRevision] =
+        await this.budgetProposalExpenseRevisionRepository.find({
+          id: budgetProposalExpenseRevisionId,
+        });
+
+      if (!budgetProposalExpenseRevision) {
+        throw new NotFoundException(
+          "budgetProposalExpenseRevision does not exist.",
+        );
+      }
+
+      const budgetProposalExpenseId =
+        budgetProposalExpenseRevision.budgetProposalExpense.id;
+
+      const [budgetProposalExpense] =
+        await this.budgetProposalExpenseRepository.find({
+          id: budgetProposalExpenseId,
+        } as any);
+
+      if (!budgetProposalExpense) {
+        throw new NotFoundException("budgetProposalExpense does not exist.");
+      }
+
+      try {
+        await this.checkManager(
+          studentId,
+          budgetProposalExpense.organization.id,
+        );
+      } catch (err) {
+        if (!(err instanceof ForbiddenException)) {
+          throw err;
+        }
+
+        throw new ForbiddenException(`${staffErrorMessage}; ${err.message}`);
+      }
+    }
+
     const review =
       await this.budgetProposalExpenseDocumentReviewRepository.find({
         budgetProposalExpenseRevisionId: param.budgetProposalExpenseRevisionId,
@@ -644,7 +771,7 @@ export class ProposalService {
   async deleteBudgetProposalIncomeDocumentReview(param) {
     const existing =
       await this.budgetProposalIncomeDocumentReviewRepository.find({
-        id: param.budgetProposalIncomeDocumentReviewId,
+        budgetProposalIncomeRevisionId: param.budgetProposalIncomeRevisionId,
       });
     if (!existing.length) {
       throw new ConflictException(
@@ -653,14 +780,14 @@ export class ProposalService {
     }
 
     await this.budgetProposalIncomeDocumentReviewRepository.delete({
-      id: param.budgetProposalIncomeDocumentReviewId,
+      budgetProposalIncomeRevisionId: param.budgetProposalIncomeRevisionId,
     });
   }
 
   async deleteBudgetProposalExpenseDocumentReview(param) {
     const existing =
       await this.budgetProposalExpenseDocumentReviewRepository.find({
-        id: param.budgetProposalExpenseDocumentReviewId,
+        budgetProposalExpenseevisionId: param.budgetProposalExpenseRevisionId,
       });
     if (!existing.length) {
       throw new ConflictException(
@@ -669,7 +796,7 @@ export class ProposalService {
     }
 
     await this.budgetProposalExpenseDocumentReviewRepository.delete({
-      id: param.budgetProposalExpenseDocumentReviewId,
+      budgetProposalExpenseRevisionId: param.budgetProposalExpenseRevisionId,
     });
   }
 
@@ -1060,5 +1187,114 @@ export class ProposalService {
     return {
       operationProposal,
     };
+  }
+
+  async createProjectProposalDocumentReview(student, body) {
+    const existing = await this.projectProposalRevisionRepository.find({
+      id: body.projectProposalRevision.id,
+    });
+    if (!existing.length) {
+      throw new ConflictException("ProjectProposalRevision does not exist.");
+    }
+
+    // 동일 revisionId의 documentReview을 soft delete
+    await this.projectProposalDocumentReviewRepository.delete({
+      projectProposalRevisionId: body.projectProposalRevision.id,
+    });
+
+    const { studentId } = student;
+
+    // 승인, 사후 승인일 때 detail = null
+    const detail =
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.Accepted ||
+      body.documentReviewStatusEnum === DocumentReviewStatusEnum.LateAccepted
+        ? null
+        : (body.detail ?? null);
+
+    const projectProposalDocumentReviewCreateDto = {
+      ...body,
+      detail,
+      student: { id: studentId },
+    };
+
+    // 생성
+    const [newProjectProposalDocumentReview] =
+      await this.projectProposalDocumentReviewRepository.create(
+        projectProposalDocumentReviewCreateDto,
+      );
+    return {
+      projectProposalDocumentReview: newProjectProposalDocumentReview,
+    };
+  }
+
+  // staff와 단체의 manager가 모두 DocumentReview를 조회할 수 있어야 하기 때문에 여기서 staff 또는 단체의 manager인지 검사
+  async readProjectProposalDocumentReview(student, param) {
+    const { studentId } = student;
+    const { projectProposalRevisionId } = param;
+    let staffErrorMessage: string | null = null;
+
+    let isStaff = false;
+
+    try {
+      // staff 검사
+      await this.checkStaff(studentId);
+      isStaff = true;
+    } catch (err) {
+      if (!(err instanceof ForbiddenException)) {
+        throw err;
+      }
+      staffErrorMessage = err.message;
+    }
+    if (!isStaff) {
+      // staff가 아니라면 단체의 manager인지 검사
+      const [projectProposalRevision] =
+        await this.projectProposalRevisionRepository.find({
+          id: projectProposalRevisionId,
+        });
+
+      if (!projectProposalRevision) {
+        throw new NotFoundException("projectProposalRevision does not exist.");
+      }
+
+      const projectProposalId = projectProposalRevision.projectProposal.id;
+
+      const [projectProposal] = await this.projectProposalRepository.find({
+        id: projectProposalId,
+      } as any);
+
+      if (!projectProposal) {
+        throw new NotFoundException("projectProposal does not exist.");
+      }
+
+      try {
+        await this.checkManager(studentId, projectProposal.organization.id);
+      } catch (err) {
+        if (!(err instanceof ForbiddenException)) {
+          throw err;
+        }
+
+        throw new ForbiddenException(`${staffErrorMessage}; ${err.message}`);
+      }
+    }
+    const review = await this.projectProposalDocumentReviewRepository.find({
+      projectProposalRevisionId: param.projectProposalRevisionId,
+    });
+
+    return { projectProposalDocumentReview: review };
+  }
+
+  async deleteProjectProposalDocumentReview(param) {
+    const existing = await this.projectProposalDocumentReviewRepository.find({
+      projectProposalRevisionId: param.projectProposalRevisionId,
+    });
+    if (!existing.length) {
+      throw new ConflictException(
+        "projectProposalDocumentReview does not exist.",
+      );
+    }
+
+    await this.projectProposalDocumentReviewRepository.delete({
+      projectProposalRevisionId: param.projectProposalRevisionId,
+    });
   }
 }

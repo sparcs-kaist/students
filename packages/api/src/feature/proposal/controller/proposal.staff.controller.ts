@@ -11,12 +11,15 @@ import {
   apiPrp018,
   apiPrp019,
   apiPrp021,
+  apiPrp022,
+  apiPrp024,
   ApiPrp016RequestBody,
   ApiPrp018RequestParam,
   ApiPrp019RequestBody,
   ApiPrp021RequestParam,
+  ApiPrp022RequestBody,
+  ApiPrp024RequestParam,
 } from "@sparcs-students/interface/api/proposal/index";
-import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import {
   GetStudent,
@@ -26,12 +29,12 @@ import { StaffOnly } from "@sparcs-students/api/common/decorators/require-positi
 import { ProposalService } from "../service/proposal.service";
 
 @StaffOnly()
-@Controller("staff/proposals/budget-proposals")
+@Controller("staff/proposals")
 export class ProposalStaffController {
   constructor(private readonly proposalService: ProposalService) {}
 
-  // 각 집행부원 권한으로 IncomeDocumentReview 생성
-  @Post("income-document-review/create")
+  // 각 집행부원(staff) 권한으로 IncomeDocumentReview 생성
+  @Post("budget-proposals/income-document-review/create")
   @UsePipes(new ZodPipe(apiPrp016))
   async createBudgetProposalIncomeDocumentReview(
     @GetStudent() student: StudentProfile,
@@ -43,9 +46,10 @@ export class ProposalStaffController {
     );
   }
 
-  // 각 집행부원 권한으로 IncomeDocumentReview 삭제
-  @Public()
-  @Delete("income-document-review/delete/:budgetProposalIncomeDocumentReviewId")
+  // 각 집행부원(staff) 권한으로 IncomeDocumentReview 삭제
+  @Delete(
+    "budget-proposals/income-document-review/delete/:budgetProposalIncomeRevisionId",
+  )
   @UsePipes(new ZodPipe(apiPrp018))
   async deleteBudgetProposalIncomeDocumentReview(
     @Param() params: ApiPrp018RequestParam,
@@ -55,8 +59,8 @@ export class ProposalStaffController {
     );
   }
 
-  // 각 집행부원 권한으로 ExpenseDocumentReview 생성
-  @Post("expense-document-review/create")
+  // 각 집행부원(staff) 권한으로 ExpenseDocumentReview 생성
+  @Post("budget-proposals/expense-document-review/create")
   @UsePipes(new ZodPipe(apiPrp019))
   async createBudgetProposalExpenseDocumentReview(
     @GetStudent() student: StudentProfile,
@@ -68,10 +72,9 @@ export class ProposalStaffController {
     );
   }
 
-  // 각 집행부원 권한으로 ExpenseDocumentReview 삭제
-  @Public()
+  // 각 집행부원(staff) 권한으로 ExpenseDocumentReview 삭제
   @Delete(
-    "expense-document-review/delete:budgetProposalExpenseDocumentReviewId",
+    "budget-proposals/expense-document-review/delete:budgetProposalExpenseRevisionId",
   )
   @UsePipes(new ZodPipe(apiPrp021))
   async deleteBudgetProposalExpenseDocumentReview(
@@ -80,5 +83,27 @@ export class ProposalStaffController {
     return this.proposalService.deleteBudgetProposalExpenseDocumentReview(
       params,
     );
+  }
+
+  // 각 집행부원(staff) 권한으로 ProjecProposalDocumentReview 생성
+  @Post("project-proposals/document-review/create")
+  @UsePipes(new ZodPipe(apiPrp022))
+  async createProjectProposalDocumentReview(
+    @GetStudent() student: StudentProfile,
+    @Body() body: ApiPrp022RequestBody,
+  ) {
+    return this.proposalService.createProjectProposalDocumentReview(
+      student,
+      body.projectProposalDocumentReview,
+    );
+  }
+
+  // 각 집행부원(staff) 권한으로 ProjectProposalDocumentReview 삭제
+  @Delete("project-proposals/document-review/delete/:projectProposalRevisionId")
+  @UsePipes(new ZodPipe(apiPrp024))
+  async deleteProjectProposalDocumentReview(
+    @Param() params: ApiPrp024RequestParam,
+  ) {
+    return this.proposalService.deleteProjectProposalDocumentReview(params);
   }
 }
