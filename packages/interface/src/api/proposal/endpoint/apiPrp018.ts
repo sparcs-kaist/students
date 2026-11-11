@@ -7,13 +7,13 @@ import { z } from "zod";
  */
 
 const url = () =>
-  `/staff/proposals/budget-proposals/income-document-review/delete`;
+  `/staff/proposals/budget-proposals/income-document-review/delete:budgetProposalIncomeRevisionId`;
 const method = "DELETE";
 export const ApiPrp018RequestUrl =
-  "/staff/proposals/budget-proposals/income-document-review/delete";
+  "/staff/proposals/budget-proposals/income-document-review/delete:budgetProposalIncomeRevisionId";
 
 const requestParam = z.object({
-  budgetProposalIncomeDocumentReviewId: z.coerce.number(),
+  budgetProposalIncomeRevisionId: z.coerce.number(),
 });
 
 const requestQuery = z.object({});

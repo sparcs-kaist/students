@@ -3,17 +3,17 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 각 집행부원 권한으로 ExpenseDocumentReview를 삭제합니다.
+ * @description 집행부원(staff) 권한으로 ExpenseDocumentReview를 삭제합니다.
  */
 
 const url = () =>
-  `/staff/proposals/budget-proposals/expense-document-review/delete`;
+  `/staff/proposals/budget-proposals/expense-document-review/delete:budgetProposalExpenseRevisionId`;
 const method = "DELETE";
 export const ApiPrp021RequestUrl =
-  "/staff/proposals/budget-proposals/expense-document-review/delete";
+  "/staff/proposals/budget-proposals/expense-document-review/delete:budgetProposalExpenseRevisionId";
 
 const requestParam = z.object({
-  budgetProposalExpenseDocumentReviewId: z.coerce.number(),
+  budgetProposalExpenseRevisionId: z.coerce.number(),
 });
 
 const requestQuery = z.object({});
