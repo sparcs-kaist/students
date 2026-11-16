@@ -60,6 +60,28 @@ const organizationMutationConfig: PreserveFormRequestConfig = {
   preserveFormOnAuthError: true,
 };
 
+export const getCreatedOrganizationMembershipId = (
+  memberships: ApiOrg005ResponseCreated["organizationMember"],
+  request: ApiOrg005RequestBody["OrganizationMember"],
+): number => {
+  const getTime = (date: Date | null | undefined) =>
+    date ? new Date(date).getTime() : null;
+  // Creation responses can also include this student's previous terms.
+  const createdMembership = memberships
+    .filter(
+      membership =>
+        getTime(membership.duration.startTerm) ===
+          getTime(request.duration.startTerm) &&
+        getTime(membership.duration.endTerm) ===
+          getTime(request.duration.endTerm),
+    )
+    .sort((left, right) => right.id - left.id)[0];
+  if (!createdMembership) {
+    throw new Error("Created organization membership not found in response");
+  }
+  return createdMembership.id;
+};
+
 export const getOrganizationMutationErrorMessage = (error: unknown): string => {
   if (isAxiosError(error)) {
     switch (error.response?.status) {

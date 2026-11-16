@@ -52,6 +52,48 @@ const countChanges = changes =>
   changes.updatedRows.length +
   changes.deletedRows.length;
 
+function loadOrganizationApi() {
+  const dependencies = Object.fromEntries(
+    [5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22].map(id => [
+      `@sparcs-students/interface/api/organization/endpoint/apiOrg${String(id).padStart(3, "0")}`,
+      {},
+    ]),
+  );
+  dependencies["@sparcs-students/web/lib/axios"] = {};
+  return loadTs(
+    "features/organization-manage/api/organizationApi.ts",
+    dependencies,
+  );
+}
+
+test("creation arrays select the saved term ID and reject an empty response", () => {
+  const { getCreatedOrganizationMembershipId } = loadOrganizationApi();
+  const request = {
+    organization: { id: 1 },
+    student: { id: 99 },
+    duration: { startTerm: new Date("2026-01-01"), endTerm: null },
+  };
+  const previous = {
+    ...request,
+    id: 7,
+    duration: {
+      startTerm: new Date("2024-01-01"),
+      endTerm: new Date("2024-12-31"),
+    },
+  };
+  const created = { ...request, id: 55 };
+  for (const response of [
+    [previous, created],
+    [created, previous],
+  ]) {
+    assert.equal(getCreatedOrganizationMembershipId(response, request), 55);
+  }
+  assert.throws(
+    () => getCreatedOrganizationMembershipId([], request),
+    /Created organization membership not found/,
+  );
+});
+
 test("registering empty metadata does not mark five existing members as changed", () => {
   const registeredMembers = initialMembers.map(member => ({
     ...member,
@@ -165,17 +207,7 @@ test("committing a new membership preserves the UI identity even when DB IDs ove
 });
 
 test("mutation errors distinguish missing presidency from duplicate registration", () => {
-  const dependencies = Object.fromEntries(
-    [5, 6, 7, 8, 9, 10, 12, 13, 16, 17, 18, 19, 20, 21, 22].map(id => [
-      `@sparcs-students/interface/api/organization/endpoint/apiOrg${String(id).padStart(3, "0")}`,
-      {},
-    ]),
-  );
-  dependencies["@sparcs-students/web/lib/axios"] = {};
-  const { getOrganizationMutationErrorMessage } = loadTs(
-    "features/organization-manage/api/organizationApi.ts",
-    dependencies,
-  );
+  const { getOrganizationMutationErrorMessage } = loadOrganizationApi();
   const { AxiosError } = createRequire(
     path.resolve(__dirname, "../package.json"),
   )("axios");

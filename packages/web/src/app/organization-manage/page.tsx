@@ -39,6 +39,7 @@ import {
   retireTeamLeader,
   deleteOperatingCommittee,
   retireOperatingCommitteeMember,
+  getCreatedOrganizationMembershipId,
   getOrganizationMutationErrorMessage,
 } from "@sparcs-students/web/features/organization-manage/api/organizationApi";
 import { getOrganizationLookup } from "@sparcs-students/web/features/organization-register/api/organizationApi";
@@ -370,7 +371,10 @@ const OrganizationManage = () => {
             const response = await createOrganizationManager(requestBody);
             savedMemberRows.push({
               ...member,
-              membershipId: response.organizationManager.id,
+              membershipId: getCreatedOrganizationMembershipId(
+                response.organizationManager,
+                requestBody.OrganizationManager,
+              ),
             });
             return;
           }
@@ -387,7 +391,10 @@ const OrganizationManage = () => {
           const response = await createOrganizationMember(requestBody);
           savedMemberRows.push({
             ...member,
-            membershipId: response.organizationMember.id,
+            membershipId: getCreatedOrganizationMembershipId(
+              response.organizationMember,
+              requestBody.OrganizationMember,
+            ),
           });
         }),
       );
