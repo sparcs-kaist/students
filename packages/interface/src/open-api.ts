@@ -4,6 +4,11 @@ import {
 } from "@asteasolutions/zod-to-openapi";
 
 export const registry = new OpenAPIRegistry();
+registry.registerComponent("securitySchemes", "bearerAuth", {
+  type: "http",
+  scheme: "bearer",
+  bearerFormat: "JWT",
+});
 
 export const restMethod = {
   method: {
@@ -86,5 +91,6 @@ export function generateOpenAPI(): ReturnType<
         description: "학기 관리 API",
       },
     ],
+    security: [{ bearerAuth: [] }],
   });
 }
