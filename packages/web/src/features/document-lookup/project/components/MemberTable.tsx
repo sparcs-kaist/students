@@ -11,6 +11,7 @@ import Table from "@sparcs-students/web/common/components/Table/Table";
 import GroupsTag from "@sparcs-students/web/common/components/Tag/GroupsTag";
 import Button from "@sparcs-students/web/common/components/Buttons/Button";
 import styled from "styled-components";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface MemberProps {
   id: string;
@@ -71,7 +72,7 @@ const columns = [
       </div>
     ),
     size: 0,
-    minSize: 400,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
 ];
 

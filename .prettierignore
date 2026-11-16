@@ -6,3 +6,4 @@ deployment/**/*.yaml
 
 # NextJS
 **/.next
+**/.next-dev

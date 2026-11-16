@@ -41,6 +41,7 @@ import { DocumentReviewStatusEnum } from "@sparcs-students/root/packages/interfa
 import HoverClickText from "@sparcs-students/web/common/components/HoverClickText";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { DBExpenditureProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 export interface ViewerExpenditureProps {
   code: number;
@@ -123,7 +124,8 @@ const getColumns = (
         );
       return <Typography>{info.getValue()}</Typography>;
     },
-    minSize: 140,
+    size: 0,
+    minSize: COLUMN_MIN_WIDTH.NAME_COMPACT,
   }),
   columnHelper.accessor("item", {
     id: "item",

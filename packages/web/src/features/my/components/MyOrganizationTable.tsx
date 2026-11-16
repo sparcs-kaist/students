@@ -10,6 +10,7 @@ import LightTag, {
 } from "@sparcs-students/web/common/components/Tag/LightTag";
 import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Table from "@sparcs-students/web/common/components/Table/Table";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 import { useEffect, useState } from "react";
 import Typography from "@sparcs-students/web/common/components/Typography";
 import styled from "styled-components";
@@ -47,7 +48,7 @@ const getColumns = () => [
     header: "단체명",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 200,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("role", {
     id: "role",
@@ -57,7 +58,7 @@ const getColumns = () => [
       return <LightTag color={color as LightTagColor}>{text}</LightTag>;
     },
     size: 0,
-    minSize: 160,
+    minSize: COLUMN_MIN_WIDTH.SHORT,
   }),
   columnHelper.accessor("status", {
     id: "status",

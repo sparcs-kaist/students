@@ -669,7 +669,7 @@ const ManagerExpenditureTableInProjectDetail: React.FC<
                   <TableCell type="Header" width="150px">
                     예산 분류
                   </TableCell>
-                  <TableCell type="Header" width={0}>
+                  <TableCell type="Header" width={0} minWidth={216}>
                     사업명
                   </TableCell>
                   <TableCell type="Header" width="142px">

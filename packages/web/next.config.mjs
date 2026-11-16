@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -30,4 +31,9 @@ const nextConfig = {
   transpilePackages: [],
 };
 
-export default withNextIntl(nextConfig);
+export default phase =>
+  withNextIntl({
+    ...nextConfig,
+    // Keep builds from replacing files used by a running development server.
+    distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
+  });

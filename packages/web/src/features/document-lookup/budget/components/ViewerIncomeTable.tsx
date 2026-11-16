@@ -24,6 +24,7 @@ import DarkTag, {
   DarkTagColor,
 } from "@sparcs-students/web/common/components/Tag/DarkTag";
 import { DBIncomeProps } from "@sparcs-students/web/features/document-lookup/budget/type/managerFormValues";
+import { COLUMN_MIN_WIDTH } from "@sparcs-students/web/common/components/Table/columnLayout";
 
 interface IncomeTableProps {
   data: DBIncomeProps[];
@@ -70,7 +71,7 @@ const columns = [
     header: "항목",
     cell: info => info.getValue(),
     size: 0,
-    minSize: 400,
+    minSize: COLUMN_MIN_WIDTH.NAME,
   }),
   columnHelper.accessor("lastYear", {
     id: "lastYear",

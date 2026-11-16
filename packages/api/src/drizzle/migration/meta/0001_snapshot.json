@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "808a4877-b68e-4886-8d57-bb03ba08bf3a",
+  "id": "4e81f15b-c226-4efa-b1f4-a6c9883517c5",
   "prevId": "55216169-9c79-4e7e-b310-8b9e41f4385e",
   "tables": {
     "budget_proposal_expense": {
@@ -157,8 +157,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_prop_exp_doc_review_bud_prop_exp_rev_id_fk": {
-          "name": "bud_prop_exp_doc_review_bud_prop_exp_rev_id_fk",
+        "bud_prop_exp_review_prop_id_fk": {
+          "name": "bud_prop_exp_review_prop_id_fk",
           "tableFrom": "budget_proposal_expense_document_review",
           "tableTo": "budget_proposal_expense",
           "columnsFrom": [
@@ -170,8 +170,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "bud_prop_exp_doc_review_student_id_fk": {
-          "name": "bud_prop_exp_doc_review_student_id_fk",
+        "bud_prop_exp_rev_student_id_fk": {
+          "name": "bud_prop_exp_rev_student_id_fk",
           "tableFrom": "budget_proposal_expense_document_review",
           "tableTo": "student",
           "columnsFrom": [
@@ -308,8 +308,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_prop_exp_rev_bud_prop_exp_id_fk": {
-          "name": "bud_prop_exp_rev_bud_prop_exp_id_fk",
+        "bud_prop_exp_rev_prop_id_fk": {
+          "name": "bud_prop_exp_rev_prop_id_fk",
           "tableFrom": "budget_proposal_expense_revision",
           "tableTo": "budget_proposal_expense",
           "columnsFrom": [
@@ -511,8 +511,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_prop_inc_rev_bud_prop_inc_id_fk": {
-          "name": "bud_prop_inc_rev_bud_prop_inc_id_fk",
+        "bud_prop_inc_rev_prop_id_fk": {
+          "name": "bud_prop_inc_rev_prop_id_fk",
           "tableFrom": "budget_proposal_income_document_review",
           "tableTo": "budget_proposal_income_revision",
           "columnsFrom": [
@@ -655,8 +655,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_prop_inc_rev_bud_prop_id_fk": {
-          "name": "bud_prop_inc_rev_bud_prop_id_fk",
+        "bud_prop_inc_rev_orig_id_fk": {
+          "name": "bud_prop_inc_rev_orig_id_fk",
           "tableFrom": "budget_proposal_income_revision",
           "tableTo": "budget_proposal_income",
           "columnsFrom": [
@@ -729,21 +729,19 @@
           "notNull": true,
           "autoincrement": false
         },
+        "project_report_id": {
+          "name": "project_report_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
           "default": "(now())"
         },
         "deleted_at": {
@@ -781,113 +779,24 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "bud_rep_exp_proj_id_fk": {
+          "name": "bud_rep_exp_proj_id_fk",
+          "tableFrom": "budget_report_expense",
+          "tableTo": "project_report",
+          "columnsFrom": [
+            "project_report_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "budget_report_expense_id": {
           "name": "budget_report_expense_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "budget_report_expense_document_review": {
-      "name": "budget_report_expense_document_review",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "budget_report_expense_revision_id": {
-          "name": "budget_report_expense_revision_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "student_id": {
-          "name": "student_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "document_review_status_enum": {
-          "name": "document_review_status_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "detail": {
-          "name": "detail",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "bud_rep_exp_doc_review_bud_rep_exp_rev_id_fk": {
-          "name": "bud_rep_exp_doc_review_bud_rep_exp_rev_id_fk",
-          "tableFrom": "budget_report_expense_document_review",
-          "tableTo": "budget_report_expense",
-          "columnsFrom": [
-            "budget_report_expense_revision_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "bud_rep_exp_doc_review_student_id_fk": {
-          "name": "bud_rep_exp_doc_review_student_id_fk",
-          "tableFrom": "budget_report_expense_document_review",
-          "tableTo": "student",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "budget_report_expense_document_review_id": {
-          "name": "budget_report_expense_document_review_id",
           "columns": [
             "id"
           ]
@@ -912,34 +821,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "budget_domain_enum": {
-          "name": "budget_domain_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "budget_division_expense_enum": {
-          "name": "budget_division_expense_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "budget_class_expense_enum": {
-          "name": "budget_class_expense_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "amount": {
           "name": "amount",
           "type": "int",
@@ -947,18 +828,11 @@
           "notNull": false,
           "autoincrement": false
         },
-        "detail": {
-          "name": "detail",
+        "note": {
+          "name": "note",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
-        },
-        "code": {
-          "name": "code",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
           "autoincrement": false
         },
         "submitted_at": {
@@ -990,15 +864,6 @@
           "autoincrement": false,
           "default": "(now())"
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "timestamp",
@@ -1009,8 +874,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_rep_exp_rev_bud_rep_exp_id_fk": {
-          "name": "bud_rep_exp_rev_bud_rep_exp_id_fk",
+        "bud_rep_exp_rev_orig_id_fk": {
+          "name": "bud_rep_exp_rev_orig_id_fk",
           "tableFrom": "budget_report_expense_revision",
           "tableTo": "budget_report_expense",
           "columnsFrom": [
@@ -1097,8 +962,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
+          "onUpdate": true
         },
         "deleted_at": {
           "name": "deleted_at",
@@ -1147,108 +1011,6 @@
       },
       "uniqueConstraints": {}
     },
-    "budget_report_income_document_review": {
-      "name": "budget_report_income_document_review",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "budget_report_income_revision_id": {
-          "name": "budget_report_income_revision_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "student_id": {
-          "name": "student_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "document_review_status_enum": {
-          "name": "document_review_status_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "detail": {
-          "name": "detail",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "bud_rep_inc_doc_review_bud_rep_inc_rev_id_fk": {
-          "name": "bud_rep_inc_doc_review_bud_rep_inc_rev_id_fk",
-          "tableFrom": "budget_report_income_document_review",
-          "tableTo": "budget_report_income_revision",
-          "columnsFrom": [
-            "budget_report_income_revision_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "bud_rep_inc_doc_review_student_id_fk": {
-          "name": "bud_rep_inc_doc_review_student_id_fk",
-          "tableFrom": "budget_report_income_document_review",
-          "tableTo": "student",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "budget_report_income_document_review_id": {
-          "name": "budget_report_income_document_review_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "budget_report_income_revision": {
       "name": "budget_report_income_revision",
       "columns": {
@@ -1266,46 +1028,18 @@
           "notNull": true,
           "autoincrement": false
         },
-        "budget_domain_enum": {
-          "name": "budget_domain_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "budget_division_income_enum": {
-          "name": "budget_division_income_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "amount": {
           "name": "amount",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
-        "detail": {
-          "name": "detail",
+        "note": {
+          "name": "note",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "code": {
-          "name": "code",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "submitted_at": {
@@ -1337,15 +1071,6 @@
           "autoincrement": false,
           "default": "(now())"
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "timestamp",
@@ -1356,8 +1081,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bud_rep_inc_rev_bud_rep_id_fk": {
-          "name": "bud_rep_inc_rev_bud_rep_id_fk",
+        "bud_rep_inc_rev_orig_id_fk": {
+          "name": "bud_rep_inc_rev_orig_id_fk",
           "tableFrom": "budget_report_income_revision",
           "tableTo": "budget_report_income",
           "columnsFrom": [
@@ -1699,67 +1424,6 @@
       },
       "uniqueConstraints": {}
     },
-    "notice": {
-      "name": "notice",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "notice_id": {
-          "name": "notice_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "operating_committee": {
       "name": "operating_committee",
       "columns": {
@@ -1796,8 +1460,7 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": 1
+          "autoincrement": false
         },
         "start_term": {
           "name": "start_term",
@@ -2396,6 +2059,115 @@
       "compositePrimaryKeys": {
         "organization_president_id": {
           "name": "organization_president_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "organization_role": {
+      "name": "organization_role",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "role_name": {
+          "name": "role_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "start_term": {
+          "name": "start_term",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end_term": {
+          "name": "end_term",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "org_role_org_id_fk": {
+          "name": "org_role_org_id_fk",
+          "tableFrom": "organization_role",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "org_role_stu_id_fk": {
+          "name": "org_role_stu_id_fk",
+          "tableFrom": "organization_role",
+          "tableTo": "student",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "organization_role_id": {
+          "name": "organization_role_id",
           "columns": [
             "id"
           ]
@@ -3076,8 +2848,8 @@
       },
       "uniqueConstraints": {}
     },
-    "execution_proposal": {
-      "name": "execution_proposal",
+    "operating_committee_proposal_revision": {
+      "name": "operating_committee_proposal_revision",
       "columns": {
         "id": {
           "name": "id",
@@ -3085,6 +2857,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
+        },
+        "operation_proposal_revision_id": {
+          "name": "operation_proposal_revision_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "operating_committee_id": {
           "name": "operating_committee_id",
@@ -3112,7 +2891,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3127,9 +2906,22 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "exec_prop_op_com_id_fk": {
-          "name": "exec_prop_op_com_id_fk",
-          "tableFrom": "execution_proposal",
+        "operating_committee_proposal_operation_proposal_revision_id_fk": {
+          "name": "operating_committee_proposal_operation_proposal_revision_id_fk",
+          "tableFrom": "operating_committee_proposal_revision",
+          "tableTo": "operation_proposal_revision",
+          "columnsFrom": [
+            "operation_proposal_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "operating_committee_proposal_ope_com_id_fk": {
+          "name": "operating_committee_proposal_ope_com_id_fk",
+          "tableFrom": "operating_committee_proposal_revision",
           "tableTo": "operating_committee",
           "columnsFrom": [
             "operating_committee_id"
@@ -3142,103 +2934,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "execution_proposal_id": {
-          "name": "execution_proposal_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "execution_proposal_revision": {
-      "name": "execution_proposal_revision",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "execution_proposal_id": {
-          "name": "execution_proposal_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "team_id": {
-          "name": "team_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "exec_prop_rev_exec_prop_id_fk": {
-          "name": "exec_prop_rev_exec_prop_id_fk",
-          "tableFrom": "execution_proposal_revision",
-          "tableTo": "execution_proposal",
-          "columnsFrom": [
-            "execution_proposal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "exec_prop_rev_team_id_fk": {
-          "name": "exec_prop_rev_team_id_fk",
-          "tableFrom": "execution_proposal_revision",
-          "tableTo": "team",
-          "columnsFrom": [
-            "team_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "execution_proposal_revision_id": {
-          "name": "execution_proposal_revision_id",
+        "operating_committee_proposal_revision_id": {
+          "name": "operating_committee_proposal_revision_id",
           "columns": [
             "id"
           ]
@@ -3282,7 +2979,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3297,8 +2994,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "op_prop_org_id_fk": {
-          "name": "op_prop_org_id_fk",
+        "operation_proposal_organization_id_fk": {
+          "name": "operation_proposal_organization_id_fk",
           "tableFrom": "operation_proposal",
           "tableTo": "organization",
           "columnsFrom": [
@@ -3310,8 +3007,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "op_prop_sem_id_fk": {
-          "name": "op_prop_sem_id_fk",
+        "operation_proposal_semester_id_fk": {
+          "name": "operation_proposal_semester_id_fk",
           "tableFrom": "operation_proposal",
           "tableTo": "semester",
           "columnsFrom": [
@@ -3398,7 +3095,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3413,8 +3110,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "op_prop_rev_op_prop_id_fk": {
-          "name": "op_prop_rev_op_prop_id_fk",
+        "operation_proposal_revision_operation_proposal_id_fk": {
+          "name": "operation_proposal_revision_operation_proposal_id_fk",
           "tableFrom": "operation_proposal_revision",
           "tableTo": "operation_proposal",
           "columnsFrom": [
@@ -3426,8 +3123,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "op_prop_rev_file_id_fk": {
-          "name": "op_prop_rev_file_id_fk",
+        "operation_proposal_revision_organization_diagram_id_fk": {
+          "name": "operation_proposal_revision_organization_diagram_id_fk",
           "tableFrom": "operation_proposal_revision",
           "tableTo": "file",
           "columnsFrom": [
@@ -3439,8 +3136,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "op_prop_rev_cog_age_id_fk": {
-          "name": "op_prop_rev_cog_age_id_fk",
+        "operation_proposal_revision_cog_agenda_id_fk": {
+          "name": "operation_proposal_revision_cog_agenda_id_fk",
           "tableFrom": "operation_proposal_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -3452,8 +3149,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "op_prop_rev_gsrc_age_id_fk": {
-          "name": "op_prop_rev_gsrc_age_id_fk",
+        "operation_proposal_revision_gsrc_agenda_id_fk": {
+          "name": "operation_proposal_revision_gsrc_agenda_id_fk",
           "tableFrom": "operation_proposal_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -3474,14 +3171,7 @@
           ]
         }
       },
-      "uniqueConstraints": {
-        "operation_proposal_revision_organization_diagram_id_unique": {
-          "name": "operation_proposal_revision_organization_diagram_id_unique",
-          "columns": [
-            "organization_diagram_id"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "project_proposal": {
       "name": "project_proposal",
@@ -3519,7 +3209,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3534,8 +3224,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "proj_pro_org_id_fk": {
-          "name": "proj_pro_org_id_fk",
+        "project_proposal_organization_id_fk": {
+          "name": "project_proposal_organization_id_fk",
           "tableFrom": "project_proposal",
           "tableTo": "organization",
           "columnsFrom": [
@@ -3547,8 +3237,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "proj_pro_sem_id_fk": {
-          "name": "proj_pro_sem_id_fk",
+        "project_proposal_semester_id_fk": {
+          "name": "project_proposal_semester_id_fk",
           "tableFrom": "project_proposal",
           "tableTo": "semester",
           "columnsFrom": [
@@ -3595,8 +3285,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "document_review_status_enum_id": {
-          "name": "document_review_status_enum_id",
+        "document_review_status_enum": {
+          "name": "document_review_status_enum",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -3621,7 +3311,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3807,7 +3497,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3818,19 +3508,12 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "code": {
-          "name": "code",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "proj_prop_rev_proj_prop_id_fk": {
-          "name": "proj_prop_rev_proj_prop_id_fk",
+        "project_proposal_revision_project_proposal_id_fk": {
+          "name": "project_proposal_revision_project_proposal_id_fk",
           "tableFrom": "project_proposal_revision",
           "tableTo": "project_proposal",
           "columnsFrom": [
@@ -3842,8 +3525,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "proj_prop_rev_team_id_fk": {
-          "name": "proj_prop_rev_team_id_fk",
+        "project_proposal_revision_team_id_fk": {
+          "name": "project_proposal_revision_team_id_fk",
           "tableFrom": "project_proposal_revision",
           "tableTo": "team",
           "columnsFrom": [
@@ -3855,8 +3538,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "proj_prop_rev_student_id_fk": {
-          "name": "proj_prop_rev_student_id_fk",
+        "project_proposal_revision_manager_id_fk": {
+          "name": "project_proposal_revision_manager_id_fk",
           "tableFrom": "project_proposal_revision",
           "tableTo": "student",
           "columnsFrom": [
@@ -3868,8 +3551,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "proj_prop_rev_cog_age_id_fk": {
-          "name": "proj_prop_rev_cog_age_id_fk",
+        "project_proposal_revision_cog_agenda_id_fk": {
+          "name": "project_proposal_revision_cog_agenda_id_fk",
           "tableFrom": "project_proposal_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -3881,8 +3564,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "proj_prop_rev_gsrc_age_id_fk": {
-          "name": "proj_prop_rev_gsrc_age_id_fk",
+        "project_proposal_revision_gsrc_agenda_id_fk": {
+          "name": "project_proposal_revision_gsrc_agenda_id_fk",
           "tableFrom": "project_proposal_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -3903,14 +3586,7 @@
           ]
         }
       },
-      "uniqueConstraints": {
-        "project_proposal_revision_code_unique": {
-          "name": "project_proposal_revision_code_unique",
-          "columns": [
-            "code"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "project_proposal_timeline": {
       "name": "project_proposal_timeline",
@@ -3922,8 +3598,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "code": {
-          "name": "code",
+        "project_proposal_revision_id": {
+          "name": "project_proposal_revision_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -3969,7 +3645,7 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
@@ -3984,15 +3660,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "proj_prop_time_proj_prop_rev_code_fk": {
-          "name": "proj_prop_time_proj_prop_rev_code_fk",
+        "project_proposal_timeline_revision_id_fk": {
+          "name": "project_proposal_timeline_revision_id_fk",
           "tableFrom": "project_proposal_timeline",
           "tableTo": "project_proposal_revision",
           "columnsFrom": [
-            "code"
+            "project_proposal_revision_id"
           ],
           "columnsTo": [
-            "code"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -4008,8 +3684,8 @@
       },
       "uniqueConstraints": {}
     },
-    "operating_committee_report_revision": {
-      "name": "operating_committee_report_revision",
+    "team_operation_proposal": {
+      "name": "team_operation_proposal",
       "columns": {
         "id": {
           "name": "id",
@@ -4018,22 +3694,22 @@
           "notNull": true,
           "autoincrement": true
         },
-        "operation_report_revision_id": {
-          "name": "operation_report_revision_id",
+        "operation_proposal_revision_id": {
+          "name": "operation_proposal_revision_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "operating_committee_id": {
-          "name": "operating_committee_id",
+        "team_id": {
+          "name": "team_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "note": {
-          "name": "note",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -4066,12 +3742,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "operating_committee_report_operation_report_revision_id_fk": {
-          "name": "operating_committee_report_operation_report_revision_id_fk",
-          "tableFrom": "operating_committee_report_revision",
-          "tableTo": "operation_report_revision",
+        "team_operation_proposal_operation_proposal_revision_id_fk": {
+          "name": "team_operation_proposal_operation_proposal_revision_id_fk",
+          "tableFrom": "team_operation_proposal",
+          "tableTo": "operation_proposal_revision",
           "columnsFrom": [
-            "operation_report_revision_id"
+            "operation_proposal_revision_id"
           ],
           "columnsTo": [
             "id"
@@ -4079,9 +3755,68 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operating_committee_report_ope_com_id_fk": {
-          "name": "operating_committee_report_ope_com_id_fk",
-          "tableFrom": "operating_committee_report_revision",
+        "team_operation_proposal_team_id_fk": {
+          "name": "team_operation_proposal_team_id_fk",
+          "tableFrom": "team_operation_proposal",
+          "tableTo": "team",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "team_operation_proposal_id": {
+          "name": "team_operation_proposal_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "operating_committee_meeting": {
+      "name": "operating_committee_meeting",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "operating_committee_id": {
+          "name": "operating_committee_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "op_com_meet_com_id_fk": {
+          "name": "op_com_meet_com_id_fk",
+          "tableFrom": "operating_committee_meeting",
           "tableTo": "operating_committee",
           "columnsFrom": [
             "operating_committee_id"
@@ -4094,8 +3829,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "operating_committee_report_revision_id": {
-          "name": "operating_committee_report_revision_id",
+        "operating_committee_meeting_id": {
+          "name": "operating_committee_meeting_id",
           "columns": [
             "id"
           ]
@@ -4103,8 +3838,264 @@
       },
       "uniqueConstraints": {}
     },
-    "operation_report": {
-      "name": "operation_report",
+    "operating_committee_meeting_result": {
+      "name": "operating_committee_meeting_result",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "meeting_revision_id": {
+          "name": "meeting_revision_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "decision_text": {
+          "name": "decision_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "attendance": {
+          "name": "attendance",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "agree": {
+          "name": "agree",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "disagree": {
+          "name": "disagree",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "abstain": {
+          "name": "abstain",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "approval": {
+          "name": "approval",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "op_com_meet_res_rev_id_fk": {
+          "name": "op_com_meet_res_rev_id_fk",
+          "tableFrom": "operating_committee_meeting_result",
+          "tableTo": "operating_committee_meeting_revision",
+          "columnsFrom": [
+            "meeting_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "operating_committee_meeting_result_id": {
+          "name": "operating_committee_meeting_result_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "operating_committee_meeting_revision": {
+      "name": "operating_committee_meeting_revision",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "operating_committee_meeting_id": {
+          "name": "operating_committee_meeting_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "place": {
+          "name": "place",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "start_term": {
+          "name": "start_term",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end_term": {
+          "name": "end_term",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cog_agenda_id": {
+          "name": "cog_agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gsrc_agenda_id": {
+          "name": "gsrc_agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "op_com_meet_rev_orig_id_fk": {
+          "name": "op_com_meet_rev_orig_id_fk",
+          "tableFrom": "operating_committee_meeting_revision",
+          "tableTo": "operating_committee_meeting",
+          "columnsFrom": [
+            "operating_committee_meeting_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "op_com_meet_cog_id_fk": {
+          "name": "op_com_meet_cog_id_fk",
+          "tableFrom": "operating_committee_meeting_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "cog_agenda_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "op_com_meet_gsrc_id_fk": {
+          "name": "op_com_meet_gsrc_id_fk",
+          "tableFrom": "operating_committee_meeting_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "gsrc_agenda_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "operating_committee_meeting_revision_id": {
+          "name": "operating_committee_meeting_revision_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "operating_committee_report": {
+      "name": "operating_committee_report",
       "columns": {
         "id": {
           "name": "id",
@@ -4125,6 +4116,126 @@
           "type": "int",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "operating_committee_id": {
+          "name": "operating_committee_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "op_com_rep_org_id_fk": {
+          "name": "op_com_rep_org_id_fk",
+          "tableFrom": "operating_committee_report",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "op_com_rep_sem_id_fk": {
+          "name": "op_com_rep_sem_id_fk",
+          "tableFrom": "operating_committee_report",
+          "tableTo": "semester",
+          "columnsFrom": [
+            "semester_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "op_com_rep_com_id_fk": {
+          "name": "op_com_rep_com_id_fk",
+          "tableFrom": "operating_committee_report",
+          "tableTo": "operating_committee",
+          "columnsFrom": [
+            "operating_committee_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "operating_committee_report_id": {
+          "name": "operating_committee_report_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "operating_committee_report_revision": {
+      "name": "operating_committee_report_revision",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "operating_committee_report_id": {
+          "name": "operating_committee_report_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "detail": {
+          "name": "detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cog_agenda_id": {
+          "name": "cog_agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gsrc_agenda_id": {
+          "name": "gsrc_agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {
@@ -4154,12 +4265,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "operation_report_organization_id_fk": {
-          "name": "operation_report_organization_id_fk",
-          "tableFrom": "operation_report",
-          "tableTo": "organization",
+        "op_com_rep_rev_orig_id_fk": {
+          "name": "op_com_rep_rev_orig_id_fk",
+          "tableFrom": "operating_committee_report_revision",
+          "tableTo": "operating_committee_report",
           "columnsFrom": [
-            "organization_id"
+            "operating_committee_report_id"
           ],
           "columnsTo": [
             "id"
@@ -4167,12 +4278,25 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operation_report_semester_id_fk": {
-          "name": "operation_report_semester_id_fk",
-          "tableFrom": "operation_report",
-          "tableTo": "semester",
+        "op_com_rep_cog_id_fk": {
+          "name": "op_com_rep_cog_id_fk",
+          "tableFrom": "operating_committee_report_revision",
+          "tableTo": "agenda",
           "columnsFrom": [
-            "semester_id"
+            "cog_agenda_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "op_com_rep_gsrc_id_fk": {
+          "name": "op_com_rep_gsrc_id_fk",
+          "tableFrom": "operating_committee_report_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "gsrc_agenda_id"
           ],
           "columnsTo": [
             "id"
@@ -4182,8 +4306,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "operation_report_id": {
-          "name": "operation_report_id",
+        "operating_committee_report_revision_id": {
+          "name": "operating_committee_report_revision_id",
           "columns": [
             "id"
           ]
@@ -4191,8 +4315,8 @@
       },
       "uniqueConstraints": {}
     },
-    "operation_report_revision": {
-      "name": "operation_report_revision",
+    "operation_report": {
+      "name": "operation_report",
       "columns": {
         "id": {
           "name": "id",
@@ -4270,9 +4394,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "operation_report_revision_operation_report_id_fk": {
-          "name": "operation_report_revision_operation_report_id_fk",
-          "tableFrom": "operation_report_revision",
+        "op_rep_rev_orig_id_fk": {
+          "name": "op_rep_rev_orig_id_fk",
+          "tableFrom": "operation_report",
           "tableTo": "operation_report",
           "columnsFrom": [
             "operation_report_id"
@@ -4283,9 +4407,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operation_report_revision_organization_diagram_id_fk": {
-          "name": "operation_report_revision_organization_diagram_id_fk",
-          "tableFrom": "operation_report_revision",
+        "op_rep_rev_org_diag_id_fk": {
+          "name": "op_rep_rev_org_diag_id_fk",
+          "tableFrom": "operation_report",
           "tableTo": "file",
           "columnsFrom": [
             "organization_diagram_id"
@@ -4296,9 +4420,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operation_report_revision_cog_agenda_id_fk": {
-          "name": "operation_report_revision_cog_agenda_id_fk",
-          "tableFrom": "operation_report_revision",
+        "op_rep_cog_id_fk": {
+          "name": "op_rep_cog_id_fk",
+          "tableFrom": "operation_report",
           "tableTo": "agenda",
           "columnsFrom": [
             "cog_agenda_id"
@@ -4309,9 +4433,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "operation_report_revision_gsrc_agenda_id_fk": {
-          "name": "operation_report_revision_gsrc_agenda_id_fk",
-          "tableFrom": "operation_report_revision",
+        "op_rep_gsrc_id_fk": {
+          "name": "op_rep_gsrc_id_fk",
+          "tableFrom": "operation_report",
           "tableTo": "agenda",
           "columnsFrom": [
             "gsrc_agenda_id"
@@ -4324,8 +4448,87 @@
         }
       },
       "compositePrimaryKeys": {
-        "operation_report_revision_id": {
-          "name": "operation_report_revision_id",
+        "operation_report_id": {
+          "name": "operation_report_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "project_detail_file": {
+      "name": "project_detail_file",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "project_report_revision_id": {
+          "name": "project_report_revision_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "proj_det_file_rev_id_fk": {
+          "name": "proj_det_file_rev_id_fk",
+          "tableFrom": "project_detail_file",
+          "tableTo": "project_report_revision",
+          "columnsFrom": [
+            "project_report_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "proj_det_file_file_id_fk": {
+          "name": "proj_det_file_file_id_fk",
+          "tableFrom": "project_detail_file",
+          "tableTo": "file",
+          "columnsFrom": [
+            "file_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "project_detail_file_id": {
+          "name": "project_detail_file_id",
           "columns": [
             "id"
           ]
@@ -4357,6 +4560,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "project_proposal_id": {
+          "name": "project_proposal_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -4371,8 +4581,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
+          "onUpdate": true
         },
         "deleted_at": {
           "name": "deleted_at",
@@ -4384,8 +4593,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "project_report_organization_id_fk": {
-          "name": "project_report_organization_id_fk",
+        "proj_rep_org_id_fk": {
+          "name": "proj_rep_org_id_fk",
           "tableFrom": "project_report",
           "tableTo": "organization",
           "columnsFrom": [
@@ -4397,12 +4606,25 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "project_report_semester_id_fk": {
-          "name": "project_report_semester_id_fk",
+        "proj_rep_sem_id_fk": {
+          "name": "proj_rep_sem_id_fk",
           "tableFrom": "project_report",
           "tableTo": "semester",
           "columnsFrom": [
             "semester_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "proj_rep_prop_id_fk": {
+          "name": "proj_rep_prop_id_fk",
+          "tableFrom": "project_report",
+          "tableTo": "project_proposal",
+          "columnsFrom": [
+            "project_proposal_id"
           ],
           "columnsTo": [
             "id"
@@ -4414,108 +4636,6 @@
       "compositePrimaryKeys": {
         "project_report_id": {
           "name": "project_report_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "project_report_document_review": {
-      "name": "project_report_document_review",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "project_report_revision_id": {
-          "name": "project_report_revision_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "student_id": {
-          "name": "student_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "document_review_status_enum": {
-          "name": "document_review_status_enum",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "detail": {
-          "name": "detail",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "proj_rep_doc_review_proj_rep_rev_id_fk": {
-          "name": "proj_rep_doc_review_proj_rep_rev_id_fk",
-          "tableFrom": "project_report_document_review",
-          "tableTo": "project_report_revision",
-          "columnsFrom": [
-            "project_report_revision_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "proj_rep_doc_review_student_id_fk": {
-          "name": "proj_rep_doc_review_student_id_fk",
-          "tableFrom": "project_report_document_review",
-          "tableTo": "student",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "project_report_document_review_id": {
-          "name": "project_report_document_review_id",
           "columns": [
             "id"
           ]
@@ -4596,22 +4716,29 @@
           "notNull": false,
           "autoincrement": false
         },
-        "purpose": {
-          "name": "purpose",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "target": {
-          "name": "target",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "detail": {
           "name": "detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "participation": {
+          "name": "participation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "result": {
+          "name": "result",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "unmet": {
+          "name": "unmet",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -4659,8 +4786,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
+          "onUpdate": true
         },
         "deleted_at": {
           "name": "deleted_at",
@@ -4668,12 +4794,19 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "agenda_id": {
+          "name": "agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "project_report_revision_project_report_id_fk": {
-          "name": "project_report_revision_project_report_id_fk",
+        "proj_rep_rev_orig_id_fk": {
+          "name": "proj_rep_rev_orig_id_fk",
           "tableFrom": "project_report_revision",
           "tableTo": "project_report",
           "columnsFrom": [
@@ -4685,8 +4818,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "project_report_revision_team_id_fk": {
-          "name": "project_report_revision_team_id_fk",
+        "proj_rep_rev_team_id_fk": {
+          "name": "proj_rep_rev_team_id_fk",
           "tableFrom": "project_report_revision",
           "tableTo": "team",
           "columnsFrom": [
@@ -4698,10 +4831,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "project_report_revision_manager_id_fk": {
-          "name": "project_report_revision_manager_id_fk",
+        "proj_rep_rev_mgr_id_fk": {
+          "name": "proj_rep_rev_mgr_id_fk",
           "tableFrom": "project_report_revision",
-          "tableTo": "student",
+          "tableTo": "user",
           "columnsFrom": [
             "manager_id"
           ],
@@ -4711,8 +4844,21 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "project_report_revision_cog_agenda_id_fk": {
-          "name": "project_report_revision_cog_agenda_id_fk",
+        "proj_rep_rev_agenda_id_fk": {
+          "name": "proj_rep_rev_agenda_id_fk",
+          "tableFrom": "project_report_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "agenda_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "proj_rep_rev_cog_id_fk": {
+          "name": "proj_rep_rev_cog_id_fk",
           "tableFrom": "project_report_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -4724,8 +4870,8 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "project_report_revision_gsrc_agenda_id_fk": {
-          "name": "project_report_revision_gsrc_agenda_id_fk",
+        "proj_rep_rev_gsrc_id_fk": {
+          "name": "proj_rep_rev_gsrc_id_fk",
           "tableFrom": "project_report_revision",
           "tableTo": "agenda",
           "columnsFrom": [
@@ -4807,8 +4953,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
+          "onUpdate": true
         },
         "deleted_at": {
           "name": "deleted_at",
@@ -4820,8 +4965,8 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "project_report_timeline_revision_id_fk": {
-          "name": "project_report_timeline_revision_id_fk",
+        "proj_rep_tim_orig_id_fk": {
+          "name": "proj_rep_tim_orig_id_fk",
           "tableFrom": "project_report_timeline",
           "tableTo": "project_report_revision",
           "columnsFrom": [
@@ -4844,8 +4989,8 @@
       },
       "uniqueConstraints": {}
     },
-    "team_operation_report": {
-      "name": "team_operation_report",
+    "recruit_evidence_file": {
+      "name": "recruit_evidence_file",
       "columns": {
         "id": {
           "name": "id",
@@ -4854,23 +4999,280 @@
           "notNull": true,
           "autoincrement": true
         },
-        "operation_report_revision_id": {
-          "name": "operation_report_revision_id",
+        "recruit_report_revision_id": {
+          "name": "recruit_report_revision_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "team_id": {
-          "name": "team_id",
+        "file_id": {
+          "name": "file_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "description": {
-          "name": "description",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rec_evi_file_rev_id_fk": {
+          "name": "rec_evi_file_rev_id_fk",
+          "tableFrom": "recruit_evidence_file",
+          "tableTo": "recruit_report_revision",
+          "columnsFrom": [
+            "recruit_report_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rec_evi_file_file_id_fk": {
+          "name": "rec_evi_file_file_id_fk",
+          "tableFrom": "recruit_evidence_file",
+          "tableTo": "file",
+          "columnsFrom": [
+            "file_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "recruit_evidence_file_id": {
+          "name": "recruit_evidence_file_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "recruit_member": {
+      "name": "recruit_member",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "recruit_report_revision_id": {
+          "name": "recruit_report_revision_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rec_mem_rev_id_fk": {
+          "name": "rec_mem_rev_id_fk",
+          "tableFrom": "recruit_member",
+          "tableTo": "recruit_report_revision",
+          "columnsFrom": [
+            "recruit_report_revision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rec_mem_stu_id_fk": {
+          "name": "rec_mem_stu_id_fk",
+          "tableFrom": "recruit_member",
+          "tableTo": "student",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "recruit_member_id": {
+          "name": "recruit_member_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "recruit_report": {
+      "name": "recruit_report",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "semester_id": {
+          "name": "semester_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rec_rep_org_id_fk": {
+          "name": "rec_rep_org_id_fk",
+          "tableFrom": "recruit_report",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rec_rep_sem_id_fk": {
+          "name": "rec_rep_sem_id_fk",
+          "tableFrom": "recruit_report",
+          "tableTo": "semester",
+          "columnsFrom": [
+            "semester_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "recruit_report_id": {
+          "name": "recruit_report_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "recruit_report_revision": {
+      "name": "recruit_report_revision",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "semester_id": {
+          "name": "semester_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "start_term": {
+          "name": "start_term",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end_term": {
+          "name": "end_term",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cog_agenda_id": {
+          "name": "cog_agenda_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cog_result_id": {
+          "name": "cog_result_id",
+          "type": "int",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -4902,12 +5304,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "team_operation_report_operation_report_revision_id_fk": {
-          "name": "team_operation_report_operation_report_revision_id_fk",
-          "tableFrom": "team_operation_report",
-          "tableTo": "operation_report_revision",
+        "rec_org_id_fk": {
+          "name": "rec_org_id_fk",
+          "tableFrom": "recruit_report_revision",
+          "tableTo": "organization",
           "columnsFrom": [
-            "operation_report_revision_id"
+            "organization_id"
           ],
           "columnsTo": [
             "id"
@@ -4915,12 +5317,38 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "team_operation_report_team_id_fk": {
-          "name": "team_operation_report_team_id_fk",
-          "tableFrom": "team_operation_report",
-          "tableTo": "team",
+        "rec_sem_id_fk": {
+          "name": "rec_sem_id_fk",
+          "tableFrom": "recruit_report_revision",
+          "tableTo": "semester",
           "columnsFrom": [
-            "team_id"
+            "semester_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rec_cog_id_fk": {
+          "name": "rec_cog_id_fk",
+          "tableFrom": "recruit_report_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "cog_agenda_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rec_cog_res_id_fk": {
+          "name": "rec_cog_res_id_fk",
+          "tableFrom": "recruit_report_revision",
+          "tableTo": "agenda",
+          "columnsFrom": [
+            "cog_result_id"
           ],
           "columnsTo": [
             "id"
@@ -4930,8 +5358,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "team_operation_report_id": {
-          "name": "team_operation_report_id",
+        "recruit_report_revision_id": {
+          "name": "recruit_report_revision_id",
           "columns": [
             "id"
           ]
@@ -5152,7 +5580,7 @@
           "name": "department_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {

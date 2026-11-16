@@ -12,8 +12,15 @@
     {
       "idx": 1,
       "version": "5",
-      "when": 1794227723653,
-      "tag": "0001_previous_ultimates",
+      "when": 1789390011973,
+      "tag": "0001_thick_mesmero",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1794831512012,
+      "tag": "0002_add_notice",
       "breakpoints": true
     }
   ]
