@@ -6,8 +6,8 @@ import { z } from "zod";
  * @description 집행부원(staff) 권한으로 ProjectProposalDocumentReview를 삭제합니다.
  */
 
-const url = () =>
-  `/staff/proposals/project-proposals/document-review/delete:projectProposalRevisionId`;
+const url = (projectProposalRevisionId: number) =>
+  `/staff/proposals/project-proposals/document-review/delete/${projectProposalRevisionId}`;
 const method = "DELETE";
 export const ApiPrp024RequestUrl =
   "/staff/proposals/project-proposals/document-review/delete:projectProposalRevisionId";

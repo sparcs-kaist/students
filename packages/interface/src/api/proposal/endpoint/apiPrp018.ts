@@ -6,8 +6,8 @@ import { z } from "zod";
  * @description 집행부원(staff) 권한으로 IncomeDocumentReview를 삭제합니다.
  */
 
-const url = () =>
-  `/staff/proposals/budget-proposals/income-document-review/delete:budgetProposalIncomeRevisionId`;
+const url = (budgetProposalIncomeRevisionId: number) =>
+  `/staff/proposals/budget-proposals/income-document-review/delete/${budgetProposalIncomeRevisionId}`;
 const method = "DELETE";
 export const ApiPrp018RequestUrl =
   "/staff/proposals/budget-proposals/income-document-review/delete:budgetProposalIncomeRevisionId";
