@@ -34,12 +34,12 @@ import { ZodPipe } from "@sparcs-students/api/common/pipes/zod-pipe";
 import { Public } from "@sparcs-students/api/common/decorators/skip-auth.decorator";
 import { ProposalService } from "../service/proposal.service";
 
-@Public()
 @Controller("student/proposals")
 export class ProposalController {
   constructor(private readonly proposalService: ProposalService) {}
 
   // 수입 revision 최신본 조회
+  @Public()
   @Get("budget-proposals/income/getRecent")
   @UsePipes(new ZodPipe(apiBudPrp012))
   async getRecentBudgetProposalIncome(
@@ -49,6 +49,7 @@ export class ProposalController {
   }
 
   // 지출 revision 최신본 조회
+  @Public()
   @Get("budget-proposals/expense/getRecent")
   @UsePipes(new ZodPipe(apiBudPrp013))
   async getRecentBudgetProposalExpense(
@@ -58,6 +59,7 @@ export class ProposalController {
   }
 
   // 수입 제출본 날짜 목록 조회
+  @Public()
   @Get("budget-proposals/income/getDateList")
   @UsePipes(new ZodPipe(apiBudPrp014))
   async getBudgetProposalIncomeDateList(
@@ -67,6 +69,7 @@ export class ProposalController {
   }
 
   // 지출 제출본 날짜 목록 조회
+  @Public()
   @Get("budget-proposals/expense/getDateList")
   @UsePipes(new ZodPipe(apiBudPrp015))
   async getBudgetProposalExpenseDateList(
@@ -76,6 +79,7 @@ export class ProposalController {
   }
 
   // 해당 날짜의 수입 제출본 조회
+  @Public()
   @Get("budget-proposals/income/getRevisionsByDate")
   @UsePipes(new ZodPipe(apiBudPrp016))
   async getBudgetProposalIncomeRevisionsByDate(
@@ -85,6 +89,7 @@ export class ProposalController {
   }
 
   // 해당 날짜의 지출 제출본 조회
+  @Public()
   @Get("budget-proposals/expense/getRevisionsByDate")
   @UsePipes(new ZodPipe(apiBudPrp017))
   async getBudgetProposalExpenseRevisionsByDate(
@@ -139,6 +144,7 @@ export class ProposalController {
   }
 
   // 사업계획서 revision 최신본 조회
+  @Public()
   @Get("proposal-revision/getRecent")
   @UsePipes(new ZodPipe(apiPrp108))
   async getRecentProjectProposalRevision(
@@ -148,6 +154,7 @@ export class ProposalController {
   }
 
   // 사업계획서 revision 제출본 날짜 목록 조회
+  @Public()
   @Get("proposal-revision/getDateList")
   @UsePipes(new ZodPipe(apiPrp109))
   async getProjectProposalRevisionDateList(
@@ -157,6 +164,7 @@ export class ProposalController {
   }
 
   // 해당 날짜에 제출된 사업계획서 revision 조회
+  @Public()
   @Get("proposal-revision/getRevisionsByDate")
   @UsePipes(new ZodPipe(apiPrp110))
   async getProjectProposalRevisionsByDate(

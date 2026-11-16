@@ -10,7 +10,7 @@ const url = (budgetProposalExpenseRevisionId: number) =>
   `/staff/proposals/budget-proposals/expense-document-review/delete/${budgetProposalExpenseRevisionId}`;
 const method = "DELETE";
 export const ApiPrp021RequestUrl =
-  "/staff/proposals/budget-proposals/expense-document-review/delete:budgetProposalExpenseRevisionId";
+  "/staff/proposals/budget-proposals/expense-document-review/delete/:budgetProposalExpenseRevisionId";
 
 const requestParam = z.object({
   budgetProposalExpenseRevisionId: z.coerce.number(),

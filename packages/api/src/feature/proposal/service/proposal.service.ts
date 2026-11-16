@@ -787,7 +787,7 @@ export class ProposalService {
   async deleteBudgetProposalExpenseDocumentReview(param) {
     const existing =
       await this.budgetProposalExpenseDocumentReviewRepository.find({
-        budgetProposalExpenseevisionId: param.budgetProposalExpenseRevisionId,
+        budgetProposalExpenseRevisionId: param.budgetProposalExpenseRevisionId,
       });
     if (!existing.length) {
       throw new ConflictException(

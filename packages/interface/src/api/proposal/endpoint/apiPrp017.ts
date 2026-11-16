@@ -10,10 +10,10 @@ import { zBudgetProposalIncomeDocumentReview } from "../type/budget-proposal-inc
 
 // manager와 staff가 모두 사용하는 api여서 Public 컨트롤러를 사용하고 service 파일에서 권한 검사
 const url = (budgetProposalIncomeRevisionId: number) =>
-  `/proposals/budget-proposals/income-document-review/read/${budgetProposalIncomeRevisionId}`;
+  `/students/proposals/budget-proposals/income-document-review/read/${budgetProposalIncomeRevisionId}`;
 const method = "GET";
 export const ApiPrp017RequestUrl =
-  "/proposals/budget-proposals/income-document-review/read:budgetProposalIncomeRevisionId";
+  "/students/proposals/budget-proposals/income-document-review/read/:budgetProposalIncomeRevisionId";
 
 const requestParam = z.object({
   budgetProposalIncomeRevisionId: z.coerce.number(),

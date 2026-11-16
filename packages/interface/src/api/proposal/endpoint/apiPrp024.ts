@@ -10,7 +10,7 @@ const url = (projectProposalRevisionId: number) =>
   `/staff/proposals/project-proposals/document-review/delete/${projectProposalRevisionId}`;
 const method = "DELETE";
 export const ApiPrp024RequestUrl =
-  "/staff/proposals/project-proposals/document-review/delete:projectProposalRevisionId";
+  "/staff/proposals/project-proposals/document-review/delete/:projectProposalRevisionId";
 
 const requestParam = z.object({
   projectProposalRevisionId: z.coerce.number(),
