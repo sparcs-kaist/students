@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { OrganizationPublicService } from "@sparcs-students/api/feature/organization/service/organization.public.service";
+import type { ApiUsr002ResponseOk } from "@sparcs-students/interface/api/user/endpoint/apiUsr002";
 import { UserRepository } from "../repository/user.repository";
 
 @Injectable()
@@ -10,7 +11,7 @@ export class UserService {
     private readonly organizationService: OrganizationPublicService,
   ) {}
 
-  async getMyInfo(userId: number) {
+  async getMyInfo(userId: number): Promise<ApiUsr002ResponseOk> {
     const profile =
       await this.userRepository.findStudentProfileByUserId(userId);
     if (!profile) {

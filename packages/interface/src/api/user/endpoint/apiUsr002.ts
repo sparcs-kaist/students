@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zMyMembership } from "@sparcs-students/interface/api/organization/endpoint/apiOrg025";
 import { registry, restMethod } from "@sparcs-students/interface/open-api";
 
 /**
@@ -35,14 +36,7 @@ const responseBodyMap = {
         })
         .nullable(),
     }),
-    organizations: z.array(
-      z.object({
-        membershipId: z.number(),
-        organizationId: z.number(),
-        name: z.string(),
-        nameEng: z.string(),
-      }),
-    ),
+    organizations: z.array(zMyMembership),
   }),
 };
 

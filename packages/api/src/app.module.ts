@@ -15,7 +15,6 @@ import FileModule from "./feature/file/file.module";
 import { ProposalModule } from "./feature/proposal/proposal.module";
 import { UserModule } from "./feature/user/user.module";
 import { ReportModule } from "./feature/report/report.module";
-import { UserModule } from "./feature/user/user.module";
 
 @Module({
   imports: [

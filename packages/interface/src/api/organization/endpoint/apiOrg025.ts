@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 로그인한 학생이 소속된 단체(organization) 멤버십 목록을 조회합니다.
+ * @description 로그인한 학생이 소속되었거나 가입 신청 중인 단체 목록을 조회합니다.
  */
 
 const url = () => `/organizations/me/memberships`;
@@ -16,12 +16,15 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({});
 
-const zMyMembership = z.object({
+export const zMyMembership = z.object({
   membershipId: z.number(),
   organizationId: z.number(),
   name: z.string(),
   nameEng: z.string(),
+  isApplying: z.boolean(),
 });
+
+export type ApiOrg025MyMembership = z.infer<typeof zMyMembership>;
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
