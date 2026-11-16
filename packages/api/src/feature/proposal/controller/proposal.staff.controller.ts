@@ -74,7 +74,7 @@ export class ProposalStaffController {
 
   // 각 집행부원(staff) 권한으로 ExpenseDocumentReview 삭제
   @Delete(
-    "budget-proposals/expense-document-review/delete:budgetProposalExpenseRevisionId",
+    "budget-proposals/expense-document-review/delete/:budgetProposalExpenseRevisionId",
   )
   @UsePipes(new ZodPipe(apiPrp021))
   async deleteBudgetProposalExpenseDocumentReview(

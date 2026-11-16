@@ -10,10 +10,10 @@ import { zProjectProposalDocumentReview } from "../type/project-proposal-documen
 
 // manager와 staff가 모두 사용하는 api여서 Public 컨트롤러를 사용하고 service 파일에서 권한 검사
 const url = (projectProposalRevisionId: number) =>
-  `/students/proposals/project-proposals/document-review/read/${projectProposalRevisionId}`;
+  `/student/proposals/project-proposals/document-review/read/${projectProposalRevisionId}`;
 const method = "GET";
 export const ApiPrp023RequestUrl =
-  "/students/proposals/project-proposals/document-review/read/:projectProposalRevisionId";
+  "/student/proposals/project-proposals/document-review/read/:projectProposalRevisionId";
 
 const requestParam = z.object({
   projectProposalRevisionId: z.coerce.number(),
