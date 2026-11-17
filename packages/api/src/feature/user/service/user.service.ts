@@ -1,20 +1,42 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 
-import { IStudent } from "@sparcs-students/interface/api/user/type/user.type";
+import { OrganizationPublicService } from "@sparcs-students/api/feature/organization/service/organization.public.service";
+import type { ApiUsr002ResponseOk } from "@sparcs-students/interface/api/user/endpoint/apiUsr002";
 import { UserRepository } from "../repository/user.repository";
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly organizationService: OrganizationPublicService,
+  ) {}
 
-  async findStudentByNumber(studentNumber: number): Promise<IStudent> {
-    const student =
-      await this.userRepository.findStudentByNumber(studentNumber);
-    if (!student) {
-      throw new NotFoundException(
-        `Student with studentNumber ${studentNumber} not found`,
-      );
+  async getMyInfo(userId: number): Promise<ApiUsr002ResponseOk> {
+    const profile =
+      await this.userRepository.findStudentProfileByUserId(userId);
+    if (!profile) {
+      throw new NotFoundException("Student profile not found");
     }
-    return student;
+
+    const { organizations } =
+      await this.organizationService.getMyOrganizationMemberships({
+        studentId: profile.studentId,
+      });
+
+    return {
+      student: {
+        id: profile.studentId,
+        studentNumber: profile.studentNumber,
+        user: {
+          id: profile.userId,
+          sid: profile.sid,
+          uid: profile.uid,
+          email: profile.email,
+          name: profile.name,
+        },
+        department: profile.department,
+      },
+      organizations,
+    };
   }
 }

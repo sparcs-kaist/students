@@ -1,28 +1,42 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zStudent } from "../type/user.type";
+import { zMyMembership } from "@sparcs-students/interface/api/organization/endpoint/apiOrg025";
+import { registry, restMethod } from "@sparcs-students/interface/open-api";
 
 /**
  * @version v0.1
- * @description 학번을 입력받아 유저 정보를 불러옵니다.
+ * @description 로그인한 사용자의 기본 정보와 소속 단체를 조회합니다.
  */
 
-const url = () => `/users/find`;
+const url = () => `/users/me`;
 const method = "GET";
-export const ApiUsr002RequestUrl = "/users/find";
+export const ApiUsr002RequestUrl = "/users/me";
 
 const requestParam = z.object({});
-
-const requestQuery = z.object({
-  studentNumber: z.coerce.number().int(),
-});
-
+const requestQuery = z.object({});
 const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    user: zStudent,
+    student: z.object({
+      id: z.number(),
+      studentNumber: z.number().nullable(),
+      user: z.object({
+        id: z.number(),
+        sid: z.string().nullable(),
+        uid: z.string().nullable(),
+        email: z.string().email(),
+        name: z.string(),
+      }),
+      department: z
+        .object({
+          id: z.number(),
+          name: z.string(),
+        })
+        .nullable(),
+    }),
+    organizations: z.array(zMyMembership),
   }),
 };
 
@@ -51,3 +65,36 @@ export type {
   ApiUsr002RequestBody,
   ApiUsr002ResponseOk,
 };
+
+registry.registerPath({
+  tags: ["User"],
+  method: restMethod.method[method],
+  path: ApiUsr002RequestUrl,
+  description: `
+  # USR-002
+
+  로그인한 사용자의 이메일, 학번, 소속 단체를 조회합니다.
+  `,
+  summary: "USR-002: 내 정보 조회",
+  request: {
+    params: requestParam,
+    query: requestQuery,
+    body: {
+      content: {
+        "application/json": {
+          schema: requestBody,
+        },
+      },
+    },
+  },
+  responses: {
+    [restMethod.code[method]]: {
+      description: "로그인한 사용자의 정보를 조회했습니다.",
+      content: {
+        "application/json": {
+          schema: responseBodyMap[HttpStatusCode.Ok],
+        },
+      },
+    },
+  },
+});

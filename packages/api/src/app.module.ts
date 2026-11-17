@@ -26,6 +26,7 @@ import { ReportModule } from "./feature/report/report.module";
     ProposalModule,
     UserModule,
     ReportModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
