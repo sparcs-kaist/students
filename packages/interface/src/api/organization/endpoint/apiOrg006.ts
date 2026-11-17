@@ -28,7 +28,7 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({
-    organizationManager: zOrganizationManager,
+    organizationManager: zOrganizationManager.array(),
   }),
 };
 

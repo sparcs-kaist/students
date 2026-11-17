@@ -1,0 +1,25 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+exports.id = "_rsc_src_i18n_messages_ko_json";
+exports.ids = ["_rsc_src_i18n_messages_ko_json"];
+exports.modules = {
+
+/***/ "(rsc)/./src/i18n/messages/ko.json":
+/*!***********************************!*\
+  !*** ./src/i18n/messages/ko.json ***!
+  \***********************************/
+/***/ ((module) => {
+
+module.exports = JSON.parse('{"로그인":"로그인","로그아웃":"로그아웃","홈":"홈","마이페이지":"마이페이지","만든 사람들":"만든 사람들","라이센스":"라이센스","이용 약관":"이용 약관","총학생회":"총학생회","공지사항":"공지사항","의결기구":"의결기구","예·결산 조회":"예·결산 조회","활동인증서":"활동인증서","학생 청원":"학생 청원","단체 관리":"단체 관리","총학생회장":"총학생회장","기구 관리":"기구 관리","예/결산 최종 승인":"예/결산 최종 승인","내 단체":"내 단체","단체 목록을 불러오지 못했습니다":"단체 목록을 불러오지 못했습니다"}');
+
+/***/ })
+
+};
+;
