@@ -15,6 +15,7 @@ import FileModule from "./feature/file/file.module";
 import { ProposalModule } from "./feature/proposal/proposal.module";
 import { UserModule } from "./feature/user/user.module";
 import { ReportModule } from "./feature/report/report.module";
+import { NoticeModule } from "./feature/notice/notice.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReportModule } from "./feature/report/report.module";
     ProposalModule,
     UserModule,
     ReportModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [
