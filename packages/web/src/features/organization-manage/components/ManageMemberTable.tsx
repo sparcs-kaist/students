@@ -328,6 +328,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   const members = useWatch({ control, name: "members" });
 
   const initialDataRef = useRef<OrganizationMemberProps[]>(initialData);
+  const deletedEndDatesRef = useRef(new Map<number, string>());
 
   useEffect(() => {
     const initialMap = new Map(
@@ -361,9 +362,12 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
 
     const createdRows = members.filter(row => !initialMap.has(row.id));
 
-    const deletedRows = initialDataRef.current.filter(
-      row => !members.find(r => r.id === row.id),
-    );
+    const deletedRows = initialDataRef.current
+      .filter(row => !members.find(r => r.id === row.id))
+      .map(row => ({
+        ...row,
+        endDate: deletedEndDatesRef.current.get(row.id) ?? row.endDate,
+      }));
 
     onDiffExtract({ updatedRows, createdRows, deletedRows });
   }, [members, onDiffExtract]);
@@ -385,6 +389,9 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
     if (members.length === 1) {
       return;
     }
+    // 은퇴 요청에는 삭제 직전에 입력한 종료일을 사용한다.
+    const member = formMethods.getValues(`members.${rowIndex}`);
+    deletedEndDatesRef.current.set(member.id, member.endDate);
     remove(rowIndex);
     const length = members.length - 1;
 
