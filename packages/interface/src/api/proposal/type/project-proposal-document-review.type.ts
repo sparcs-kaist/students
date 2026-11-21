@@ -12,6 +12,16 @@ export const zProjectProposalDocumentReview = z.object({
   detail: z.string().optional(),
 });
 
+export const zProjectProposalDocumentReviewRequestCreate =
+  zProjectProposalDocumentReview.omit({
+    id: true,
+    student: true,
+  });
+
 export type IProjectProposalDocumentReview = z.infer<
   typeof zProjectProposalDocumentReview
+>;
+
+export type IProjectProposalDocumentReviewRequestCreate = z.infer<
+  typeof zProjectProposalDocumentReviewRequestCreate
 >;
