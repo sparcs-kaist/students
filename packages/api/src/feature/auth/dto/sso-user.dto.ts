@@ -1,4 +1,5 @@
 import { KaistInfo } from "@sparcs-students/api/feature/auth/dto/kaist-info.dto";
+import { KaistV2Info } from "@sparcs-students/api/feature/auth/dto/kaist-v2-info.dto";
 
 export class SSOUser {
   /** 사용자가 SSO 전체에서 고유하게 받은 ID입니다. 30자를 초과하지 않습니다. */
@@ -39,6 +40,9 @@ export class SSOUser {
 
   /** 사용자의 KAIST Portal 데이터입니다. */
   kaist_info!: KaistInfo;
+
+  /** 사용자의 KAIST Portal v2 데이터입니다. */
+  kaist_v2_info?: KaistV2Info;
 
   /** kaist_info를 업데이트한 날짜입니다. YYYY-MM-DD 형식의 날짜 또는 빈 문자열 값입니다. */
   kaist_info_time?: Date;
