@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { DrizzleModule } from "@sparcs-students/api/drizzle/drizzle.module";
+import { StaffRepository } from "@sparcs-students/api/feature/organization/repository/staff.repository";
 import { BudgetProposalExpenseRepository } from "./repository/budget-proposal-expense.repository";
 import { BudgetProposalExpenseRevisionRepository } from "./repository/budget-proposal-expense-revision.repository";
 import { BudgetProposalIncomeRepository } from "./repository/budget-proposal-income.repository";
@@ -38,6 +39,7 @@ import { ProjectProposalDocumentReviewRepository } from "./repository/project-pr
     OperationProposalRevisionRepository,
     ProposalService,
     OrganizationManagerRepository,
+    StaffRepository,
   ],
   imports: [DrizzleModule],
   exports: [
