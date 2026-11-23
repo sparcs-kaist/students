@@ -74,15 +74,25 @@ export class AuthService {
       );
     }
     const kaistInfo = ssoProfile.kaist_info;
-    const studentNumber = kaistInfo?.ku_std_no || "00000000";
+    const kaistV2Info = ssoProfile.kaist_v2_info;
+    const studentNumber =
+      kaistV2Info?.std_no || kaistInfo?.ku_std_no || "00000000";
     const email =
-      kaistInfo?.mail?.replace("mailto:", "") || "unknown@kaist.ac.kr";
+      kaistV2Info?.email ||
+      kaistInfo?.mail?.replace("mailto:", "") ||
+      "unknown@kaist.ac.kr";
     const uid = ssoProfile.uid || "00000000";
     const sid = ssoProfile.sid || "00000000";
     const name =
-      kaistInfo?.ku_kname || `${ssoProfile.first_name} ${ssoProfile.last_name}`;
+      kaistV2Info?.user_nm ||
+      kaistInfo?.ku_kname ||
+      `${ssoProfile.first_name} ${ssoProfile.last_name}`;
     const type = kaistInfo?.ku_person_type || "Student";
-    const department = kaistInfo?.ku_kaist_org_id || "0000";
+    const department =
+      kaistV2Info?.std_dept_id ||
+      kaistV2Info?.kaist_org_id ||
+      kaistInfo?.ku_kaist_org_id ||
+      "0000";
 
     // if (process.env.NODE_ENV === "local") {
     //   studentNumber = process.env.USER_KU_STD_NO;

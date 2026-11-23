@@ -100,6 +100,9 @@ export class SSOClient {
       if (result.kaist_info && typeof result.kaist_info === "string") {
         result.kaist_info = JSON.parse(result.kaist_info);
       }
+      if (result.kaist_v2_info && typeof result.kaist_v2_info === "string") {
+        result.kaist_v2_info = JSON.parse(result.kaist_v2_info);
+      }
 
       return result as T;
     } catch (err) {

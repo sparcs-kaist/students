@@ -5,8 +5,10 @@ import FlexWrapper from "@sparcs-students/web/common/components/FlexWrapper";
 import Modal from "@sparcs-students/web/common/components/Modal";
 import TelEditingModalContent from "@sparcs-students/web/common/components/Modal/TelEditingModalContent";
 import Typography from "@sparcs-students/web/common/components/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import { getMyInfo } from "../services/myApi";
 
 const CardWrapper = styled.div`
   display: flex;
@@ -20,13 +22,25 @@ const CardWrapper = styled.div`
   box-sizing: border-box;
 `;
 const ProfileCard = () => {
-  // TODO : Api 연결
+  // TODO : 전화번호 Api 연결
   const [tel, setTel] = useState("010-0000-0000");
-  const [studentID, setStudentID] = useState(20240602);
-  const [department, setDepartment] = useState("수리과학과/학사");
-  const [clubs, setClubs] = useState(["SPARCS/정회원", "학부총학생회/국원"]);
+  const [name, setName] = useState("");
+  const [studentID, setStudentID] = useState<number | null>(null);
+  const [department, setDepartment] = useState("");
+  const [clubs, setClubs] = useState<string[]>([]);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    getMyInfo()
+      .then(({ student, organizations }) => {
+        setName(student.user.name);
+        setStudentID(student.studentNumber);
+        setDepartment(student.department?.name ?? "");
+        setClubs(organizations.map(org => org.name));
+      })
+      .catch(() => {});
+  }, []);
 
   const handleEditOnclick = () => {
     setIsOpen(true);
@@ -46,10 +60,7 @@ const ProfileCard = () => {
       <FlexWrapper direction="column" gap={10}>
         <FlexWrapper direction="row" gap={5}>
           <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-            임가은,
-          </Typography>
-          <Typography fs={24} lh={30} color="BLACK" fw="BOLD">
-            Gaeun Lim
+            {name}
           </Typography>
         </FlexWrapper>
         <FlexWrapper direction="row" gap={10}>
