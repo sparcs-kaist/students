@@ -1,4 +1,9 @@
-import { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
+import {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HttpStatusCode,
+} from "axios";
 
 import {
   removeLocalStorageItem,
@@ -8,11 +13,17 @@ import logger from "@sparcs-students/web/utils/logger";
 
 import postRefresh from "./postRefresh";
 
+export type PreserveFormRequestConfig = AxiosRequestConfig & {
+  preserveFormOnAuthError?: boolean;
+};
+
 const errorInterceptor = {
   onFulfilled(values: AxiosResponse) {
     return values;
   },
   async onRejected(error: AxiosError) {
+    const preserveForm = (error.config as PreserveFormRequestConfig | undefined)
+      ?.preserveFormOnAuthError;
     switch (error.response?.status) {
       case HttpStatusCode.Unauthorized: {
         try {
@@ -30,11 +41,12 @@ const errorInterceptor = {
           logger.error("Login failed", refreshError);
           removeLocalStorageItem("accessToken");
           removeLocalStorageItem("responseToken");
-          window.location.href = "/";
+          if (!preserveForm) window.location.href = "/";
         }
         return Promise.reject(error);
       }
       case HttpStatusCode.Forbidden: {
+        if (preserveForm) return Promise.reject(error);
         const previousPage = document.referrer;
 
         if (previousPage.startsWith(window.location.origin)) {
