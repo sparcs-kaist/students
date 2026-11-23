@@ -221,6 +221,24 @@ const MemberRow: React.FC<MemberRowProps> = ({
     ));
   };
 
+  const handleDateChange = (
+    dateType: "startDate" | "endDate",
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const input = event.currentTarget;
+    const member = getValues(`members.${rowIndex}`);
+    const startDate = dateType === "startDate" ? input.value : member.startDate;
+    const endDate = dateType === "endDate" ? input.value : member.endDate;
+    if (startDate && endDate && endDate < startDate) {
+      input.value = member[dateType];
+      alert("종료일은 시작일보다 빠를 수 없습니다.");
+      return;
+    }
+    setValue(`members.${rowIndex}.${dateType}`, input.value, {
+      shouldDirty: true,
+    });
+  };
+
   return (
     <TableRowWrapper isLast={isLast}>
       <TableCell type="Default" width={COL_WIDTHS.idx}>
@@ -278,7 +296,7 @@ const MemberRow: React.FC<MemberRowProps> = ({
             <input
               type="date"
               value={field.value}
-              onChange={field.onChange}
+              onChange={event => handleDateChange("startDate", event)}
               style={{ width: "100%", border: "none", outline: "none" }}
             />
           </TableCell>
@@ -292,7 +310,7 @@ const MemberRow: React.FC<MemberRowProps> = ({
             <input
               type="date"
               value={field.value}
-              onChange={field.onChange}
+              onChange={event => handleDateChange("endDate", event)}
               style={{ width: "100%", border: "none", outline: "none" }}
             />
           </TableCell>
@@ -328,6 +346,7 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
   const members = useWatch({ control, name: "members" });
 
   const initialDataRef = useRef<OrganizationMemberProps[]>(initialData);
+  const deletedEndDatesRef = useRef(new Map<number, string>());
 
   useEffect(() => {
     const initialMap = new Map(
@@ -361,9 +380,12 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
 
     const createdRows = members.filter(row => !initialMap.has(row.id));
 
-    const deletedRows = initialDataRef.current.filter(
-      row => !members.find(r => r.id === row.id),
-    );
+    const deletedRows = initialDataRef.current
+      .filter(row => !members.find(r => r.id === row.id))
+      .map(row => ({
+        ...row,
+        endDate: deletedEndDatesRef.current.get(row.id) ?? row.endDate,
+      }));
 
     onDiffExtract({ updatedRows, createdRows, deletedRows });
   }, [members, onDiffExtract]);
@@ -385,6 +407,9 @@ const MemberTableForm: React.FC<ManageMemberTableProps> = ({
     if (members.length === 1) {
       return;
     }
+    // 은퇴 요청에는 삭제 직전에 입력한 종료일을 사용한다.
+    const member = formMethods.getValues(`members.${rowIndex}`);
+    deletedEndDatesRef.current.set(member.id, member.endDate);
     remove(rowIndex);
     const length = members.length - 1;
 

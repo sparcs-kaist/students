@@ -89,6 +89,29 @@ type DirtyCommitteeMemberDataItem = {
   dirtyData: DirtyCommitteeMemberData;
 };
 
+type MemberDateGroup = {
+  name: string;
+  members: OrganizationMemberProps[];
+  isRetirement?: boolean;
+};
+
+const getInvalidDateMembers = (groups: MemberDateGroup[], today: Date) => {
+  const todayDate = today.toLocaleDateString("sv-SE", {
+    timeZone: "Asia/Seoul",
+  });
+  return groups.flatMap(group =>
+    group.members
+      .filter(member => {
+        if (!member.startDate || (!member.endDate && !group.isRetirement)) {
+          return false;
+        }
+        const endDate = member.endDate || todayDate;
+        return endDate < member.startDate;
+      })
+      .map(member => ({ ...member, groupName: group.name })),
+  );
+};
+
 const calculateChangedRows = ({
   dirtyMemberData,
   dirtyCommitteeMemberDataList,
@@ -329,11 +352,52 @@ const OrganizationManage = () => {
     return val;
   };
 
+  const validateMemberDates = () => {
+    const groups: MemberDateGroup[] = [
+      {
+        name: "단체 구성원",
+        members: formMemberMethods.getValues("members"),
+      },
+      {
+        name: "단체 구성원 (임기 종료)",
+        members: dirtyMemberData.deletedRows,
+        isRetirement: true,
+      },
+      ...committeeTables.flatMap(table => [
+        {
+          name: table.name,
+          members: table.formMethods.getValues("members"),
+        },
+        {
+          name: `${table.name} (임기 종료)`,
+          members:
+            dirtyCommitteeMemberDataList.find(data => data.id === table.id)
+              ?.dirtyData.deletedRows ?? [],
+          isRetirement: true,
+        },
+      ]),
+    ];
+    const invalidMembers = getInvalidDateMembers(groups, new Date());
+    if (invalidMembers.length === 0) return true;
+
+    alert(
+      `종료일은 시작일보다 빠를 수 없습니다. 다음 구성원의 날짜를 확인해주세요.\n\n${invalidMembers
+        .map(
+          member =>
+            `${member.groupName} / ${member.name || "이름 미입력"} (${member.studentId || "학번 미입력"}): ${member.startDate} ~ ${member.endDate || "오늘"}`,
+        )
+        .join("\n")}`,
+    );
+    return false;
+  };
+
   const handleSubmitChanges = async () => {
     if (!currentOrganizationId) {
       alert("조직 ID를 찾을 수 없습니다. 조직을 선택해주세요.");
       return;
     }
+
+    if (!validateMemberDates()) return;
 
     setIsSubmitting(true);
 
@@ -379,11 +443,11 @@ const OrganizationManage = () => {
             member.role === MemberRoleEnum.Editor
           ) {
             return retireOrganizationManager(member.id, {
-              endTerm: new Date(),
+              endTerm: member.endDate ? new Date(member.endDate) : new Date(),
             });
           }
           return retireOrganizationMember(member.id, {
-            endTerm: new Date(),
+            endTerm: member.endDate ? new Date(member.endDate) : new Date(),
           });
         }),
       );
@@ -456,18 +520,22 @@ const OrganizationManage = () => {
               if (isOpCom) {
                 // 운영위원회 멤버 은퇴 (apiOrg022)
                 return retireOperatingCommitteeMember(member.id, {
-                  endTerm: new Date(),
+                  endTerm: member.endDate
+                    ? new Date(member.endDate)
+                    : new Date(),
                 });
               }
               if (member.role === CommitteeRoleEnum.Chief) {
                 // 팀 리더 은퇴 (apiOrg020)
                 return retireTeamLeader(member.id, {
-                  endTerm: new Date(),
+                  endTerm: member.endDate
+                    ? new Date(member.endDate)
+                    : new Date(),
                 });
               }
               // 팀 멤버 은퇴 (apiOrg019)
               return retireTeamMember(member.id, {
-                endTerm: new Date(),
+                endTerm: member.endDate ? new Date(member.endDate) : new Date(),
               });
             },
           );
@@ -487,6 +555,8 @@ const OrganizationManage = () => {
   };
 
   const onConfirmModal = () => {
+    if (!validateMemberDates()) return;
+
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
         <CancellableModalContent
