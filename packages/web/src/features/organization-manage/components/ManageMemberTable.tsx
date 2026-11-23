@@ -221,6 +221,24 @@ const MemberRow: React.FC<MemberRowProps> = ({
     ));
   };
 
+  const handleDateChange = (
+    dateType: "startDate" | "endDate",
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const input = event.currentTarget;
+    const member = getValues(`members.${rowIndex}`);
+    const startDate = dateType === "startDate" ? input.value : member.startDate;
+    const endDate = dateType === "endDate" ? input.value : member.endDate;
+    if (startDate && endDate && endDate < startDate) {
+      input.value = member[dateType];
+      alert("종료일은 시작일보다 빠를 수 없습니다.");
+      return;
+    }
+    setValue(`members.${rowIndex}.${dateType}`, input.value, {
+      shouldDirty: true,
+    });
+  };
+
   return (
     <TableRowWrapper isLast={isLast}>
       <TableCell type="Default" width={COL_WIDTHS.idx}>
@@ -278,7 +296,7 @@ const MemberRow: React.FC<MemberRowProps> = ({
             <input
               type="date"
               value={field.value}
-              onChange={field.onChange}
+              onChange={event => handleDateChange("startDate", event)}
               style={{ width: "100%", border: "none", outline: "none" }}
             />
           </TableCell>
@@ -292,7 +310,7 @@ const MemberRow: React.FC<MemberRowProps> = ({
             <input
               type="date"
               value={field.value}
-              onChange={field.onChange}
+              onChange={event => handleDateChange("endDate", event)}
               style={{ width: "100%", border: "none", outline: "none" }}
             />
           </TableCell>
