@@ -27,6 +27,7 @@ import { NoticeModule } from "./feature/notice/notice.module";
     ProposalModule,
     UserModule,
     ReportModule,
+    UserModule,
     NoticeModule,
   ],
   controllers: [AppController],
