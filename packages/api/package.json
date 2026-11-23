@@ -102,7 +102,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@sparcs-students/api/(.*)$": "<rootDir>/$1",
+      "^@sparcs-students/interface/(.*)$": "<rootDir>/../../interface/src/$1"
+    }
   },
   "packageManager": "pnpm@9.14.4"
 }

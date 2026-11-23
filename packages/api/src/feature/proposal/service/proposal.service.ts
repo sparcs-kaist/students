@@ -844,6 +844,7 @@ export class ProposalService {
     }
 
     const [target] = await this.projectProposalTimelineRepository.find({
+      id: projectProposalTimeline.id,
       projectProposalRevision: code,
     });
 
@@ -855,6 +856,7 @@ export class ProposalService {
       await this.projectProposalTimelineRepository.patch(
         {
           id: target.id,
+          projectProposalRevision: code,
         } as any,
         model => ({
           ...model,

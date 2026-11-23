@@ -20,3 +20,6 @@ env/.env
 
 # Git Submodules
 .students-secrets
+
+# Next.js development build output
+.next-dev/
